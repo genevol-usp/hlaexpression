@@ -1,0 +1,97 @@
+
+\documentclass[12pt]{article}
+
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage[pdftex]{graphicx}
+\usepackage[utf8x]{inputenc}
+\usepackage[brazil]{babel}
+\usepackage{hyperref}
+\usepackage{bm}
+
+\usepackage{graphicx}
+\usepackage{fancyhdr}
+\usepackage{slashed}
+\usepackage{setspace}
+\linespread{1.5}
+
+\newcommand{\mc}{\mathcal}
+\newcommand{\nn}{\nonumber \\ }
+
+\begin{document}
+
+\title{Matching Hla reads}
+\author{DM JC VA}
+\maketitle 
+
+\section{Probabilistic Model}
+
+Let $\mc{R}= \left\{r_1,\ldots, r_N\right\}$ a set of reads mapped into a set
+$\mc T = \left\{t_1,\ldots,t_K\right\}$ of transcripts (or targets).  The
+information of which read is mapped into which target can be summarized by
+the indicator matrix $\bm X$, where $X_{nk} = 1$ if the read $n$ is mapped on
+the target $k$ and $0$.
+
+Let $\bm \theta =(\theta_1, \ldots, \theta_K)$ where $\theta_k$ is 
+the probability that one read is generated from a transcript $t_k$, then the
+log-likelihood of $\bm \theta$ given $\bm X$ is, 
+\begin{align}
+    \label{eq:}
+    \mc L (\bm \theta; \bm X) = \log P(\bm X| \bm \theta) = \sum_{n=1}^N 
+    \log\left(\sum_{k=1}^K X_{nk}\frac{\theta_k}{\tilde l_k}\right)
+\end{align}
+where $\tilde l_k$ is the effective length of the transcript. This
+probabilistic model is understood assuming that the probability of one read 
+maps into one transcript depends solely of its expression. This model was 
+proposed by \cite{} and \cite{}î and further developed by \cite{}.
+The maximum likelihood solution of this model cannot be solved
+analytically, nevertheless, it can be accomplished by Estimation Maximization
+(EM) procedure. 
+
+Defining the auxiliary and unmeasured matrix $\bm Z$ that is the true indicator
+matrix, where $Z_{nk}=1$ only if the read $n$ was originated by the transcript
+$k$ and $0$ otherwise. Then, the complete log-likelihood function of the model
+is 
+\begin{align}
+    \label{eq:}
+    \mc L (\bm \theta; \bm X, \bm Z) = \log P(\bm X, \bm Z| \bm \theta) = \sum_{n=1}^N 
+    \sum_{k=1}^K Z_{nk}\log\left( X_{nk}\frac{\theta_k}{\tilde l_k}\right)
+\end{align}
+
+\subsection{EM algorithm}
+
+Given the complete model, it can be show that EM algorithms steps are given by,
+\paragraph{Estimation step:}
+\begin{align}
+    \gamma_{nk}^{(t+1)} &= \mathbb E (Z_{nk}|\bm X_n, \bm \theta^t) 
+    = P(Z_{nk} = 1 | \bm X_n, \bm \theta^t) \nn 
+    &= \frac{X_{nk}\theta_k^t}{\sum_{j=1}^KX_{nj}\theta_j^t}
+    \label{eq:E}
+\end{align}
+\paragraph{Maximisation step:} Let $n_k^{(t+1)} = \sum_{n=1}^N
+\gamma_{nk}^{(t+1)}$ then 
+\begin{align}
+    \theta_k^{(t+1)} = \frac{n_k^{(t+1)}}{N}
+    \label{eq:M}
+\end{align}
+
+\subsection{Implementation}
+
+From equation EM equations it follows,
+\begin{align}
+    \label{eq:}
+    n_k^{(t+1)} &= \sum_{n=1}^N \gamma_{nk}^{(t+1)} 
+    = \sum_{n=1}^N\frac{X_{nk}\theta_k^t}{\sum_{j=1}^KX_{nj}\theta_j^t}\nn
+    &= n_{u(k)} 
+    + \sum_{j\neq k} \frac{\theta_k^t}{\theta_k^t + \theta_j^t}n_{u(k,j)}
+    + \sum_{l\neq j}\sum_{j\neq k} 
+    \frac{\theta_k^t}{\theta_k^t + \theta_j^t+ \theta_l^t} n_{u(k,j,l)} +
+    \ldots
+\end{align}
+Where $n_{u(k)}$ is the number of reads that maps uniquely to
+the targets, $t_k$ and $n_{u(k,j)}$ and uniquely mapped in $t_k$ and $t_j$,
+etc. Since any initial condition will lead to the same global maximum we
+set $\theta_k^0 = n_{u(k)}/N$.
+%\bibliographystyle{plain}
+%\bibliography{biblio}
+\end{document}
