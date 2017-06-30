@@ -1,6 +1,6 @@
 #!/bin/bash
 
-FASTQ_DIR=/raid/genevol/rnaseq/fastq
+FASTQ_DIR=../../data/fastq
 SAMPLE=$1
 
 zcat $FASTQ_DIR/$SAMPLE\_1.fastq.gz > $SAMPLE\_1.fastq &
