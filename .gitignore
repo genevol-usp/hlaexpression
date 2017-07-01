@@ -1,0 +1,6 @@
+*.fasta
+*.fastq
+*.fq
+*.gem
+*.log
+*.xlsx
