@@ -1,5 +1,4 @@
 library(tidyverse)
-library(ggplot2)
 
 allele_dist <- read_tsv("../distances_to_reference.tsv")
 
