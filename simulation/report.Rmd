@@ -1,0 +1,12 @@
+---
+title: "Report"
+output: github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r echo=FALSE}
+knitr::include_graphics('./plots/hlasimul.png')
+```
