@@ -43,7 +43,7 @@ aligned_df <- inner_join(library_df, aligned, by = "subject") %>%
   gather(reads, value, -subject) %>%
   arrange(subject, reads)
 
-nci_allele <- read_tsv("./nci_expression.tsv")
+nci_allele <- read_tsv("../data/nci_expression.tsv")
 
 nci_gene <- distinct(nci_allele, subject, locus, mRNA, c_surface) %>%
   filter(subject %in% samples)

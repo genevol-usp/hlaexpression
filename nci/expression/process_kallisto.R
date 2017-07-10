@@ -47,7 +47,7 @@ if (quant_round == 1 | quant_round == 2) {
 			   .(th, subject, locus, allele)]
     genos_dt[, allele := hla_trimnames(gsub("IMGT_|_s\\d", "", allele), 3)]
 
-    nci_genos <- fread("./nci_expression.tsv", select = c(1, 2, 4))
+    nci_genos <- fread("../data/nci_expression.tsv", select = c(1, 2, 4))
    
     accuracies_list <- 
       parallel::mclapply(split(genos_dt, genos_dt$th),
