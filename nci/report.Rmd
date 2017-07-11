@@ -44,7 +44,7 @@ typing.
 \*Allele calls were compared at the maximum resolution possible at each pair
 
 ```{r}
-read_tsv("./genotyping_accuracies.tsv") %>%
+read_tsv("./expression/genotyping_accuracies.tsv") %>%
   filter(th == 0.20) %>%
   select(locus, concordance = accuracy) %>%
   kable()

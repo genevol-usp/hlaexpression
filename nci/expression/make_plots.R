@@ -18,7 +18,7 @@ plot_lineages <- function(data) {
     scale_color_manual(values = c("0" = "grey25", "1" = "green")) +
     stat_summary(fun.y = mean, geom = "point", shape = "\U2014", size = 9) +
     facet_wrap(~locus, scales = "free", ncol = 1, strip.position = "left") +
-    labs(x = NULL, y = "qPCR expression") +
+    labs(x = NULL, y = "mRNA") +
     theme_bw() +
     theme(axis.title = element_text(size = 16),
           axis.text.y = element_text(size = 14),
@@ -215,11 +215,11 @@ ggplot(hlac_df, aes(expression, c_surface)) +
 dev.off()
 
 png("../plots/rnaseq_lineages.png", width=12, height=6, units="in", res=300)
-plot_lineages(rnaseq_lineage)
+plot_lineages(rnaseq_lineage) + labs(y = "TPM")
 dev.off()
 
 png("../plots/nci_lineages.png", width=12, height=6, units="in", res=300)
-plot_lineages(nci_lineage)
+plot_lineages(nci_lineage) + labs(y = "mRNA (qPCR)")
 dev.off()
 
 png("../plots/tpm_vs_B2MnormCounts.png", width = 12, height = 6, units = "in", res = 300)
