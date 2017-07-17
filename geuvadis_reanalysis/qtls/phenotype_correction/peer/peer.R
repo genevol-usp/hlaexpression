@@ -4,14 +4,14 @@ library(peer)
 k <- commandArgs(TRUE) %>% as.integer()
 
 phenotypes <- 
-  data.table::fread("../kallisto_gene_expressed90%.csv") %>%
+  data.table::fread("../../../expression/kallisto/kallisto_gene_expressed90%.csv") %>%
   as.data.frame() %>%
   `rownames<-`(.$subject) %>%
   dplyr::select(-subject) %>%
   data.matrix()
 
 covs <- 
-  data.table::fread("covs.csv") %>%
+  data.table::fread("./covs.csv") %>%
   as.data.frame() %>%
   `rownames<-`(.$subject) %>%
   dplyr::select(-subject) %>%
