@@ -1,0 +1,140 @@
+---
+title: "Report"
+output: github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE, comment = "")
+```
+
+```{r pkgs, echo = FALSE}
+library(knitr)
+library(tidyverse)
+```
+
+# Library Sizes and pseudoaligned reads
+
+```{r}
+include_graphics("./plots/library_sizes.png")
+```
+
+# Typing accuracies
+
+*Concordance: the proportion of the called alleles that are concordant with the Gourraud et al (2014) typings
+
+*Allele calls were compared at the maximum resolution possible at each pair
+
+```{r}
+read_tsv("./genotyping_accuracies.tsv") %>%
+  filter(th_average == max(th_average)) %>%
+  filter(th == min(th)) %>%
+  select(locus, accuracy) %>%
+  kable()
+```
+
+# Expression estimates
+
+## GEM-based vs. kallisto
+
+```{r}
+include_graphics("./plots/kallisto_vs_hlatx.png")
+```
+
+## Comparison to Geuvadis' published data
+
+```{r}
+include_graphics("./plots/kallisto_vs_geuvadis.png")
+```
+
+## Comparison of different indices
+
+### HLA diversity vs Reference chromosomes
+
+```{r}
+include_graphics("./plots/kallisto_imgt_vs_chr.png")
+```
+
+### HLA diversity vs Reference chromosomes + Alternate haplotypes + Patches + Scaffolds
+
+```{r}
+include_graphics("./plots/kallisto_imgt_vs_all.png")
+```
+
+### Distribution of TPM values
+
+```{r}
+include_graphics("./plots/tpm_distributions.png")
+```
+
+# ASE 
+
+## ASE by number of genotype inference errors
+
+*Each point represents a heterozygous genotype in the intersect with Gourraud data.
+
+*There are more points with extreme ASE associated with genotyping errors because I'm not applying anymore a threshold of expression between 2nd allele/1st allele after the second round of the pipeline.
+
+```{r}
+include_graphics("./plots/ase.png")
+```
+
+## ASE distribution
+
+```{r}
+include_graphics("./plots/ase_histogram.png")
+```
+
+# Correlation of expression
+
+## Correlation decreases with the increase in the number of PEER factors/PCs
+
+```{r}
+include_graphics("./plots/correlation_decrease.png")
+```
+
+
+*Expression data in the plots below correspond to TPM values corrected by 10 PCs
+
+## Among the HLA genes
+
+```{r}
+include_graphics("./plots/hlacorrelations.png")
+```
+
+## Between Class II genes and CIITA
+
+```{r}
+include_graphics("./plots/trans_activ_corrs.png")
+```
+
+## Between pairs of HLA genes on the same vs on different haplotypes
+
+### HLA-A vs HLA-B
+
+```{r}
+include_graphics("./plots/a_vs_b.png")
+```
+
+### HLA-A vs HLA-C
+
+```{r}
+include_graphics("./plots/a_vs_c.png")
+```
+
+### HLA-B vs HLA-C
+
+```{r}
+include_graphics("./plots/b_vs_c.png")
+```
+
+### HLA-DQA1 vs HLA-DQB1
+
+```{r}
+include_graphics("./plots/dqa_vs_dqb.png")
+```
+
+### HLA-DQA1 vs HLA-DRB1
+
+```{r}
+include_graphics("./plots/dqa_vs_drb.png")
+```
