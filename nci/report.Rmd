@@ -102,7 +102,7 @@ The coverage measure is the gene-level coverage, which is the sum of the coverag
 include_graphics('./plots/covs_measure.png')
 ```
 
-It does not make sense to compare coverage with a normalized measure of expression, such as qPCR and TPM. For example, two samples with the same coverage at a given gene may have different TPM values, because TPM normalization depends on the mRNA composition of each sample.
+It does not make sense to compare coverage with a normalized measure of expression, such as qPCR and TPM. For example, two samples with the same coverage at a given gene may have different TPM values, because TPM normalization depends on the mRNA composition of the sample.
 
 On the other hand, coverage is very well correlated with kallisto's estimated counts.
 
