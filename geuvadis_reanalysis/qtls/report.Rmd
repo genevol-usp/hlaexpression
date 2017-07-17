@@ -1,0 +1,41 @@
+---
+title: "Report"
+output: github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE, comment = "")
+```
+
+```{r pkgs, echo = FALSE}
+library(knitr)
+library(tidyverse)
+```
+
+# eQTLs
+
+*Analysis were carried out using European individuals only
+
+## PCA of genotypes
+
+```{r}
+include_graphics("./plots/genotype_pca.png")
+```
+
+## Number of eGenes according to method of phenotype correction
+
+```{r}
+include_graphics("./plots/pca_vs_peer.png")
+```
+
+## Distribution of eQTLs around the TSS
+
+```{r}
+include_graphics("./plots/qtls_landscape.png")
+```
+
+## HLA lineages
+
+```{r}
+include_graphics("./plots/lineage_and_effects.png")
+```
