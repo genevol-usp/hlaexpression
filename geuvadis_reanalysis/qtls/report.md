@@ -4,7 +4,7 @@ Report
 eQTLs
 =====
 
-\*Analysis were carried out using European individuals only
+**All analyses were carried out using European individuals only**
 
 PCA of genotypes
 ----------------
