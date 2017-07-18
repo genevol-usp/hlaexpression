@@ -68,7 +68,9 @@ RNAseq: TPM vs ACTB-normalized counts
 Coverage
 ========
 
-The coverage measure is the gene-level coverage, which is the sum of the coverage, at each position, over the 2 alleles of a locus (black line in the plot below).
+The coverage measure is the gene-level coverage, which is the sum of the coverage at each position over the 2 alleles of a locus (black line in the plot below). It was necessary to use this measure because the allele-level coverage that comes out from kallisto is not really meaningful. For example, consider the allele C\*07:02:01 (red line in the plot below). Looking at this plot, one could say that the expression estimates from the 2 HLA-C alleles are very different, but they are actually almost the same. This allele has only 2 differences from C\*07:01:01 in exons 2 and 3. Reads aligning to the rest of the gene, where the 2 alleles are identical, are attributed to C\*07:01:01 as "primary alignment", which samtools uses to calculate coverage.
+
+This behavior of kallisto is like the default behavior of STAR, i.e. from all alignments with the best score, choose one to be reported as primary. However, you can control this behavior in STAR, but not in kallisto.
 
 ![](./plots/covs_measure.png)
 
