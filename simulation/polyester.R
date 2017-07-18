@@ -4,7 +4,7 @@ library(Biostrings)
 devtools::load_all("~/hlatools")
 devtools::load_all("~/genomicRutils")
 
-index <- readDNAStringSet("../index/gencode.v26.CHR.IMGT.transcripts.fa")
+index <- readDNAStringSet("../geuvadis_reanalysis/expression/kallisto/index/gencode.v26.CHR.IMGT.transcripts.fa")
 index <- index[width(index) >= 75]
 
 ground_truth <- fread("./ground_truth_files/phenotypes.tsv")
@@ -43,10 +43,13 @@ tx <- intersect(names(index), counts_dt$target_id)
 index <- index[tx]
 
 counts_dt <- 
-  counts_dt[tx][
-  , lapply(.SD, function(x) round(x/sum(x) * 3e7)), .SDcols = chosen_samples]
+  counts_dt[tx
+	  ][, (chosen_samples) := lapply(.SD, function(x) round(x/sum(x) * 3e7)), .SDcols = chosen_samples]
 
-counts_matrix <- as.matrix(counts_dt)
+fwrite(counts_dt, "./ground_truth_files/phenotypes_adjusted_30Mread.tsv", 
+       quote = FALSE, sep = "\t")
+
+counts_matrix <- as.matrix(counts_dt[, -1])
 
 writeXStringSet(index, "./ground_truth_files/polyester_index.fa")
   
