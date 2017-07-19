@@ -107,14 +107,17 @@ gencode12 <-
   filter(gene_name %in% paste0("HLA-", c("A", "B", "C", "DQA1", "DQB1", "DRB1"))) %>%
   select(locus = gene_name, Gene_Symbol = gene_id)
 
+geuvadis_samples <- geuvadis_info %>%
+  filter(kgp_phase3 == 1L) %>%
+  pull(assay_name)
+
 geuvadis <- 
-  "~/hlaexpression/geuvadis_reanalysis/data/GD462.GeneQuantRPKM.50FN.samplename.resk10.txt.gz" %>%
+  "http://www.ebi.ac.uk/arrayexpress/files/E-GEUV-1/GD660.GeneQuantRPKM.txt.gz" %>%
   read_tsv() %>%
   inner_join(gencode12, by = "Gene_Symbol") %>%
-  select(locus, HG00096:NA20828) %>%
+  select(locus, geuvadis_samples) %>%
+  setNames(sub("^([^.]+)\\..+$", "\\1", names(.))) %>%
   gather(subject, fpkm, HG00096:NA20828) %>%
-  filter(subject %in% geuvadis_ids$name) %>%
-  select(subject, locus, fpkm) %>%
   arrange(subject, locus)
 
 kallisto_fpkms <- 
