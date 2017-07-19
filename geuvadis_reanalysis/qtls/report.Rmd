@@ -44,7 +44,8 @@ include_graphics("./plots/lineage_and_effects.png")
 
 ## Geuvadis
 
-Some of our eQTLs seem to mark the same biological signal as the eQTLs found by Geuvadis (RTC > 0.9)
+Some of our eQTLs seem to mark the same biological signal as the eQTLs found by
+Geuvadis (RTC > 0.9)
 
 ```{r}
 read_tsv("./rtc/geuvadis_eqtls/results.tsv") %>% kable()
@@ -55,6 +56,15 @@ read_tsv("./rtc/geuvadis_eqtls/results.tsv") %>% kable()
 ```{r}
 read_tsv("./rtc/gwas/results.tsv") %>%
   select(gene, rank, variant, gwas_variant, rtc, trait, studies = link) %>%
+  kable()
+```
+
+## Trans-eQTLs
+
+- Approximate pass as described on QTLtools website
+
+```{r}
+read_tsv("./trans/trans_results.tsv") %>%
   kable()
 ```
 

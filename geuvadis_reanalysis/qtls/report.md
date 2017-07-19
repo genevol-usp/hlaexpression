@@ -88,3 +88,15 @@ Association with GWAS traits
 | HLA-DRB1 |     0| rs9270698   | rs9271192     |  0.992| Alzheimers disease                              | www.ncbi.nlm.nih.gov/pubmed/24162737                                                                                                                                                                                          |
 | HLA-DRB1 |     1| rs1048372   | rs9271348     |  1.000| rheumatoid arthritis                            | www.ncbi.nlm.nih.gov/pubmed/24532677                                                                                                                                                                                          |
 | HLA-DRB1 |     2| rs145607970 | rs35597309    |  0.998| esophageal squamous cell carcinoma              | www.ncbi.nlm.nih.gov/pubmed/25129146                                                                                                                                                                                          |
+
+Trans-eQTLs
+-----------
+
+-   Approximate pass as described on QTLtools website
+
+| gene\_name | variant\_id |  variant\_chr|  variant\_pos|  log10\_nom\_pval|
+|:-----------|:------------|-------------:|-------------:|-----------------:|
+| HLA-DQA1   | rs532173125 |             2|     178431654|          24.33378|
+| HLA-DQA1   | rs145339215 |             2|     178431521|          23.98334|
+| HLA-DQA1   | rs3997878   |             2|     178431899|          22.15065|
+| HLA-DQA1   | rs141354030 |             2|     178451007|          14.99886|
