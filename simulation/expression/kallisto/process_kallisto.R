@@ -51,7 +51,7 @@ if (quant_round == 1 | quant_round == 2) {
   if (quant_round == 1) {
      
     true_genos <- 
-      fread("./ground_truth_files/genos.tsv")[, locus := sub("HLA-", "", locus)]
+      fread("../../data/genos.tsv")[, locus := sub("HLA-", "", locus)]
  
     thresholds <- as.list(seq(0, .25, .05))
     names(thresholds) <- seq(0, .25, .05)

@@ -2,13 +2,12 @@ library(data.table)
 library(Biostrings)
 devtools::load_all("~/genomicRutils")
 
-### BED
-
 geuvadis_dt <- 
   setDT(geuvadis_info)[kgp_phase3 == 1, .(sample_id = name, subject = ena_id)]
 
 abundance_files <- 
-  file.path("../quantifications_2", geuvadis_dt$subject, "abundance.tsv")
+  file.path("../../geuvadis_reanalysis/expression/kallisto/quantifications_2", 
+	    geuvadis_dt$subject, "abundance.tsv")
 names(abundance_files) <- geuvadis_dt$subject
 
 abundances <- 
@@ -27,5 +26,4 @@ samples <- names(abundances_wide)[-1]
 abundances_wide[, (samples) := lapply(.SD, function(x) round(ifelse(is.na(x), 0, x))),
 		.SDcols = samples]
 
-fwrite(abundances_wide, "./ground_truth_files/phenotypes.tsv", 
-       sep = "\t", quote = FALSE)
+fwrite(abundances_wide, "./phenotypes.tsv", sep = "\t", quote = FALSE)

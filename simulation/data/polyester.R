@@ -4,10 +4,10 @@ library(Biostrings)
 devtools::load_all("~/hlatools")
 devtools::load_all("~/genomicRutils")
 
-index <- readDNAStringSet("../geuvadis_reanalysis/expression/kallisto/index/gencode.v26.CHR.IMGT.transcripts.fa")
+index <- readDNAStringSet("../../geuvadis_reanalysis/expression/kallisto/index/gencode.v26.CHR.IMGT.transcripts.fa")
 index <- index[width(index) >= 75]
 
-ground_truth <- fread("./ground_truth_files/phenotypes.tsv")
+ground_truth <- fread("./phenotypes.tsv")
 
 set.seed(2)
 all_samples <- names(ground_truth)[-1]
@@ -16,7 +16,7 @@ chosen_samples <- sort(sample(all_samples, 50))
 samples_dt <- data.table(subject = chosen_samples,
 			 code = sprintf("sample_%02d", 1:50))
 
-writeLines(chosen_samples, "./ground_truth_files/samples.txt")
+writeLines(chosen_samples, "./samples.txt")
 
 counts_dt <- ground_truth[, c("target_id", (chosen_samples)), with = FALSE]
 setkey(counts_dt, target_id)
@@ -36,7 +36,7 @@ genos <-
 		  ][samples_dt, on = .(subject)
 		  ][, .(subject = code, locus, allele)]
 
-fwrite(genos, "./ground_truth_files/genos.tsv", sep = "\t", quote = FALSE)
+fwrite(genos, "./genos.tsv", sep = "\t", quote = FALSE)
 
 tx <- intersect(names(index), counts_dt$target_id)
 
@@ -46,14 +46,14 @@ counts_dt <-
   counts_dt[tx
 	  ][, (chosen_samples) := lapply(.SD, function(x) round(x/sum(x) * 3e7)), .SDcols = chosen_samples]
 
-fwrite(counts_dt, "./ground_truth_files/phenotypes_adjusted_30Mread.tsv", 
+fwrite(counts_dt, "./phenotypes_adjusted_30Mread.tsv", 
        quote = FALSE, sep = "\t")
 
 counts_matrix <- as.matrix(counts_dt[, -1])
 
-writeXStringSet(index, "./ground_truth_files/polyester_index.fa")
+writeXStringSet(index, "./polyester_index.fa")
   
-simulate_experiment_countmat(fasta = "./ground_truth_files/polyester_index.fa", 
+simulate_experiment_countmat(fasta = "./polyester_index.fa", 
 			     readmat = counts_matrix,
 			     readlen = 75, 
 			     outdir = "./fastq")

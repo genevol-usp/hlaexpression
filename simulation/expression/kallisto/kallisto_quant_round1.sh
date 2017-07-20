@@ -3,10 +3,10 @@
 kallisto=/home/vitor/kallisto_linux-v0.43.1/kallisto
 
 sample=$1
-fastqR1=./fastq/$sample\_1.fq.gz
-fastqR2=./fastq/$sample\_2.fq.gz
+fastqR1=../../data/fastq/$sample\_1.fq.gz
+fastqR2=../../data/fastq/$sample\_2.fq.gz
 
-index=../index/gencode.v26.CHR.IMGT.transcripts.idx
+index=../../../geuvadis_reanalysis/expression/kallisto/index/gencode.v26.CHR.IMGT.transcripts.idx
 
 outdir=./quantifications_1
 log=$outdir/log/$sample.log
