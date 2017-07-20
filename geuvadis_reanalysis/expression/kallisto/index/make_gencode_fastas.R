@@ -1,4 +1,4 @@
-devtools::load_all("/home/vitor/genomicRutils")
+devtools::load_all("/home/vitor/hlaseqlib")
 
 imgt <- Biostrings::readDNAStringSet("imgt_index.fa") 
 

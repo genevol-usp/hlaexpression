@@ -16,12 +16,11 @@ make_index <- function(loci, infer_missing = TRUE) {
       filter(!all(grepl("\\*", cds))) %>%
       ungroup() %>%
       split(.$locus) %>%
-      map_df(~hla_infer(., cores = 24)) %>%
+      map_df(~hla_infer(., cores = 36)) %>%
       select(-locus)
   } else {
     alignments <-
-      nuc_paths %>%
-      map_df(~hla_read_alignment(., omit = "N", rm_incomplete = TRUE))
+      map_df(nuc_paths, ~hla_read_alignment(., omit = "N", rm_incomplete = TRUE))
   }
 
   alignments %>%
@@ -37,7 +36,6 @@ make_index <- function(loci, infer_missing = TRUE) {
   select(allele, cds) %>%
   arrange(allele)
 }
-
 # ------------------------------------------------------------------------------
 
 main_loci <- c("A", "B", "C", "DQA1", "DQB1", "DRB")

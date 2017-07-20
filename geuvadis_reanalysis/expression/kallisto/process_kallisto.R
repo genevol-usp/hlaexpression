@@ -1,6 +1,5 @@
 library(data.table)
-devtools::load_all("~/hlatools")
-devtools::load_all("/home/vitor/genomicRutils/")
+devtools::load_all("~/hlaseqlib")
 
 process_quant_imgt <- function(quant_files) {
 
@@ -63,7 +62,7 @@ if (quant_round == 1 | quant_round == 2) {
     genos_dt <- typings_dt[locus %in% c("A", "B", "C", "DQB1", "DRB1"), 
 			   .(th, subject, locus, allele)]
     genos_dt[, `:=`(subject = convert_ena_ids(subject),
-		    allele = hla_trimnames(gsub("IMGT_|_s\\d", "", allele), 3))]
+		    allele = hla_trimnames(gsub("IMGT_", "", allele), 3))]
 
     pag3f <- setDT(pag)[, allele := hla_trimnames(allele)]
 
