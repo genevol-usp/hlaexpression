@@ -1,4 +1,4 @@
-devtools::load_all("~/genomicRutils")
+devtools::load_all("~/hlaseqlib")
 library(data.table)
 
 setDTthreads(36)
