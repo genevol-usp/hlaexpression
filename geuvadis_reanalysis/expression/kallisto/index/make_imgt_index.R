@@ -1,7 +1,5 @@
-devtools::load_all("/home/vitor/hlatools")
-library(tidyrverse)
-
-doMC::registerDoMC(40)
+devtools::load_all("/home/vitor/hlaseqlib")
+library(tidyverse)
 
 # Functions --------------------------------------------------------------------
 
@@ -18,7 +16,7 @@ make_index <- function(loci, infer_missing = TRUE) {
       filter(!all(grepl("\\*", cds))) %>%
       ungroup() %>%
       split(.$locus) %>%
-      map_df(~hla_infer(., .parallel = TRUE)) %>%
+      map_df(~hla_infer(., cores = 24)) %>%
       select(-locus)
   } else {
     alignments <-
@@ -27,8 +25,7 @@ make_index <- function(loci, infer_missing = TRUE) {
   }
 
   alignments %>%
-  mutate(allele3f = ifelse(grepl("_s\\d+$", allele), allele, 
-         		  hla_trimnames(allele, 3)),
+  mutate(allele3f = hla_trimnames(allele, 3),
          cds = hla_format_sequence(cds)) %>%
   group_by(cds) %>%
   summarize(allele = paste(allele, collapse = "/"), 
