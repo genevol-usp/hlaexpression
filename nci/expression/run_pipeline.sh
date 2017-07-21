@@ -1,6 +1,6 @@
 #!/bin/bash
 
-JOBS=60
+JOBS=48
 parallel=/home/vitor/parallel
 
 write_custom_index=../../geuvadis_reanalysis/expression/kallisto/index/write_genotyped_alleles.R
