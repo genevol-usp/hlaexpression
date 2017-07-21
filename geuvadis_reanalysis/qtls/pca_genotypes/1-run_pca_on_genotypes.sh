@@ -1,6 +1,6 @@
 #!/bin/bash
 
-QTLtools=/home/vitor/QTLtools/QTLtools
+QTLtools=/home/vitor/QTLtools/QTLtools_1.1_Ubuntu16.04_x86_64
 
 VCF=./genotypes/eur_maf05.vcf.gz
 OUT=./pca/eur

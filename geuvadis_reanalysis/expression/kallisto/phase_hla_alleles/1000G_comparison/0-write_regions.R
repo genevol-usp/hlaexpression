@@ -1,4 +1,4 @@
-devtools::load_all("~/genomicRutils")
+devtools::load_all("/home/vitor/hlaseqlib")
 library(tidyverse)
 
 bed <-

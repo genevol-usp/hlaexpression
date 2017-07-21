@@ -1,5 +1,4 @@
-devtools::load_all("/home/vitor/genomicRutils")
-devtools::load_all("/home/vitor/hlatools")
+devtools::load_all("/home/vitor/hlaseqlib")
 library(tidyverse)
 library(cowplot)
 library(ggpmisc)

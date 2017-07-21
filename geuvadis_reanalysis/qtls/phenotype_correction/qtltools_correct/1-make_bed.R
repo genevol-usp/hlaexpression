@@ -1,5 +1,5 @@
 library(data.table)
-devtools::load_all("/home/vitor/genomicRutils")
+devtools::load_all("/home/vitor/hlaseqlib")
 
 samples <- setDT(geuvadis_info)[pop != "YRI" & kgp_phase3 == 1, name]
 

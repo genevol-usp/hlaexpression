@@ -1,4 +1,4 @@
-devtools::load_all("~/genomicRutils")
+devtools::load_all("~/hlaseqlib")
 library(tidyverse)
 
 gencode_hla <- gencode_chr_gene %>%

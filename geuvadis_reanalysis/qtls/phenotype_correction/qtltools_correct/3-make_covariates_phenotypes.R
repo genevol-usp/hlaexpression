@@ -1,5 +1,5 @@
 library(data.table)
-devtools::load_all("/home/vitor/genomicRutils")
+devtools::load_all("/home/vitor/hlaseqlib")
 
 known_covs <- 
   setDT(geuvadis_info

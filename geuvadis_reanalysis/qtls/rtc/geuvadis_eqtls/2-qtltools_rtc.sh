@@ -1,11 +1,11 @@
 #!/bin/bash
 
-QTLtools=/home/vitor/QTLtools/QTLtools
+QTLtools=/home/vitor/QTLtools/QTLtools_1.1_Ubuntu16.04_x86_64
 
 VCF=../../../genotypes/eur_maf05.vcf.gz
 SAMPLES=../../../genotypes/samples.eur
 BED=../../../phenotypes/phenotypes_eur_60.bed.gz
-COV=../../../covariates_genos.txt
+COV=../../pca_genotypes/covariates_genos.txt
 HOTSPOTS=../hotspots_hg38_fixed_distances.bed
 CATALOG=./catalog.tsv
 COND=../../../permutations/conditional_60_all.txt.gz

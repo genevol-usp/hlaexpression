@@ -1,6 +1,6 @@
 #!/bin/bash
 
-QTLtools=/home/vitor/QTLtools/QTLtools
+QTLtools=/home/vitor/QTLtools/QTLtools_1.1_Ubuntu16.04_x86_64
 parallel=/home/vitor/parallel
 
 N_PCS=60

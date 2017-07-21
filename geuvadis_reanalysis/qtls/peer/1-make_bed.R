@@ -1,4 +1,4 @@
-devtools::load_all("/home/vitor/genomicRutils")
+devtools::load_all("/home/vitor/hlaseqlib")
 library(tidyverse)
 
 write_bed <- function(peer_out) { 

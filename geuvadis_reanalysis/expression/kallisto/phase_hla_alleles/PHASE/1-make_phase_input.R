@@ -1,5 +1,4 @@
-devtools::load_all("~/genomicRutils/")
-devtools::load_all("~/hlatools")
+devtools::load_all("/home/vitor/hlaseqlib")
 library(tidyverse)
 
 genotypes <- 

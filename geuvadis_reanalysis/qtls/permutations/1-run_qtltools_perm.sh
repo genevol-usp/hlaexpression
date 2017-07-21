@@ -1,7 +1,7 @@
 #!/bin/bash
 
 QTLtools_dir=/home/vitor/QTLtools
-QTLtools=$QTLtools_dir/QTLtools
+QTLtools=$QTLtools_dir/QTLtools_1.1_Ubuntu16.04_x86_64
 parallel=/home/vitor/parallel
 
 JOBS=60

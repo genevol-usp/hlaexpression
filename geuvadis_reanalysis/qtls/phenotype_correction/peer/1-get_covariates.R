@@ -1,4 +1,4 @@
-devtools::load_all("/home/vitor/genomicRutils")
+devtools::load_all("/home/vitor/hlaseqlib")
 library(tidyverse)
 
 samples <- geuvadis_info %>%
@@ -38,4 +38,4 @@ covs <-
   select(-lab, -pop) %>%
   rename(subject = name)
 
-write_csv(covs, "covs.csv")
+write_csv(covs, "./covs.csv")
