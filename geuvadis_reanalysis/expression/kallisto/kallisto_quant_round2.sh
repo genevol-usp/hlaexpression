@@ -19,7 +19,7 @@ cat $gencode $sample_hla > $sample_fa
 
 $kallisto index -i $sample_idx $sample_fa &> $outdir/log/$sample.index.log
 
-$kallisto quant -i $sample_idx -t 8 -o $sampledir --bias $fastqR1 $fastqR2\
+$kallisto quant -i $sample_idx -t 1 -o $sampledir --bias $fastqR1 $fastqR2\
   2> $outdir/log/$sample.quant.log
 
 rm $sample_fa $sample_idx

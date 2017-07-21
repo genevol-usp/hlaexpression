@@ -26,4 +26,7 @@ geuvadis_reanalysis/expression/kallisto/quantifications_*
 geuvadis_reanalysis/qtls/rtc/unmapped_to_hg38
 nci/expression/alignments/
 nci/expression/quantifications_*
-simulation/quantifications_*
+simulation/expression/kallisto/quantifications_*
+simulation/expression/star/quantifications_*
+simulation/expression/star/index
+simulation/expression/star/Log*

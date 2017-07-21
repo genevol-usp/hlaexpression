@@ -14,7 +14,7 @@ catalog <-
   read_tsv("./gwas_catalog_filtered.txt", col_names = c("variant", "trait"))
 
 qtls <-
-  read_qtltools("../../permutations/conditional_60_all.txt.gz") %>%
+  read_qtltools("../../conditional_analysis/conditional_60_all.txt.gz") %>%
   filter(bwd_best == 1) %>%
   inner_join(gencode_hla, by = c("phen_id" = "gene_id")) %>%
   select(gene = gene_name, variant = var_id, rank)
@@ -44,7 +44,7 @@ qtls_rtc <-
   left_join(whole_catalog, by = c("gwas_variant" = "SNP_ID_CURRENT")) %>% 
   group_by(gene, variant, rank, gwas_variant, distance_variants, 
            distance_gwas_gene, rtc, trait) %>%
-  summarise(link = paste(unique(LINK), collapse = "/")) %>%
+  summarise(link = paste(unique(LINK), collapse = " ")) %>%
   ungroup() %>%
   arrange(gene, rank)
 

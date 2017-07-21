@@ -1,5 +1,5 @@
 library(data.table)
-devtools::load_all("~/genomicRutils")
+devtools::load_all("~/hlaseqlib")
 
 readDT <- function(i) {
   x <- fread(i, select = c(1, 4, 5))

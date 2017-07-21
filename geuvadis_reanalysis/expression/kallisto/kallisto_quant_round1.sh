@@ -12,4 +12,4 @@ index=./index/gencode.v26.CHR.IMGT.transcripts.idx
 outdir=./quantifications_1
 log=$outdir/log/$sample.quant.log
 
-$kallisto quant -i $index -t 8 -o $outdir/$sample $fastqR1 $fastqR2 &> $log
+$kallisto quant -i $index -t 1 -o $outdir/$sample $fastqR1 $fastqR2 &> $log

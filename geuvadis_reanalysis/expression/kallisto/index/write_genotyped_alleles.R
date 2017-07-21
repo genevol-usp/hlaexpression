@@ -4,7 +4,7 @@ library(tidyverse)
 processed_quants <- commandArgs(TRUE)[1]
 outdir <- commandArgs(TRUE)[2]
 
-index <- readDNAStringSet("/home/vitor/rnaseq/kallisto/index/imgt_index.fa")
+index <- readDNAStringSet("/home/vitor/hlaexpression/geuvadis_reanalysis/expression/kallisto/index/imgt_index.fa")
 
 genos <- 
   read_tsv(processed_quants) %>%
