@@ -1,6 +1,6 @@
 library(data.table)
 library(Biostrings)
-devtools::load_all("~/genomicRutils")
+devtools::load_all("~/hlaseqlib")
 
 geuvadis_dt <- 
   setDT(geuvadis_info)[kgp_phase3 == 1, .(sample_id = name, subject = ena_id)]

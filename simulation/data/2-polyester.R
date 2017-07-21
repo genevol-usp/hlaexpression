@@ -1,8 +1,7 @@
 library(data.table)
 library(polyester)
 library(Biostrings)
-devtools::load_all("~/hlatools")
-devtools::load_all("~/genomicRutils")
+devtools::load_all("~/hlaseqlib")
 
 index <- readDNAStringSet("../../geuvadis_reanalysis/expression/kallisto/index/gencode.v26.CHR.IMGT.transcripts.fa")
 index <- index[width(index) >= 75]
@@ -26,7 +25,7 @@ genos <-
        id = 1, measure = 2:ncol(counts_dt), variable = "subject"
       )[value > 0
       ][, locus := imgt_to_gname(target_id)
-      ][, allele := hla_trimnames(gsub("IMGT_|_s\\d", "", target_id), 3)
+      ][, allele := hla_trimnames(gsub("IMGT_", "", target_id), 3)
       ][, .(subject, locus, allele)]
 
 hom <- copy(genos)[, n := .N, by = .(subject, locus)][n == 1][, n := NULL]
