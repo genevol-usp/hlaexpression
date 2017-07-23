@@ -1,6 +1,5 @@
 library(data.table)
-devtools::load_all("~/hlatools")
-devtools::load_all("/home/vitor/genomicRutils/")
+devtools::load_all("~/hlaseqlib")
 
 process_quant_imgt <- function(quant_files) {
 

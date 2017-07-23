@@ -1,13 +1,13 @@
 library(tidyverse)
 
-allele_dist <- read_tsv("../distances_to_reference.tsv")
+allele_dist <- read_tsv("./data/distances_to_reference.tsv") %>%
+  mutate(locus = sub("^HLA-", "", locus))
 
-samples <- tibble(subject = readLines("./ground_truth_files/samples.txt"),
+samples <- tibble(subject = readLines("./data/samples.txt"),
 		  code = sprintf("sample_%02d", 1:50))
 
 ground_truth <- 
-  read_tsv("./ground_truth_files/phenotypes.tsv") %>%
-  mutate_at(vars(-target_id), function(x) round(x/sum(x) * 3e7)) %>% 
+  read_tsv("./data/phenotypes_adjusted_30Mread.tsv") %>%
   filter(grepl("IMGT_(A|B|C|DQA1|DQB1|DRB1)", target_id)) %>%
   gather(subject, true_counts, -target_id) %>%
   inner_join(samples, by = "subject") %>%
@@ -17,7 +17,7 @@ ground_truth <-
   summarize(true_counts = sum(true_counts))
 
 quants_imgt <- 
-  read_tsv("./quantifications_2/processed_quant.tsv") %>%
+  read_tsv("./expression/kallisto/quantifications_2/processed_quant.tsv") %>%
   filter(locus %in% c("A", "B", "C", "DQA1", "DQB1", "DRB1")) %>%
   mutate(allele = sub("IMGT_", "", allele)) %>%
   left_join(allele_dist, by = c("locus", "allele")) %>%
@@ -25,12 +25,12 @@ quants_imgt <-
   summarize(est_counts = sum(est_counts), dist = mean(dist))
 
 quants_chr <- 
-  read_tsv("./quantifications_CHR/processed_quant.tsv") %>%
+  read_tsv("./expression/kallisto/quantifications_CHR/processed_quant.tsv") %>%
   group_by(subject, locus) %>%
   summarize(est_counts = sum(est_counts))
 
 quants_all <- 
-  read_tsv("./quantifications_ALL/processed_quant.tsv") %>%
+  read_tsv("./expression/kallisto/quantifications_ALL/processed_quant.tsv") %>%
   group_by(subject, locus) %>%
   summarize(est_counts = sum(est_counts))
 
