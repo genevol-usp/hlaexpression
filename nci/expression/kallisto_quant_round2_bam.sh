@@ -27,7 +27,7 @@ imgtmapped=$sampledir/imgt_mapped.bam
 imgtsorted=$sampledir/imgt_mapped_sorted.bam
 bed=./imgt.bed
 header=./$sampledir/header.sam
-cov=./alignments/$sample/imgt.coverage
+cov=$sampledir/imgt.coverage
 
 cat $gencode $hla > $index_fa
 

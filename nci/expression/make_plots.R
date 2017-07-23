@@ -1,5 +1,4 @@
-devtools::load_all("~/genomicRutils")
-devtools::load_all("~/hlatools")
+devtools::load_all("~/hlaseqlib")
 library(tidyverse)
 
 # Functions
@@ -112,14 +111,14 @@ rnaseq_hk <- read_tsv("./quantifications_2/housekeeping_norm_expression.tsv") %>
             est_counts_B2Mnorm = sum(est_counts_B2Mnorm),
             est_counts_GAPDHnorm = sum(est_counts_GAPDHnorm))
 
-cov_files <- file.path("./alignments", samples, "imgt.coverage")
+cov_files <- file.path("./quantifications_2", samples, "imgt.coverage")
 names(cov_files) <- samples
 
 covs_df <- 
   plyr::ldply(cov_files, 
               . %>% read_tsv(col_names = c("allele", "pos", "cov")) %>%
                 filter(grepl("IMGT_(A|B|C)", allele)),
-              .id = "subject", .parallel = TRUE) %>% as_tibble() %>%
+              .id = "subject") %>% as_tibble() %>%
   mutate(allele = sub("IMGT_", "", allele),
          locus = sub("^([^*]+).+$", "HLA-\\1", allele)) %>%
   select(subject, locus, allele, pos, cov)

@@ -25,7 +25,7 @@ We first quantfied our ability to correctly genotype individuals based on the RN
 
 | locus |  concordance|
 |:------|------------:|
-| HLA-A |         0.97|
+| HLA-A |         0.96|
 | HLA-B |         0.96|
 | HLA-C |         0.97|
 
