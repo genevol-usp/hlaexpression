@@ -24,6 +24,6 @@ write_bed <- function(peer_out) {
   system(paste("bgzip", bed_out, "&& tabix -p bed", bed_out_gz))
 }
 
-peer_files <- list.files("../../peer", pattern = "\\.rds$", full.names = TRUE)
+peer_files <- list.files("../phenotype_correction/peer", pattern = "\\.rds$", full.names = TRUE)
 
 parallel::mclapply(peer_files, write_bed, mc.cores = length(peer_files))
