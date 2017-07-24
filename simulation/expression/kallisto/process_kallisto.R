@@ -64,7 +64,7 @@ if (quant_round == 1 | quant_round == 2) {
 
     genos_dt <- typings_dt[locus %in% c("A", "B", "C", "DQA1", "DQB1", "DRB1"), 
 			   .(th, subject, locus, allele)]
-    genos_dt[, allele := hla_trimnames(gsub("IMGT_|_s\\d", "", allele), 3)]
+    genos_dt[, allele := hla_trimnames(gsub("IMGT_", "", allele), 3)]
 
     accuracies_list <- 
       parallel::mclapply(split(genos_dt, genos_dt$th),

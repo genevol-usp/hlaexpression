@@ -1,5 +1,5 @@
 library(data.table)
-devtools::load_all("~/genomicRutils")
+devtools::load_all("/home/vitor/hlaseqlib")
 
 samples <- geuvadis_info$ena_id[geuvadis_info$kgp_phase3 == 1]
 
