@@ -15,7 +15,7 @@ sample_fa=./sample_indices/index_$sample.fa
 cat $fasta $sample_hla > $sample_fa
 
 $STAR --runThreadN 6 --runMode genomeGenerate --genomeDir $indexDIR\
-  --genomeFastaFiles $sample_fa --genomeChrNbits 11 --genomeSAindexNbases 13
+  --genomeFastaFiles $sample_fa --genomeChrBinNbits 11 --genomeSAindexNbases 13
 
 fq1=../../data/fastq/$sample\_1.fq.gz
 fq2=../../data/fastq/$sample\_2.fq.gz
