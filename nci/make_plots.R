@@ -1,5 +1,6 @@
-devtools::load_all("~/hlaseqlib")
+devtools::load_all("/home/vitor/hlaseqlib")
 library(tidyverse)
+library(ggplot2)
 
 # Functions
 readLOG <- function(log) {
@@ -27,12 +28,12 @@ plot_lineages <- function(data) {
 }
 
 # Data
-samples <- readLines("./nci_samples.txt")
+samples <- readLines("./expression/nci_samples.txt")
 
-library_df <- read_tsv("./library_sizes.tsv") %>%
+library_df <- read_tsv("./expression/library_sizes.tsv") %>%
   rename(total = libsize)
 
-log_files <- file.path("./quantifications_2/log", paste0(samples, ".log"))
+log_files <- file.path("./expression/quantifications_2/log", paste0(samples, ".log"))
 names(log_files) <- samples
 
 aligned <- map_df(log_files, readLOG) %>%
@@ -42,7 +43,7 @@ aligned_df <- inner_join(library_df, aligned, by = "subject") %>%
   gather(reads, value, -subject) %>%
   arrange(subject, reads)
 
-nci_allele <- read_tsv("../data/nci_expression.tsv")
+nci_allele <- read_tsv("./data/nci_expression.tsv")
 
 nci_gene <- distinct(nci_allele, subject, locus, mRNA, c_surface) %>%
   filter(subject %in% samples)
@@ -58,7 +59,7 @@ nci_lineage <- nci_allele %>%
   ungroup() %>%
   mutate(fit = lm(expression ~ lineage - 1)$fitted.values)
       
-rnaseq_allele <- read_tsv("./quantifications_2/processed_quant.tsv") %>%
+rnaseq_allele <- read_tsv("./expression/quantifications_2/processed_quant.tsv") %>%
   filter(locus %in% c("HLA-A", "HLA-B", "HLA-C")) %>%
   mutate(allele = hla_trimnames(gsub("IMGT_|_s\\d", "", allele), 3)) %>%
   select(subject, locus, allele, tpm)
@@ -104,14 +105,24 @@ corr_c <- hlac_df %>%
   mutate(label1 = paste("italic(r) ==", cor),
          label2 = paste("italic(r[adj]^{2}) == ", rsq))
 
-rnaseq_hk <- read_tsv("./quantifications_2/housekeeping_norm_expression.tsv") %>%
+rnaseq_hk <- read_tsv("./expression/quantifications_2/housekeeping_norm_expression.tsv") %>%
   group_by(subject, locus) %>%
   summarize(tpm = sum(tpm), 
             est_counts_ACTBnorm = sum(est_counts_ACTBnorm),
             est_counts_B2Mnorm = sum(est_counts_B2Mnorm),
             est_counts_GAPDHnorm = sum(est_counts_GAPDHnorm))
 
-cov_files <- file.path("./quantifications_2", samples, "imgt.coverage")
+#allele_df <- 
+#  read_tsv("./expression/allele_calls.tsv") %>%
+#  select(-concordant) %>%
+#  left_join(nci_allele, by = c("subject", "locus", "allele_nci" = "allele")) %>%
+#  distinct() %>%
+#  select(subject, locus, hap, allele_rnaseq, allele_nci, mRNA) %>%
+#  left_join(rnaseq_allele, by = c("subject", "locus", "allele_rnaseq" = "allele")) %>%
+#  distinct() %>%
+#  mutate(lineage = hla_trimnames(allele_rnaseq, 1))
+
+cov_files <- file.path("./expression/quantifications_2", samples, "imgt.coverage")
 names(cov_files) <- samples
 
 covs_df <- 
@@ -149,7 +160,7 @@ covs_gene_100to300 <-
 qpcr <- select(nci_gene, subject, locus, qPCR = mRNA)
 
 kallisto <- 
-  read_tsv("./quantifications_2/processed_quant.tsv") %>%
+  read_tsv("./expression/quantifications_2/processed_quant.tsv") %>%
   filter(locus %in% c("HLA-A", "HLA-B", "HLA-C")) %>%
   group_by(subject, locus) %>%
   summarize(RNAseq_counts = sum(est_counts), RNAseq_TPM = sum(tpm)) %>%
@@ -161,9 +172,8 @@ cov_expression_df <-
   gather(method, value, RNAseq_counts, RNAseq_TPM, qPCR) %>%
   mutate(method = factor(method, levels = c("qPCR", "RNAseq_TPM", "RNAseq_counts")))
 
-
 # plots
-png("../plots/library_sizes.png", width = 12, height = 5, units = "in", res = 300)
+png("./plots/library_sizes.png", width = 12, height = 5, units = "in", res = 300)
 ggplot(aligned_df) +
   geom_point(aes(x = reorder(subject, value, FUN = "max"), y = value,
                 color = reads), size = 1) +
@@ -179,7 +189,7 @@ ggplot(aligned_df) +
   guides(colour = guide_legend(override.aes = list(size = 3)))
 dev.off()
 
-png("../plots/seq_vs_pcr.png", width=12, height=4, units="in", res=300)
+png("./plots/seq_vs_pcr.png", width=12, height=4, units="in", res=300)
 ggplot(gene_df, aes(mRNA, tpm)) +
   geom_point(size = 2) +
   geom_smooth(method = lm, se = FALSE) +
@@ -196,7 +206,22 @@ ggplot(gene_df, aes(mRNA, tpm)) +
   labs(x = "qPCR", y = "RNAseq (TPM)")
 dev.off()
 
-png("../plots/ab_vs_rna.png", width=10, height=4, units="in", res=300)
+#png("./plots/seq_vs_pcr_allele.png", width=12, height=4, units="in", res=300)
+#allele_df %>%
+#  filter(locus == 'HLA-A') %>%
+#  ggplot(aes(mRNA, tpm)) +
+#  geom_point(aes(color = lineage), size = 2) +
+#  geom_smooth(method = lm, se = FALSE) +
+#  facet_wrap(~locus, scales = "free") +
+#  theme_bw() +
+#  theme(axis.title = element_text(size = 16),
+#        axis.text = element_text(size = 14),
+#        legend.text = element_text(size = 14),
+#        strip.text = element_text(face = "bold", size = 16)) +
+#  labs(x = "qPCR", y = "RNAseq (TPM)")
+#dev.off()
+
+png("./plots/ab_vs_rna.png", width=10, height=4, units="in", res=300)
 ggplot(hlac_df, aes(expression, c_surface)) +
   geom_point(size = 2) +
   geom_smooth(method = lm, se = FALSE) +
@@ -213,15 +238,15 @@ ggplot(hlac_df, aes(expression, c_surface)) +
         strip.text = element_text(face = "bold", size = 16))
 dev.off()
 
-png("../plots/rnaseq_lineages.png", width=12, height=6, units="in", res=300)
+png("./plots/rnaseq_lineages.png", width=12, height=6, units="in", res=300)
 plot_lineages(rnaseq_lineage) + labs(y = "TPM")
 dev.off()
 
-png("../plots/nci_lineages.png", width=12, height=6, units="in", res=300)
+png("./plots/nci_lineages.png", width=12, height=6, units="in", res=300)
 plot_lineages(nci_lineage) + labs(y = "mRNA (qPCR)")
 dev.off()
 
-png("../plots/tpm_vs_B2MnormCounts.png", width = 12, height = 6, units = "in", res = 300)
+png("./plots/tpm_vs_B2MnormCounts.png", width = 12, height = 6, units = "in", res = 300)
 ggplot(rnaseq_hk, aes(tpm, est_counts_B2Mnorm)) +
   geom_point(size = 2, alpha = .5) +
   geom_smooth(method = lm, se = FALSE) +
@@ -236,7 +261,7 @@ ggplot(rnaseq_hk, aes(tpm, est_counts_B2Mnorm)) +
                         label.x.npc = .3, label.y.npc = .7) 
 dev.off()
 
-png("../plots/tpm_vs_ACTBnormCounts.png", width = 12, height = 6, units = "in", res = 300)
+png("./plots/tpm_vs_ACTBnormCounts.png", width = 12, height = 6, units = "in", res = 300)
 ggplot(rnaseq_hk, aes(tpm, est_counts_ACTBnorm)) +
   geom_point(size = 2, alpha = .5) +
   geom_smooth(method = lm, se = FALSE) +
@@ -251,7 +276,7 @@ ggplot(rnaseq_hk, aes(tpm, est_counts_ACTBnorm)) +
                         label.x.npc = .7, label.y.npc = .05) 
 dev.off()
 
-png("../plots/tpm_vs_GAPDHnormCounts.png", width = 12, height = 6, units = "in", res = 300)
+png("./plots/tpm_vs_GAPDHnormCounts.png", width = 12, height = 6, units = "in", res = 300)
 ggplot(rnaseq_hk, aes(tpm, est_counts_GAPDHnorm)) +
   geom_point(size = 2, alpha = .5) +
   geom_smooth(method = lm, se = FALSE) +
@@ -266,7 +291,7 @@ ggplot(rnaseq_hk, aes(tpm, est_counts_GAPDHnorm)) +
                         label.x.npc = .7, label.y.npc = .05) 
 dev.off()
 
-png("../plots/covs_measure.png", width = 10, height = 5, units = "in", res = 300)
+png("./plots/covs_measure.png", width = 10, height = 5, units = "in", res = 300)
 ggplot(data = filter(covs_df, subject == '66K00634')) +
   geom_line(data = filter(covs_gene, subject == '66K00634'), 
             aes(pos, cov, group = locus)) +
@@ -283,7 +308,7 @@ ggplot(data = filter(covs_df, subject == '66K00634')) +
         strip.text = element_text(size = 18))
 dev.off()
 
-png("../plots/covs_expression.png", width = 8, height = 8, units = "in", res = 300)
+png("./plots/covs_expression.png", width = 8, height = 8, units = "in", res = 300)
 ggplot(cov_expression_df, aes(value, cov)) +
   geom_point() +
   geom_smooth(method = lm, se = FALSE) +
