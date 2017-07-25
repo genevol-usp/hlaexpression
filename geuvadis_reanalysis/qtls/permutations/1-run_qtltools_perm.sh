@@ -4,7 +4,7 @@ QTLtools_dir=/home/vitor/QTLtools
 QTLtools=$QTLtools_dir/QTLtools_1.1_Ubuntu16.04_x86_64
 parallel=/home/vitor/parallel
 
-JOBS=60
+CHUNKS=100
 SAMPLES=../genotypes/samples.eur
 VCF=../genotypes/eur_maf05.vcf.gz
 COV=../pca_genotypes/covariates_genos.txt
@@ -16,15 +16,15 @@ do
   OUT=./results/permutations_$pc
   LOG=./log/pc$pc.log
 
-  for j in $(seq 1 $JOBS)
+  for j in $(seq 1 $CHUNKS)
   do
     echo $QTLtools cis --vcf $VCF --bed $BED --cov $COV \
-      --include-samples $SAMPLES --normal --chunk $j $JOBS --permute 1000 \
+      --include-samples $SAMPLES --normal --chunk $j $CHUNKS --permute 1000 \
       --out $OUT\_$j.txt --log $LOG
   done
 done>$CMD_FILE
   
-$parallel --gnu -j $JOBS :::: $CMD_FILE
+$parallel --gnu -j 64 :::: $CMD_FILE
 
 rm $CMD_FILE
 

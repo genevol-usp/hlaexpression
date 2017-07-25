@@ -8,4 +8,4 @@ perm_dt <- rbindlist(lapply(perm_files, fread), idcol = "PCs")
 
 n_genes <- perm_dt[, .N, by = PCs]
 
-best <- n_genes[order(-N)]
+n_genes[order(-N)]
