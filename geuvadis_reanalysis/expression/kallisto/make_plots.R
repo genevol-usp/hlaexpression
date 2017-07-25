@@ -1,5 +1,4 @@
-devtools::load_all("/home/vitor/genomicRutils")
-devtools::load_all("/home/vitor/hlatools")
+devtools::load_all("/home/vitor/hlaseqlib")
 library(tidyverse)
 library(cowplot)
 library(GGally)
@@ -96,8 +95,8 @@ ggplot(kallisto_hlatx, aes(kallisto, hlatx)) +
   labs(x = "counts / library size (kallisto)", 
        y = "counts / library size (GEM-based method)") +
   facet_wrap(~locus, scales = "free") +
-  stat_poly_eq(aes(label = ..adj.rr.label..), rr.digits = 3,
-               formula = y ~ x, parse = TRUE, size = 5) 
+  stat_poly_eq(aes(label = ..adj.rr.label..), rr.digits = 2,
+               formula = y ~ x, parse = TRUE, size = 6) 
 dev.off()
 
 ## kallisto vs Geuvadis
@@ -181,7 +180,7 @@ ggplot(kallisto_ref_imgt, aes(imgt, all)) +
   geom_point(alpha = 1/2) +
   facet_wrap(~locus, scales = "free") +
   ggpmisc::stat_poly_eq(aes(label = ..adj.rr.label..), rr.digits = 2,
-                        formula = y ~ x, parse = TRUE, size = 6 +
+                        formula = y ~ x, parse = TRUE, size = 6) +
   theme_bw() +
   theme(axis.text.x = element_text(size = 12),
         axis.title = element_text(size = 16),
@@ -193,8 +192,8 @@ png("./plots/tpm_distributions.png", height = 6, width = 10, units = "in", res =
 kallisto_ref_imgt %>%
   gather(index, value, imgt:all) %>%
   ggplot(aes(value, fill = index)) +
-  geom_density(alpha = .5) +
-  scale_x_continuous(labels = scales::scientific) +
+  geom_density(alpha = 1/2) +
+  scale_x_continuous(breaks = function(x) scales::pretty_breaks(3)(x)) +
   ggthemes::scale_fill_colorblind() +
   theme_bw() +
   theme(axis.text.x = element_text(angle = 45, margin = margin(t = 10))) +
@@ -226,15 +225,19 @@ ggplot(ase_error, aes(factor(error), ase)) +
   facet_wrap(~locus) + 
   labs(x = "number of wrong calls in genotype") +
   theme_bw() +
-  theme(strip.text = element_text(face = "bold"),
-        text = element_text(size = rel(4)))
+  theme(axis.text.x = element_text(size = 12),
+        axis.title = element_text(size = 16),
+        strip.text = element_text(size = 16))
 dev.off()
 
 png("./plots/ase_histogram.png", width = 8, height = 4, units = "in", res = 300)
 ggplot(ase_df, aes(ase)) +
   geom_density(fill = "grey35", color = NA) +
   facet_wrap(~locus) +
-  theme_bw()
+  theme_bw() +
+  theme(axis.text.x = element_text(size = 12),
+        axis.title = element_text(size = 16),
+        strip.text = element_text(size = 16))
 dev.off()
 
 # Correlation of expression
@@ -251,13 +254,13 @@ hla_and_transAct_genes <- gencode_chr_gene %>%
 			  "HLA-DRB1", "CIITA"))
 
 pca_expression_files <-
-  sprintf("./QTLtools/phenotypes/phenotypes_eur_%d.bed.gz", seq(0, 100, 5)) %>%
+  sprintf("../../qtls/phenotype_correction/qtltools_correct/corrected/phenotypes_eur_%d.bed.gz", seq(0, 100, 5)) %>%
   setNames(seq(0, 100, 5))
 
 pca_expression_df <-
   parallel::mclapply(pca_expression_files, 
 		     function(i) 
-		       read_tsv(i) %>% 
+		       read_tsv(i, progress = FALSE) %>% 
 		       inner_join(hla_and_transAct_genes, by = c("id" = "gene_id")) %>%
 		       select(gene_name, HG00096:NA20828),
 		     mc.cores = 21) %>%
@@ -290,13 +293,13 @@ ggplot(class_2_trans_df, aes(value, CIITA)) +
   geom_point(alpha = 1/2) +
   geom_smooth(method = lm, se = FALSE) +
   theme_bw() +
-  theme(axis.text = element_text(size = rel(1.5)),
-        axis.title = element_text(size = rel(2)),
-        strip.text = element_text(size = rel(1.5))) +
+  theme(axis.text.x = element_text(size = 12),
+        axis.title = element_text(size = 16),
+        strip.text = element_text(size = 16)) + 
   facet_wrap(~locus) +
   labs(x = NULL) +
   stat_poly_eq(aes(label = ..adj.rr.label..), rr.digits = 2,
-               formula = y ~ x, parse = TRUE, size = rel(5))
+               formula = y ~ x, parse = TRUE, size = 6)
 dev.off()
 
 ## Same vs different haplotypes
@@ -321,12 +324,12 @@ make_phase_plot <- function(data, locus1, locus2) {
   geom_smooth(method = lm, se = FALSE) + 
   facet_wrap(~level, nrow = 1, scales = "free") +
   theme_bw() +
-  theme(axis.text = element_text(size = rel(1.5)),
-        axis.title = element_text(size = rel(2)),
-        strip.text = element_text(size = rel(1.5))) +
+  theme(axis.text.x = element_text(size = 12),
+        axis.title = element_text(size = 16),
+        strip.text = element_text(size = 16)) + 
   labs(x = paste0("HLA-", locus1), y = paste0("HLA-", locus2)) +
-  stat_poly_eq(aes(label = ..adj.rr.label..), rr.digits = 3,
-               formula = y ~ x, parse = TRUE, size = rel(5))
+  stat_poly_eq(aes(label = ..adj.rr.label..), rr.digits = 2,
+               formula = y ~ x, parse = TRUE, size = 6)
 }
 
 residuals_by_allele_10pcs <- 
@@ -380,14 +383,14 @@ cors_pca <-
   gather(gene_pair, correlation, -1)
 
 peer_expression_files <- 
-  list.files("./QTLtools/peer/phenotypes", pattern = "\\.bed\\.gz$", full.names = TRUE)
+  list.files("../../qtls/peer/phenotypes", pattern = "\\.bed\\.gz$", full.names = TRUE)
  
 names(peer_expression_files) <- sub("^.+eur_(\\d+)\\.bed\\.gz$", "\\1", peer_expression_files)
 
 peer_expression_df <-
   parallel::mclapply(peer_expression_files, 
 		     function(i) 
-		       read_tsv(i) %>% 
+		       read_tsv(i, progress = FALSE) %>% 
 		       inner_join(hla_and_transAct_genes, by = c("id" = "gene_id")) %>%
 		       select(gene_name, HG00096:NA20828),
 		     mc.cores = length(peer_expression_files)) %>%
