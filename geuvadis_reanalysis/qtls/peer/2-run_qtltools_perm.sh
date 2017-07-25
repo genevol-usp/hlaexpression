@@ -18,8 +18,8 @@ do
 
   for j in $(seq 1 $CHUNKS)
   do
-    echo $QTLtools cis --vcf $VCF --bed $BED --cov $COV \
-      --include-samples $SAMPLES --normal --chunk $j $CHUNKS --permute 1000 \
+    echo $QTLtools cis --vcf $VCF --bed $BED --cov $COV\
+      --include-samples $SAMPLES --normal --chunk $j $CHUNKS --permute 1000\
       --out $OUT\_$j.txt --log $LOG
   done
 done>$CMD_FILE
