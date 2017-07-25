@@ -4,9 +4,46 @@ output: github_document
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE, comment = '')
 ```
 
-```{r echo=FALSE}
-knitr::include_graphics('./plots/hlasimul.png')
+```{r pkgs}
+library(tidyverse)
+library(knitr)
+```
+
+# kallisto
+
+## Genotyping
+
+```{r}
+read_tsv("./expression/kallisto/genotyping_accuracies.tsv") %>%
+  filter(th == .05) %>%
+  mutate(accuracy = accuracy * 100) %>%
+  select(locus, `accuracy (%)` = accuracy) %>%
+  kable()
+```
+
+## Expression
+
+```{r}
+include_graphics('./plots/hlasimul.png')
+```
+
+# STAR + Salmon
+
+## Genotyping
+
+```{r}
+read_tsv("./expression/star/genotyping_accuracies.tsv") %>%
+  filter(th == .05) %>%
+  mutate(accuracy = accuracy * 100) %>%
+  select(locus, `accuracy (%)` = accuracy) %>%
+  kable()
+```
+
+## Expression
+
+```{r}
+include_graphics("./plots/star_simul.png")
 ```

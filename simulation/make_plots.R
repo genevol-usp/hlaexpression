@@ -4,7 +4,7 @@ allele_dist <- read_tsv("./data/distances_to_reference.tsv") %>%
   mutate(locus = sub("^HLA-", "", locus))
 
 samples <- tibble(subject = readLines("./data/samples.txt"),
-		  code = sprintf("sample_%02d", 1:50))
+                  code = sprintf("sample_%02d", 1:50))
 
 ground_truth <- 
   read_tsv("./data/phenotypes_adjusted_30Mread.tsv") %>%
@@ -36,13 +36,21 @@ quants_all <-
 
 quant_data <-
   left_join(quants_chr, quants_all, by = c("subject", "locus"),
-	    suffix = c("_chr", "_all")) %>%
+            suffix = c("_chr", "_all")) %>%
   left_join(quants_imgt, by = c("subject", "locus")) %>%
   rename(est_counts_imgt = est_counts) %>%
   gather(index, counts, est_counts_chr:est_counts_imgt) %>%
   left_join(ground_truth, by = c("subject", "locus")) %>%
-  mutate(index = sub("est_counts_", "", index),
-	 prop_mapped = counts/true_counts)
+  mutate(index = sub("est_counts_", "", index), 
+         prop_mapped = counts/true_counts)
+
+quant_star <- 
+  read_tsv("./expression/star/quantifications_2/processed_quant.tsv") %>%
+  filter(locus %in% paste0("HLA-", c("A", "B", "C", "DQA1", "DQB1", "DRB1"))) %>%
+  group_by(subject, locus) %>%
+  summarize(est_counts = sum(est_counts)) %>%
+  mutate(locus = sub("HLA-", "", locus)) %>%
+  left_join(ground_truth, by = c("subject", "locus"))
 
 png("./plots/hlasimul.png", width = 12, height = 6, units = "in", res = 300)
 ggplot(quant_data, aes(dist, prop_mapped, color = index)) +
@@ -65,4 +73,13 @@ ggplot(quant_data, aes(dist, prop_mapped, color = index)) +
   guides(color = guide_legend(override.aes = list(size = 4))) +
   labs(x = "proportion of sites with mismatches to the reference allele", 
        y = "proportion of reads recovered")
+dev.off()
+
+png("./plots/star_simul.png", width = 8, height = 5, units = "in", res = 300)
+ggplot(quant_star, aes(est_counts, true_counts)) +
+  geom_abline() +
+  geom_point(alpha = .5) +
+  facet_wrap(~locus, scales = "free") +
+  theme_bw() +
+  labs(x = "estimated counts", y = "true counts")
 dev.off()
