@@ -13,11 +13,10 @@ make_pca_plot <- function(PC_x, PC_y) {
     theme_bw()
 }
 
-geuvadis_pops <- geuvadis_info %>%
-  select(subject = name, pop)
+geuvadis_pops <- select(geuvadis_info, subject = name, pop)
 
 pcs <- 
-  read_delim("./QTLtools/pca/eur.pca", delim = " ") %>%
+  read_delim("./pca_genotypes/eur.pca", delim = " ") %>%
   mutate(SampleID = sub("^.+_(PC\\d+)$", "\\1", SampleID)) %>%
   filter(SampleID %in% paste0("PC", 1:100)) %>%
   gather(subject, value, -1) %>%
