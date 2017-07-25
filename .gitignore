@@ -10,6 +10,7 @@
 *.idx
 *.inp
 *.log
+*.out
 *.pca
 *.pca_stats
 *.rds
