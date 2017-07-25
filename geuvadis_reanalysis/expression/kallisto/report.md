@@ -16,7 +16,7 @@ Typing accuracies
 | locus |  accuracy|
 |:------|---------:|
 | A     |      0.97|
-| B     |      0.97|
+| B     |      0.98|
 | C     |      0.95|
 | DQB1  |      0.95|
 | DRB1  |      0.98|
@@ -24,28 +24,27 @@ Typing accuracies
 Expression estimates
 ====================
 
-GEM-based vs. kallisto
-----------------------
+kallisto-IMGT vs...
+-------------------
+
+### GEM-based hlaTX
 
 ![](./plots/kallisto_vs_hlatx.png)
 
-Comparison to Geuvadis' published data
---------------------------------------
+### Geuvadis' published data
 
 ![](./plots/kallisto_vs_geuvadis.png)
 
-Comparison of different indices
--------------------------------
-
-### HLA diversity vs Reference chromosomes
+### index with reference chromosomes only
 
 ![](./plots/kallisto_imgt_vs_chr.png)
 
-### HLA diversity vs Reference chromosomes + Alternate haplotypes + Patches + Scaffolds
+### index with reference chromosomes + alternate haplotypes + patches + scaffolds
 
 ![](./plots/kallisto_imgt_vs_all.png)
 
-### Distribution of TPM values
+Distribution of TPM values
+--------------------------
 
 ![](./plots/tpm_distributions.png)
 

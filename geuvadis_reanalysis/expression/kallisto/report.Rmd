@@ -34,33 +34,33 @@ read_tsv("./genotyping_accuracies.tsv") %>%
 
 # Expression estimates
 
-## GEM-based vs. kallisto
+## kallisto-IMGT vs...
+
+### GEM-based hlaTX
 
 ```{r}
 include_graphics("./plots/kallisto_vs_hlatx.png")
 ```
 
-## Comparison to Geuvadis' published data
+### Geuvadis' published data
 
 ```{r}
 include_graphics("./plots/kallisto_vs_geuvadis.png")
 ```
 
-## Comparison of different indices
-
-### HLA diversity vs Reference chromosomes
+### index with reference chromosomes only
 
 ```{r}
 include_graphics("./plots/kallisto_imgt_vs_chr.png")
 ```
 
-### HLA diversity vs Reference chromosomes + Alternate haplotypes + Patches + Scaffolds
+### index with reference chromosomes + alternate haplotypes + patches + scaffolds
 
 ```{r}
 include_graphics("./plots/kallisto_imgt_vs_all.png")
 ```
 
-### Distribution of TPM values
+## Distribution of TPM values
 
 ```{r}
 include_graphics("./plots/tpm_distributions.png")

@@ -64,7 +64,7 @@ if (quant_round == 1 | quant_round == 2) {
     genos_dt[, `:=`(subject = convert_ena_ids(subject),
 		    allele = hla_trimnames(gsub("IMGT_", "", allele), 3))]
 
-    pag3f <- setDT(pag)[, allele := hla_trimnames(allele)]
+    pag3f <- setDT(pag)[, allele := hla_trimnames(allele, 3)]
 
     accuracies_list <- 
       parallel::mclapply(split(genos_dt, genos_dt$th),

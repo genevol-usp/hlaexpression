@@ -66,7 +66,7 @@ expression_df <-
   filter(locus %in% c("A", "B", "C", "DQA1", "DQB1", "DRB1")) %>%
   inner_join(geuvadis_ids, by = "subject") %>%
   select(subject = name, locus, allele, est_counts, tpm) %>%
-  mutate(allele = hla_trimnames(gsub("IMGT_|_s\\d", "", allele), 3)) %>%
+  mutate(allele = hla_trimnames(gsub("IMGT_", "", allele), 3)) %>%
   arrange(subject, locus, allele)
 
 kallisto_imgt <- expression_df %>%
@@ -77,12 +77,13 @@ kallisto_hlatx <-
   inner_join(kallisto_imgt, hlatx, by = c("subject", "locus")) %>%
   select(subject, locus, kallisto = est_counts, hlatx = counts) %>%
   inner_join(library_size, by = "subject") %>%
-  mutate(kallisto = kallisto/total, hlatx = hlatx/total) %>%
+  mutate(locus = paste0("HLA-", locus),
+         kallisto = kallisto/total, hlatx = hlatx/total) %>%
   select(-total)
 
 png("./plots/kallisto_vs_hlatx.png", height = 6, width = 10, units = "in", res = 150)
 ggplot(kallisto_hlatx, aes(kallisto, hlatx)) +
-  geom_abline(color = "grey") +
+  geom_abline() +
   geom_point(alpha = 1/2) +
   scale_x_continuous(breaks = function(x) scales::pretty_breaks(3)(x)) +
   scale_y_continuous(breaks = function(y) scales::pretty_breaks(3)(y)) +
@@ -92,7 +93,8 @@ ggplot(kallisto_hlatx, aes(kallisto, hlatx)) +
         axis.text.y = element_text(size = 12),
         axis.title = element_text(size = 16),
         strip.text = element_text(size = 16)) +
-  labs(x = "kallisto", y = "GEM-based method") +
+  labs(x = "counts / library size (kallisto)", 
+       y = "counts / library size (GEM-based method)") +
   facet_wrap(~locus, scales = "free") +
   stat_poly_eq(aes(label = ..adj.rr.label..), rr.digits = 3,
                formula = y ~ x, parse = TRUE, size = 5) 
@@ -131,8 +133,8 @@ fpkm_df <-
 
 png("./plots/kallisto_vs_geuvadis.png", width = 10, height = 6, units = "in", res = 300)
 ggplot(fpkm_df, aes(kallisto, geuvadis)) +
+  geom_abline() +
   geom_point(alpha = 1/2) +
-  geom_smooth(method = lm, se = FALSE) +
   facet_wrap(~locus, scales = "free") +
   ggpmisc::stat_poly_eq(aes(label = ..adj.rr.label..), rr.digits = 2,
                         formula = y ~ x, parse = TRUE, size = 6) +
@@ -161,26 +163,30 @@ kallisto_ref_imgt <-
 
 png("./plots/kallisto_imgt_vs_chr.png", height = 6, width = 10, units = "in", res = 150)
 ggplot(kallisto_ref_imgt, aes(imgt, chr)) +
-  geom_abline(color = "grey") +
-  geom_point(color = "black", alpha = .5) +
+  geom_abline() +
+  geom_point(alpha = 1/2) +
   facet_wrap(~locus, scales = "free") +
-  ggpmisc::stat_poly_eq(aes(label = ..adj.rr.label..), rr.digits = 3,
-                        formula = y ~ x, parse = TRUE, size = rel(3.5)) +
+  ggpmisc::stat_poly_eq(aes(label = ..adj.rr.label..), rr.digits = 2,
+                        formula = y ~ x, parse = TRUE, size = 6) +
   theme_bw() +
-  theme(axis.text.x = element_text(angle = 45, margin = margin(t = 7))) +
-  labs(x = "kallisto: supplemented index (TPM)", y = "kallisto: REF only (TPM)")
+  theme(axis.text.x = element_text(size = 12),
+        axis.title = element_text(size = 16),
+        strip.text = element_text(size = 16)) +
+  labs(x = "TPM (kallisto-IMGT)", y = "TPM (kallisto REF chromosomes)")
 dev.off()
 
 png("./plots/kallisto_imgt_vs_all.png", height = 6, width = 10, units = "in", res = 150)
 ggplot(kallisto_ref_imgt, aes(imgt, all)) +
-  geom_abline(color = "grey") +
-  geom_point(color = "black", alpha = .5) +
+  geom_abline() +
+  geom_point(alpha = 1/2) +
   facet_wrap(~locus, scales = "free") +
-  ggpmisc::stat_poly_eq(aes(label = ..adj.rr.label..), rr.digits = 3,
-                        formula = y ~ x, parse = TRUE, size = rel(3.5)) +
+  ggpmisc::stat_poly_eq(aes(label = ..adj.rr.label..), rr.digits = 2,
+                        formula = y ~ x, parse = TRUE, size = 6 +
   theme_bw() +
-  theme(axis.text.x = element_text(angle = 45, margin = margin(t = 7))) +
-  labs(x = "kallisto: supplemented index (TPM)", y = "kallisto: REF + alt haps (TPM)")
+  theme(axis.text.x = element_text(size = 12),
+        axis.title = element_text(size = 16),
+        strip.text = element_text(size = 16)) + 
+  labs(x = "TPM (kallisto-IMGT)", y = "TPM (kallisto REF + ALT)")
 dev.off()
 
 png("./plots/tpm_distributions.png", height = 6, width = 10, units = "in", res = 150)
@@ -224,7 +230,7 @@ ggplot(ase_error, aes(factor(error), ase)) +
         text = element_text(size = rel(4)))
 dev.off()
 
-png("./plots/ase_histogram.png", width = 8, height = 5, units = "in", res = 300)
+png("./plots/ase_histogram.png", width = 8, height = 4, units = "in", res = 300)
 ggplot(ase_df, aes(ase)) +
   geom_density(fill = "grey35", color = NA) +
   facet_wrap(~locus) +
@@ -262,7 +268,7 @@ pca_expression_df <-
 
 phen10 <- filter(pca_expression_df, PCs == 10) %>% select(-PCs)
 
-png("./plots/hlacorrelations.png", width = 10, height = 10, units = "in", res = 300)
+png("./plots/hlacorrelations.png", width = 8, height = 8, units = "in", res = 300)
 pairs_hla_k <-
   ggpairs(select(phen10, -subject, -CIITA), 
           lower = list(continuous = plot_lower), upper = list()) + 
@@ -281,13 +287,16 @@ class_2_trans_df <-
 
 png("./plots/trans_activ_corrs.png", width = 10, height = 3.5, units = "in", res = 300)
 ggplot(class_2_trans_df, aes(value, CIITA)) +
-  geom_point(alpha = .5) +
+  geom_point(alpha = 1/2) +
   geom_smooth(method = lm, se = FALSE) +
   theme_bw() +
+  theme(axis.text = element_text(size = rel(1.5)),
+        axis.title = element_text(size = rel(2)),
+        strip.text = element_text(size = rel(1.5))) +
   facet_wrap(~locus) +
   labs(x = NULL) +
   stat_poly_eq(aes(label = ..adj.rr.label..), rr.digits = 2,
-               formula = y ~ x, parse = TRUE, size = rel(4))
+               formula = y ~ x, parse = TRUE, size = rel(5))
 dev.off()
 
 ## Same vs different haplotypes
