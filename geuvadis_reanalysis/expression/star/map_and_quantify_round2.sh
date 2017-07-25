@@ -41,4 +41,4 @@ out=./quantifications_2/$sample
 
 $salmon quant -t $sample_fa -l IU -a $bam -o $out -p 6
 
-rm $sample_fa $sample_hla
+rm $sample_fa $sample_hla ./mappings_2/$sample\_*
