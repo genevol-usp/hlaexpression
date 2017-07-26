@@ -14,7 +14,7 @@ sampledir=$outdir/$sample
 mkdir -p $outdir/log
 mkdir -p $sampledir
 
-gencode=../../geuvadis_reanalysis/expression/kallisto/index/gencode.v26.CHR.transcripts.noIMGT.fa
+gencode=../../geuvadis_reanalysis/expression/kallisto/index/gencode.v25.CHR.transcripts.noIMGT.fa
 hla=./index/sample_indices/hla_$sample.fa
 index_fa=./index/sample_indices/index_$sample.fa
 index_idx=./index/sample_indices/index_$sample.idx
@@ -54,4 +54,4 @@ $samtools sort $imgtmapped -o $imgtsorted
 
 $samtools depth -a -m 100000 -b $bed $imgtsorted > $cov
 
-rm $outbam $sampledir/header.sam $index_fa $index_idx $imgtbam $imgtmapped
+rm $outbam $sampledir/header.sam $hla $index_fa $index_idx $imgtbam $imgtmapped
