@@ -15,9 +15,9 @@ log=$outdir/log/$sample.log
 mkdir -p $outdir/log
 
 if [ "${#fastqR1[@]}" == 1 ]; then
-  $kallisto quant -i $index -t 1 -o $outdir/$sample ${fastqR1[0]} ${fastqR2[0]} &> $log
+  $kallisto quant -i $index -t 4 -o $outdir/$sample ${fastqR1[0]} ${fastqR2[0]} &> $log
 elif [ "${#fastqR1[@]}" == 2 ]; then
-  $kallisto quant -i $index -t 1 -o $outdir/$sample ${fastqR1[0]} ${fastqR2[0]} ${fastqR1[1]} ${fastqR2[1]} &> $log
+  $kallisto quant -i $index -t 4 -o $outdir/$sample ${fastqR1[0]} ${fastqR2[0]} ${fastqR1[1]} ${fastqR2[1]} &> $log
 else
   echo "wrong number of fastq files"
 fi
