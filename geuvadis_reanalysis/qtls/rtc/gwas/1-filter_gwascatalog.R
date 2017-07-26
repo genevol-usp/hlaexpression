@@ -1,7 +1,7 @@
 library(tidyverse)
 
 vcf <- 
-  "zcat ../../../genotypes/eur_maf05.vcf.gz | grep -v '##' | cut -f1,2,3" %>%
+  "zcat ../../genotypes/eur_maf05.vcf.gz | grep -v '##' | cut -f1,2,3" %>%
   data.table::fread() %>%
   as.tibble() 
 

@@ -11,7 +11,7 @@ hla_by_allele <-
   select(subject, locus, hap, hla_allele, tpm) 
 
 hla_by_gene_60 <-
-  read_tsv("../QTLtools/phenotypes/phenotypes_eur_60.bed.gz") %>%
+  read_tsv("../../../qtls/phenotype_correction/qtltools_correct/corrected/phenotypes_eur_60.bed.gz") %>%
   inner_join(gencode_hla, c("gid" = "gene_id")) %>%
   gather(subject, tpm_pc, HG00096:NA20828) %>%
   select(subject, locus = gene_name, tpm_pc) %>%
@@ -33,7 +33,7 @@ bed_60 <-
 write_tsv(bed_60, "./data/hla_allele_expression_60pcs.bed")
 
 hla_by_gene_10 <-
-  read_tsv("../QTLtools/phenotypes/phenotypes_eur_10.bed.gz") %>%
+  read_tsv("../../../qtls/phenotype_correction/qtltools_correct/corrected/phenotypes_eur_10.bed.gz") %>%
   inner_join(gencode_hla, c("gid" = "gene_id")) %>%
   gather(subject, tpm_pc, HG00096:NA20828) %>%
   select(subject, locus = gene_name, tpm_pc) %>%

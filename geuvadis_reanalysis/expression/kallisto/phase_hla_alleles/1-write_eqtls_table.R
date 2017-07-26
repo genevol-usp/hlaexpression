@@ -5,7 +5,7 @@ gencode_hla <- gencode_chr_gene %>%
   filter(gene_name %in% paste0("HLA-", c("A", "B", "C", "DQA1", "DQB1", "DRB1")))
 
 eqtls <- 
-  "../QTLtools/permutations/conditional_60_all.txt.gz" %>%
+  "../../../qtls/conditional_analysis/conditional_60_all.txt.gz" %>%
   read_qtltools() %>%
   filter(phen_id %in% gencode_hla$gene_id, bwd_best == 1L) %>%
   select(phen_id, var_id, var_chr, var_from, var_to, rank) 

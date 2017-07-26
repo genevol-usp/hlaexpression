@@ -2,15 +2,14 @@ devtools::load_all("/home/vitor/hlaseqlib")
 library(Biostrings)
 library(tidyverse)
 
-map_to_genome <- function(locus, ref_allele, strand, annot_starts, annot_ends, chr6seq) {
+map_to_genome <- function(locus, strand, annot_start, annot_end, ref_allele, chr6) {
 
   locus <- sub("HLA-", "", locus) 
   if (locus == "DRB1") locus <- "DRB"
   
-  nuc <- paste0("/home/vitor/IMGTHLA/alignments/", locus, "_nuc.txt")
-
   ref_seq <- 
-    hla_read_alignment(nuc, omit = "N", rm_incomplete = TRUE, by_exon = TRUE) %>%
+    paste0("/home/vitor/IMGTHLA/alignments/", locus, "_nuc.txt") %>%
+    hla_read_alignment(omit = "N", rm_incomplete = TRUE, by_exon = TRUE) %>%
     separate(allele, c("allele", "exon"), sep = "_") %>%
     filter(allele == ref_allele) %>%
     mutate(cds = hla_format_sequence(cds)) %>%
@@ -22,48 +21,29 @@ map_to_genome <- function(locus, ref_allele, strand, annot_starts, annot_ends, c
     ungroup() %>%
     select(allele, cds)
   
-  x_seqs <- DNAStringSet(ref_seq$cds)
-  names(x_seqs) <- ref_seq$allele
+  x_seqs <- 
+    ref_seq %>%
+    split(.$allele) %>%
+    map_chr("cds") %>%
+    DNAStringSet()
 
-  genomicpos <- 
-    matchPDict(x_seqs, chr6seq) %>%
-    as.list() %>%
-    map_df(. %>% as.data.frame, .id = "allele_exon") %>%
-    filter(start %in% unlist(annot_starts) | end %in% unlist(annot_ends)) %>%
-    arrange(start) %>%
-    group_by(allele_exon) %>% 
-    mutate(coords = list(start:end)) %>%
-    ungroup() %>%
-    summarise(coords = list(unlist(coords))) %>%
-    pull(coords)
-
-  alignments <- hla_read_alignment(nuc, omit = "N")
-  
-  if (locus == "DRB") {
-    alignments <- filter(alignments, !grepl("^DRB[2-9]", allele))
-  }
-
-  locus_pos <-
-    which(unlist(strsplit(alignments$cds[alignments$allele == ref_allele], "")) != ".")
-   
-  alignments %>%
-  mutate(allele = hla_trimnames(allele, 3),
-	 pos = genomicpos, 
-	 cds = map_chr(cds, ~paste(unlist(strsplit(., ""))[locus_pos], collapse = "")),
-	 cds = gsub("\\.", "-", cds),
-	 cds = gsub("\\*", "N", cds),
-	 cds = map_chr(cds, ~ifelse(strand == "+", ., as.character(reverseComplement(DNAStringSet(.)))))) %>%
-  distinct(allele, cds, .keep_all = TRUE) %>%
-  mutate(cds = strsplit(cds, "")) %>%
-  unnest(pos, cds) %>%
-  rename(snp_allele = cds)
+  matchPDict(x_seqs, chr6) %>%
+  as.list() %>%
+  map_df(. %>% as.data.frame, .id = "allele_exon") %>%
+  filter(start %in% unlist(annot_start) | end %in% unlist(annot_end)) %>%
+  arrange(start) %>%
+  group_by(allele_exon) %>% 
+  mutate(coords = list(start:end)) %>%
+  ungroup() %>%
+  summarise(coords = list(unlist(coords))) %>%
+  pull(coords)
 }
 
-genome <- readDNAStringSet("~/gencode_data/GRCh38.primary_assembly.genome.fa.gz")
+genome <- readDNAStringSet("/home/vitor/gencode_data/GRCh38.primary_assembly.genome.fa.gz")
 chr6 <- genome[names(genome) == "chr6 6"][[1]]
 
 samples <- 
-  read_tsv("../../samples_phase3.tsv") %>%
+  read_tsv("../../../../data/sample_info/samples_phase3.tsv") %>%
   pull(subject)
 
 ref_alleles <- read_tsv("./hla_ref_alleles.tsv")
@@ -73,12 +53,12 @@ genos <-
   filter(locus %in% c("A", "B", "C", "DQA1", "DQB1", "DRB1")) %>%
   select(subject, locus, allele) %>%
   mutate(subject = convert_ena_ids(subject),
-	 allele = gsub("IMGT_|_s\\d", "", allele),
-	 allele = hla_trimnames(allele, 3))
+	 locus = paste0("HLA-", locus),
+	 allele = sub("^([^=]+).*$", "\\1", allele))
 
 vcf <-
   read_tsv("./hla_snps.vcf", comment = "##") %>%
-  filter(nchar(REF) == 1, grepl("^[ACGT](,[ACGT])*$", ALT)) %>%
+  filter(nchar(REF) == 1, grepl("^[ACGT](,[ACGT])*$", ALT)) %>% 
   select(-1, -3, -6, -7, -8, -9) %>%
   gather(subject, genotype, HG00096:NA21144) %>%
   filter(subject %in% samples) %>%
@@ -89,26 +69,45 @@ vcf <-
   select(subject, pos = POS, h1, h2)
 
 hla_db <-
-  get_gencode_coords("~/gencode_data/gencode.v26.annotation.gtf.gz", feature = "exon") %>%
+  "/home/vitor/gencode_data/gencode.v26.annotation.gtf.gz" %>%
+  get_gencode_coords(feature = "exon") %>%
   select(locus = gene_name, strand, start, end) %>%
   filter(locus %in% ref_alleles$locus) %>%
   distinct() %>%
   group_by(locus, strand) %>%
-  summarize(start = list(start), end = list(end)) %>%
-  left_join(ref_alleles, by = "locus") 
+  summarize(annot_start = list(start), annot_end = list(end)) %>%
+  left_join(ref_alleles, by = "locus") %>%
+  ungroup() %>%
+  rename(ref_allele = allele)
 
-out <-
-  map_df(split(hla_db, hla_db$locus), 
-	 ~map_to_genome(.x$locus, .x$allele, .x$strand, .x$start, .x$end, chr6)) %>% 
-  filter(pos %in% vcf$pos)
+pos_df <- 
+  hla_db %>%
+  mutate(pos = pmap(hla_db, map_to_genome, chr6 = chr6),
+	 pos = flatten(pos)) %>%
+  select(locus, strand, pos)
+  
+allele_index <- readDNAStringSet("../../index/index_ref_positions.fa")
 
-locus_pos <- out %>%
-  mutate(locus = sub("^([^*]+).+$", "\\1", allele)) %>%
-  distinct(locus, pos)
+allele_seq_df <- 
+  tibble(allele = names(allele_index),
+	 cds = as.character(allele_index)) %>%
+  mutate(locus = imgt_to_gname(allele)) %>%
+  select(locus, allele, cds) %>%
+  filter(allele %in% genos$allele) %>%
+  left_join(pos_df, by = "locus") %>%
+  group_by(allele) %>%
+  mutate(cds = map_chr(cds, ~ifelse(strand == "+", ., as.character(reverseComplement(DNAStringSet(.)))))) %>%
+  ungroup() %>%
+  mutate(cds = strsplit(cds, "")) %>%
+  unnest(pos, cds) %>%
+  filter(pos %in% vcf$pos) %>%
+  select(locus, allele, pos, snp_allele = cds)
 
-vcf <- 
-  inner_join(vcf, locus_pos, by = "pos") %>%
-  inner_join(genos, by = c("subject", "locus"))
+variant_df <-
+  left_join(genos, allele_seq_df, by = c("locus", "allele")) %>%
+  left_join(vcf, by = c("subject", "pos"))
+
+## check problem with gencode V26 HLA-B coords
 
 variant_df <- 
   inner_join(vcf, out, by = c("allele", "pos")) %>%

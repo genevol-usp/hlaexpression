@@ -6,7 +6,7 @@ sample=$1
 fastq_dir=/home/vitor/hlaexpression/geuvadis_reanalysis/data/fastq
 fastqR1=$fastq_dir/$sample\_1.fastq.gz
 fastqR2=$fastq_dir/$sample\_2.fastq.gz
-index=./index/gencode.v26.CHR.transcripts.idx
+index=./index/gencode.v25.CHR.transcripts.idx
 outdir=./quantifications_CHR
 log=$outdir/log/$sample.quant.log
 

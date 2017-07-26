@@ -4,7 +4,7 @@ QTLtools_dir=/home/vitor/QTLtools
 QTLtools=$QTLtools_dir/QTLtools_1.1_Ubuntu16.04_x86_64
 parallel=/home/vitor/parallel
 
-CHUNKS=100
+CHUNKS=64
 SAMPLES=../genotypes/samples.eur
 VCF=../genotypes/eur_maf05.vcf.gz
 COV=../pca_genotypes/covariates_genos.txt

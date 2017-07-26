@@ -2,12 +2,12 @@
 
 QTLtools=/home/vitor/QTLtools/QTLtools_1.1_Ubuntu16.04_x86_64
 
-VCF=../../../genotypes/eur_maf05.vcf.gz
-BED=../../../phenotypes/phenotypes_eur_60.bed.gz
+VCF=../../genotypes/eur_maf05.vcf.gz
+BED=../../phenotype_correction/qtltools_correct/corrected/phenotypes_eur_60.bed.gz
 COV=../../pca_genotypes/covariates_genos.txt
 HOTSPOTS=../hotspots_hg38_fixed_distances.bed
 CATALOG=./previous_eQTLs.tsv
-COND=../../../permutations/conditional_60_all.txt.gz
+COND=../../conditional_analysis/conditional_60_all.txt.gz
 LOG=./log.txt
 OUT=./rtc_results.txt
 
