@@ -1,42 +1,6 @@
 devtools::load_all("/home/vitor/hlaseqlib")
+library(Biostrings)
 library(tidyverse)
-
-# Functions --------------------------------------------------------------------
-
-make_index <- function(loci, infer_missing = TRUE) {
-
-  nuc_paths <- paste0("/home/vitor/IMGTHLA/alignments/", loci, "_nuc.txt")
-
-  if (infer_missing) {
-    alignments <- 
-      map_df(nuc_paths, ~hla_read_alignment(., omit = "N")) %>%
-      mutate(locus = sub("^([^*]+).+$", "\\1", allele)) %>%
-      select(locus, allele, cds) %>%
-      group_by(locus) %>%
-      filter(!all(grepl("\\*", cds))) %>%
-      ungroup() %>%
-      split(.$locus) %>%
-      map_df(~hla_infer(., cores = 36)) %>%
-      select(-locus)
-  } else {
-    alignments <-
-      map_df(nuc_paths, ~hla_read_alignment(., omit = "N", rm_incomplete = TRUE))
-  }
-
-  alignments %>%
-  mutate(allele3f = hla_trimnames(allele, 3),
-         cds = hla_format_sequence(cds)) %>%
-  group_by(cds) %>%
-  summarize(allele = paste(allele, collapse = "/"), 
-            allele3f = paste(unique(allele3f), collapse = "/")) %>%
-  group_by(allele3f) %>%
-  mutate(n = n()) %>%
-  ungroup() %>%
-  mutate(allele = ifelse(n > 1L, allele, allele3f)) %>%
-  select(allele, cds) %>%
-  arrange(allele)
-}
-# ------------------------------------------------------------------------------
 
 main_loci <- c("A", "B", "C", "DQA1", "DQB1", "DRB")
 
@@ -46,13 +10,71 @@ other_loci <-
   map_chr(1) %>%
   .[! . %in% c(main_loci, "ClassI", "ClassII")]
 
-index <- 
-  bind_rows(make_index(main_loci, infer_missing = TRUE),
-            make_index(other_loci, infer_missing = FALSE)) %>%
-  mutate(allele = paste0("IMGT_", allele)) %>%
-  split(.$allele) %>% 
-  map("cds")
+loci_df <- 
+  tibble(locus = c(main_loci, other_loci)) %>%
+  mutate(only_complete = locus %in% other_loci,
+	 seqs = map2(locus, only_complete, hla_make_sequences, n_cores = 16)) 
 
-indexDNA <- Biostrings::DNAStringSet(unlist(index))
+seqs_df <- select(loci_df, seqs) %>% unnest()
 
-Biostrings::writeXStringSet(indexDNA, "./imgt_index.fa")	    
+index_df <- 
+  seqs_df %>%
+  mutate(cds = hla_format_sequence(cds)) %>%
+  group_by(cds) %>%
+  summarize(allele = paste(allele, collapse = "/")) %>%
+  ungroup() %>%
+  mutate(allele3f = hla_trimnames(allele)) %>%
+  group_by(allele3f) %>%
+  mutate(n = n()) %>%
+  ungroup() %>% 
+  arrange(allele)
+
+index <-
+  index_df %>%
+  mutate(allele = paste0("IMGT_", ifelse(n > 1L, allele, allele3f))) %>%
+  select(allele, cds) %>%
+  split(.$allele) %>%
+  map_chr("cds") %>%
+  DNAStringSet()
+
+writeXStringSet(index, "./imgt_index.fa")	    
+
+index_info <-
+  index_df %>%
+  select(allele, allele3f, n) %>%
+  rownames_to_column() %>%
+  separate_rows(allele, sep = "/")
+
+ref_pos_df <- 
+  read_tsv("../phase_hla_alleles/1000G_comparison/hla_ref_alleles.tsv") %>%
+  left_join(seqs_df, by = "allele") %>%
+  mutate(pos = map(cds, ~which(unlist(strsplit(., "")) != "."))) %>%
+  select(locus, pos)
+
+index_ref_pos_df <-
+  seqs_df %>%
+  filter(grepl("^(A|B|C|DQA1|DQB1|DRB1)", allele)) %>%
+  mutate(locus = sub("^([^*]+).+$", "HLA-\\1", allele)) %>%
+  left_join(ref_pos_df, by = "locus") %>%
+  mutate(cds = map2_chr(cds, pos, ~paste(substring(.x, .y, .y), collapse = "")),
+	 cds = gsub("\\.", "-", cds),
+	 cds = gsub("\\*", "N", cds)) %>%
+  select(allele, cds) %>%
+  left_join(index_info, by = "allele") %>%
+  group_by(rowname) %>%
+  summarize(allele = paste(allele, collapse = "/"),
+	    allele3f = unique(allele3f),
+	    n = unique(n),
+	    cds = unique(cds)) %>%
+  ungroup() %>%
+  arrange(allele)
+
+index_ref_pos <-
+  index_ref_pos_df %>%
+  mutate(allele = paste0("IMGT_", ifelse(n > 1L, allele, allele3f))) %>%
+  select(allele, cds) %>%
+  split(.$allele) %>%
+  map_chr("cds") %>%
+  DNAStringSet()
+
+writeXStringSet(index_ref_pos, "./index_ref_positions.fa")
