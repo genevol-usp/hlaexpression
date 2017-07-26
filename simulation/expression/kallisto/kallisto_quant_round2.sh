@@ -17,6 +17,7 @@ sampledir=$outdir/$sample
 bam=$sampledir/alignments.bam
 log=$outdir/log/$sample.quant.log
 
+mkdir -p $outdir/log
 mkdir -p $sampledir
 
 cat $gencode $sample_hla > $sample_fa

@@ -11,4 +11,6 @@ index=../../../geuvadis_reanalysis/expression/kallisto/index/gencode.v26.CHR.IMG
 outdir=./quantifications_1
 log=$outdir/log/$sample.log
 
+mkdir -p $outdir/log
+
 $kallisto quant -i $index -t 1 -o $outdir/$sample $fastqR1 $fastqR2 &> $log 
