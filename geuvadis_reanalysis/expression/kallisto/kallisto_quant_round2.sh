@@ -15,6 +15,8 @@ sample_idx=./index/sample_indices/index_$sample.idx
 outdir=quantifications_2
 sampledir=$outdir/$sample
 
+mkdir -p $outdir/log
+
 cat $gencode $sample_hla > $sample_fa
 
 $kallisto index -i $sample_idx $sample_fa &> $outdir/log/$sample.index.log

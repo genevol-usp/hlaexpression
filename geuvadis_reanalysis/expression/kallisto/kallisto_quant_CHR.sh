@@ -10,5 +10,7 @@ index=./index/gencode.v25.CHR.transcripts.idx
 outdir=./quantifications_CHR
 log=$outdir/log/$sample.quant.log
 
+mkdir -p $outdir/log
+
 $kallisto quant -i $index -t 1 -o $outdir/$sample --bias $fastqR1 $fastqR2\
   &> $log
