@@ -17,7 +17,7 @@ gene_exp <-
          ][, `:=`(gid = gene_id, gene_name = NULL)]
 
 setcolorder(gene_exp, c("chr", "start", "end", "gene_id", "gid", "strand", 
-			names(gene_exp)[grep("^HG|^NA", names(gene_exp))]))
+			grep("^HG|^NA", names(gene_exp), value = TRUE)))
 
 setnames(gene_exp, c("chr", "gene_id", "strand"), c("#chr", "id", "strd"))
 
