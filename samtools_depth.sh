@@ -3,9 +3,9 @@
 samtools=/home/vitor/samtools-1.3.1/samtools
 
 sample=$1
-dir=./mappings_1
+dir=./nci/expression/quantifications_2
 bam=$dir/$sample\_Aligned.out.bam
-bed=../../../nci/expression/imgt.bed
+bed=./nci/expression/imgt.bed
 header=$dir/$sample\_header.sam
 imgtbam=$dir/$sample\_imgt.bam
 imgtmapped=$dir/$sample\_imgt_mapped.bam
