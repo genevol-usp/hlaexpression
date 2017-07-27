@@ -1,6 +1,6 @@
 #!/bin/bash
 
-JOBS=30
+JOBS=64
 parallel=/home/vitor/parallel
 samples=../../data/sample_info/samples_phase3_ena.txt
 

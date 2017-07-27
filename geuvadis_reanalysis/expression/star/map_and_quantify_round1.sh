@@ -24,7 +24,7 @@ $STAR --runMode alignReads --runThreadN 6 --genomeDir $indexDIR\
   --outFileNamePrefix $outPrefix
 
 bam=./mappings_1/$sample\_Aligned.out.bam
-fasta=../kallisto/index/gencode.v26.CHR.IMGT.transcripts.fa
+fasta=../kallisto/index/gencode.v25.CHR.IMGT.transcripts.fa
 out=./quantifications_1/$sample
 
 $salmon quant -t $fasta -l IU -a $bam -o $out -p 6
