@@ -1,9 +1,9 @@
 library(data.table)
 library(polyester)
 library(Biostrings)
-devtools::load_all("~/hlaseqlib")
+devtools::load_all("/home/vitor/hlaseqlib")
 
-index <- readDNAStringSet("../../geuvadis_reanalysis/expression/kallisto/index/gencode.v26.CHR.IMGT.transcripts.fa")
+index <- readDNAStringSet("../../geuvadis_reanalysis/expression/kallisto/index/gencode.v25.CHR.IMGT.transcripts.fa")
 index <- index[width(index) >= 75]
 
 ground_truth <- fread("./phenotypes.tsv")

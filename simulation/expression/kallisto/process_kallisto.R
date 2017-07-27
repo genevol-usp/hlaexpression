@@ -1,5 +1,5 @@
 library(data.table)
-devtools::load_all("~/hlaseqlib")
+devtools::load_all("/home/vitor//hlaseqlib")
 
 process_quant_imgt <- function(quant_files) {
 

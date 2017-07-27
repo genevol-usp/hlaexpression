@@ -1,6 +1,6 @@
 library(data.table)
 library(Biostrings)
-devtools::load_all("~/hlaseqlib")
+devtools::load_all("/home/vitor/hlaseqlib")
 
 geuvadis_dt <- 
   setDT(geuvadis_info)[kgp_phase3 == 1, .(sample_id = name, subject = ena_id)]
@@ -15,8 +15,8 @@ abundances <-
 		     mc.cores = 50)
 
 abundances_dt <- 
-  rbindlist(abundances, idcol = "subject")[
-  geuvadis_dt, on = "subject"]
+  rbindlist(abundances, idcol = "subject"
+	  )[geuvadis_dt, on = "subject"]
 
 abundances_wide <- 
   dcast(abundances_dt, target_id ~ sample_id, value.var = "est_counts")
