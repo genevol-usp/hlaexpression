@@ -8,7 +8,7 @@ indexDIR=./sample_indices/$sample
 
 mkdir -p $indexDIR
 
-fasta=../../../geuvadis_reanalysis/expression/kallisto/index/gencode.v26.CHR.transcripts.noIMGT.fa
+fasta=../../../geuvadis_reanalysis/expression/kallisto/index/gencode.v25.CHR.transcripts.noIMGT.fa
 sample_hla=./sample_indices/hla_$sample.fa
 sample_fa=./sample_indices/index_$sample.fa
 
@@ -23,7 +23,8 @@ outPrefix=./mappings_2/$sample\_
 
 $STAR --runMode alignReads --runThreadN 6 --genomeDir $indexDIR\
   --readFilesIn $fq1 $fq2 --readFilesCommand zcat\
-  --outFilterMismatchNmax 1\
+  --outFilterMismatchNmax 999\
+  --outFilterMismatchNoverReadLmax 0.04\
   --outFilterMultimapScoreRange 0\
   --outFilterMultimapNmax 50\
   --winAnchorMultimapNmax 100\
