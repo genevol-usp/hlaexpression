@@ -5,10 +5,10 @@ parallel=/home/vitor/parallel
 
 N_PCS=60
 CHUNKS=64
-SAMPLES=../genotypes/samples.eur
-VCF=../genotypes/eur_maf05.vcf.gz
-COV=../pca_genotypes/covariates_genos.txt
-BED=../phenotype_correction/qtltools_correct/corrected/phenotypes_eur_$N_PCS.bed.gz
+SAMPLES=../../../genotypes/samples.eur
+VCF=../../../genotypes/eur_maf05.vcf.gz
+COV=../../../pca_genotypes/covariates_genos.txt
+BED=../phenotypes/phenotypes_eur_$N_PCS.bed.gz
 THR=../permutations/results/permutations_$N_PCS.thresholds.txt
 OUT=./conditional_$N_PCS
 LOG=./log.txt
@@ -16,8 +16,8 @@ CMD_FILE=./cmd_cond.txt
 
 for j in $(seq 1 $CHUNKS)
 do
-  echo $QTLtools cis --vcf $VCF --bed $BED --cov $COV --mapping $THR \
-    --include-samples $SAMPLES --normal --chunk $j $CHUNKS \
+  echo $QTLtools cis --vcf $VCF --bed $BED --cov $COV --mapping $THR\
+    --include-samples $SAMPLES --normal --chunk $j $CHUNKS\
     --out $OUT\_$j.txt --log $LOG
 done>$CMD_FILE
 

@@ -18,12 +18,12 @@ write_bed <- function(peer_out) {
     select(`#chr` = chr, start, end, id, gid, strd = strand, starts_with("HG"), starts_with("NA")) %>%
     arrange(`#chr`, start, end)
 
-  bed_out <- sprintf("./phenotypes/phenotypes_eur_%s.bed", peerk)
+  bed_out <- sprintf("./phenotypes_eur_%s.bed", peerk)
   bed_out_gz <- paste0(bed_out, ".gz")
   write_tsv(bed, bed_out)
   system(paste("bgzip", bed_out, "&& tabix -p bed", bed_out_gz))
 }
 
-peer_files <- list.files("../phenotype_correction/peer", pattern = "\\.rds$", full.names = TRUE)
+peer_files <- list.files("./residuals", pattern = "\\.rds$", full.names = TRUE)
 
 parallel::mclapply(peer_files, write_bed, mc.cores = length(peer_files))

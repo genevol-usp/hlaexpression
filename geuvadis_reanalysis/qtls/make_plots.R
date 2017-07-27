@@ -42,16 +42,16 @@ dev.off()
 
 # Number of eQTLs per method of phenotype correction
 egenes_pca <-
-  sprintf("./QTLtools/permutations/permutations_%d.significant.txt", seq(0, 100, 5)) %>%
+  sprintf("./qtls_kallisto/qtltools_correction/permutations/results/permutations_%d.significant.txt", seq(0, 100, 5)) %>%
   setNames(seq(0, 100, 5)) %>%
   parallel::mclapply(function(x) read_delim(x, delim = " ", col_names = FALSE), 
                      mc.cores = 21) %>%
   bind_rows(.id = "f") %>%
   count(f)
 
-peer_perm_files <- list.files("./QTLtools/peer/permutations", 
-                              pattern = "permutations_\\d+\\.significant", 
-                              full.names = TRUE)
+peer_perm_files <- 
+  list.files("./qtls_kallisto/peer_correction/permutations/results", 
+	     pattern = "permutations_\\d+\\.significant", full.names = TRUE)
 
 names(peer_perm_files) <- 
   sub("^.+permutations_(\\d+)\\.significant\\.txt$", "\\1", peer_perm_files)
@@ -83,19 +83,19 @@ dev.off()
 ## lineages
 concordant <- 
   bind_rows(
-    read_tsv("./phase_hla_alleles/data/concordant_haps_classI.tsv") %>%
+    read_tsv("../expression/kallisto/phase_hla_alleles/data/concordant_haps_classI.tsv") %>%
       gather(locus, allele, A:C), 
-    read_tsv("./phase_hla_alleles/data/concordant_haps_classII.tsv") %>%
+    read_tsv("../expression/kallisto/phase_hla_alleles/data/concordant_haps_classII.tsv") %>%
       gather(locus, allele, DQA1:DRB1)) %>%
   arrange(subject, locus, hap) %>%
   mutate(concordant_phase = TRUE)
 
 residuals_by_allele_60pcs <- 
-  read_tsv("./phase_hla_alleles/data/hla_allele_expression_60pcs.bed") %>%
+  read_tsv("../expression/kallisto/phase_hla_alleles/data/hla_allele_expression_60pcs.bed") %>%
   gather(subject, resid, -locus, -hap)
 
 expression_data <-
-  read_tsv("./phase_hla_alleles/data/1000G_haps_expression_snps.tsv") %>%
+  read_tsv("../expression/kallisto/phase_hla_alleles/data/1000G_haps_expression_snps.tsv") %>%
   filter(rank == 0) %>%
   left_join(concordant, by = c("subject", "locus", "hap")) %>%
   left_join(residuals_by_allele_60pcs, by = c("subject", "locus", "hap")) %>%
@@ -129,13 +129,13 @@ phen60 <-
   arrange(subject, locus)
 
 best_eqtl_locus <-
-  read_tsv("./phase_hla_alleles/best_eqtls.tsv") %>%
+  read_tsv("../expression/kallisto/phase_hla_alleles/best_eqtls.tsv") %>%
   filter(rank == 0L) %>%
   left_join(gencode_hla, by = c("phen_id" = "gene_id")) %>%
   select(locus = gene_name, variant = var_id)
 
 eqtl_info <- 
-  read_tsv("./phase_hla_alleles/best_eqtl_snps.vcf", comment = "##") %>%
+  read_tsv("../expression/kallisto/phase_hla_alleles/best_eqtl_snps.vcf", comment = "##") %>%
   select(-`#CHROM`, -POS, -QUAL, -FILTER, -INFO, -FORMAT) %>%
   gather(subject, genotype, -(ID:ALT)) %>%
   inner_join(best_eqtl_locus, by = c("ID" = "variant")) %>%
@@ -199,7 +199,7 @@ dev.off()
 
 # eQTL landscape around TSS
 conditional_pca <-
-  read_qtltools("./QTLtools/permutations/conditional_60_all.txt.gz") %>%
+  read_qtltools("./qtls_kallisto/qtltools_correction/conditional_analysis/conditional_60_all.txt.gz") %>%
   inner_join(select(gencode_hla, gene_id, gene_name), by = c("phen_id" = "gene_id")) %>%
   mutate(dist_tss = ifelse(strand == "+", 
                            var_from - phen_from,

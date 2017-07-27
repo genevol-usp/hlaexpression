@@ -6,7 +6,7 @@ gencode12 <-
       )[gene_name %in% paste0("HLA-", c("A", "B", "C", "DQA1", "DQB1", "DRB1"))
       ][, .(gene_id, gene_name)]
 
-geuvadis <- fread("zcat < ~/hlaexpression/geuvadis_reanalysis/data/previous_qtls/geuvadis_eur_eqtls.txt.gz")
+geuvadis <- fread("zcat < ../../../../../data/previous_qtls/geuvadis_eur_eqtls.txt.gz")
 setnames(geuvadis, c(1, 4), c("snp_id", "gene_id"))
 
 hla <- geuvadis[gencode12, on = .(gene_id)][grepl("^rs|^snp", snp_id)]
@@ -25,7 +25,7 @@ bedhg38 <-
       )[, .(chr = V1, pos = V2, info = V4)
       ][, chr := as.integer(sub("chr", "", chr))]
 
-vcf <- fread("zcat < ~/hlaexpression/geuvadis_reanalysis/data/1000G_sites/ALL.chr6_GRCh38_sites.20170504.vcf.gz",
+vcf <- fread("zcat < ../../../../../data/1000G_sites/ALL.chr6_GRCh38_sites.20170504.vcf.gz",
 	     skip = "#CHROM", select = 1:3)
 setnames(vcf, c("chr", "pos", "id"))
 

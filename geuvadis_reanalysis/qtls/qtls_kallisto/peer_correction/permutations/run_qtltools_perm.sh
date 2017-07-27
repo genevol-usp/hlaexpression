@@ -5,15 +5,15 @@ QTLtools=$QTLtools_dir/QTLtools_1.1_Ubuntu16.04_x86_64
 parallel=/home/vitor/parallel
 
 CHUNKS=64
-SAMPLES=../genotypes/samples.eur
-VCF=../genotypes/eur_maf05.vcf.gz
-COV=../pca_genotypes/covariates_genos.txt
+SAMPLES=../../../genotypes/samples.eur
+VCF=../../../genotypes/eur_maf05.vcf.gz
+COV=../../../pca_genotypes/covariates_genos.txt
 CMD_FILE=./cmd.txt
 
 for k in $(seq 0 5 20; seq 30 10 100)
 do
-  BED=./phenotypes/phenotypes_eur_$k.bed.gz
-  OUT=./permutations/permutations_$k
+  BED=../phenotypes/phenotypes_eur_$k.bed.gz
+  OUT=./results/permutations_$k
   LOG=./log/k$k.log
 
   for j in $(seq 1 $CHUNKS)
@@ -30,7 +30,7 @@ rm $CMD_FILE
 
 for k in $(seq 0 5 20; seq 30 10 100)
 do
-  OUT=./permutations/permutations_$k
+  OUT=./results/permutations_$k
   cat $OUT\_*.txt | gzip -c > $OUT.txt.gz
   rm $OUT\_*.txt
 

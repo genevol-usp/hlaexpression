@@ -48,13 +48,15 @@ Some of our eQTLs seem to mark the same biological signal as the eQTLs found by
 Geuvadis (RTC > 0.9)
 
 ```{r}
-read_tsv("./rtc/geuvadis_eqtls/results.tsv") %>% kable()
+"./qtls_kallisto/qtltools_correction/rtc/geuvadis_eqtls/results.tsv" %>%
+  read_tsv() %>%
+  kable()
 ```
 
 ## Association with GWAS traits
 
 ```{r}
-read_tsv("./rtc/gwas/results.tsv") %>%
+read_tsv("./qtls_kallisto/qtltools_correction/rtc/gwas/results.tsv") %>%
   select(gene, rank, variant, gwas_variant, rtc, trait, studies = link) %>%
   kable()
 ```
@@ -64,7 +66,6 @@ read_tsv("./rtc/gwas/results.tsv") %>%
 - Approximate pass as described on QTLtools website
 
 ```{r}
-read_tsv("./trans/trans_results.tsv") %>%
+read_tsv("./qtls_kallisto/qtltools_correction/trans/trans_results.tsv") %>%
   kable()
 ```
-

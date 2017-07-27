@@ -4,15 +4,15 @@ QTLtools_dir=/home/vitor/QTLtools
 QTLtools=$QTLtools_dir/QTLtools_1.1_Ubuntu16.04_x86_64
 parallel=/home/vitor/parallel
 
-CHUNKS=100
-SAMPLES=../genotypes/samples.eur
-VCF=../genotypes/eur_maf05.vcf.gz
-COV=../pca_genotypes/covariates_genos.txt
+CHUNKS=64
+SAMPLES=../../../genotypes/samples.eur
+VCF=../../../genotypes/eur_maf05.vcf.gz
+COV=../../../pca_genotypes/covariates_genos.txt
 CMD_FILE=./cmd.txt
   
 for pc in $(seq 0 5 100)
 do  
-  BED=../phenotype_correction/qtltools_correct/corrected/phenotypes_eur_$pc.bed.gz
+  BED=../phenotypes/phenotypes_eur_$pc.bed.gz
   OUT=./results/permutations_$pc
   LOG=./log/pc$pc.log
 

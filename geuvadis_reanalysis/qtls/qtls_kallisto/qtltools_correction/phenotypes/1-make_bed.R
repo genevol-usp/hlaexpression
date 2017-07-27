@@ -3,7 +3,7 @@ devtools::load_all("/home/vitor/hlaseqlib")
 
 samples <- setDT(geuvadis_info)[pop != "YRI" & kgp_phase3 == 1, name]
 
-gene_exp <- fread("../../../expression/kallisto/kallisto_gene_expressed90%.csv"
+gene_exp <- fread("../../../../expression/kallisto/kallisto_gene_expressed90%.csv"
 		)[subject %in% samples]
   
 gene_exp <- melt(gene_exp, id = 1, measure = 2:ncol(gene_exp), 
