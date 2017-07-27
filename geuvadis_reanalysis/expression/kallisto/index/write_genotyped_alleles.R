@@ -8,10 +8,11 @@ index <- readDNAStringSet("/home/vitor/hlaexpression/geuvadis_reanalysis/express
 
 genos <- 
   read_tsv(processed_quants) %>%
+  filter(est_counts > 0) %>%
   select(subject, allele) %>%
   distinct() %>%
   separate_rows(allele, sep = "=") %>%  
   mutate(path = file.path(outdir, paste0("hla_", subject, ".fa"))) %>%
   split(.$subject)
 
-purrr::map(genos, ~writeXStringSet(index[.$allele], unique(.$path)))
+map(genos, ~writeXStringSet(index[.$allele], unique(.$path)))
