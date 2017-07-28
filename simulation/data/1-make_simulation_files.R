@@ -12,7 +12,7 @@ sample_dt <-
 	      ][order(sample_id)
 	      ][, code := sprintf("sample_%02d", 1:50)]
 
-writeLines(geuvadis_dt$sample_id, "./samples.txt")
+writeLines(sample_dt$sample_id, "./samples.txt")
 
 abundance_files <- 
   file.path("../../geuvadis_reanalysis/expression/kallisto/quantifications_2", 
@@ -34,19 +34,20 @@ genos <- rbind(genos, hom)[, .(subject = code, locus, allele)][order(subject, lo
 fwrite(genos, "./genos.tsv", sep = "\t", quote = FALSE)
 
 index <- readDNAStringSet("../../geuvadis_reanalysis/expression/kallisto/index/gencode.v25.CHR.IMGT.transcripts.fa")
-index <- index [width(index) >= 75]
+index <- index[width(index) >= 75]
 
 abundances_wide <- dcast(abundances_dt, target_id ~ sample_id, value.var = "est_counts")
+setkey(abundances_wide, target_id)
 
 tx <- intersect(names(index), abundances_wide$target_id)
 
 index <- index[tx]
-abundances_wide <- abundances_wide[target_id %in% tx]
+abundances_wide <- abundances_wide[tx]
 
 samples <- names(abundances_wide)[-1]
 
-abundances_wide[, (samples) := lapply(.SD, function(x) round(ifelse(is.na(x), 0, x))), .SDcols = samples]
+abundances_wide[, (samples) := lapply(.SD, function(x) ifelse(is.na(x), 0, x)), .SDcols = samples]
 abundances_wide[, (samples) := lapply(.SD, function(x) round(x/sum(x) * 3e7)), .SDcols = samples]
 
 writeXStringSet(index, "./polyester_index.fa")
-fwrite(abundances_wide, "./phenotypes.tsv", sep = "\t", quote = FALSE)
+fwrite(abundances_wide[, -1], "./phenotypes.tsv", sep = "\t", quote = FALSE)
