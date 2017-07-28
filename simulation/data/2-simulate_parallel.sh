@@ -5,7 +5,7 @@ parallel=/home/vitor/parallel
 mkdir -p ./fastq
 mkdir -p ./fasta_{01..50}
 
-$parallel --gnu -j 50 Rscript 2-polyester.R {} ::: {1..50} 
+$parallel --gnu -j 50 Rscript polyester.R {} ::: {1..50} 
 
 for i in {1..2}
 do
