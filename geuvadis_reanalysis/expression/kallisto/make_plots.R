@@ -104,7 +104,7 @@ gencode_hla <- gencode_chr_gene %>%
   filter(gene_name %in% paste0("HLA-", c("A", "B", "C", "DQA1", "DQB1", "DRB1")))
 
 gencode12 <- 
-  get_gencode_coords("~/gencode_data/gencode.v12.annotation.gtf.gz", feature = "gene") %>%
+  get_gencode_coords("/home/vitor/gencode_data/gencode.v12.annotation.gtf.gz", feature = "gene") %>%
   filter(gene_name %in% paste0("HLA-", c("A", "B", "C", "DQA1", "DQB1", "DRB1"))) %>%
   select(locus = gene_name, Gene_Symbol = gene_id)
 
@@ -113,8 +113,7 @@ geuvadis_samples <- geuvadis_info %>%
   pull(assay_name)
 
 geuvadis <- 
-  "http://www.ebi.ac.uk/arrayexpress/files/E-GEUV-1/GD660.GeneQuantRPKM.txt.gz" %>%
-  read_tsv() %>%
+  read_tsv("../../data/quantifications/GD660.GeneQuantRPKM.txt.gz") %>%
   inner_join(gencode12, by = "Gene_Symbol") %>%
   select(locus, geuvadis_samples) %>%
   setNames(sub("^([^.]+)\\..+$", "\\1", names(.))) %>%
@@ -254,7 +253,7 @@ hla_and_transAct_genes <- gencode_chr_gene %>%
 			  "HLA-DRB1", "CIITA"))
 
 pca_expression_files <-
-  sprintf("../../qtls/phenotype_correction/qtltools_correct/corrected/phenotypes_eur_%d.bed.gz", seq(0, 100, 5)) %>%
+  sprintf("../../qtls/qtls_kallisto/qtltools_correction/phenotypes/phenotypes_eur_%d.bed.gz", seq(0, 100, 5)) %>%
   setNames(seq(0, 100, 5))
 
 pca_expression_df <-
@@ -383,7 +382,7 @@ cors_pca <-
   gather(gene_pair, correlation, -1)
 
 peer_expression_files <- 
-  list.files("../../qtls/peer/phenotypes", pattern = "\\.bed\\.gz$", full.names = TRUE)
+  list.files("../../qtls/qtls_kallisto/peer_correction/phenotypes", pattern = "\\.bed\\.gz$", full.names = TRUE)
  
 names(peer_expression_files) <- sub("^.+eur_(\\d+)\\.bed\\.gz$", "\\1", peer_expression_files)
 
