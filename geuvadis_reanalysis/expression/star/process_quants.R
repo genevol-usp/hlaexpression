@@ -30,7 +30,7 @@ if (quant_round == 1L) {
   calls <- typings %>%
     filter(locus %in% paste0("HLA-", c("A", "B", "C", "DQA1", "DQB1", "DRB1"))) %>%
     select(th, subject, locus, allele) %>%
-    mutate(subject = as.character(subject),
+    mutate(subject = convert_ena_ids(as.character(subject)),
 	   locus = sub("^HLA-", "", locus),
 	   allele = hla_trimnames(gsub("IMGT_", "", allele), 3))
 
@@ -45,7 +45,8 @@ if (quant_round == 1L) {
 
   best_th <- accuracies %>%
     slice(which.max(th_average)) %>%
-    pull(th)
+    pull(th) %>%
+    as.character()
 
   accuracies <- accuracies %>%
     mutate(accuracy = round(accuracy, 2),
