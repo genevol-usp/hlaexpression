@@ -12,8 +12,8 @@ other_loci <-
 
 loci_df <- 
   tibble(locus = c(main_loci, other_loci)) %>%
-  mutate(only_complete = locus %in% other_loci,
-	 seqs = map2(locus, only_complete, hla_make_sequences, n_cores = 16)) 
+  mutate(infer = locus %in% main_loci,
+	 seqs = map2(locus, infer, hla_make_sequences, n_cores = 16)) 
 
 seqs_df <- select(loci_df, seqs) %>% unnest()
 
