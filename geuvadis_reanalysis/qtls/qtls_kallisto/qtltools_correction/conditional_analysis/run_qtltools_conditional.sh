@@ -3,7 +3,7 @@
 QTLtools=/home/vitor/QTLtools/QTLtools_1.1_Ubuntu16.04_x86_64
 parallel=/home/vitor/parallel
 
-N_PCS=60
+N_PCS=75
 CHUNKS=64
 SAMPLES=../../../genotypes/samples.eur
 VCF=../../../genotypes/eur_maf05.vcf.gz

@@ -6,8 +6,8 @@ salmon=/home/vitor/Salmon-0.8.2_linux_x86_64/bin/salmon
 sample=$1
 
 indexDIR=./index
-fq1=../../data/fastq/$sample_1.fastq.gz
-fq2=../../data/fastq/$sample_2.fastq.gz
+fq1=../../data/fastq/$sample\_1.fastq.gz
+fq2=../../data/fastq/$sample\_2.fastq.gz
 outPrefix=./mappings_1/$sample\_
 
 $STAR --runMode alignReads --runThreadN 6 --genomeDir $indexDIR\

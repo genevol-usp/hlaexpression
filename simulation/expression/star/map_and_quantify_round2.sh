@@ -2,6 +2,7 @@
 
 STAR=/home/vitor/STAR
 salmon=/home/vitor/Salmon-0.8.2_linux_x86_64/bin/salmon
+samtools=/home/vitor/samtools-1.3.1/samtools
 
 sample=$1
 indexDIR=./sample_indices/$sample
@@ -37,9 +38,22 @@ $STAR --runMode alignReads --runThreadN 6 --genomeDir $indexDIR\
 
 rm -r $indexDIR
 
-bam=./mappings_2/$sample\_Aligned.out.bam
+bam=$outPrefix\Aligned.out.bam
 out=./quantifications_2/$sample
 
 $salmon quant -t $sample_fa -l IU -a $bam -o $out -p 6
 
 rm $sample_fa $sample_hla
+
+header=$outPrefix\header.sam
+imgtbam=$outPrefix\imgt.bam
+
+$samtools view -H $bam > $header
+
+$samtools view $bam |\
+  awk -F $'\t' '$1 ~ /IMGT/ || $3 ~ /IMGT/' |\
+  cat $header - |\
+  $samtools view -Sb - |\
+  $samtools view -b -f 0x2 -F 0x100 - > $imgtbam
+
+rm $header

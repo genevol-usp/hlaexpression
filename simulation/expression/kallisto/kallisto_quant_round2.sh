@@ -27,4 +27,15 @@ $kallisto index -i $sample_idx $sample_fa &> $outdir/log/$sample.index.log
 $kallisto quant -i $sample_idx -t 1 -o $sampledir --bias --pseudobam\
   $fastqR1 $fastqR2 2> $log | $samtools view -Sb - > $bam
 
+header=$sampledir/header.sam
+imgtbam=$sampledir/imgt.bam
+
+$samtools view -H $bam > $header
+
+$samtools view $bam |\
+  awk -F $'\t' '$1 ~ /IMGT/ || $3 ~ /IMGT/' |\
+  cat $header - |\
+  $samtools view -Sb - |\
+  $samtools view -b -f 0x2 - > $imgtbam
+
 rm $sample_fa $sample_idx

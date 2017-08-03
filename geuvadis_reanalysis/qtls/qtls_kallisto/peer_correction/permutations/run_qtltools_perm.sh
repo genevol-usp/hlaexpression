@@ -10,7 +10,8 @@ VCF=../../../genotypes/eur_maf05.vcf.gz
 COV=../../../pca_genotypes/covariates_genos.txt
 CMD_FILE=./cmd.txt
 
-for k in $(seq 0 5 20; seq 30 10 100)
+#for k in $(seq 0 5 20; seq 30 10 100)
+for k in $(seq 0 5 20; seq 30 10 60; seq 90 10 100)
 do
   BED=../phenotypes/phenotypes_eur_$k.bed.gz
   OUT=./results/permutations_$k
@@ -28,7 +29,8 @@ $parallel --gnu -j 64 :::: $CMD_FILE
 
 rm $CMD_FILE
 
-for k in $(seq 0 5 20; seq 30 10 100)
+#for k in $(seq 0 5 20; seq 30 10 100)
+for k in $(seq 0 5 20; seq 30 10 60; seq 90 10 100)
 do
   OUT=./results/permutations_$k
   cat $OUT\_*.txt | gzip -c > $OUT.txt.gz

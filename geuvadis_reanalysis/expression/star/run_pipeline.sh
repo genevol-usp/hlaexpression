@@ -1,6 +1,6 @@
 #!/bin/bash
 
-JOBS=10
+JOBS=12
 parallel=/home/vitor/parallel
 samples=../../data/sample_info/samples_phase3_ena.txt
 write_custom_index=../kallisto/index/write_genotyped_alleles.R

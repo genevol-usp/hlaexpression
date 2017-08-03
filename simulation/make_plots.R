@@ -6,8 +6,11 @@ allele_dist <- read_tsv("./data/distances_to_reference.tsv") %>%
 samples <- tibble(subject = readLines("./data/samples.txt"),
                   code = sprintf("sample_%02d", 1:50))
 
+index <- Biostrings::readDNAStringSet("./data/polyester_index.fa")
+
 ground_truth <- 
-  read_tsv("./data/phenotypes_adjusted_30Mread.tsv") %>%
+  read_tsv("./data/phenotypes.tsv") %>%
+  mutate(target_id = names(index)) %>%
   filter(grepl("IMGT_(A|B|C|DQA1|DQB1|DRB1)", target_id)) %>%
   gather(subject, true_counts, -target_id) %>%
   inner_join(samples, by = "subject") %>%
