@@ -8,8 +8,8 @@ fastqR1=$fastq_dir/$sample\_1.fastq.gz
 fastqR2=$fastq_dir/$sample\_2.fastq.gz 
 index=./index/gencode.v25.ALL.transcripts.idx
 outdir=./quantifications_ALL
+log=$outdir/log/$sample.quant.log
 
 mkdir -p $outdir/log
 
-$kallisto quant -i $index -t 1 -o $outdir/$sample --bias $fastqR1 $fastqR2\
-  &> $log
+$kallisto quant -i $index -t 1 -o $outdir/$sample --bias $fastqR1 $fastqR2 &> $log
