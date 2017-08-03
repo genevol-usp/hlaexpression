@@ -90,15 +90,15 @@ concordant <-
   arrange(subject, locus, hap) %>%
   mutate(concordant_phase = TRUE)
 
-residuals_by_allele_60pcs <- 
-  read_tsv("../expression/kallisto/phase_hla_alleles/data/hla_allele_expression_60pcs.bed") %>%
+residuals_by_allele_best <- 
+  read_tsv("../expression/kallisto/phase_hla_alleles/data/hla_allele_expression_bestpc.bed") %>%
   gather(subject, resid, -locus, -hap)
 
 expression_data <-
   read_tsv("../expression/kallisto/phase_hla_alleles/data/1000G_haps_expression_snps.tsv") %>%
   filter(rank == 0) %>%
   left_join(concordant, by = c("subject", "locus", "hap")) %>%
-  left_join(residuals_by_allele_60pcs, by = c("subject", "locus", "hap")) %>%
+  left_join(residuals_by_allele_best, by = c("subject", "locus", "hap")) %>%
   select(subject, hap, locus, hla_allele, rank, resid,
                 variant, variant_allele, concordant_phase)
 
@@ -121,12 +121,17 @@ k_levels <-
   arrange(subject, locus, hla_allele)
 
 ## effects
-phen60 <- 
-  filter(pca_expression_df, PCs == 60) %>% 
-  select(-PCs, -CIITA) %>%
-  gather(locus, resid, -1) %>%
-  mutate(locus = paste0("HLA-", locus)) %>%
-  arrange(subject, locus)
+gencode_hla <- gencode_chr_gene %>%
+  filter(gene_name %in% paste0("HLA-", c("A", "B", "C", "DQA1", "DQB1", "DRB1"))) %>%
+  select(gene_id, gene_name)
+
+phen_best <-
+  "./qtls_kallisto/qtltools_correction/phenotypes/phenotypes_eur_75.bed.gz" %>%
+  read_tsv() %>%
+  inner_join(gencode_hla, by = c("gid" = "gene_id")) %>%
+  select(gene_name, HG00096:NA20828) %>%
+  gather(subject, resid, -gene_name) %>%
+  select(subject, locus = gene_name, resid)
 
 best_eqtl_locus <-
   read_tsv("../expression/kallisto/phase_hla_alleles/best_eqtls.tsv") %>%
@@ -149,7 +154,7 @@ eqtl_info <-
   ungroup() %>%
   unite(id, genotype, locus, sep = "_", remove = FALSE)
 
-eqtls_expression_df <- left_join(eqtl_info, phen60, by = c("subject", "locus"))
+eqtls_expression_df <- left_join(eqtl_info, phen_best, by = c("subject", "locus"))
 
 ## plot
 png("./plots/lineage_and_effects.png", width = 12, height = 12, units = "in", res = 300)
@@ -199,7 +204,7 @@ dev.off()
 
 # eQTL landscape around TSS
 conditional_pca <-
-  read_qtltools("./qtls_kallisto/qtltools_correction/conditional_analysis/conditional_60_all.txt.gz") %>%
+  read_qtltools("./qtls_kallisto/qtltools_correction/conditional_analysis/conditional_75_all.txt.gz") %>%
   inner_join(select(gencode_hla, gene_id, gene_name), by = c("phen_id" = "gene_id")) %>%
   mutate(dist_tss = ifelse(strand == "+", 
                            var_from - phen_from,
