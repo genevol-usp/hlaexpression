@@ -51,7 +51,7 @@ write_tsv(concordant_haps, "./data/concordant_haps_classIandII.tsv")
 expression_df <-
   read_tsv("../quantifications_2/processed_quant.tsv") %>%
   mutate(subject = convert_ena_ids(subject),
-         allele = hla_trimnames(gsub("^IMGT_|_s\\d$", "", allele), 3)) %>%
+         allele = sub("IMGT_", "", allele)) %>%
   filter(locus %in% gencode_hla$locus, subject %in% kgp_haps$subject) %>%
   select(subject, locus, allele, tpm) %>%
   arrange(subject, locus)
@@ -73,7 +73,8 @@ eqtl_info <-
 
 kgp_calls_and_expr <- 
   kgp_calls %>%
-  separate_rows(hla_allele, sep = "/") %>%
+  separate_rows(hla_allele, sep = "/IMGT_") %>%
+  mutate(hla_allele = sub("IMGT_", "", hla_allele)) %>%
   group_by(subject, locus) %>%
   slice(c(1, n())) %>%
   ungroup() %>%
@@ -85,13 +86,12 @@ kgp_calls_and_expr <-
   arrange(subject, locus, hap, hla_allele, rank) %>%
   rename(variant_allele = allele)
 
-PHASE_calls_and_expr <- 
-  left_join(PHASE_calls, expression_df, 
-            by = c("subject", "locus", "hla_allele" = "allele")) %>%
+PHASE_calls_and_expr <-
+  PHASE_calls %>%
+  mutate(hla_allele = sub("IMGT_", "", hla_allele)) %>%
+  left_join(expression_df, by = c("subject", "locus", "hla_allele" = "allele")) %>%
   distinct() 
 
-write_tsv(kgp_calls_and_expr, 
-	 "./data/1000G_haps_expression_snps.tsv")
+write_tsv(kgp_calls_and_expr, "./data/1000G_haps_expression_snps.tsv")
 
-write_tsv(PHASE_calls_and_expr, 
-	 "./data/PHASE_haps_expression_snps.tsv")
+write_tsv(PHASE_calls_and_expr, "./data/PHASE_haps_expression_snps.tsv")

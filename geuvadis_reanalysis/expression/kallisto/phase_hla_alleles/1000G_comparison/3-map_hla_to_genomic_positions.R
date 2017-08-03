@@ -57,7 +57,7 @@ genos <-
 	 allele = sub("^([^=]+).*$", "\\1", allele))
 
 vcf <-
-  read_tsv("./hla_snps.vcf", comment = "##") %>%
+  read_tsv("./hla_snps.vcf", comment = "##", progress = FALSE) %>%
   filter(nchar(REF) == 1, grepl("^[ACGT](,[ACGT])*$", ALT)) %>% 
   select(-1, -3, -6, -7, -8, -9) %>%
   gather(subject, genotype, HG00096:NA21144) %>%
@@ -68,8 +68,16 @@ vcf <-
          h2 = ifelse(h2 == 0, REF, substring(ALT, h2, h2))) %>%
   select(subject, pos = POS, h1, h2)
 
+duplicated_pos <- vcf %>%
+  count(subject, pos) %>%
+  distinct(pos, n) %>%
+  filter(n > 1L) %>%
+  pull(pos)
+
+vcf <- vcf %>% filter(! pos %in% duplicated_pos) 
+
 hla_db <-
-  "/home/vitor/gencode_data/gencode.v26.annotation.gtf.gz" %>%
+  "/home/vitor/gencode_data/gencode.v25.annotation.gtf.gz" %>%
   get_gencode_coords(feature = "exon") %>%
   select(locus = gene_name, strand, start, end) %>%
   filter(locus %in% ref_alleles$locus) %>%
@@ -105,18 +113,12 @@ allele_seq_df <-
 
 variant_df <-
   left_join(genos, allele_seq_df, by = c("locus", "allele")) %>%
-  left_join(vcf, by = c("subject", "pos"))
-
-## check problem with gencode V26 HLA-B coords
-
-variant_df <- 
-  inner_join(vcf, out, by = c("allele", "pos")) %>%
-  mutate(a1 = snp_allele == h1 | snp_allele == "N",
-	 a2 = snp_allele == h2 | snp_allele == "N") %>%
+  left_join(vcf, by = c("subject", "pos")) %>%
+  mutate(a1 = snp_allele == h1,	a2 = snp_allele == h2) %>%
   group_by(subject, locus, allele) %>%
   summarize(a1 = sum(!a1), a2 = sum(!a2)) %>%
   ungroup() %>%
   gather(hap, diffs, a1, a2) %>%
-  arrange(subject, hap, allele)
+  arrange(subject, allele, hap)
 
 write_tsv(variant_df, "./hla_haps_mapped_to_1000G.tsv")
