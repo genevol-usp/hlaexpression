@@ -14,3 +14,5 @@ Rscript $write_custom_index ./quantifications_1/processed_quant.tsv ./sample_ind
 $parallel --gnu -j $JOBS ./map_and_quantify_round2.sh {} :::: $samples
 
 Rscript process_quants.R 2
+
+Rscript make_expression_matrix.R
