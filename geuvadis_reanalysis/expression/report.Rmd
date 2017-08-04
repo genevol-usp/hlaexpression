@@ -12,7 +12,7 @@ library(knitr)
 library(tidyverse)
 ```
 
-# Library Sizes and pseudoaligned reads
+# Library Sizes and pseudoaligned reads (kallisto)
 
 ```{r}
 include_graphics("./plots/library_sizes.png")
@@ -25,10 +25,19 @@ include_graphics("./plots/library_sizes.png")
 *Allele calls were compared at the maximum resolution possible at each pair
 
 ```{r}
-read_tsv("./genotyping_accuracies.tsv") %>%
+kallisto_typing <-
+  read_tsv("./kallisto/genotyping_accuracies.tsv") %>%
   filter(th_average == max(th_average)) %>%
   filter(th == min(th)) %>%
-  select(locus, accuracy) %>%
+  select(locus, kallisto = accuracy)
+
+star_typing <-
+  read_tsv("./star/genotyping_accuracies.tsv") %>%
+  filter(th_average == max(th_average)) %>%
+  filter(th == min(th)) %>%
+  select(locus, star = accuracy)
+
+left_join(kallisto_typing, star_typing, by = "locus") %>%
   kable()
 ```
 
@@ -42,23 +51,33 @@ read_tsv("./genotyping_accuracies.tsv") %>%
 include_graphics("./plots/kallisto_vs_hlatx.png")
 ```
 
+### STAR-Salmon
+
+*coming soon*
+
+```{r eval=FALSE}
+include_graphic("./plots/kallisto_vs_star.png")
+```
+
 ### Geuvadis' published data
 
 ```{r}
 include_graphics("./plots/kallisto_vs_geuvadis.png")
 ```
 
-### index with reference chromosomes only
+### kallisto – reference chromosomes only
 
 ```{r}
 include_graphics("./plots/kallisto_imgt_vs_chr.png")
 ```
 
-### index with reference chromosomes + alternate haplotypes + patches + scaffolds
+### kallisto – reference chromosomes + alternate haplotypes + patches + scaffolds
 
 ```{r}
 include_graphics("./plots/kallisto_imgt_vs_all.png")
 ```
+
+**The rest of this document shows kallisto-IMGT data**
 
 ## Distribution of TPM values
 
@@ -70,9 +89,9 @@ include_graphics("./plots/tpm_distributions.png")
 
 ## ASE by number of genotype inference errors
 
-*Each point represents a heterozygous genotype in the intersect with Gourraud data.
+\*Each point represents a heterozygous genotype in the intersect with Gourraud data.
 
-*There are more points with extreme ASE associated with genotyping errors because I'm not applying anymore a threshold of expression between 2nd allele/1st allele after the second round of the pipeline.
+\*There are more points with extreme ASE associated with genotyping errors because I'm not applying anymore a threshold of expression between 2nd allele/1st allele after the second round of the pipeline.
 
 ```{r}
 include_graphics("./plots/ase.png")
@@ -92,8 +111,7 @@ include_graphics("./plots/ase_histogram.png")
 include_graphics("./plots/correlation_decrease.png")
 ```
 
-
-*Expression data in the plots below correspond to TPM values corrected by 10 PCs
+\*Expression data in the plots below correspond to TPM values corrected by 10 PCs
 
 ## Among the HLA genes
 

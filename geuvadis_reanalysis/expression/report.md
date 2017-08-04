@@ -1,8 +1,8 @@
 Report
 ================
 
-Library Sizes and pseudoaligned reads
-=====================================
+Library Sizes and pseudoaligned reads (kallisto)
+================================================
 
 ![](./plots/library_sizes.png)
 
@@ -13,13 +13,13 @@ Typing accuracies
 
 \*Allele calls were compared at the maximum resolution possible at each pair
 
-| locus |  accuracy|
-|:------|---------:|
-| A     |      0.97|
-| B     |      0.98|
-| C     |      0.95|
-| DQB1  |      0.95|
-| DRB1  |      0.98|
+| locus |  kallisto|  star|
+|:------|---------:|-----:|
+| A     |      0.97|  0.97|
+| B     |      0.98|  0.98|
+| C     |      0.95|  0.96|
+| DQB1  |      0.95|  0.95|
+| DRB1  |      0.98|  0.98|
 
 Expression estimates
 ====================
@@ -31,17 +31,23 @@ kallisto-IMGT vs...
 
 ![](./plots/kallisto_vs_hlatx.png)
 
+### STAR-Salmon
+
+*coming soon*
+
 ### Geuvadis' published data
 
 ![](./plots/kallisto_vs_geuvadis.png)
 
-### index with reference chromosomes only
+### kallisto – reference chromosomes only
 
 ![](./plots/kallisto_imgt_vs_chr.png)
 
-### index with reference chromosomes + alternate haplotypes + patches + scaffolds
+### kallisto – reference chromosomes + alternate haplotypes + patches + scaffolds
 
 ![](./plots/kallisto_imgt_vs_all.png)
+
+**The rest of this document shows kallisto-IMGT data**
 
 Distribution of TPM values
 --------------------------
