@@ -237,7 +237,7 @@ ase_df <-
   kallisto %>%
   group_by(subject, locus) %>%
   filter(n_distinct(allele) == 2) %>%
-  mutate(ase = calc_ase(est_counts)) %>%
+  summarize(ase = calc_ase(est_counts)) %>%
   ungroup()
   
 ase_error <- 
