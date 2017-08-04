@@ -17,13 +17,13 @@ geuvadis_ids <- geuvadis_info %>%
   select(subject = ena_id, name)
 
 library_size <- 
-  read_delim("./library_size.txt", delim = " ") %>%
+  read_delim("../data/sample_info/library_size.txt", delim = " ") %>%
   inner_join(geuvadis_ids, by = "subject") %>%
   select(subject = name, total = n) %>%
   arrange(subject)
 
 log_files <- 
-  file.path("./quantifications_2/log", paste0(geuvadis_ids$subject, ".quant.log")) %>%
+  file.path("./kallisto/quantifications_2/log", paste0(geuvadis_ids$subject, ".quant.log")) %>%
   setNames(geuvadis_ids$subject)
 
 aligned <- lapply(log_files, readLOG)
@@ -51,8 +51,7 @@ dev.off()
 
 ## kallisto vs hlaTX
 hlatx <- 
- "~/hlaexpression/geuvadis_reanalysis/expression/hlaTX/results/results_TX.txt" %>%
-  hla_readtx() %>%
+  hla_readtx("./hlaTX/results/results_TX.txt") %>%
   mutate(locus = sub("^([^_]+).*$", "\\1", allele)) %>%
   inner_join(geuvadis_ids) %>%
   select(subject = name, locus, est_counts) %>%
@@ -60,20 +59,20 @@ hlatx <-
   summarize(counts = sum(est_counts)) %>%
   ungroup()
 
-expression_df <- 
-  read_tsv("quantifications_2/processed_quant.tsv") %>%
+kallisto <- 
+  read_tsv("./kallisto/quantifications_2/processed_quant.tsv") %>%
   filter(locus %in% c("A", "B", "C", "DQA1", "DQB1", "DRB1")) %>%
   inner_join(geuvadis_ids, by = "subject") %>%
   select(subject = name, locus, allele, est_counts, tpm) %>%
   mutate(allele = hla_trimnames(gsub("IMGT_", "", allele), 3)) %>%
   arrange(subject, locus, allele)
 
-kallisto_imgt <- expression_df %>%
+kallisto_gene <- kallisto %>%
   group_by(subject, locus) %>%
   summarize(est_counts = sum(est_counts), tpm = sum(tpm))
 
 kallisto_hlatx <- 
-  inner_join(kallisto_imgt, hlatx, by = c("subject", "locus")) %>%
+  inner_join(kallisto_gene, hlatx, by = c("subject", "locus")) %>%
   select(subject, locus, kallisto = est_counts, hlatx = counts) %>%
   inner_join(library_size, by = "subject") %>%
   mutate(locus = paste0("HLA-", locus),
@@ -99,12 +98,42 @@ ggplot(kallisto_hlatx, aes(kallisto, hlatx)) +
                formula = y ~ x, parse = TRUE, size = 6) 
 dev.off()
 
+## kallisto vs STAR
+star <-
+  read_tsv("./star/quantifications_2/processed_quant.tsv") %>%
+  filter(locus %in% c("A", "B", "C", "DQA1", "DQB1", "DRB1")) %>%
+  inner_join(geuvadis_ids, by = "subject") %>%
+  select(subject = name, locus, allele, est_counts, tpm) %>%
+  mutate(allele = hla_trimnames(gsub("IMGT_", "", allele), 3)) %>%
+  arrange(subject, locus, allele) %>%
+  group_by(subject, locus) %>%
+  summarize(est_counts = sum(est_counts), tpm = sum(tpm))
+
+kallisto_star <- 
+  inner_join(kallisto_gene, hlatx, by = c("subject", "locus")) %>%
+  select(subject, locus, kallisto = tpm.x, star = tpm.y)
+
+png("./plots/kallisto_vs_star.png", width = 10, height = 6, units = "in", res = 300)
+ggplot(kallisto_star, aes(kallisto, star)) +
+  geom_abline() +
+  geom_point(alpha = 1/2) +
+  facet_wrap(~locus, scales = "free") +
+  ggpmisc::stat_poly_eq(aes(label = ..adj.rr.label..), rr.digits = 2,
+                        formula = y ~ x, parse = TRUE, size = 6) +
+  theme_bw() +
+  theme(axis.text = element_text(size = 12),
+        axis.title = element_text(size = 16),
+        strip.text = element_text(size = 16)) +
+  labs(x = "TPM (kallisto)", y = "TPM (STAR+Salmon)")
+dev.off()
+
 ## kallisto vs Geuvadis
 gencode_hla <- gencode_chr_gene %>%
   filter(gene_name %in% paste0("HLA-", c("A", "B", "C", "DQA1", "DQB1", "DRB1")))
 
-gencode12 <- 
-  get_gencode_coords("/home/vitor/gencode_data/gencode.v12.annotation.gtf.gz", feature = "gene") %>%
+gencode12 <-
+  "/home/vitor/gencode_data/gencode.v12.annotation.gtf.gz" %>%
+  get_gencode_coords(feature = "gene") %>%
   filter(gene_name %in% paste0("HLA-", c("A", "B", "C", "DQA1", "DQB1", "DRB1"))) %>%
   select(locus = gene_name, Gene_Symbol = gene_id)
 
@@ -113,7 +142,7 @@ geuvadis_samples <- geuvadis_info %>%
   pull(assay_name)
 
 geuvadis <- 
-  read_tsv("../../data/quantifications/GD660.GeneQuantRPKM.txt.gz") %>%
+  read_tsv("../data/quantifications/GD660.GeneQuantRPKM.txt.gz") %>%
   inner_join(gencode12, by = "Gene_Symbol") %>%
   select(locus, geuvadis_samples) %>%
   setNames(sub("^([^.]+)\\..+$", "\\1", names(.))) %>%
@@ -121,7 +150,7 @@ geuvadis <-
   arrange(subject, locus)
 
 kallisto_fpkms <- 
-  read_tsv("./quantifications_2/gene_fpkms.tsv") %>%
+  read_tsv("./kallisto/quantifications_2/gene_fpkms.tsv") %>%
   left_join(geuvadis_ids, by = "subject") %>%
   select(subject = name, locus, fpkm)
 
@@ -145,17 +174,17 @@ dev.off()
 
 ## kallisto different indices
 kallisto_chr <- 
-  read_tsv("./quantifications_CHR/processed_quant.tsv") %>%
+  read_tsv("./kallisto/quantifications_CHR/processed_quant.tsv") %>%
   inner_join(geuvadis_ids, by = "subject") %>%
   select(subject = name, locus, tpm)
 
 kallisto_all <- 
-  read_tsv("./quantifications_ALL/processed_quant.tsv") %>%
+  read_tsv("./kallisto/quantifications_ALL/processed_quant.tsv") %>%
   inner_join(geuvadis_ids, by = "subject") %>%
   select(subject = name, locus, tpm)
 
 kallisto_ref_imgt <-
-  left_join(kallisto_imgt, kallisto_chr, by = c("subject", "locus")) %>%
+  left_join(kallisto_gene, kallisto_chr, by = c("subject", "locus")) %>%
   left_join(kallisto_all, by = c("subject", "locus")) %>%
   select(subject, locus, imgt = tpm.x, chr = tpm.y, all = tpm)
 
@@ -205,14 +234,14 @@ calc_ase <- function(counts) min(counts)/sum(counts)
 pag3f <- mutate(pag, allele = hla_trimnames(allele, 3))
 
 ase_df <- 
-  expression_df %>%
+  kallisto %>%
   group_by(subject, locus) %>%
   filter(n_distinct(allele) == 2) %>%
   mutate(ase = calc_ase(est_counts)) %>%
   ungroup()
   
 ase_error <- 
-  calc_genotyping_accuracy(expression_df, pag3f, by_locus = FALSE) %>%
+  calc_genotyping_accuracy(kallisto, pag3f, by_locus = FALSE) %>%
   group_by(subject, locus) %>%
   summarize(error = sum(!correct)) %>%
   ungroup() %>%
@@ -253,7 +282,7 @@ hla_and_transAct_genes <- gencode_chr_gene %>%
 			  "HLA-DRB1", "CIITA"))
 
 pca_expression_files <-
-  sprintf("../../qtls/qtls_kallisto/qtltools_correction/phenotypes/phenotypes_eur_%d.bed.gz", seq(0, 100, 5)) %>%
+  sprintf("../qtls/qtls_kallisto/qtltools_correction/phenotypes/phenotypes_eur_%d.bed.gz", seq(0, 100, 5)) %>%
   setNames(seq(0, 100, 5))
 
 pca_expression_df <-
@@ -332,10 +361,11 @@ make_phase_plot <- function(data, locus1, locus2) {
 }
 
 residuals_by_allele_10pcs <- 
-  read_tsv("./phase_hla_alleles/data/hla_allele_expression_10pcs.bed") %>%
+  read_tsv("./kallisto/phase_hla_alleles/data/hla_allele_expression_10pcs.bed") %>%
   gather(subject, resid, -locus, -hap)
 
-residuals_by_allele_wide <- spread(residuals_by_allele_10pcs, locus, resid) %>%
+residuals_by_allele_wide <- 
+  spread(residuals_by_allele_10pcs, locus, resid) %>%
   select(subject, hap, everything()) %>%
   arrange(subject, hap)
 
@@ -382,7 +412,7 @@ cors_pca <-
   gather(gene_pair, correlation, -1)
 
 peer_expression_files <- 
-  list.files("../../qtls/qtls_kallisto/peer_correction/phenotypes", pattern = "\\.bed\\.gz$", full.names = TRUE)
+  list.files("../qtls/qtls_kallisto/peer_correction/phenotypes", pattern = "\\.bed\\.gz$", full.names = TRUE)
  
 names(peer_expression_files) <- sub("^.+eur_(\\d+)\\.bed\\.gz$", "\\1", peer_expression_files)
 
