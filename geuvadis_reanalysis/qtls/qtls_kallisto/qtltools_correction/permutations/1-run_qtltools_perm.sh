@@ -10,7 +10,7 @@ VCF=../../../genotypes/eur_maf05.vcf.gz
 COV=../../../pca_genotypes/covariates_genos.txt
 CMD_FILE=./cmd.txt
   
-for pc in $(seq 0 5 100)
+for pc in $(seq 0 5 30; seq 40 10 100)
 do  
   BED=../phenotypes/phenotypes_eur_$pc.bed.gz
   OUT=./results/permutations_$pc
@@ -28,7 +28,7 @@ $parallel --gnu -j 64 :::: $CMD_FILE
 
 rm $CMD_FILE
 
-for pc in $(seq 0 5 100)
+for pc in $(seq 0 5 30; seq 40 10 100)
 do
   OUT=./results/permutations_$pc
   cat $OUT\_*.txt | gzip -c > $OUT.txt.gz

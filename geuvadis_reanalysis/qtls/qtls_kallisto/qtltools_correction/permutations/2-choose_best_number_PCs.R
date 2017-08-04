@@ -1,8 +1,9 @@
 library(data.table)
 
-perm_files <- 
-  sprintf("./results/permutations_%d.significant.txt", seq(0, 100, 5))
-names(perm_files) <- seq(0, 100, 5)  
+pcs <- c(seq(0, 30, 5), seq(40, 100, 10))
+
+perm_files <- sprintf("./results/permutations_%d.significant.txt", pcs)
+names(perm_files) <- pcs
  
 perm_dt <- rbindlist(lapply(perm_files, fread), idcol = "PCs")
 
