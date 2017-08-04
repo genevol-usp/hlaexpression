@@ -53,10 +53,8 @@ include_graphics("./plots/kallisto_vs_hlatx.png")
 
 ### STAR-Salmon
 
-*coming soon*
-
-```{r eval=FALSE}
-include_graphic("./plots/kallisto_vs_star.png")
+```{r}
+include_graphics("./plots/kallisto_vs_star.png")
 ```
 
 ### Geuvadis' published data

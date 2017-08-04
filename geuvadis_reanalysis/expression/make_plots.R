@@ -101,16 +101,17 @@ dev.off()
 ## kallisto vs STAR
 star <-
   read_tsv("./star/quantifications_2/processed_quant.tsv") %>%
-  filter(locus %in% c("A", "B", "C", "DQA1", "DQB1", "DRB1")) %>%
+  filter(locus %in% paste0("HLA-", c("A", "B", "C", "DQA1", "DQB1", "DRB1"))) %>%
   inner_join(geuvadis_ids, by = "subject") %>%
   select(subject = name, locus, allele, est_counts, tpm) %>%
-  mutate(allele = hla_trimnames(gsub("IMGT_", "", allele), 3)) %>%
+  mutate(locus = sub("HLA-", "", locus),
+	 allele = hla_trimnames(gsub("IMGT_", "", allele), 3)) %>%
   arrange(subject, locus, allele) %>%
   group_by(subject, locus) %>%
   summarize(est_counts = sum(est_counts), tpm = sum(tpm))
 
 kallisto_star <- 
-  inner_join(kallisto_gene, hlatx, by = c("subject", "locus")) %>%
+  inner_join(kallisto_gene, star, by = c("subject", "locus")) %>%
   select(subject, locus, kallisto = tpm.x, star = tpm.y)
 
 png("./plots/kallisto_vs_star.png", width = 10, height = 6, units = "in", res = 300)
@@ -149,10 +150,21 @@ geuvadis <-
   gather(subject, fpkm, HG00096:NA20828) %>%
   arrange(subject, locus)
 
+#geuvadis <- 
+#  read_tsv("../data/quantifications/GD462.GeneQuantRPKM.50FN.samplename.resk10.txt.gz") %>%
+#  inner_join(gencode12, by = "Gene_Symbol") %>%
+#  select(locus, HG00096:NA20828) %>%
+#  gather(subject, fpkm, HG00096:NA20828) %>%
+#  arrange(subject, locus)
+
 kallisto_fpkms <- 
-  read_tsv("./kallisto/quantifications_2/gene_fpkms.tsv") %>%
-  left_join(geuvadis_ids, by = "subject") %>%
-  select(subject = name, locus, fpkm)
+  data.table::fread("./kallisto/kallisto_gene_expressed90%_fpkm.csv") %>%
+  as_tibble() %>%
+  select(subject, gencode_hla$gene_id) %>%
+  gather(gene_id, fpkm, -subject) %>%
+  left_join(gencode_hla, by = "gene_id") %>%
+  select(subject, locus = gene_name, fpkm) %>%
+  arrange(subject, locus)
 
 fpkm_df <- 
   inner_join(kallisto_fpkms, geuvadis, by = c("subject", "locus")) %>%

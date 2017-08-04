@@ -33,7 +33,7 @@ kallisto-IMGT vs...
 
 ### STAR-Salmon
 
-*coming soon*
+![](./plots/kallisto_vs_star.png)
 
 ### Geuvadis' published data
 
