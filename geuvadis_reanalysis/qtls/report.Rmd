@@ -30,9 +30,21 @@ include_graphics("./plots/pca_vs_peer.png")
 
 ## Distribution of eQTLs around the TSS
 
+### kallisto
+
 ```{r}
-include_graphics("./plots/qtls_landscape.png")
+include_graphics("./plots/qtls_landscape_kallisto.png")
 ```
+
+### STAR
+
+```{r}
+include_graphics("./plots/qtls_landscape_star.png")
+```
+
+**.............................................................**
+**NOTE: All analyses below were carried out using kallisto data**
+**.............................................................**
 
 ## HLA lineages
 

@@ -5,9 +5,9 @@ parallel=/home/vitor/parallel
 
 N_PCS=60
 CHUNKS=64
-SAMPLES=../../../genotypes/samples.eur
-VCF=../../../genotypes/eur_maf05.vcf.gz
-COV=../../../pca_genotypes/covariates_genos.txt
+SAMPLES=../../genotypes/samples.eur
+VCF=../../genotypes/eur_maf05.vcf.gz
+COV=../../pca_genotypes/covariates_genos.txt
 BED=../phenotypes/phenotypes_eur_$N_PCS.bed.gz
 THR=../permutations/results/permutations_$N_PCS.thresholds.txt
 OUT=./conditional_$N_PCS
