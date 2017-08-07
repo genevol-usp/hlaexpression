@@ -27,7 +27,11 @@ Distribution of eQTLs around the TSS
 
 ![](./plots/qtls_landscape_star.png)
 
-**.............................................................** **NOTE: All analyses below were carried out using kallisto data** **.............................................................**
+**.............................................................**
+
+**NOTE: All analyses below were carried out using kallisto data**
+
+**.............................................................**
 
 HLA lineages
 ------------
