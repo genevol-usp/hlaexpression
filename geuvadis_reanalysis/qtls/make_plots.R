@@ -40,10 +40,12 @@ plot_grid(p1 + guides(color=FALSE),
           nrow = 2, ncol = 3, rel_widths = c(3, 3, 1))
 dev.off()
 
-# Number of eQTLs per method of phenotype correction
-egenes_pca <-
-  sprintf("./qtls_kallisto/qtltools_correction/permutations/results/permutations_%d.significant.txt", seq(0, 100, 5)) %>%
-  setNames(seq(0, 100, 5)) %>%
+# Number of eQTLs per method of phenotype correction / aligner
+pcs <- c(seq(0, 30, 5), seq(40, 100, 10))
+
+egenes_pca_kallisto <-
+  sprintf("./qtls_kallisto/qtltools_correction/permutations/results/permutations_%d.significant.txt", pcs) %>%
+  setNames(pcs) %>%
   parallel::mclapply(function(x) read_delim(x, delim = " ", col_names = FALSE), 
                      mc.cores = 21) %>%
   bind_rows(.id = "f") %>%
@@ -56,14 +58,25 @@ peer_perm_files <-
 names(peer_perm_files) <- 
   sub("^.+permutations_(\\d+)\\.significant\\.txt$", "\\1", peer_perm_files)
 
-egenes_peer <-
+egenes_peer_kallisto <-
   peer_perm_files %>%
   parallel::mclapply(function(x) read_delim(x, delim = " ", col_names = FALSE),
                      mc.cores = length(peer_perm_files)) %>%
   bind_rows(.id = "f") %>%
   count(f)
 
-egenes_df <- list(PCA = egenes_pca, PEER = egenes_peer) %>%
+egenes_pca_star <- 
+  sprintf("./qtls_star/permutations/results/permutations_%d.significant.txt", pcs) %>%
+  setNames(pcs) %>%
+  parallel::mclapply(function(x) read_delim(x, delim = " ", col_names = FALSE), 
+                     mc.cores = 21) %>%
+  bind_rows(.id = "f") %>%
+  count(f)
+
+egenes_df <- 
+  list(PCA_kallisto = egenes_pca_kallisto, 
+       PCA_star = egenes_pca_star,
+       PEER_kallisto = egenes_peer_kallisto) %>%
   bind_rows(.id = "method") %>%
   mutate(f = as.integer(f)) %>%
   arrange(f, method)
@@ -73,7 +86,7 @@ ggplot(egenes_df, aes(f, n, color = method, group = method)) +
   geom_point(size = 2.5) + 
   geom_line() +
   scale_x_continuous(breaks = sort(unique(egenes_df$f))) +
-  ggsci::scale_color_npg() +
+  ggsci::scale_color_aaas() +
   theme_bw() +
   labs(x = "Number of PCs/factors", y = "Number of eGenes")
 dev.off()
@@ -203,8 +216,9 @@ ggdraw(grid1) +
 dev.off()
 
 # eQTL landscape around TSS
-conditional_pca <-
-  read_qtltools("./qtls_kallisto/qtltools_correction/conditional_analysis/conditional_75_all.txt.gz") %>%
+
+read_conditional <- function(path) {
+  read_qtltools(path) %>%
   inner_join(select(gencode_hla, gene_id, gene_name), by = c("phen_id" = "gene_id")) %>%
   mutate(dist_tss = ifelse(strand == "+", 
                            var_from - phen_from,
@@ -216,33 +230,52 @@ conditional_pca <-
   filter(rank == min(rank)) %>%
   ungroup() %>%
   mutate(rank = factor(rank))
+}
 
-png("./plots/qtls_landscape.png", height = 12, width = 10, units = "in", res = 300)
-ggplot() +
-  geom_vline(xintercept = 0, color = "grey25", size = 2) + 
-  geom_point(data = filter(conditional_pca, signif == 0), 
-             aes(dist_tss, nom_pval),
-             color = "grey", alpha = .1, show.legend = FALSE) +
-  geom_point(data = filter(conditional_pca, signif == 1L), 
-             aes(dist_tss, nom_pval, color = rank), 
-             alpha = .5) +
-  geom_point(data = filter(conditional_pca, best == 1L), 
-             aes(dist_tss, nom_pval, color = rank), 
-             size = 2) +
-  geom_point(data = filter(conditional_pca, best == 1L), 
-             aes(dist_tss, nom_pval), 
-             shape = 1, size = 2, color = "black", stroke = 1.5) +
-  geom_hline(data = conditional_pca %>% 
-               group_by(phen_id) %>% 
-               filter(signif == 0) %>% 
-               summarise(thres = max(nom_pval)),
-             aes(yintercept = thres), color = "black") +
-  coord_cartesian(xlim = c(-1e6, +1e6)) +
-  ggsci::scale_color_aaas() +
-  scale_x_continuous(labels = scales::comma) +
-  theme_minimal() +
-  facet_wrap(~phen_id, scales = "free_y", ncol = 1) +
-  labs(x = "distance from TSS", 
-       y = expression(paste("-log"[10], italic(Pvalue)))) +
-  guides(color = guide_legend(override.aes = list(alpha = 1, size = 3)))
+plot_qtls <- function(conditional_df) {
+
+  ggplot() +
+    geom_vline(xintercept = 0, color = "grey25", size = 2) + 
+    geom_point(data = filter(conditional_df, signif == 0), 
+	       aes(dist_tss, nom_pval),
+	       color = "grey", alpha = .1, show.legend = FALSE) +
+    geom_point(data = filter(conditional_df, signif == 1L), 
+	       aes(dist_tss, nom_pval, color = rank), 
+	       alpha = .5) +
+    geom_point(data = filter(conditional_df, best == 1L), 
+	       aes(dist_tss, nom_pval, color = rank), 
+	       size = 2) +
+    geom_point(data = filter(conditional_df, best == 1L), 
+	       aes(dist_tss, nom_pval), 
+	       shape = 1, size = 2, color = "black", stroke = 1.5) +
+    geom_hline(data = conditional_df %>% 
+		 group_by(phen_id) %>% 
+		 filter(signif == 0) %>% 
+		 summarise(thres = max(nom_pval)),
+	       aes(yintercept = thres), color = "black") +
+    coord_cartesian(xlim = c(-1e6, +1e6)) +
+    ggsci::scale_color_aaas() +
+    scale_x_continuous(labels = scales::comma) +
+    theme_minimal() +
+    facet_wrap(~phen_id, scales = "free_y", ncol = 1) +
+    labs(x = "distance from TSS", 
+	 y = expression(paste("-log"[10], italic(Pvalue)))) +
+    guides(color = guide_legend(override.aes = list(alpha = 1, size = 3)))
+}
+
+conditional_pca_kallisto <-
+  "./qtls_kallisto/qtltools_correction/conditional_analysis/conditional_60_all.txt.gz" %>%
+  read_conditional()
+
+conditional_pca_star <-
+  "./qtls_star/conditional_analysis/conditional_60_all.txt.gz" %>%
+  read_conditional()
+
+png("./plots/qtls_landscape_kallisto.png", height = 12, width = 10, units = "in", res = 300)
+plot_qtls(conditional_pca_kallisto)
 dev.off()
+
+png("./plots/qtls_landscape_star.png", height = 12, width = 10, units = "in", res = 300)
+plot_qtls(conditional_pca_star)
+dev.off()
+
