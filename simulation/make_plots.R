@@ -29,7 +29,7 @@ quants_imgt <-
 
 quants_chr <- 
   read_tsv("./expression/kallisto/quantifications_CHR/processed_quant.tsv") %>%
-  seelct(-tpm)
+  select(-tpm)
 
 quants_all <- 
   read_tsv("./expression/kallisto/quantifications_ALL/processed_quant.tsv") %>%
@@ -73,7 +73,7 @@ ggplot(quant_data, aes(dist, prop_mapped, color = index)) +
   geom_line(stat = "smooth", method = "loess", span = 1, se = FALSE, 
             alpha = 0.4, size = 1.5) +
   scale_x_continuous(labels = scales::percent) +
-  scale_y_continuous(breaks = seq(0, 1.4, 0.4)) +
+  scale_y_continuous(breaks = seq(0, 1.5, 0.5)) +
   facet_wrap(~locus, scales = "free_x") +
   ggsci::scale_color_aaas(labels = c(chr = "Ref chromosomes",
                                     all = stringr::str_wrap("Ref chromosomes + Alternate haplotypes", 20),
@@ -96,7 +96,7 @@ ggplot(quant_data_star, aes(dist, prop_mapped, color = index)) +
   geom_line(stat = "smooth", method = "loess", span = 1, se = FALSE, 
             alpha = 0.4, size = 1.5) +
   scale_x_continuous(labels = scales::percent) +
-  scale_y_continuous(breaks = seq(0, 1.4, 0.4)) +
+  scale_y_continuous(breaks = seq(0, 1.5, 0.5)) +
   facet_wrap(~locus, scales = "free_x") +
   ggsci::scale_color_aaas(labels = c(chr = "Ref chromosomes",
                                     imgt = stringr::str_wrap("Ref chromosomes + HLA diversity", 20))) +
