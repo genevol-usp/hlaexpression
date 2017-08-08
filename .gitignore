@@ -25,6 +25,8 @@
 geuvadis_reanalysis/expression/kallisto/phase_hla_alleles/PHASE/phase*
 geuvadis_reanalysis/expression/kallisto/quantifications_*
 geuvadis_reanalysis/expression/star/index
+geuvadis_reanalysis/expression/star/mappings_*
+geuvadis_reanalysis/expression/star/quantifications_*
 geuvadis_reanalysis/qtls/rtc/unmapped_to_hg38
 geuvadis_reanalysis/qtls/rtc/geuvadis_eqtls/unmapped_to_hg38
 nci/expression/alignments/
@@ -32,5 +34,6 @@ nci/expression/quantifications_*
 simulation/expression/kallisto/quantifications_*
 simulation/expression/star/quantifications_*
 simulation/expression/star/index
+simulation/expression/star/indexCHR
 simulation/expression/star/Log*
 simulation/expression/star/mappings_2

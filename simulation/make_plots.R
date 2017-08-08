@@ -29,13 +29,11 @@ quants_imgt <-
 
 quants_chr <- 
   read_tsv("./expression/kallisto/quantifications_CHR/processed_quant.tsv") %>%
-  group_by(subject, locus) %>%
-  summarize(est_counts = sum(est_counts))
+  seelct(-tpm)
 
 quants_all <- 
   read_tsv("./expression/kallisto/quantifications_ALL/processed_quant.tsv") %>%
-  group_by(subject, locus) %>%
-  summarize(est_counts = sum(est_counts))
+  select(-tpm)
 
 quant_data <-
   left_join(quants_chr, quants_all, by = c("subject", "locus"),
@@ -50,10 +48,24 @@ quant_data <-
 quant_star <- 
   read_tsv("./expression/star/quantifications_2/processed_quant.tsv") %>%
   filter(locus %in% paste0("HLA-", c("A", "B", "C", "DQA1", "DQB1", "DRB1"))) %>%
+  mutate(locus = sub("HLA-", "", locus), allele = sub("IMGT_", "", allele)) %>%
+  left_join(allele_dist, by = c("locus", "allele")) %>%
   group_by(subject, locus) %>%
-  summarize(est_counts = sum(est_counts)) %>%
-  mutate(locus = sub("HLA-", "", locus)) %>%
-  left_join(ground_truth, by = c("subject", "locus"))
+  summarize(est_counts = sum(est_counts), dist = mean(dist)) %>%
+  ungroup()
+
+quant_star_chr <- 
+  read_tsv("./expression/star/quantifications_CHR/processed_quant.tsv") %>%
+  select(-tpm) %>%
+  mutate(locus = sub("HLA-", "", locus))
+ 
+quant_data_star <-
+  left_join(quant_star, quant_star_chr, by = c("subject", "locus")) %>%
+  select(subject, locus, dist, imgt = est_counts.x, chr = est_counts.y) %>%
+  gather(index, counts, imgt, chr) %>%
+  left_join(ground_truth, by = c("subject", "locus")) %>%
+  mutate(prop_mapped = counts/true_counts)
+
 
 png("./plots/hlasimul.png", width = 12, height = 6, units = "in", res = 300)
 ggplot(quant_data, aes(dist, prop_mapped, color = index)) +
@@ -79,10 +91,23 @@ ggplot(quant_data, aes(dist, prop_mapped, color = index)) +
 dev.off()
 
 png("./plots/star_simul.png", width = 8, height = 5, units = "in", res = 300)
-ggplot(quant_star, aes(est_counts, true_counts)) +
-  geom_abline() +
-  geom_point(alpha = .5) +
-  facet_wrap(~locus, scales = "free") +
+ggplot(quant_data_star, aes(dist, prop_mapped, color = index)) +
+  geom_point() +
+  geom_line(stat = "smooth", method = "loess", span = 1, se = FALSE, 
+            alpha = 0.4, size = 1.5) +
+  scale_x_continuous(labels = scales::percent) +
+  scale_y_continuous(breaks = seq(0, 1.4, 0.4)) +
+  facet_wrap(~locus, scales = "free_x") +
+  ggsci::scale_color_aaas(labels = c(chr = "Ref chromosomes",
+                                    imgt = stringr::str_wrap("Ref chromosomes + HLA diversity", 20))) +
   theme_bw() +
-  labs(x = "estimated counts", y = "true counts")
+  theme(axis.text = element_text(size = 14),
+        axis.title = element_text(size = 18),
+        legend.title = element_text(size = 16),
+        legend.text = element_text(size = 14),
+        strip.text = element_text(size = 16, face = "bold"),
+        legend.position = "top") +
+  guides(color = guide_legend(override.aes = list(size = 4))) +
+  labs(x = "proportion of sites with mismatches to the reference allele", 
+       y = "proportion of reads recovered")
 dev.off()
