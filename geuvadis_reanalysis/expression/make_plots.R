@@ -202,17 +202,9 @@ kallisto_chr <-
   select(locus = gene_name, starts_with("HG"), starts_with("NA")) %>%
   gather(subject, resid, -locus)
 
-kallisto_all <- 
-  "../qtls/qtls_kallisto/qtltools_correction/phenotypes_all/phenotypes_eur_10.bed.gz" %>%
-  read_tsv() %>%
-  inner_join(select(gencode_hla, gene_id, gene_name), by = c("gid" = "gene_id")) %>%
-  select(locus = gene_name, starts_with("HG"), starts_with("NA")) %>%
-  gather(subject, resid, -locus)
-
 kallisto_ref_imgt <-
   left_join(kallisto_10pc, kallisto_chr, by = c("subject", "locus")) %>%
-  left_join(kallisto_all, by = c("subject", "locus")) %>%
-  select(subject, locus, imgt = resid.x, chr = resid.y, all = resid)
+  select(subject, locus, imgt = resid.x, chr = resid.y)
 
 png("./plots/kallisto_imgt_vs_chr.png", height = 6, width = 10, units = "in", res = 150)
 ggplot(kallisto_ref_imgt, aes(imgt, chr)) +
@@ -226,20 +218,6 @@ ggplot(kallisto_ref_imgt, aes(imgt, chr)) +
         axis.title = element_text(size = 16),
         strip.text = element_text(size = 16)) +
   labs(x = "PCA-corrected TPM (kallisto-IMGT)", y = "PCA-corrected (kallisto REF chromosomes)")
-dev.off()
-
-png("./plots/kallisto_imgt_vs_all.png", height = 6, width = 10, units = "in", res = 150)
-ggplot(kallisto_ref_imgt, aes(imgt, all)) +
-  geom_abline() +
-  geom_point(alpha = 1/2) +
-  facet_wrap(~locus, scales = "free") +
-  ggpmisc::stat_poly_eq(aes(label = ..adj.rr.label..), rr.digits = 2,
-                        formula = y ~ x, parse = TRUE, size = 6) +
-  theme_bw() +
-  theme(axis.text = element_text(size = 12),
-        axis.title = element_text(size = 16),
-        strip.text = element_text(size = 16)) + 
-  labs(x = "PCA-corrected TPM (kallisto-IMGT)", y = "PCA-corrected TPM (kallisto REF + ALT)")
 dev.off()
 
 kallisto_imgt_tpm <-

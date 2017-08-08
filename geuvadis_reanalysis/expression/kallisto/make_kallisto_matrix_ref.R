@@ -34,7 +34,3 @@ samples_dt <-
 
 make_table("./quantifications_CHR") %>%
   fwrite("./kallisto_CHR_expressed90%.csv")
-
-make_table("./quantifications_ALL") %>%
-  fwrite("./kallisto_ALL_expressed90%.csv")
-

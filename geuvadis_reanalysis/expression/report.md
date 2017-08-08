@@ -44,21 +44,13 @@ STAR-Salmon vs Geuvadis
 
 ![](./plots/star_vs_geuvadis.png)
 
-kallisto, different indices:
-----------------------------
-
-### HLA diversity vs reference chromosomes only
+kallisto: HLA diversity vs reference chromosomes only
+-----------------------------------------------------
 
 ![](./plots/kallisto_imgt_vs_chr.png)
 
-### HLA diversity vs reference chromosomes + alternate haplotypes + patches + scaffolds
-
-![](./plots/kallisto_imgt_vs_all.png)
-
-STAR, different indices:
-------------------------
-
-### HLA diversity vs reference chromosomes only
+STAR: HLA diversity vs reference chromosomes only
+-------------------------------------------------
 
 ![](./plots/star_imgt_vs_chr.png)
 
