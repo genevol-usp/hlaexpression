@@ -43,38 +43,53 @@ left_join(kallisto_typing, star_typing, by = "locus") %>%
 
 # Expression estimates
 
-## kallisto-IMGT vs...
-
-### GEM-based hlaTX
+## kallisto vs GEM-based hlaTX
 
 ```{r}
 include_graphics("./plots/kallisto_vs_hlatx.png")
 ```
 
-### STAR-Salmon
+## kallisto vs STAR-Salmon
 
 ```{r}
 include_graphics("./plots/kallisto_vs_star.png")
 ```
 
-### Geuvadis' published data
+## kallisto vs Geuvadis
 
 ```{r}
 include_graphics("./plots/kallisto_vs_geuvadis.png")
 ```
 
-### kallisto – reference chromosomes only
+## STAR-Salmon vs Geuvadis
+
+```{r}
+include_graphics("./plots/star_vs_geuvadis.png")
+```
+
+## kallisto, different indices:
+
+### HLA diversity vs reference chromosomes only
 
 ```{r}
 include_graphics("./plots/kallisto_imgt_vs_chr.png")
 ```
 
-### kallisto – reference chromosomes + alternate haplotypes + patches + scaffolds
+### HLA diversity vs reference chromosomes + alternate haplotypes + patches + scaffolds
 
 ```{r}
 include_graphics("./plots/kallisto_imgt_vs_all.png")
 ```
 
+## STAR, different indices:
+
+### HLA diversity vs reference chromosomes only
+
+```{r}
+include_graphics("./plots/star_imgt_vs_chr.png")
+```
+
+\linebreak
 
 **..................................................................**
 

@@ -24,28 +24,43 @@ Typing accuracies
 Expression estimates
 ====================
 
-kallisto-IMGT vs...
--------------------
-
-### GEM-based hlaTX
+kallisto vs GEM-based hlaTX
+---------------------------
 
 ![](./plots/kallisto_vs_hlatx.png)
 
-### STAR-Salmon
+kallisto vs STAR-Salmon
+-----------------------
 
 ![](./plots/kallisto_vs_star.png)
 
-### Geuvadis' published data
+kallisto vs Geuvadis
+--------------------
 
 ![](./plots/kallisto_vs_geuvadis.png)
 
-### kallisto – reference chromosomes only
+STAR-Salmon vs Geuvadis
+-----------------------
+
+![](./plots/star_vs_geuvadis.png)
+
+kallisto, different indices:
+----------------------------
+
+### HLA diversity vs reference chromosomes only
 
 ![](./plots/kallisto_imgt_vs_chr.png)
 
-### kallisto – reference chromosomes + alternate haplotypes + patches + scaffolds
+### HLA diversity vs reference chromosomes + alternate haplotypes + patches + scaffolds
 
 ![](./plots/kallisto_imgt_vs_all.png)
+
+STAR, different indices:
+------------------------
+
+### HLA diversity vs reference chromosomes only
+
+![](./plots/star_imgt_vs_chr.png)
 
 **..................................................................**
 

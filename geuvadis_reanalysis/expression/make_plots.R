@@ -135,7 +135,7 @@ ggplot(kallisto_star, aes(kallisto, star)) +
        y = "PCA-corrected TPM (STAR-Salmon)")
 dev.off()
 
-## kallisto vs Geuvadis
+## kallisto and STAR vs Geuvadis
 gencode12 <-
   "/home/vitor/gencode_data/gencode.v12.annotation.gtf.gz" %>%
   get_gencode_coords(feature = "gene") %>%
@@ -154,9 +154,16 @@ kallisto_fpkms_10pcs <-
   select(locus = gene_name, starts_with("HG"), starts_with("NA")) %>%
   gather(subject, resid, -locus)
 
-fpkm_df <- 
-  inner_join(kallisto_fpkms_10pcs, geuvadis, by = c("subject", "locus")) %>%
-  select(subject, locus, kallisto = resid.x, geuvadis = resid.y)
+star_fpkms_10pcs <-
+  read_tsv("../qtls/qtls_star/phenotypes_fpkm_peer/phenotypes_eur_10.bed.gz") %>%
+  inner_join(select(gencode_hla, gene_id, gene_name), by = c("gid" = "gene_id")) %>%
+  select(locus = gene_name, starts_with("HG"), starts_with("NA")) %>%
+  gather(subject, resid, -locus)
+
+fpkm_df <-
+  list(geuvadis = geuvadis, kallisto = kallisto_fpkms_10pcs, star = star_fpkms_10pcs) %>%
+  bind_rows(.id = "method") %>%
+  spread(method, resid)
 
 png("./plots/kallisto_vs_geuvadis.png", width = 10, height = 6, units = "in", res = 300)
 ggplot(fpkm_df, aes(kallisto, geuvadis)) +
@@ -171,6 +178,21 @@ ggplot(fpkm_df, aes(kallisto, geuvadis)) +
         strip.text = element_text(size = 16)) +
   labs(x = "PEER-corrected FPKM (kallisto)", y = "PEER-corrected FPKM (GEUVADIS)")
 dev.off()
+
+png("./plots/star_vs_geuvadis.png", width = 10, height = 6, units = "in", res = 300)
+ggplot(fpkm_df, aes(star, geuvadis)) +
+  geom_abline() +
+  geom_point(alpha = 1/2) +
+  facet_wrap(~locus, scales = "free") +
+  ggpmisc::stat_poly_eq(aes(label = ..adj.rr.label..), rr.digits = 2,
+                        formula = y ~ x, parse = TRUE, size = 6) +
+  theme_bw() +
+  theme(axis.text = element_text(size = 12),
+        axis.title = element_text(size = 16),
+        strip.text = element_text(size = 16)) +
+  labs(x = "PEER-corrected FPKM (STAR)", y = "PEER-corrected FPKM (GEUVADIS)")
+dev.off()
+
 
 ## kallisto different indices
 kallisto_chr <- 
@@ -248,6 +270,34 @@ ggplot(kallisto_tpm_df, aes(tpm, fill = index)) +
   theme(axis.text.x = element_text(angle = 45, margin = margin(t = 10))) +
   facet_wrap(~locus, scales = "free")
 dev.off()
+
+
+# STAR different indices
+star_chr <- 
+  "../qtls/qtls_star/phenotypes_chr/phenotypes_eur_10.bed.gz" %>%
+  read_tsv() %>%
+  inner_join(select(gencode_hla, gene_id, gene_name), by = c("gid" = "gene_id")) %>%
+  select(locus = gene_name, starts_with("HG"), starts_with("NA")) %>%
+  gather(subject, resid, -locus)
+
+star_ref_imgt <-
+  left_join(star_10pc, star_chr, by = c("subject", "locus")) %>%
+  select(subject, locus, imgt = resid.x, chr = resid.y)
+
+png("./plots/star_imgt_vs_chr.png", height = 6, width = 10, units = "in", res = 150)
+ggplot(star_ref_imgt, aes(imgt, chr)) +
+  geom_abline() +
+  geom_point(alpha = 1/2) +
+  facet_wrap(~locus, scales = "free") +
+  ggpmisc::stat_poly_eq(aes(label = ..adj.rr.label..), rr.digits = 2,
+                        formula = y ~ x, parse = TRUE, size = 6) +
+  theme_bw() +
+  theme(axis.text = element_text(size = 12),
+        axis.title = element_text(size = 16),
+        strip.text = element_text(size = 16)) +
+  labs(x = "PCA-corrected TPM (STAR-IMGT)", y = "PCA-corrected (STAR REF chromosomes)")
+dev.off()
+
 
 # ASE
 calc_ase <- function(counts) min(counts)/sum(counts)
