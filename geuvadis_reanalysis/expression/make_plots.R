@@ -99,20 +99,26 @@ ggplot(kallisto_hlatx, aes(kallisto, hlatx)) +
 dev.off()
 
 ## kallisto vs STAR
-star <-
-  read_tsv("./star/quantifications_2/processed_quant.tsv") %>%
-  filter(locus %in% paste0("HLA-", c("A", "B", "C", "DQA1", "DQB1", "DRB1"))) %>%
-  inner_join(geuvadis_ids, by = "subject") %>%
-  select(subject = name, locus, allele, est_counts, tpm) %>%
-  mutate(locus = sub("HLA-", "", locus),
-	 allele = hla_trimnames(gsub("IMGT_", "", allele), 3)) %>%
-  arrange(subject, locus, allele) %>%
-  group_by(subject, locus) %>%
-  summarize(est_counts = sum(est_counts), tpm = sum(tpm))
+gencode_hla <- gencode_chr_gene %>%
+  filter(gene_name %in% paste0("HLA-", c("A", "B", "C", "DQA1", "DQB1", "DRB1")))
+
+kallisto_10pc <-
+  "../qtls/qtls_kallisto/qtltools_correction/phenotypes/phenotypes_eur_10.bed.gz" %>%
+  read_tsv() %>%
+  inner_join(select(gencode_hla, gene_id, gene_name), by = c("gid" = "gene_id")) %>%
+  select(locus = gene_name, starts_with("HG"), starts_with("NA")) %>%
+  gather(subject, resid, -locus)
+
+star_10pc <-
+  "../qtls/qtls_star/phenotypes/phenotypes_eur_10.bed.gz" %>%
+  read_tsv() %>%
+  inner_join(select(gencode_hla, gene_id, gene_name), by = c("gid" = "gene_id")) %>%
+  select(locus = gene_name, starts_with("HG"), starts_with("NA")) %>%
+  gather(subject, resid, -locus)
 
 kallisto_star <- 
-  inner_join(kallisto_gene, star, by = c("subject", "locus")) %>%
-  select(subject, locus, kallisto = tpm.x, star = tpm.y)
+  inner_join(kallisto_10pc, star_10pc, by = c("subject", "locus")) %>%
+  select(subject, locus, kallisto = resid.x, star = resid.y)
 
 png("./plots/kallisto_vs_star.png", width = 10, height = 6, units = "in", res = 300)
 ggplot(kallisto_star, aes(kallisto, star)) +
@@ -125,50 +131,32 @@ ggplot(kallisto_star, aes(kallisto, star)) +
   theme(axis.text = element_text(size = 12),
         axis.title = element_text(size = 16),
         strip.text = element_text(size = 16)) +
-  labs(x = "TPM (kallisto)", y = "TPM (STAR+Salmon)")
+  labs(x = "PCA-corrected TPM (kallisto)", 
+       y = "PCA-corrected TPM (STAR-Salmon)")
 dev.off()
 
 ## kallisto vs Geuvadis
-gencode_hla <- gencode_chr_gene %>%
-  filter(gene_name %in% paste0("HLA-", c("A", "B", "C", "DQA1", "DQB1", "DRB1")))
-
 gencode12 <-
   "/home/vitor/gencode_data/gencode.v12.annotation.gtf.gz" %>%
   get_gencode_coords(feature = "gene") %>%
   filter(gene_name %in% paste0("HLA-", c("A", "B", "C", "DQA1", "DQB1", "DRB1"))) %>%
-  select(locus = gene_name, Gene_Symbol = gene_id)
-
-geuvadis_samples <- geuvadis_info %>%
-  filter(kgp_phase3 == 1L) %>%
-  pull(assay_name)
+  select(gene_name, gene_id)
 
 geuvadis <- 
-  read_tsv("../data/quantifications/GD660.GeneQuantRPKM.txt.gz") %>%
-  inner_join(gencode12, by = "Gene_Symbol") %>%
-  select(locus, geuvadis_samples) %>%
-  setNames(sub("^([^.]+)\\..+$", "\\1", names(.))) %>%
-  gather(subject, fpkm, HG00096:NA20828) %>%
-  arrange(subject, locus)
+  read_tsv("../data/quantifications/peer/phenotypes_eur_10.bed.gz") %>%
+  inner_join(gencode12, by = c("gid" = "gene_id")) %>%
+  select(locus = gene_name, starts_with("HG"), starts_with("NA")) %>%
+  gather(subject, resid, -locus)
 
-#geuvadis <- 
-#  read_tsv("../data/quantifications/GD462.GeneQuantRPKM.50FN.samplename.resk10.txt.gz") %>%
-#  inner_join(gencode12, by = "Gene_Symbol") %>%
-#  select(locus, HG00096:NA20828) %>%
-#  gather(subject, fpkm, HG00096:NA20828) %>%
-#  arrange(subject, locus)
-
-kallisto_fpkms <- 
-  data.table::fread("./kallisto/kallisto_gene_expressed90%_fpkm.csv") %>%
-  as_tibble() %>%
-  select(subject, gencode_hla$gene_id) %>%
-  gather(gene_id, fpkm, -subject) %>%
-  left_join(gencode_hla, by = "gene_id") %>%
-  select(subject, locus = gene_name, fpkm) %>%
-  arrange(subject, locus)
+kallisto_fpkms_10pcs <- 
+  read_tsv("../qtls/qtls_kallisto/peer_correction/phenotypes_fpkm/phenotypes_eur_10.bed.gz") %>%
+  inner_join(select(gencode_hla, gene_id, gene_name), by = c("gid" = "gene_id")) %>%
+  select(locus = gene_name, starts_with("HG"), starts_with("NA")) %>%
+  gather(subject, resid, -locus)
 
 fpkm_df <- 
-  inner_join(kallisto_fpkms, geuvadis, by = c("subject", "locus")) %>%
-  select(subject, locus, kallisto = fpkm.x, geuvadis = fpkm.y)
+  inner_join(kallisto_fpkms_10pcs, geuvadis, by = c("subject", "locus")) %>%
+  select(subject, locus, kallisto = resid.x, geuvadis = resid.y)
 
 png("./plots/kallisto_vs_geuvadis.png", width = 10, height = 6, units = "in", res = 300)
 ggplot(fpkm_df, aes(kallisto, geuvadis)) +
@@ -181,24 +169,28 @@ ggplot(fpkm_df, aes(kallisto, geuvadis)) +
   theme(axis.text = element_text(size = 12),
         axis.title = element_text(size = 16),
         strip.text = element_text(size = 16)) +
-  labs(x = "FPKM (kallisto)", y = "FPKM (GEUVADIS)")
+  labs(x = "PEER-corrected FPKM (kallisto)", y = "PEER-corrected FPKM (GEUVADIS)")
 dev.off()
 
 ## kallisto different indices
 kallisto_chr <- 
-  read_tsv("./kallisto/quantifications_CHR/processed_quant.tsv") %>%
-  inner_join(geuvadis_ids, by = "subject") %>%
-  select(subject = name, locus, tpm)
+  "../qtls/qtls_kallisto/qtltools_correction/phenotypes_chr/phenotypes_eur_10.bed.gz" %>%
+  read_tsv() %>%
+  inner_join(select(gencode_hla, gene_id, gene_name), by = c("gid" = "gene_id")) %>%
+  select(locus = gene_name, starts_with("HG"), starts_with("NA")) %>%
+  gather(subject, resid, -locus)
 
 kallisto_all <- 
-  read_tsv("./kallisto/quantifications_ALL/processed_quant.tsv") %>%
-  inner_join(geuvadis_ids, by = "subject") %>%
-  select(subject = name, locus, tpm)
+  "../qtls/qtls_kallisto/qtltools_correction/phenotypes_all/phenotypes_eur_10.bed.gz" %>%
+  read_tsv() %>%
+  inner_join(select(gencode_hla, gene_id, gene_name), by = c("gid" = "gene_id")) %>%
+  select(locus = gene_name, starts_with("HG"), starts_with("NA")) %>%
+  gather(subject, resid, -locus)
 
 kallisto_ref_imgt <-
-  left_join(kallisto_gene, kallisto_chr, by = c("subject", "locus")) %>%
+  left_join(kallisto_10pc, kallisto_chr, by = c("subject", "locus")) %>%
   left_join(kallisto_all, by = c("subject", "locus")) %>%
-  select(subject, locus, imgt = tpm.x, chr = tpm.y, all = tpm)
+  select(subject, locus, imgt = resid.x, chr = resid.y, all = resid)
 
 png("./plots/kallisto_imgt_vs_chr.png", height = 6, width = 10, units = "in", res = 150)
 ggplot(kallisto_ref_imgt, aes(imgt, chr)) +
@@ -208,10 +200,10 @@ ggplot(kallisto_ref_imgt, aes(imgt, chr)) +
   ggpmisc::stat_poly_eq(aes(label = ..adj.rr.label..), rr.digits = 2,
                         formula = y ~ x, parse = TRUE, size = 6) +
   theme_bw() +
-  theme(axis.text.x = element_text(size = 12),
+  theme(axis.text = element_text(size = 12),
         axis.title = element_text(size = 16),
         strip.text = element_text(size = 16)) +
-  labs(x = "TPM (kallisto-IMGT)", y = "TPM (kallisto REF chromosomes)")
+  labs(x = "PCA-corrected TPM (kallisto-IMGT)", y = "PCA-corrected (kallisto REF chromosomes)")
 dev.off()
 
 png("./plots/kallisto_imgt_vs_all.png", height = 6, width = 10, units = "in", res = 150)
@@ -222,16 +214,33 @@ ggplot(kallisto_ref_imgt, aes(imgt, all)) +
   ggpmisc::stat_poly_eq(aes(label = ..adj.rr.label..), rr.digits = 2,
                         formula = y ~ x, parse = TRUE, size = 6) +
   theme_bw() +
-  theme(axis.text.x = element_text(size = 12),
+  theme(axis.text = element_text(size = 12),
         axis.title = element_text(size = 16),
         strip.text = element_text(size = 16)) + 
-  labs(x = "TPM (kallisto-IMGT)", y = "TPM (kallisto REF + ALT)")
+  labs(x = "PCA-corrected TPM (kallisto-IMGT)", y = "PCA-corrected TPM (kallisto REF + ALT)")
 dev.off()
 
+kallisto_imgt_tpm <-
+  read_tsv("./kallisto/quantifications_2/processed_quant.tsv") %>%
+  filter(locus %in% c("A", "B", "C", "DQA1", "DQB1", "DRB1")) %>%
+  group_by(subject, locus) %>%
+  summarize(tpm = sum(tpm)) %>%
+  ungroup()
+
+kallisto_chr_tpm <- 
+  read_tsv("./kallisto/quantifications_CHR/processed_quant.tsv") %>%
+  select(-est_counts)
+
+kallisto_all_tpm <- 
+  read_tsv("./kallisto/quantifications_ALL/processed_quant.tsv") %>%
+  select(-est_counts)
+
+kallisto_tpm_df <- 
+  list(imgt = kallisto_imgt_tpm, chr = kallisto_chr_tpm, all = kallisto_all_tpm) %>%
+  bind_rows(.id = "index")
+
 png("./plots/tpm_distributions.png", height = 6, width = 10, units = "in", res = 150)
-kallisto_ref_imgt %>%
-  gather(index, value, imgt:all) %>%
-  ggplot(aes(value, fill = index)) +
+ggplot(kallisto_tpm_df, aes(tpm, fill = index)) +
   geom_density(alpha = 1/2) +
   scale_x_continuous(breaks = function(x) scales::pretty_breaks(3)(x)) +
   ggthemes::scale_fill_colorblind() +

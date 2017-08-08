@@ -2,7 +2,7 @@
 
 JOBS=64
 parallel=/home/vitor/parallel
-samples=../../data/sample_info/samples_phase3_ena.txt
+samples=../../data/sample_info/samples_phase3_ena_eur.txt
 
 $parallel --gnu -j $JOBS ./kallisto_quant_CHR.sh {} :::: $samples
 

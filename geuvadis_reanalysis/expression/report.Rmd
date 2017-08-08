@@ -20,9 +20,9 @@ include_graphics("./plots/library_sizes.png")
 
 # Typing accuracies
 
-*Concordance: the proportion of the called alleles that are concordant with the Gourraud et al (2014) typings
+\*Concordance: the proportion of the called alleles that are concordant with the Gourraud et al (2014) typings
 
-*Allele calls were compared at the maximum resolution possible at each pair
+\*Allele calls were compared at the maximum resolution possible at each pair
 
 ```{r}
 kallisto_typing <-
@@ -75,9 +75,16 @@ include_graphics("./plots/kallisto_imgt_vs_chr.png")
 include_graphics("./plots/kallisto_imgt_vs_all.png")
 ```
 
-**........................................................**
-**NOTE: THE REST OF THIS DOCUMENT SHOWS KALLISTO-IMGT DATA**
-**........................................................**
+
+**..................................................................**
+
+\linebreak
+
+**NOTE: All analyses below were carried out using kallisto-IMGT data**
+
+\linebreak
+
+**.................................................................**
 
 
 ## Distribution of TPM values

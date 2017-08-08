@@ -47,7 +47,11 @@ kallisto-IMGT vs...
 
 ![](./plots/kallisto_imgt_vs_all.png)
 
-**........................................................** **NOTE: THE REST OF THIS DOCUMENT SHOWS KALLISTO-IMGT DATA** **........................................................**
+**..................................................................**
+
+**NOTE: All analyses below were carried out using kallisto-IMGT data**
+
+**.................................................................**
 
 Distribution of TPM values
 --------------------------

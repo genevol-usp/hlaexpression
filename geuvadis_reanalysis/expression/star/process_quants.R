@@ -3,9 +3,10 @@ library(tidyverse)
 
 quant_round <- commandArgs(TRUE)[1]
 
-genos <- mutate(pag, allele = hla_trimnames(allele, 3))
-
-samples <- sort(geuvadis_info$ena_id[geuvadis_info$kgp_phase3 == 1L])
+samples <- 
+  geuvadis_info %>% 
+  filter(kgp_phase3 == 1L & pop != "YRI") %>%
+  pull(ena_id)
 
 doMC::registerDoMC(25)
 
@@ -25,6 +26,8 @@ if (quant_round == 1 | quant_round == 2) {
 	      .id = "subject", .parallel = TRUE)
 
   if (quant_round == 1L) {
+    
+    genos <- mutate(pag, allele = hla_trimnames(allele, 3))
     
     thresholds <- as.list(seq(0, .25, .05))
     names(thresholds) <- seq(0, .25, .05)

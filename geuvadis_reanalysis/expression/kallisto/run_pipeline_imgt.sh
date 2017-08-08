@@ -2,7 +2,7 @@
 
 JOBS=64
 parallel=/home/vitor/parallel
-samples=../../data/sample_info/samples_phase3_ena.txt
+samples=../../data/sample_info/samples_phase3_ena_eur.txt
 write_custom_index=./index/write_genotyped_alleles.R 
 
 $parallel --gnu -j $JOBS ./kallisto_quant_round1.sh {} :::: $samples
