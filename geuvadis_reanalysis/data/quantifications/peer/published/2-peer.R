@@ -4,7 +4,7 @@ library(peer)
 k <- 10L
 
 phenotypes <- 
-  data.table::fread("./geuvadis_rpkms.tsv") %>%
+  data.table::fread("./geuvadis_fpkms.csv") %>%
   as.data.frame() %>%
   `rownames<-`(.$subject) %>%
   .[-1] %>%
