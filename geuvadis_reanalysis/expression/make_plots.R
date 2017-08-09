@@ -298,7 +298,7 @@ ase_error <-
 
 png("./plots/ase.png", width = 8, height = 5, units = "in", res = 300)
 ggplot(ase_error, aes(factor(error), ase)) +
-  geom_jitter(alpha = 1/2, position = position_jitter(width = 0.3)) +
+  ggbeeswarm::geom_quasirandom(varwidth = TRUE) +
   facet_wrap(~locus) + 
   labs(x = "number of wrong calls in genotype") +
   theme_bw() +
