@@ -1,10 +1,10 @@
 library(magrittr)
 library(peer)
 
-k <- commandArgs(TRUE) %>% as.integer()
+k <- 10 
 
 phenotypes <- 
-  data.table::fread("../../../../expression/kallisto/kallisto_gene_expressed90%.csv") %>%
+  data.table::fread("../../../../expression/kallisto/kallisto_gene_expressed90%_fpkm.csv") %>%
   as.data.frame() %>%
   `rownames<-`(.$subject) %>%
   .[-1] %>%
