@@ -68,8 +68,8 @@ Distribution of TPM values
 ASE
 ===
 
-ASE by number of genotype inference errors
-------------------------------------------
+ASE by number of genotyping errors
+----------------------------------
 
 \*Each point represents a heterozygous genotype in the intersect with Gourraud data.
 
