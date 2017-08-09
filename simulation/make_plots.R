@@ -42,7 +42,8 @@ quant_data <-
   rename(est_counts_imgt = est_counts) %>%
   gather(index, counts, est_counts_chr:est_counts_imgt) %>%
   left_join(ground_truth, by = c("subject", "locus")) %>%
-  mutate(index = sub("est_counts_", "", index), 
+  mutate(index = sub("est_counts_", "", index),
+	 index = factor(index, levels = c("imgt", "chr", "all")),
          prop_mapped = counts/true_counts)
 
 quant_star <- 
@@ -64,7 +65,8 @@ quant_data_star <-
   select(subject, locus, dist, imgt = est_counts.x, chr = est_counts.y) %>%
   gather(index, counts, imgt, chr) %>%
   left_join(ground_truth, by = c("subject", "locus")) %>%
-  mutate(prop_mapped = counts/true_counts)
+  mutate(index = factor(index, levels = c("imgt", "chr", "all")),
+	 prop_mapped = counts/true_counts)
 
 
 png("./plots/hlasimul.png", width = 12, height = 6, units = "in", res = 300)
