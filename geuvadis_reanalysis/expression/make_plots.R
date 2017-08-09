@@ -142,9 +142,21 @@ gencode12 <-
   filter(gene_name %in% paste0("HLA-", c("A", "B", "C", "DQA1", "DQB1", "DRB1"))) %>%
   select(gene_name, gene_id)
 
+gencode19 <-
+  "/home/vitor/gencode_data/gencode.v19.annotation.gtf.gz" %>%
+  get_gencode_coords(feature = "gene") %>%
+  filter(gene_name %in% paste0("HLA-", c("A", "B", "C", "DQA1", "DQB1", "DRB1"))) %>%
+  select(gene_name, gene_id)
+
 geuvadis <- 
-  read_tsv("../data/quantifications/peer/phenotypes_eur_10.bed.gz") %>%
+  read_tsv("../data/quantifications/peer/published/phenotypes_eur_10.bed.gz") %>%
   inner_join(gencode12, by = c("gid" = "gene_id")) %>%
+  select(locus = gene_name, starts_with("HG"), starts_with("NA")) %>%
+  gather(subject, resid, -locus)
+
+geuvadis_new <-
+  read_tsv("../data/quantifications/peer/new/phenotypes_eur_10.bed.gz") %>%
+  inner_join(gencode19, by = c("gid" = "gene_id")) %>%
   select(locus = gene_name, starts_with("HG"), starts_with("NA")) %>%
   gather(subject, resid, -locus)
 
@@ -161,7 +173,8 @@ star_fpkms_10pcs <-
   gather(subject, resid, -locus)
 
 fpkm_df <-
-  list(geuvadis = geuvadis, kallisto = kallisto_fpkms_10pcs, star = star_fpkms_10pcs) %>%
+  list(geuvadis = geuvadis, geuvadis_new = geuvadis_new,
+       kallisto = kallisto_fpkms_10pcs, star = star_fpkms_10pcs) %>%
   bind_rows(.id = "method") %>%
   spread(method, resid)
 
@@ -193,6 +206,33 @@ ggplot(fpkm_df, aes(star, geuvadis)) +
   labs(x = "PEER-corrected FPKM (STAR)", y = "PEER-corrected FPKM (GEUVADIS)")
 dev.off()
 
+png("./plots/kallisto_vs_geuvadis_new.png", width = 10, height = 6, units = "in", res = 300)
+ggplot(fpkm_df, aes(kallisto, geuvadis_new)) +
+  geom_abline() +
+  geom_point(alpha = 1/2) +
+  facet_wrap(~locus, scales = "free") +
+  ggpmisc::stat_poly_eq(aes(label = ..adj.rr.label..), rr.digits = 2,
+                        formula = y ~ x, parse = TRUE, size = 6) +
+  theme_bw() +
+  theme(axis.text = element_text(size = 12),
+        axis.title = element_text(size = 16),
+        strip.text = element_text(size = 16)) +
+  labs(x = "PEER-corrected FPKM (kallisto)", y = "PEER-corrected FPKM (GEUVADIS)")
+dev.off()
+
+png("./plots/star_vs_geuvadis_new.png", width = 10, height = 6, units = "in", res = 300)
+ggplot(fpkm_df, aes(star, geuvadis_new)) +
+  geom_abline() +
+  geom_point(alpha = 1/2) +
+  facet_wrap(~locus, scales = "free") +
+  ggpmisc::stat_poly_eq(aes(label = ..adj.rr.label..), rr.digits = 2,
+                        formula = y ~ x, parse = TRUE, size = 6) +
+  theme_bw() +
+  theme(axis.text = element_text(size = 12),
+        axis.title = element_text(size = 16),
+        strip.text = element_text(size = 16)) +
+  labs(x = "PEER-corrected FPKM (STAR)", y = "PEER-corrected FPKM (GEUVADIS)")
+dev.off()
 
 ## kallisto different indices
 kallisto_chr <- 
@@ -330,9 +370,11 @@ hla_and_transAct_genes <- gencode_chr_gene %>%
   filter(gene_name %in% c("HLA-A", "HLA-B", "HLA-C", "HLA-DQA1", "HLA-DQB1", 
 			  "HLA-DRB1", "CIITA"))
 
+pcs <- c(seq(0, 30, 5), seq(40, 100, 10))
+
 pca_expression_files <-
-  sprintf("../qtls/qtls_kallisto/qtltools_correction/phenotypes/phenotypes_eur_%d.bed.gz", seq(0, 100, 5)) %>%
-  setNames(seq(0, 100, 5))
+  sprintf("../qtls/qtls_kallisto/qtltools_correction/phenotypes/phenotypes_eur_%d.bed.gz", pcs) %>%
+  setNames(pcs)
 
 pca_expression_df <-
   parallel::mclapply(pca_expression_files, 
@@ -340,7 +382,7 @@ pca_expression_df <-
 		       read_tsv(i, progress = FALSE) %>% 
 		       inner_join(hla_and_transAct_genes, by = c("id" = "gene_id")) %>%
 		       select(gene_name, HG00096:NA20828),
-		     mc.cores = 21) %>%
+		     mc.cores = length(pcs)) %>%
   bind_rows(.id = "PCs") %>%
   gather(subject, value, HG00096:NA20828) %>%
   mutate(gene_name = sub("^HLA-", "", gene_name)) %>%

@@ -34,15 +34,25 @@ kallisto vs STAR-Salmon
 
 ![](./plots/kallisto_vs_star.png)
 
-kallisto vs Geuvadis
---------------------
+kallisto vs Geuvadis (Published)
+--------------------------------
 
 ![](./plots/kallisto_vs_geuvadis.png)
 
-STAR-Salmon vs Geuvadis
------------------------
+STAR-Salmon vs Geuvadis (Published)
+-----------------------------------
 
 ![](./plots/star_vs_geuvadis.png)
+
+kallisto vs Geuvadis (new quantifications)
+------------------------------------------
+
+![](./plots/kallisto_vs_geuvadis_new.png)
+
+STAR-Salmon vs Geuvadis (new quantifications)
+---------------------------------------------
+
+![](./plots/star_vs_geuvadis_new.png)
 
 kallisto: HLA diversity vs reference chromosomes only
 -----------------------------------------------------

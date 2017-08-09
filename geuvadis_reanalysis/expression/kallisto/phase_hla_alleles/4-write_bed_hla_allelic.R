@@ -11,7 +11,7 @@ hla_by_allele <-
   select(subject, locus, hap, hla_allele, tpm) 
 
 hla_by_gene_best <-
-  read_tsv("../../../qtls/qtls_kallisto/qtltools_correction/phenotypes/phenotypes_eur_75.bed.gz") %>%
+  read_tsv("../../../qtls/qtls_kallisto/qtltools_correction/phenotypes/phenotypes_eur_60.bed.gz") %>%
   inner_join(gencode_hla, c("gid" = "gene_id")) %>%
   gather(subject, tpm_pc, HG00096:NA20828) %>%
   select(subject, locus = gene_name, tpm_pc) %>%
