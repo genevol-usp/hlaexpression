@@ -90,6 +90,26 @@ include_graphics("./plots/kallisto_vs_star_TPM.png")
 include_graphics("./plots/kallisto_vs_star_10pc.png")
 ```
 
+## kallisto vs STAR-Salmon; Reference chromosomes only
+
+### Counts
+
+```{r}
+include_graphics("./plots/kallisto_vs_star_CHR_counts.png")
+```
+
+### TPM
+
+```{r}
+include_graphics("./plots/kallisto_vs_star_CHR_TPM.png")
+```
+
+### PCA-corrected expression
+
+```{r} 
+include_graphics("./plots/kallisto_vs_star_CHR_10pc.png")
+```
+
 ## kallisto; HLA-diversity vs Reference chromosomes only
 
 ### Counts

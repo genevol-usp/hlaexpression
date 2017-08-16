@@ -38,6 +38,20 @@ scatter_plot <- function(df, x_var, y_var) {
 	  strip.text = element_text(size = 16))
 }
 
+scatter_plot_color <- function(df, x_var, y_var, color_var) {
+  ggplot(df, aes_string(x_var, y_var, color = color_var)) +
+    geom_abline() +
+    geom_point(alpha = 1/2) +
+    facet_wrap(~locus, scales = "free") +
+    ggpmisc::stat_poly_eq(aes(label = ..adj.rr.label..), rr.digits = 2,
+			  formula = y ~ x, parse = TRUE, size = 6) +
+    theme_bw() +
+    theme(axis.text = element_text(size = 12),
+	  axis.title = element_text(size = 16),
+	  strip.text = element_text(size = 16)) +
+    labs(color = "distance to ref")
+}
+
 # Data
 allele_dist <- read_tsv("./data/distances_to_reference.tsv") %>%
   mutate(locus = sub("^HLA-", "", locus))
@@ -207,37 +221,37 @@ scatter_plot(quant_data, "resid.kallisto.chr", "resid.star.chr") +
 dev.off()
 
 png("./plots/kallisto_imgt_vs_chr_counts.png", width = 10, height = 6, units = "in", res = 300)
-scatter_plot(quant_data, "est_counts.kallisto.imgt", "est_counts.kallisto.chr") +
+scatter_plot_color(quant_data, "est_counts.kallisto.imgt", "est_counts.kallisto.chr", "dist.kallisto") +
   labs(x = "Counts (kallisto-IMGT)", 
        y = "Counts (kallisto REF chromosomes)")
 dev.off()
 
 png("./plots/kallisto_imgt_vs_chr_TPM.png", width = 10, height = 6, units = "in", res = 300)
-scatter_plot(quant_data, "tpm.kallisto.imgt", "tpm.kallisto.chr") +
+scatter_plot_color(quant_data, "tpm.kallisto.imgt", "tpm.kallisto.chr", "dist.kallisto") +
   labs(x = "TPM (kallisto-IMGT)", 
        y = "TPM (kallisto REF chromosomes)")
 dev.off()
 
 png("./plots/kallisto_imgt_vs_chr_10pc.png", width = 10, height = 6, units = "in", res = 300)
-scatter_plot(quant_data, "resid.kallisto.imgt", "resid.kallisto.chr") +
+scatter_plot_color(quant_data, "resid.kallisto.imgt", "resid.kallisto.chr", "dist.kallisto") +
   labs(x = "PCA-corrected TPM (kallisto-IMGT)", 
        y = "PCA-corrected TPM (kallisto REF chromosomes)")
 dev.off()
 
 png("./plots/star_imgt_vs_chr_counts.png", width = 10, height = 6, units = "in", res = 300)
-scatter_plot(quant_data, "est_counts.star.imgt", "est_counts.star.chr") +
+scatter_plot_color(quant_data, "est_counts.star.imgt", "est_counts.star.chr", "dist.star") +
   labs(x = "Counts (STAR-IMGT)", 
        y = "Counts (STAR REF chromosomes)")
 dev.off()
 
 png("./plots/star_imgt_vs_chr_TPM.png", width = 10, height = 6, units = "in", res = 300)
-scatter_plot(quant_data, "tpm.star.imgt", "tpm.star.chr") +
+scatter_plot_color(quant_data, "tpm.star.imgt", "tpm.star.chr", "dist.star") +
   labs(x = "TPM (STAR-IMGT)", 
        y = "TPM (STAR REF chromosomes)")
 dev.off()
 
 png("./plots/star_imgt_vs_chr_10pc.png", width = 10, height = 6, units = "in", res = 300)
-scatter_plot(quant_data, "resid.star.imgt", "resid.star.chr") +
+scatter_plot_color(quant_data, "resid.star.imgt", "resid.star.chr", "dist.star") +
   labs(x = "PCA-corrected TPM (STAR-IMGT)", 
        y = "PCA-corrected TPM (STAR REF chromosomes)")
 dev.off()

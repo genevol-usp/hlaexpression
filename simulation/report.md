@@ -95,6 +95,21 @@ kallisto vs STAR-Salmon; HLA-diversity index
 
 ![](./plots/kallisto_vs_star_10pc.png)
 
+kallisto vs STAR-Salmon; Reference chromosomes only
+---------------------------------------------------
+
+### Counts
+
+![](./plots/kallisto_vs_star_CHR_counts.png)
+
+### TPM
+
+![](./plots/kallisto_vs_star_CHR_TPM.png)
+
+### PCA-corrected expression
+
+![](./plots/kallisto_vs_star_CHR_10pc.png)
+
 kallisto; HLA-diversity vs Reference chromosomes only
 -----------------------------------------------------
 
