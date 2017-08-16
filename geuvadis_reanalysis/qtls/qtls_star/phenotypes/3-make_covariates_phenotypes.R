@@ -1,5 +1,4 @@
 library(data.table)
-devtools::load_all("/home/vitor/hlaseqlib")
 
 pcs_dt <- 
   fread("./phenotypes_eur_pcs.pca", nrows = 100)[, SampleID := sub("^.+(PC\\d+)$", "\\1", SampleID)]
