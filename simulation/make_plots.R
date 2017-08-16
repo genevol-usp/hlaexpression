@@ -28,7 +28,7 @@ plot_dist <- function(df) {
 scatter_plot <- function(df, x_var, y_var) {
   ggplot(df, aes_string(x_var, y_var)) +
     geom_abline() +
-    geom_point(alpha = 1/2) +
+    geom_point() +
     facet_wrap(~locus, scales = "free") +
     ggpmisc::stat_poly_eq(aes(label = ..adj.rr.label..), rr.digits = 2,
 			  formula = y ~ x, parse = TRUE, size = 6) +
@@ -38,8 +38,8 @@ scatter_plot <- function(df, x_var, y_var) {
 	  strip.text = element_text(size = 16))
 }
 
-scatter_plot_color <- function(df, x_var, y_var, color_var) {
-  ggplot(df, aes_string(x_var, y_var, color = color_var)) +
+scatter_plot_color <- function(df, x_var, y_var, alpha_var) {
+  ggplot(df, aes_string(x_var, y_var, alpha = alpha_var)) +
     geom_abline() +
     geom_point() +
     facet_wrap(~locus, scales = "free") +
@@ -49,7 +49,7 @@ scatter_plot_color <- function(df, x_var, y_var, color_var) {
     theme(axis.text = element_text(size = 12),
 	  axis.title = element_text(size = 16),
 	  strip.text = element_text(size = 16)) +
-    labs(color = "distance to ref")
+    labs(alpha = "distance to ref")
 }
 
 # Data
