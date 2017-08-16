@@ -42,7 +42,8 @@ scatter_plot_color <- function(df, x_var, y_var, alpha_var) {
     theme_bw() +
     theme(axis.text = element_text(size = 12),
           axis.title = element_text(size = 16),
-          strip.text = element_text(size = 16))
+          strip.text = element_text(size = 16)) +
+    labs(alpha = "distance to ref")
 }
 
 make_data <- function(locus1, locus2) {
