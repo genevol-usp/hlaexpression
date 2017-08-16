@@ -5,9 +5,6 @@ pcs_dt <-
   fread("./phenotypes_eur_pcs.pca", nrows = 100)[, SampleID := sub("^.+(PC\\d+)$", "\\1", SampleID)]
 setnames(pcs_dt, "SampleID", "id")
 
-cols <- names(pcs_dt)[-1]
-pcs_dt[, (cols) := lapply(.SD, as.character), .SDcols = cols]
-
 out_basename <- "./covariates/covariates_pheno_"
 
 for (pc in c(seq(5, 30, 5), seq(40, 100, 10))) {
