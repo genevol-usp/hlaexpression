@@ -41,7 +41,7 @@ scatter_plot <- function(df, x_var, y_var) {
 scatter_plot_color <- function(df, x_var, y_var, color_var) {
   ggplot(df, aes_string(x_var, y_var, color = color_var)) +
     geom_abline() +
-    geom_point(alpha = 1/2) +
+    geom_point() +
     facet_wrap(~locus, scales = "free") +
     ggpmisc::stat_poly_eq(aes(label = ..adj.rr.label..), rr.digits = 2,
 			  formula = y ~ x, parse = TRUE, size = 6) +
