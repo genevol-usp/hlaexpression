@@ -27,7 +27,7 @@ read_tsv("./expression/kallisto/genotyping_accuracies.tsv") %>%
 ## Expression
 
 ```{r}
-include_graphics('./plots/hlasimul.png')
+include_graphics('./plots/kallisto_prop_mapped.png')
 ```
 
 # STAR + Salmon
@@ -45,7 +45,7 @@ read_tsv("./expression/star/genotyping_accuracies.tsv") %>%
 ## Expression
 
 ```{r}
-include_graphics("./plots/star_simul.png")
+include_graphics("./plots/star_prop_mapped.png")
 ```
 
 # Quality assessment 
@@ -67,3 +67,68 @@ Percentage of simulated reads gained by each HLA gene (reads simulated from othe
 ```{r}
 read_tsv("./reads_false_pos_hla.tsv") %>% kable()
 ```
+
+# Comparisons between indices and aligners
+
+## kallisto vs STAR-Salmon; HLA-diversity index
+
+### Counts
+
+```{r}
+include_graphics("./plots/kallisto_vs_star_counts.png")
+```
+
+### TPM
+
+```{r}
+include_graphics("./plots/kallisto_vs_star_TPM.png")
+```
+
+### PCA-corrected expression
+
+```{r} 
+include_graphics("./plots/kallisto_vs_star_10pc.png")
+```
+
+## kallisto; HLA-diversity vs Reference chromosomes only
+
+### Counts
+
+```{r}
+include_graphics("./plots/kallisto_imgt_vs_chr_counts.png")
+```
+
+### TPM
+
+```{r}
+include_graphics("./plots/kallisto_imgt_vs_chr_TPM.png")
+```
+
+### PCA-corrected expression
+
+```{r}
+include_graphics("./plots/kallisto_imgt_vs_chr_10pc.png")
+```
+
+## STAR-Salmon; HLA-diversity vs Reference chromosomes only
+
+### Counts
+
+```{r}
+include_graphics("./plots/star_imgt_vs_chr_counts.png")
+```
+
+### TPM 
+
+```{r}
+include_graphics("./plots/star_imgt_vs_chr_TPM.png")
+```
+
+### PCA-corrected expression
+
+```{r}
+include_graphics("./plots/star_imgt_vs_chr_10pc.png")
+```
+
+
+

@@ -19,7 +19,7 @@ Genotyping
 Expression
 ----------
 
-![](./plots/hlasimul.png)
+![](./plots/kallisto_prop_mapped.png)
 
 STAR + Salmon
 =============
@@ -39,7 +39,7 @@ Genotyping
 Expression
 ----------
 
-![](./plots/star_simul.png)
+![](./plots/star_prop_mapped.png)
 
 Quality assessment
 ==================
@@ -76,3 +76,51 @@ Percentage of simulated reads gained by each HLA gene (reads simulated from othe
 | HLA-DQA1  |      0.04|  0.03|
 | HLA-DQB1  |      0.00|  0.00|
 | HLA-DRB1  |      0.10|  0.05|
+
+Comparisons between indices and aligners
+========================================
+
+kallisto vs STAR-Salmon; HLA-diversity index
+--------------------------------------------
+
+### Counts
+
+![](./plots/kallisto_vs_star_counts.png)
+
+### TPM
+
+![](./plots/kallisto_vs_star_TPM.png)
+
+### PCA-corrected expression
+
+![](./plots/kallisto_vs_star_10pc.png)
+
+kallisto; HLA-diversity vs Reference chromosomes only
+-----------------------------------------------------
+
+### Counts
+
+![](./plots/kallisto_imgt_vs_chr_counts.png)
+
+### TPM
+
+![](./plots/kallisto_imgt_vs_chr_TPM.png)
+
+### PCA-corrected expression
+
+![](./plots/kallisto_imgt_vs_chr_10pc.png)
+
+STAR-Salmon; HLA-diversity vs Reference chromosomes only
+--------------------------------------------------------
+
+### Counts
+
+![](./plots/star_imgt_vs_chr_counts.png)
+
+### TPM
+
+![](./plots/star_imgt_vs_chr_TPM.png)
+
+### PCA-corrected expression
+
+![](./plots/star_imgt_vs_chr_10pc.png)
