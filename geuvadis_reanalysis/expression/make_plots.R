@@ -233,19 +233,82 @@ quant_data <-
   left_join(geuvadis_new, by = c("subject", "locus")) %>%
   rename(resid.geuvadis.new = resid)
 
-kallisto_imgt_tpm <- select(kallisto_gene, -est_counts)
+kallisto_rsq <- 
+  quant_data %>%
+  group_by(locus) %>%
+  mutate(qt_dist = ntile(dist.kallisto, 4)) %>%
+  filter(qt_dist %in% c(1, 4)) %>%
+  group_by(locus, qt_dist) %>%
+  summarize(rsq = summary(lm(resid.kallisto.imgt.tpm~resid.kallisto.chr.tpm))$adj.r.square) %>%
+  ungroup()
+
+star_rsq <- 
+  quant_data %>%
+  group_by(locus) %>%
+  mutate(qt_dist = ntile(dist.star, 4)) %>%
+  filter(qt_dist %in% c(1, 4)) %>%
+  group_by(locus, qt_dist) %>%
+  summarize(rsq = summary(lm(resid.star.imgt.tpm~resid.star.chr.tpm))$adj.r.square) %>%
+  ungroup()
+
+kallisto_imgt_tpm <- select(kallisto_gene, -est_counts, -dist)
 
 kallisto_chr_tpm <- 
   read_tsv("./kallisto/quantifications_CHR/processed_quant.tsv") %>%
-  select(-est_counts)
+  mutate(locus = paste0("HLA-", locus)) %>%
+  inner_join(geuvadis_ids, by = "subject") %>%
+  select(subject = name, locus, tpm) %>%
+  arrange(subject, locus)
 
 kallisto_all_tpm <- 
   read_tsv("./kallisto/quantifications_ALL/processed_quant.tsv") %>%
-  select(-est_counts)
+  mutate(locus = paste0("HLA-", locus)) %>%
+  inner_join(geuvadis_ids, by = "subject") %>%
+  select(subject = name, locus, tpm) %>%
+  arrange(subject, locus)
 
 kallisto_tpm_df <- 
   list(imgt = kallisto_imgt_tpm, chr = kallisto_chr_tpm, all = kallisto_all_tpm) %>%
   bind_rows(.id = "index")
+
+kallisto_tpm_rsq <- 
+  select(kallisto_gene, -est_counts) %>%
+  left_join(kallisto_chr_tpm, by = c("subject", "locus"), 
+	    suffix = c(".kallisto.imgt", ".kallisto.chr")) %>%
+  group_by(locus) %>%
+  mutate(qt_dist = ntile(dist, 4)) %>%
+  filter(qt_dist %in% c(1, 4)) %>%
+  group_by(locus, qt_dist) %>%
+  summarize(rsq = summary(lm(tpm.kallisto.imgt~tpm.kallisto.chr))$adj.r.square) %>%
+  ungroup()
+
+star_imgt_tpm <- star_gene %>%
+  select(subject, locus, dist, tpm)
+
+star_chr_tpm <- 
+  read_tsv("./star/quantifications_CHR/processed_quant.tsv") %>%
+  inner_join(geuvadis_ids, by = "subject") %>%
+  select(subject = name, locus, tpm)
+
+star_tpm_rsq <- 
+  left_join(star_imgt_tpm, star_chr_tpm, by = c("subject", "locus"), 
+	    suffix = c(".kallisto.imgt", ".kallisto.chr")) %>%
+  group_by(locus) %>%
+  mutate(qt_dist = ntile(dist, 4)) %>%
+  filter(qt_dist == 1L | qt_dist == 4L) %>%
+  group_by(locus, qt_dist) %>%
+  summarize(rsq = summary(lm(tpm.kallisto.imgt~tpm.kallisto.chr))$adj.r.square) %>%
+  ungroup()
+
+rsq_df <-
+  left_join(kallisto_rsq, star_rsq, by = c("locus", "qt_dist"), 
+	    suffix = c(".kallisto.pca", ".star.pca")) %>%
+  left_join(kallisto_tpm_rsq, by = c("locus", "qt_dist")) %>%
+  rename(rsq.kallisto.tpm = rsq) %>%
+  left_join(star_tpm_rsq, by = c("locus", "qt_dist")) %>%
+  rename(rsq.star.tpm = rsq)
+
+write_tsv(rsq_df, "./plots/rsq_by_quartile.tsv")
 
 pag3f <- mutate(pag, allele = hla_trimnames(allele, 3))
 
