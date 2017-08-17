@@ -10,12 +10,9 @@ samples <-
 
 doMC::registerDoMC(25)
 
-if (quant_round == 1 | quant_round == 2) {
+if (quant_round == 1 || quant_round == 2) {
 
   quants <- 
-    file.path(paste0("./quantifications_", quant_round), samples, "quant.sf") %>%
-    setNames(samples) %>%
-    plyr::ldply(. %>% read_tsv(col_types = "c--dd", progress = FALSE) %>% 
     file.path(paste0("./quantifications_", quant_round), samples, "quant.sf") %>%
     setNames(samples) %>%
     plyr::ldply(. %>% read_tsv(col_types = "c--dd", progress = FALSE) %>% 
