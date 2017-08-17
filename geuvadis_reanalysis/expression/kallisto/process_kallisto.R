@@ -28,7 +28,8 @@ process_quant_refgenome <- function(quant_files, gencode_hla_tx) {
    ][order(subject, gene_name)]
 }
 
-samples <- geuvadis_info$ena_id[geuvadis_info$kgp_phase3 == 1]
+samples <- 
+  geuvadis_info$ena_id[geuvadis_info$kgp_phase3 == 1 & geuvadis_info$pop != "YRI"]
 
 quant_round <- commandArgs(TRUE)[1]
 quant_dir <- paste0("./quantifications_", quant_round)
