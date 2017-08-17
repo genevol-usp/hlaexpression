@@ -85,10 +85,18 @@ include_graphics("./plots/star_vs_geuvadis_new.png")
 include_graphics("./plots/kallisto_imgt_vs_chr.png")
 ```
 
-## STAR:  HLA diversity vs reference chromosomes only
+## STAR: HLA diversity vs reference chromosomes only
 
 ```{r}
 include_graphics("./plots/star_imgt_vs_chr.png")
+```
+
+### HLA diversity vs reference chromosomes only: R-square by quartile of difference to the reference allele
+
+```{r}
+read_tsv("./plots/rsq_by_quartile.tsv") %>%
+  rename(quartile = qt_dist) %>%
+  kable()
 ```
 
 \linebreak
