@@ -143,4 +143,12 @@ STAR-Salmon; HLA-diversity vs Reference chromosomes only
 Varying the mismatch threshold in the alignment to REF chromosomes
 ==================================================================
 
-![](./plots/star_mismatch_rates.png)
+TPM
+---
+
+![](./plots/star_mismatch_rates_TPM.png)
+
+PCA-corrected expression
+------------------------
+
+![](./plots/star_mismatch_rates_PCA.png)

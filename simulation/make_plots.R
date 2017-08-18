@@ -213,6 +213,36 @@ star_chr_10pc_df <-
 	 mismatch = factor(mismatch, levels = c("4%", "6%", "8%", "10%"))) %>%
   select(subject, locus, mismatch, resid.imgt, resid)
 
+star_quant_chr_0.06 <- 
+  read_tsv("./expression/star/quantifications_CHR_0.06/processed_quant.tsv") %>%
+  mutate(locus = sub("HLA-", "", locus)) %>%
+  select(-est_counts)
+
+star_quant_chr_0.08 <- 
+  read_tsv("./expression/star/quantifications_CHR_0.08/processed_quant.tsv") %>%
+  mutate(locus = sub("HLA-", "", locus)) %>%
+  select(-est_counts)
+
+star_quant_chr_0.1 <- 
+  read_tsv("./expression/star/quantifications_CHR_0.1/processed_quant.tsv") %>%
+  mutate(locus = sub("HLA-", "", locus)) %>%
+  select(-est_counts)
+
+star_chr_tpm_df <-
+  left_join(star_quant_imgt, star_quant_chr, by = c("subject", "locus"), 
+	    suffix = c(".imgt", ".4")) %>%
+  select(-starts_with("est_counts"), -dist) %>%
+  left_join(star_quant_chr_0.06, by = c("subject", "locus")) %>%
+  rename(tpm.6 = tpm) %>%
+  left_join(star_quant_chr_0.08, by = c("subject", "locus")) %>%
+  rename(tpm.8 = tpm) %>%
+  left_join(star_quant_chr_0.1, by = c("subject", "locus")) %>%
+  rename(tpm.10 = tpm) %>%
+  gather(mismatch, tpm, tpm.4:tpm.10) %>%
+  mutate(mismatch = sub("^tpm\\.(\\d+)$", "\\1%", mismatch),
+	 mismatch = factor(mismatch, levels = c("4%", "6%", "8%", "10%"))) %>%
+  select(subject, locus, mismatch, tpm.imgt, tpm)
+
 
 # Plots
 png("./plots/kallisto_prop_mapped.png", width = 12, height = 6, units = "in", res = 200)
@@ -295,7 +325,22 @@ scatter_plot_color(quant_data, "resid.star.imgt", "resid.star.chr", "dist.star")
        y = "PCA-corrected TPM (STAR REF chromosomes)")
 dev.off()
 
-png("./plots/star_mismatch_rates.png", width = 12, height = 10, units = "in", res = 200)
+png("./plots/star_mismatch_rates_TPM.png", width = 12, height = 10, units = "in", res = 200)
+ggplot(star_chr_tpm_df, aes(tpm.imgt, tpm)) +
+    geom_abline() +
+    geom_point() +
+    facet_grid(mismatch~locus, scales = "free") +
+    ggpmisc::stat_poly_eq(aes(label = ..adj.rr.label..), rr.digits = 2,
+			  formula = y ~ x, parse = TRUE, size = 6) +
+    theme_bw() +
+    theme(axis.text = element_text(size = 12),
+	  axis.title = element_text(size = 16),
+	  strip.text = element_text(size = 16)) +
+    labs(x = "TPM (IMGT)",
+	 y = "TPM (REF chromosomes)")
+dev.off()
+
+png("./plots/star_mismatch_rates_PCA.png", width = 12, height = 10, units = "in", res = 200)
 ggplot(star_chr_10pc_df, aes(resid.imgt, resid)) +
     geom_abline() +
     geom_point() +
