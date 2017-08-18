@@ -139,3 +139,8 @@ STAR-Salmon; HLA-diversity vs Reference chromosomes only
 ### PCA-corrected expression
 
 ![](./plots/star_imgt_vs_chr_10pc.png)
+
+Varying the mismatch threshold in the alignment to REF chromosomes
+==================================================================
+
+![](./plots/star_mismatch_rates.png)

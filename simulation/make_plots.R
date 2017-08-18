@@ -100,7 +100,7 @@ star_quant_imgt <-
   ungroup()
 
 star_quant_chr <- 
-  read_tsv("./expression/star/quantifications_CHR/processed_quant.tsv") %>%
+  read_tsv("./expression/star/quantifications_CHR_0.04/processed_quant.tsv") %>%
   mutate(locus = sub("HLA-", "", locus))
 
 kallisto_10pc <-
@@ -128,7 +128,7 @@ kallisto_chr_10pc <-
   mutate(locus = sub("^HLA-", "", locus))
 
 star_chr_10pc <-
-  "./expression/star/phenotype_correction/chr/phenotypes_10.bed.gz" %>%
+  "./expression/star/phenotype_correction/chr_0.04/phenotypes_10.bed.gz" %>%
   read_tsv() %>%
   inner_join(select(gencode_hla, gene_id, gene_name), by = c("gid" = "gene_id")) %>%
   select(locus = gene_name, starts_with("sample_")) %>%
@@ -175,84 +175,138 @@ counts_star <-
          prop_mapped = counts/true_counts) %>%
   rename(dist = dist.star)
 
+star_chr_10pc_0.06 <-
+  "./expression/star/phenotype_correction/chr_0.06/phenotypes_10.bed.gz" %>%
+  read_tsv() %>%
+  inner_join(select(gencode_hla, gene_id, gene_name), by = c("gid" = "gene_id")) %>%
+  select(locus = gene_name, starts_with("sample_")) %>%
+  gather(subject, resid, -locus) %>%
+  mutate(locus = sub("^HLA-", "", locus))
+
+star_chr_10pc_0.08 <-
+  "./expression/star/phenotype_correction/chr_0.08/phenotypes_10.bed.gz" %>%
+  read_tsv() %>%
+  inner_join(select(gencode_hla, gene_id, gene_name), by = c("gid" = "gene_id")) %>%
+  select(locus = gene_name, starts_with("sample_")) %>%
+  gather(subject, resid, -locus) %>%
+  mutate(locus = sub("^HLA-", "", locus))
+
+star_chr_10pc_0.1 <-
+  "./expression/star/phenotype_correction/chr_0.1/phenotypes_10.bed.gz" %>%
+  read_tsv() %>%
+  inner_join(select(gencode_hla, gene_id, gene_name), by = c("gid" = "gene_id")) %>%
+  select(locus = gene_name, starts_with("sample_")) %>%
+  gather(subject, resid, -locus) %>%
+  mutate(locus = sub("^HLA-", "", locus))
+
+star_chr_10pc_df <-
+  left_join(star_10pc, star_chr_10pc, by = c("subject", "locus"),
+	    suffix = c(".imgt", ".4")) %>%
+  left_join(star_chr_10pc_0.06, by = c("subject", "locus")) %>%
+  rename(resid.6 = resid) %>%
+  left_join(star_chr_10pc_0.08, by = c("subject", "locus")) %>%
+  rename(resid.8 = resid) %>%
+  left_join(star_chr_10pc_0.1, by = c("subject", "locus")) %>%
+  rename(resid.10 = resid) %>%
+  gather(mismatch, resid, resid.4:resid.10) %>%
+  mutate(mismatch = sub("^resid\\.(\\d+)$", "\\1%", mismatch),
+	 mismatch = factor(mismatch, levels = c("4%", "6%", "8%", "10%"))) %>%
+  select(subject, locus, mismatch, resid.imgt, resid)
+
+
 # Plots
-png("./plots/kallisto_prop_mapped.png", width = 12, height = 6, units = "in", res = 300)
+png("./plots/kallisto_prop_mapped.png", width = 12, height = 6, units = "in", res = 200)
 plot_dist(counts_kallisto)
 dev.off()
 
-png("./plots/star_prop_mapped.png", width = 8, height = 5, units = "in", res = 300)
+png("./plots/star_prop_mapped.png", width = 8, height = 5, units = "in", res = 200)
 plot_dist(counts_star)
 dev.off()
 
-png("./plots/kallisto_vs_star_counts.png", width = 10, height = 6, units = "in", res = 300)
+png("./plots/kallisto_vs_star_counts.png", width = 10, height = 6, units = "in", res = 200)
 scatter_plot(quant_data, "est_counts.kallisto.imgt", "est_counts.star.imgt") +
   labs(x = "Counts (kallisto)", 
        y = "Counts (STAR-Salmon)")
 dev.off()
 
-png("./plots/kallisto_vs_star_TPM.png", width = 10, height = 6, units = "in", res = 300)
+png("./plots/kallisto_vs_star_TPM.png", width = 10, height = 6, units = "in", res = 200)
 scatter_plot(quant_data, "tpm.kallisto.imgt", "tpm.star.imgt") +
   labs(x = "TPM (kallisto)", 
        y = "TPM (STAR-Salmon)")
 dev.off()
 
-png("./plots/kallisto_vs_star_10pc.png", width = 10, height = 6, units = "in", res = 300)
+png("./plots/kallisto_vs_star_10pc.png", width = 10, height = 6, units = "in", res = 200)
 scatter_plot(quant_data, "resid.kallisto.imgt", "resid.star.imgt") +
   labs(x = "PCA-corrected TPM (kallisto)", 
        y = "PCA-corrected TPM (STAR-Salmon)")
 dev.off()
 
-png("./plots/kallisto_vs_star_CHR_counts.png", width = 10, height = 6, units = "in", res = 300)
+png("./plots/kallisto_vs_star_CHR_counts.png", width = 10, height = 6, units = "in", res = 200)
 scatter_plot(quant_data, "est_counts.kallisto.chr", "est_counts.star.chr") +
   labs(x = "Counts (kallisto)", 
        y = "Counts (STAR-Salmon)")
 dev.off()
 
-png("./plots/kallisto_vs_star_CHR_TPM.png", width = 10, height = 6, units = "in", res = 300)
+png("./plots/kallisto_vs_star_CHR_TPM.png", width = 10, height = 6, units = "in", res = 200)
 scatter_plot(quant_data, "tpm.kallisto.chr", "tpm.star.chr") +
   labs(x = "TPM (kallisto)", 
        y = "TPM (STAR-Salmon)")
 dev.off()
 
-png("./plots/kallisto_vs_star_CHR_10pc.png", width = 10, height = 6, units = "in", res = 300)
+png("./plots/kallisto_vs_star_CHR_10pc.png", width = 10, height = 6, units = "in", res = 200)
 scatter_plot(quant_data, "resid.kallisto.chr", "resid.star.chr") +
   labs(x = "PCA-corrected TPM (kallisto)", 
        y = "PCA-corrected TPM (STAR-Salmon)")
 dev.off()
 
-png("./plots/kallisto_imgt_vs_chr_counts.png", width = 10, height = 6, units = "in", res = 300)
+png("./plots/kallisto_imgt_vs_chr_counts.png", width = 10, height = 6, units = "in", res = 200)
 scatter_plot_color(quant_data, "est_counts.kallisto.imgt", "est_counts.kallisto.chr", "dist.kallisto") +
   labs(x = "Counts (kallisto-IMGT)", 
        y = "Counts (kallisto REF chromosomes)")
 dev.off()
 
-png("./plots/kallisto_imgt_vs_chr_TPM.png", width = 10, height = 6, units = "in", res = 300)
+png("./plots/kallisto_imgt_vs_chr_TPM.png", width = 10, height = 6, units = "in", res = 200)
 scatter_plot_color(quant_data, "tpm.kallisto.imgt", "tpm.kallisto.chr", "dist.kallisto") +
   labs(x = "TPM (kallisto-IMGT)", 
        y = "TPM (kallisto REF chromosomes)")
 dev.off()
 
-png("./plots/kallisto_imgt_vs_chr_10pc.png", width = 10, height = 6, units = "in", res = 300)
+png("./plots/kallisto_imgt_vs_chr_10pc.png", width = 10, height = 6, units = "in", res = 200)
 scatter_plot_color(quant_data, "resid.kallisto.imgt", "resid.kallisto.chr", "dist.kallisto") +
   labs(x = "PCA-corrected TPM (kallisto-IMGT)", 
        y = "PCA-corrected TPM (kallisto REF chromosomes)")
 dev.off()
 
-png("./plots/star_imgt_vs_chr_counts.png", width = 10, height = 6, units = "in", res = 300)
+png("./plots/star_imgt_vs_chr_counts.png", width = 10, height = 6, units = "in", res = 200)
 scatter_plot_color(quant_data, "est_counts.star.imgt", "est_counts.star.chr", "dist.star") +
   labs(x = "Counts (STAR-IMGT)", 
        y = "Counts (STAR REF chromosomes)")
 dev.off()
 
-png("./plots/star_imgt_vs_chr_TPM.png", width = 10, height = 6, units = "in", res = 300)
+png("./plots/star_imgt_vs_chr_TPM.png", width = 10, height = 6, units = "in", res = 200)
 scatter_plot_color(quant_data, "tpm.star.imgt", "tpm.star.chr", "dist.star") +
   labs(x = "TPM (STAR-IMGT)", 
        y = "TPM (STAR REF chromosomes)")
 dev.off()
 
-png("./plots/star_imgt_vs_chr_10pc.png", width = 10, height = 6, units = "in", res = 300)
+png("./plots/star_imgt_vs_chr_10pc.png", width = 10, height = 6, units = "in", res = 200)
 scatter_plot_color(quant_data, "resid.star.imgt", "resid.star.chr", "dist.star") +
   labs(x = "PCA-corrected TPM (STAR-IMGT)", 
        y = "PCA-corrected TPM (STAR REF chromosomes)")
+dev.off()
+
+png("./plots/star_mismatch_rates.png", width = 12, height = 10, units = "in", res = 200)
+ggplot(star_chr_10pc_df, aes(resid.imgt, resid)) +
+    geom_abline() +
+    geom_point() +
+    facet_grid(mismatch~locus, scales = "free") +
+    ggpmisc::stat_poly_eq(aes(label = ..adj.rr.label..), rr.digits = 2,
+			  formula = y ~ x, parse = TRUE, size = 6) +
+    theme_bw() +
+    theme(axis.text = element_text(size = 12),
+	  axis.title = element_text(size = 16),
+	  strip.text = element_text(size = 16)) +
+    labs(x = "PCA-corrected TPM (IMGT)",
+	 y = "PCA-corrected TPM (REF chromosomes)")
 dev.off()
 

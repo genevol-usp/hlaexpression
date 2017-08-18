@@ -150,5 +150,10 @@ include_graphics("./plots/star_imgt_vs_chr_TPM.png")
 include_graphics("./plots/star_imgt_vs_chr_10pc.png")
 ```
 
+# Varying the mismatch threshold in the alignment to REF chromosomes
+
+```{r}
+include_graphics("./plots/star_mismatch_rates.png")
+```
 
 

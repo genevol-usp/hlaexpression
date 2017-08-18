@@ -1,9 +1,11 @@
 #!/bin/bash
 
-JOBS=12
+JOBS=10
 parallel=/home/vitor/parallel
 samples=$(echo sample_{01..50})
 
-$parallel --gnu -j $JOBS ./map_and_quantify_CHR.sh {} ::: $samples
+mismatch=0.1
 
-Rscript process_quants.R CHR
+$parallel --gnu -j $JOBS ./map_and_quantify_CHR.sh {} $mismatch ::: $samples
+
+Rscript process_quants.R CHR_$mismatch

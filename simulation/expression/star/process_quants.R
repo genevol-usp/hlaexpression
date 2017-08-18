@@ -63,7 +63,7 @@ if (quant_round == 1 | quant_round == 2) {
     out_df <- hla_genotype_dt(quants, th = 0)
   }
 
-} else if (quant_round == "CHR") {
+} else if (grepl("CHR", quant_round)) {
 
   out_df <-
     file.path(paste0("./quantifications_", quant_round), samples, "quant.sf") %>%
