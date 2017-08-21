@@ -53,6 +53,14 @@ scatter_plot_color <- function(df, x_var, y_var, alpha_var) {
 }
 
 # Data
+mrd_kallisto <- read_tsv("./expression/kallisto/mrd_2.tsv")
+mrd_star <- read_tsv("./expression/star/mrd_2.tsv")
+
+mrd_df <- list(kallisto = mrd_kallisto, star = mrd_star) %>%
+  bind_rows(.id = "aligner") %>%
+  select(subject, aligner, mrd) %>%
+  arrange(subject, aligner)
+
 allele_dist <- read_tsv("./data/distances_to_reference.tsv") %>%
   mutate(locus = sub("^HLA-", "", locus))
 
@@ -355,3 +363,12 @@ ggplot(star_chr_10pc_df, aes(resid.imgt, resid)) +
 	 y = "PCA-corrected TPM (REF chromosomes)")
 dev.off()
 
+png("./plots/mrd.png", width = 12, height = 6, units = "in", res = 200)
+ggplot(mrd_df, aes(reorder(subject, mrd, FUN = "max"), mrd, fill = aligner)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  ggsci::scale_fill_npg() +
+  theme_bw() +
+  theme(axis.text.x = element_blank(),
+        axis.title.x = element_blank()) +
+  labs(y = "mean absolute relative difference")
+dev.off()
