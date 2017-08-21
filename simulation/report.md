@@ -158,10 +158,10 @@ Mean Absolute Relative Difference
 
 Relative difference is =
 
--   0 if \(x_i = y_i = 0\)
+-   0 if x<sub>i</sub> = y<sub>i</sub> = 0
 
--   \(frac{|x_i - y_i|}{x_i + y_i}\) otherwise
+-   |x<sub>i</sub> - y<sub>i</sub>| / x<sub>i</sub> + y<sub>i</sub> otherwise
 
-, where \(x_i\) and \(y_i\) are the true and estimated gene counts respectively. Then I take the mean over all genes, obtaining a value of MRD for each sample.
+, where x<sub>i</sub> and y<sub>i</sub> are the true and estimated gene counts respectively. Then I take the mean over all genes, obtaining a value of MRD for each sample.
 
 ![](./plots/mrd.png)
