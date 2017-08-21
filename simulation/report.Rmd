@@ -170,7 +170,7 @@ Relative difference is =
 
 - 0 if x~i~ = y~i~ = 0 
 
-- |x~i~ - y~i~| / x~i~ + y~i~ otherwise
+- |x~i~ - y~i~| / (x~i~ + y~i~) otherwise
 
 , where x~i~ and y~i~ are the true and estimated gene counts respectively.
 Then I take the mean over all genes, obtaining a value of MRD for each sample.
