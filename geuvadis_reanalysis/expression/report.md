@@ -24,13 +24,14 @@ Typing accuracies
 Expression estimates
 ====================
 
-kallisto vs GEM-based hlaTX
----------------------------
-
-![](./plots/kallisto_vs_hlatx.png)
-
 kallisto vs STAR-Salmon
 -----------------------
+
+### TPM
+
+![](./plots/kallisto_vs_star_TPM.png)
+
+### PCA-corrected
 
 ![](./plots/kallisto_vs_star.png)
 
@@ -57,35 +58,41 @@ STAR-Salmon vs Geuvadis (new quantifications)
 kallisto: HLA diversity vs reference chromosomes only
 -----------------------------------------------------
 
+### TPM
+
+![](./plots/kallisto_imgt_vs_chr_TPM.png)
+
+### PCA-corrected
+
 ![](./plots/kallisto_imgt_vs_chr.png)
 
 STAR: HLA diversity vs reference chromosomes only
 -------------------------------------------------
 
+### TPM
+
+![](./plots/star_imgt_vs_chr_TPM.png)
+
+### PCA-corrected
+
 ![](./plots/star_imgt_vs_chr.png)
 
 ### HLA diversity vs reference chromosomes only: R-square by quartile of difference to the reference allele
 
-| locus    |  quartile|  rsq.kallisto.pca|  rsq.star.pca|  rsq.kallisto.tpm|  rsq.star.tpm|
-|:---------|---------:|-----------------:|-------------:|-----------------:|-------------:|
-| HLA-A    |         1|              0.33|          0.86|              0.75|          0.94|
-| HLA-A    |         4|              0.40|          0.75|              0.84|          0.89|
-| HLA-B    |         1|              0.21|          0.76|              0.64|          0.85|
-| HLA-B    |         4|              0.27|          0.68|              0.30|          0.54|
-| HLA-C    |         1|              0.13|          0.62|              0.52|          0.88|
-| HLA-C    |         4|              0.34|          0.77|              0.50|          0.85|
-| HLA-DQA1 |         1|              0.24|          0.56|              0.58|          0.86|
-| HLA-DQA1 |         4|              0.06|          0.15|              0.31|          0.58|
-| HLA-DQB1 |         1|              0.79|          0.83|              0.83|          0.80|
-| HLA-DQB1 |         4|              0.70|          0.69|              0.76|          0.72|
-| HLA-DRB1 |         1|              0.39|          0.66|              0.74|          0.86|
-| HLA-DRB1 |         4|              0.42|          0.63|              0.59|          0.75|
-
-**..................................................................**
-
-**NOTE: All analyses below were carried out using kallisto-IMGT data**
-
-**.................................................................**
+| locus    |  quartile|  rsq.kallisto.tpm|  rsq.kallisto.pca|  rsq.star.tpm|  rsq.star.pca|
+|:---------|---------:|-----------------:|-----------------:|-------------:|-------------:|
+| HLA-A    |         1|              0.75|              0.33|          0.94|          0.86|
+| HLA-A    |         4|              0.84|              0.40|          0.89|          0.75|
+| HLA-B    |         1|              0.64|              0.21|          0.85|          0.76|
+| HLA-B    |         4|              0.30|              0.27|          0.54|          0.68|
+| HLA-C    |         1|              0.52|              0.13|          0.88|          0.62|
+| HLA-C    |         4|              0.50|              0.34|          0.85|          0.77|
+| HLA-DQA1 |         1|              0.58|              0.24|          0.86|          0.56|
+| HLA-DQA1 |         4|              0.31|              0.06|          0.58|          0.15|
+| HLA-DQB1 |         1|              0.83|              0.79|          0.80|          0.83|
+| HLA-DQB1 |         4|              0.76|              0.70|          0.72|          0.69|
+| HLA-DRB1 |         1|              0.74|              0.39|          0.86|          0.66|
+| HLA-DRB1 |         4|              0.59|              0.42|          0.75|          0.63|
 
 Distribution of TPM values
 --------------------------
