@@ -46,7 +46,7 @@ index_info <-
   separate_rows(allele, sep = "/")
 
 ref_pos_df <- 
-  read_tsv("../phase_hla_alleles/1000G_comparison/hla_ref_alleles.tsv") %>%
+  read_tsv("./hla_ref_alleles.tsv") %>%
   left_join(seqs_df, by = "allele") %>%
   mutate(pos = map(cds, ~which(unlist(strsplit(., "")) != "."))) %>%
   select(locus, pos)

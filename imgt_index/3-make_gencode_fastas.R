@@ -2,7 +2,7 @@ library(Biostrings)
 devtools::load_all("/home/vitor/hlaseqlib")
 library(tidyverse)
 
-imgt <- readDNAStringSet("imgt_index.fa") 
+imgt <- readDNAStringSet("./imgt_index.fa") 
 
 gencode <- readDNAStringSet("/home/vitor/gencode_data/gencode.v25.transcripts.fa.gz")
   

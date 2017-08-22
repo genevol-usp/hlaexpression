@@ -46,7 +46,7 @@ samples <-
   read_tsv("../../../../data/sample_info/samples_phase3.tsv") %>%
   pull(subject)
 
-ref_alleles <- read_tsv("./hla_ref_alleles.tsv")
+ref_alleles <- read_tsv("../../../../../imgt_index/hla_ref_alleles.tsv")
 
 genos <- 
   read_tsv("../../quantifications_2/processed_quant.tsv") %>%
