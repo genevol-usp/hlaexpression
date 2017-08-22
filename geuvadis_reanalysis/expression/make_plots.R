@@ -442,7 +442,8 @@ cors_data <-
 png("./plots/library_sizes.png", height = 4, width = 10, units = "in", res = 150)
 ggplot(reads_df) +
   geom_line(aes(x = reorder(subject, n_reads, FUN = "max"), y = n_reads, 
-                color = source, group = source), size = 1.1) +
+                color = source, group = source), size = 1.25, alpha = 1/2) +
+  ggsci::scale_color_aaas() +
   scale_y_continuous(labels = scales::comma) +
   theme(axis.text.x = element_blank(),
         axis.ticks.x = element_blank()) +
@@ -573,8 +574,8 @@ dev.off()
 
 png("./plots/correlation_decrease.png", width = 10, height = 5, units = "in", res = 300)
 ggplot(cors_data, aes(covariates, correlation, color = method)) +
-  geom_point() +
-  ggsci::scale_color_npg() +
+  geom_point(size = 1.2, alpha = 1/2) +
+  ggsci::scale_color_aaas() +
   scale_x_continuous(breaks = pcs) +
   facet_wrap(~gene_pair) +
   theme_bw() +
