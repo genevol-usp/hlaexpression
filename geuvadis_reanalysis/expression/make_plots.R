@@ -5,12 +5,6 @@ library(GGally)
 library(ggpmisc)
 
 # functions
-readLOG <- function(log) {
-  x <- readLines(log)
-  q <- x[grep("\\[quant\\] processed", x)]
-  n <- as.integer(gsub(",", "", sub("^.+reads, ([0-9,]+).+$", "\\1", q)))
-}
-
 calc_ase <- function(counts) min(counts)/sum(counts)
 
 plot_lower <- function(data, mapping, ...) {
@@ -83,23 +77,19 @@ geuvadis_ids <- geuvadis_info %>%
 library_size <- 
   read_delim("../data/sample_info/library_size.txt", delim = " ") %>%
   inner_join(geuvadis_ids, by = "subject") %>%
-  select(subject = name, total = n) %>%
+  select(subject, total = n) %>%
   arrange(subject)
 
-log_files <- 
-  file.path("./kallisto/quantifications_2/log", paste0(geuvadis_ids$subject, ".quant.log")) %>%
-  setNames(geuvadis_ids$subject)
+kallisto_aligned <- read_tsv("./kallisto/aligned_reads.tsv")
+star_aligned <- read_tsv("./star/aligned_reads.tsv")
 
-aligned <- lapply(log_files, readLOG)
-
-aligned_df <- 
-  tibble(subject = names(aligned), aligned = unlist(aligned)) %>%
-  inner_join(geuvadis_ids, by = "subject") %>%
-  select(subject = name, aligned) %>%
-  arrange(subject) %>%
+reads_df <- 
+  left_join(kallisto_aligned, star_aligned, by = "subject") %>%
+  rename(kallisto = V1.x, STAR_salmon = V1.y) %>%
   left_join(library_size, by = "subject") %>%
-  gather(reads, n, aligned, total) %>%
-  arrange(subject, reads)
+  gather("source", "n_reads", -1) %>%
+  mutate(source = factor(source, levels = c("total", "kallisto", "STAR_salmon"))) %>%
+  arrange(subject, source)
 
 gencode_hla <- gencode_chr_gene %>%
   filter(gene_name %in% paste0("HLA-", c("A", "B", "C", "DQA1", "DQB1", "DRB1")))
@@ -332,13 +322,10 @@ hla_and_transAct_genes <- gencode_chr_gene %>%
 
 pcs <- c(seq(0, 30, 5), seq(40, 100, 10))
 
-pca_expression_files <-
+pca_kallisto_df <-
   sprintf("../qtls/qtls_kallisto/qtltools_correction/phenotypes/phenotypes_eur_%d.bed.gz", pcs) %>%
-  setNames(pcs)
-
-pca_expression_df <-
-  parallel::mclapply(pca_expression_files, 
-		     function(i) 
+  setNames(pcs) %>%
+  parallel::mclapply(function(i) 
 		       read_tsv(i, progress = FALSE) %>% 
 		       inner_join(hla_and_transAct_genes, by = c("id" = "gene_id")) %>%
 		       select(gene_name, HG00096:NA20828),
@@ -348,7 +335,20 @@ pca_expression_df <-
   mutate(gene_name = sub("^HLA-", "", gene_name)) %>%
   spread(gene_name, value) 
 
-phen10 <- filter(pca_expression_df, PCs == 10) %>% select(-PCs)
+pca_star_df <-
+  sprintf("../qtls/qtls_star/phenotypes/phenotypes_eur_%d.bed.gz", pcs) %>%
+  setNames(pcs) %>%
+  parallel::mclapply(function(i) 
+		       read_tsv(i, progress = FALSE) %>% 
+		       inner_join(hla_and_transAct_genes, by = c("id" = "gene_id")) %>%
+		       select(gene_name, HG00096:NA20828),
+		     mc.cores = length(pcs)) %>%
+  bind_rows(.id = "PCs") %>%
+  gather(subject, value, HG00096:NA20828) %>%
+  mutate(gene_name = sub("^HLA-", "", gene_name)) %>%
+  spread(gene_name, value) 
+
+phen10 <- filter(pca_kallisto_df, PCs == 10) %>% select(-PCs)
 
 class_2_trans_df <- 
   phen10 %>%
@@ -367,8 +367,22 @@ residuals_by_allele_wide <-
 
 residuals_gene_level <- select(phen10, subject, A, B, C, DQA1, DQB1, DRB1)
 
-cors_pca <- 
-  pca_expression_df %>%
+cors_pca_kallisto <- 
+  pca_kallisto_df %>%
+  group_by(PCs) %>%
+  summarize(AxB = cor(A, B), 
+            AxC = cor(A, C), 
+	    BxC = cor(B, C),
+	    DQA1xDQB1 = cor(DQA1, DQB1), 
+	    DQA1xDRB1 = cor(DQA1, DRB1), 
+	    DQB1xDRB1 = cor(DQB1, DRB1),  
+	    DQA1xCIITA = cor(DQA1, CIITA),
+	    DQB1xCIITA = cor(DQB1, CIITA), 
+	    DRB1xCIITA = cor(DRB1, CIITA)) %>%
+  gather(gene_pair, correlation, -1)
+
+cors_pca_star <- 
+  pca_star_df %>%
   group_by(PCs) %>%
   summarize(AxB = cor(A, B), 
             AxC = cor(A, C), 
@@ -412,10 +426,12 @@ cors_peer <-
 	    DRB1xCIITA = cor(DRB1, CIITA)) %>%
   gather(gene_pair, correlation, -1)
 
-cors_data <- 
-  left_join(cors_pca, cors_peer, by = c("gene_pair", "PCs" = "K")) %>%
-  rename(covariates = PCs, PCA = correlation.x, PEER = correlation.y) %>%
-  gather(method, correlation, PCA:PEER) %>%
+cors_data <-
+  left_join(cors_pca_kallisto, cors_pca_star, by = c("PCs", "gene_pair")) %>%
+  rename(kallisto.PCA = correlation.x, star_salmon.PCA = correlation.y) %>%
+  left_join(cors_peer, by = c("gene_pair", "PCs" = "K")) %>%
+  rename(covariates = PCs, kallisto.PEER = correlation) %>%
+  gather(method, correlation, -covariates, -gene_pair) %>%
   mutate(covariates = as.integer(covariates),
          gene_pair = factor(gene_pair, levels = c("AxB", "AxC", "BxC",
                                                   "DQA1xDQB1", "DQA1xDRB1", "DQB1xDRB1",
@@ -424,9 +440,9 @@ cors_data <-
 
 # plots
 png("./plots/library_sizes.png", height = 4, width = 10, units = "in", res = 150)
-ggplot(aligned_df) +
-  geom_line(aes(x = reorder(subject, n, FUN = "max"), y = n, 
-                color = reads, group = reads), size = 1.1) +
+ggplot(reads_df) +
+  geom_line(aes(x = reorder(subject, n_reads, FUN = "max"), y = n_reads, 
+                color = source, group = source), size = 1.1) +
   scale_y_continuous(labels = scales::comma) +
   theme(axis.text.x = element_blank(),
         axis.ticks.x = element_blank()) +
@@ -559,7 +575,7 @@ png("./plots/correlation_decrease.png", width = 10, height = 5, units = "in", re
 ggplot(cors_data, aes(covariates, correlation, color = method)) +
   geom_point() +
   ggsci::scale_color_npg() +
-  scale_x_continuous(breaks = seq(0, 100, 5)) +
+  scale_x_continuous(breaks = pcs) +
   facet_wrap(~gene_pair) +
   theme_bw() +
   theme(axis.text.x = element_text(angle = 90), legend.position = "top") +
