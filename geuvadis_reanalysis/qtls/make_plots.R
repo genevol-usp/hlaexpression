@@ -139,7 +139,7 @@ gencode_hla <- gencode_chr_gene %>%
   select(gene_id, gene_name)
 
 phen_best <-
-  "./qtls_kallisto/qtltools_correction/phenotypes/phenotypes_eur_75.bed.gz" %>%
+  "./qtls_kallisto/qtltools_correction/phenotypes/phenotypes_eur_60.bed.gz" %>%
   read_tsv() %>%
   inner_join(gencode_hla, by = c("gid" = "gene_id")) %>%
   select(gene_name, HG00096:NA20828) %>%
@@ -216,7 +216,6 @@ ggdraw(grid1) +
 dev.off()
 
 # eQTL landscape around TSS
-
 read_conditional <- function(path) {
   read_qtltools(path) %>%
   inner_join(select(gencode_hla, gene_id, gene_name), by = c("phen_id" = "gene_id")) %>%
@@ -270,6 +269,11 @@ conditional_pca_kallisto <-
 conditional_pca_star <-
   "./qtls_star/conditional_analysis/conditional_60_all.txt.gz" %>%
   read_conditional()
+
+conditional_pca_star %>%
+  filter(best == 1L) %>%
+  select(phen_id, rank, var_id, dist_tss, slope) %>%
+  write_tsv("./plots/eqtls.tsv")
 
 png("./plots/qtls_landscape_kallisto.png", height = 12, width = 10, units = "in", res = 300)
 plot_qtls(conditional_pca_kallisto)

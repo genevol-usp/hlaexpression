@@ -42,16 +42,6 @@ include_graphics("./plots/qtls_landscape_kallisto.png")
 include_graphics("./plots/qtls_landscape_star.png")
 ```
 
-**.............................................................**
-
-\linebreak
-
-**NOTE: All analyses below were carried out using kallisto data**
-
-\linebreak
-
-**.............................................................**
-
 ## HLA lineages
 
 ```{r}
@@ -66,7 +56,7 @@ Some of our eQTLs seem to mark the same biological signal as the eQTLs found by
 Geuvadis (RTC > 0.9)
 
 ```{r}
-"./qtls_kallisto/qtltools_correction/rtc/geuvadis_eqtls/results.tsv" %>%
+"./qtls_star/rtc/geuvadis_eqtls/results.tsv" %>%
   read_tsv() %>%
   kable()
 ```
@@ -74,7 +64,7 @@ Geuvadis (RTC > 0.9)
 ## Association with GWAS traits
 
 ```{r}
-read_tsv("./qtls_kallisto/qtltools_correction/rtc/gwas/results.tsv") %>%
+read_tsv("./qtls_star/rtc/gwas/results.tsv") %>%
   select(gene, rank, variant, gwas_variant, rtc, trait, studies = link) %>%
   kable()
 ```
