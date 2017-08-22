@@ -445,6 +445,7 @@ ggplot(reads_df) +
                 color = source, group = source), size = 1.5, alpha = 1/2) +
   ggsci::scale_color_aaas() +
   scale_y_continuous(labels = scales::comma) +
+  theme_bw() +
   theme(axis.text.x = element_blank(),
         axis.ticks.x = element_blank(),
 	panel.grid.major = element_blank(), 
