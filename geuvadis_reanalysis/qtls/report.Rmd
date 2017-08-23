@@ -74,6 +74,6 @@ read_tsv("./qtls_star/rtc/gwas/results.tsv") %>%
 - Approximate pass as described on QTLtools website
 
 ```{r}
-read_tsv("./qtls_kallisto/qtltools_correction/trans/trans_results.tsv") %>%
+read_tsv("./qtls_star/trans/trans_results.tsv") %>%
   kable()
 ```
