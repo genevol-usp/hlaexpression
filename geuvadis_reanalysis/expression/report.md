@@ -119,9 +119,6 @@ ASE distribution
 Correlation of expression
 =========================
 
-Correlation decreases with the increase in the number of PEER factors/PCs
--------------------------------------------------------------------------
-
 ![](./plots/correlation_decrease.png)
 
 \*Expression data in the plots below correspond to TPM values corrected by 10 PCs

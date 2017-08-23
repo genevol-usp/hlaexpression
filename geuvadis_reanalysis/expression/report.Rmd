@@ -144,8 +144,6 @@ include_graphics("./plots/ase_histogram.png")
 
 # Correlation of expression
 
-## Correlation decreases with the increase in the number of PEER factors/PCs
-
 ```{r}
 include_graphics("./plots/correlation_decrease.png")
 ```
