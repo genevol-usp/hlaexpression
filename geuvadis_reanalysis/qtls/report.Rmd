@@ -66,7 +66,10 @@ Geuvadis (RTC > 0.9)
 ```{r}
 read_tsv("./qtls_star/rtc/gwas/results.tsv") %>%
   select(gene, rank, variant, gwas_variant, rtc, trait, studies = link) %>%
-  kable()
+  group_by(gene, rank, variant, gwas_variant, rtc) %>%
+  summarize(trait = paste(trait, collapse = "/"), 
+	    studies = paste(studies, collapse = " ")) %>%
+  kable(digits = 2)
 ```
 
 ## Trans-eQTLs
