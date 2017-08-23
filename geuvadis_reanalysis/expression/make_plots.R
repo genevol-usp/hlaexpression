@@ -75,9 +75,10 @@ geuvadis_ids <- geuvadis_info %>%
   select(subject = ena_id, name)
 
 library_size <- 
-  read_delim("../data/sample_info/library_size.txt", delim = " ") %>%
+  read_tsv("../data/sample_info/library_sizes.txt", 
+	   col_names = c("subject", "total")) %>%
   inner_join(geuvadis_ids, by = "subject") %>%
-  select(subject, total = n) %>%
+  select(subject, total) %>%
   arrange(subject)
 
 kallisto_aligned <- read_tsv("./kallisto/aligned_reads.tsv")
@@ -328,7 +329,7 @@ class_2_trans_df <-
   arrange(subject, locus)
 
 residuals_by_allele_10pcs <- 
-  read_tsv("./kallisto/phase_hla_alleles/data/hla_allele_expression_10pcs.bed") %>%
+  read_tsv("./star/phase_hla_alleles/data/hla_allele_expression_10pcs.bed") %>%
   gather(subject, resid, -locus, -hap)
 
 residuals_by_allele_wide <- 
@@ -559,7 +560,7 @@ dev.off()
 png("./plots/correlation_decrease.png", width = 10, height = 5, units = "in", res = 200)
 ggplot(cors_data, aes(covariates, correlation, color = method)) +
   geom_point(size = 2, alpha = 1/2) +
-  ggsci::scale_color_aaas() +
+  ggthemes::scale_color_colorblind() +
   scale_x_continuous(breaks = pcs) +
   facet_wrap(~gene_pair) +
   theme_bw() +
