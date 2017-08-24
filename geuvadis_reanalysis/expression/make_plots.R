@@ -182,6 +182,17 @@ star_chr_10pc <-
   select(locus = gene_name, starts_with("HG"), starts_with("NA")) %>%
   gather(subject, resid, -locus)
 
+geuvadis_final <- 
+  read_tsv("../data/quantifications/GD462.GeneQuantRPKM.50FN.samplename.resk10.txt.gz") %>%
+  select(gene_id = Gene_Symbol, geuvadis_ids$name) %>%
+  gather(subject, resid, -gene_id) %>% 
+  group_by(gene_id) %>%
+  mutate(resid = GenABEL::rntransform(resid)) %>%
+  ungroup() %>%
+  inner_join(gencode12, by = "gene_id") %>%
+  select(subject, locus = gene_name, resid) %>%
+  arrange(subject, locus)
+
 geuvadis <- 
   read_tsv("../data/quantifications/peer/published/phenotypes_eur_10.bed.gz") %>%
   inner_join(gencode12, by = c("gid" = "gene_id")) %>%
@@ -235,7 +246,9 @@ quant_data <-
   left_join(geuvadis, by = c("subject", "locus")) %>%
   rename(resid.geuvadis.old = resid) %>%
   left_join(geuvadis_new, by = c("subject", "locus")) %>%
-  rename(resid.geuvadis.new = resid)
+  rename(resid.geuvadis.new = resid) %>%
+  left_join(geuvadis_final, by = c("subject", "locus")) %>%
+  rename(resid.geuvadis.final = resid)
 
 star_tpm_df <- 
   quant_data %>%
@@ -332,12 +345,20 @@ residuals_by_allele_10pcs <-
   read_tsv("./star/phase_hla_alleles/data/hla_allele_expression_10pcs.bed") %>%
   gather(subject, resid, -locus, -hap)
 
+concordant_haps <- 
+  read_tsv("./star/phase_hla_alleles/data/concordant_haps_classIandII.tsv") %>%
+  select(subject, hap)
+
 residuals_by_allele_wide <- 
   spread(residuals_by_allele_10pcs, locus, resid) %>%
   select(subject, hap, everything()) %>%
+  inner_join(concordant_haps, by = c("subject", "hap")) %>%
   arrange(subject, hap)
 
-residuals_gene_level <- select(phen10, subject, A, B, C, DQA1, DQB1, DRB1)
+residuals_gene_level <- 
+  phen10 %>%
+  select(subject, A, B, C, DQA1, DQB1, DRB1) %>%
+  filter(subject %in% concordant_haps$subject)
 
 cors_pca_kallisto <- 
   pca_kallisto_df %>%
@@ -444,6 +465,16 @@ dev.off()
 
 png("./plots/star_vs_geuvadis.png", width = 10, height = 6, units = "in", res = 200)
 scatter_plot_color(quant_data, "resid.star.imgt.fpkm", "resid.geuvadis.old", "dist.star") +
+  labs(x = "PEER-corrected FPKM (STAR)", y = "PEER-corrected FPKM (GEUVADIS)")
+dev.off()
+
+png("./plots/kallisto_vs_geuvadis_final.png", width = 10, height = 6, units = "in", res = 200)
+scatter_plot_color(quant_data, "resid.kallisto.imgt.fpkm", "resid.geuvadis.final", "dist.kallisto") +
+  labs(x = "PEER-corrected FPKM (kallisto)", y = "PEER-corrected FPKM (GEUVADIS)")
+dev.off()
+
+png("./plots/star_vs_geuvadis_final.png", width = 10, height = 6, units = "in", res = 200)
+scatter_plot_color(quant_data, "resid.star.imgt.fpkm", "resid.geuvadis.final", "dist.star") +
   labs(x = "PEER-corrected FPKM (STAR)", y = "PEER-corrected FPKM (GEUVADIS)")
 dev.off()
 
