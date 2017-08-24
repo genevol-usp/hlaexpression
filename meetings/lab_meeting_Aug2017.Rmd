@@ -1,0 +1,144 @@
+---
+title: Expression estimation and eQTL mapping of HLA genes
+author: 
+  - Meyer Lab$^1$
+  - Dermitzakis Lab$^2$
+institute: 
+  - $^1$University of São Paulo
+  - $^2$University of Geneva
+output: 
+  beamer_presentation:
+  mathjax: "http://example.com/mathjax/MathJax.js?config=TeX-AMS-MML_HTMLorMML"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo=FALSE, comment='', message=FALSE, warning=FALSE)
+```
+
+## Motivation
+
+- Many datasets of genome-wide data are available, but HLA estimates may be inaccurate
+- Better eQTL mapping
+- HLA allele-level estimates
+- Understand how the regulatory architecture is related to HLA lineages
+
+## Strategy
+
+\includegraphics[width=\linewidth]{../../hla_manuscript/figures/method.png}
+
+## Simulation: Indices convering HLA diversity recover more reads
+
+Typing accuracy: 100%
+
+\includegraphics[width=\linewidth]{../simulation/plots/star_prop_mapped.png}
+
+## Quality assessment
+
+\fontsize{6pt}{6}\selectfont
+
+**Percentage of simulated reads not aligned:**
+
+| Gene    | kallisto | STAR  |
+|:-------:|:--------:|:-----:|
+|HLA-A    |   2.4    |  0    |
+|HLA-B    |   2.3    |  0    |
+|HLA-C    |   2.5    |  0    |
+|HLA-DQA1 |   1.2    |  0    |
+|HLA-DQB1 |   1.4    |  0    |
+|HLA-DRB1 |   2.1    |  0    |
+
+**Percentage of simulated reads from each HLA gene that aligned to a different reference:**
+
+| Gene    | kallisto | STAR  |
+|:-------:|:--------:|:-----:|
+|HLA-A    |   2.3    |  1.66 |
+|HLA-B    |   0.3    |  0.2  |
+|HLA-C    |   0.1    |  0    |
+|HLA-DQA1 |   0.7    |  0.4  |
+|HLA-DQB1 |   0      |  0    |
+|HLA-DRB1 |   0.9    |  0.4  |
+
+**Percentage of false positive reads:**
+
+| Gene    | kallisto | STAR  |
+|:-------:|:--------:|:-----:|
+|HLA-A    |   0      |  0    |
+|HLA-B    |   0      |  0    |
+|HLA-C    |   0.1    |  0    |
+|HLA-DQA1 |   0      |  0    |
+|HLA-DQB1 |   0      |  0    |
+|HLA-DRB1 |   0.1    |  0    |
+
+## Real Data (Geuvadis)
+
+**Typing accuracy**
+
+| Gene    | kallisto | STAR  |
+|:-------:|:--------:|:-----:|
+|HLA-A    |  97%     |  97%  |
+|HLA-B    |  98%     |  98%  |
+|HLA-C    |  95%     |  96%  |
+|HLA-DQB1 |  95%     |  95%  |
+|HLA-DRB1 |  98%     |  98%  |
+
+*Gold standard:
+1000 Genomes individuals HLA-typed by Gourraud et al. (2014). PLoS ONE 9(7): e97282.
+
+## Aligner choice does not influence expression estimate
+
+\includegraphics[width=\linewidth]{../geuvadis_reanalysis/expression/plots/kallisto_vs_star_TPM.png}
+
+## Correlation with Geuvadis' published estimates
+
+\includegraphics[width=\linewidth]{../geuvadis_reanalysis/expression/plots/star_vs_geuvadis_final.png}
+
+## Taking the uncorrected data and running myself the correction 
+
+\includegraphics[width=\linewidth]{../geuvadis_reanalysis/expression/plots/star_vs_geuvadis.png}
+
+## New quantifications 
+
+\includegraphics[width=\linewidth]{../geuvadis_reanalysis/expression/plots/star_vs_geuvadis_new.png}
+
+## Mapping to REF chromosomes may be enough for gene-level estimates
+
+\includegraphics[width=.9\linewidth]{../simulation/plots/star_mismatch_rates_PCA.png}
+
+## expression of alleles from different genes on the same vs on different haplotypes
+
+\includegraphics[width=\linewidth]{../geuvadis_reanalysis/expression/plots/b_vs_c.png}
+
+
+# eQTLs
+
+## Number of eGenes
+
+\includegraphics[width=\linewidth]{../geuvadis_reanalysis/qtls/plots/pca_vs_peer.png}
+
+## eQTLs at HLA genes
+
+\includegraphics[width=.7\linewidth]{../geuvadis_reanalysis/qtls/plots/qtls_landscape_star.png}
+
+## RTC with Geuvadis eQTLs
+
+\fontsize{7pt}{6}\selectfont
+
+| Gene    | rank | variant   | geuvadis gene    | geuvadis variant | RTC |
+|:-------:|:----:|:---------:|:----------------:|:----------------:|:---:|
+|HLA-C    |   0  |rs41561715 | HLA-C            | rs115899777      | 0.95|
+|HLA-DQA1 |   0  |rs373884000| HLA-DRB1         | rs116405062      | 0.97|
+|HLA-DQA1 |   1  |rs9274722  | HLA-DQA1/HLA-DQB1| rs9274660        | 0.92|
+|HLA-DQB1 |   0  |rs1770     | HLA-DQA1/HLA-DQB1| rs9274660        | 0.98|
+|HLA-DRB1 |   0  |rs9270698  | HLA-DQA1/HLA-DQB1| rs9274660        | 0.92|
+|HLA-DRB1 |   2  |rs145607970| HLA-DQA1/HLA-DQB1| rs9274660        | 0.93|
+
+## Relationship between eQTLs and HLA alleles
+
+\includegraphics[width=.75\linewidth]{../geuvadis_reanalysis/qtls/plots/lineage_and_effects.png}
+
+## How allele-level expression is estimated in the HLA field
+
+\includegraphics[width=\linewidth]{./ramsuran_hlaA_lineages.png}
+
+Ramsuram et al. Human Molecular Genetics, 2015, 24 (15).
+
