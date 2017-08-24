@@ -559,11 +559,16 @@ dev.off()
 
 png("./plots/correlation_decrease.png", width = 10, height = 5, units = "in", res = 200)
 ggplot(cors_data, aes(covariates, correlation, color = method)) +
-  geom_point(size = 2, alpha = 1/2) +
+  geom_point(size = 3) +
   ggthemes::scale_color_colorblind() +
   scale_x_continuous(breaks = pcs) +
   facet_wrap(~gene_pair) +
   theme_bw() +
-  theme(axis.text.x = element_text(angle = 90), legend.position = "top") +
+  theme(legend.title = element_blank(),
+	legend.text = element_text(size = 16),
+	legend.position = "top",	
+	axis.title = element_text(size = 16),
+	strip.text = element_text(size = 16),
+	axis.text.x = element_text(angle = 90)) +
   labs(x = "Number of PCs/factors")
 dev.off()

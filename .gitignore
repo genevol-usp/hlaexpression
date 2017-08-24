@@ -23,6 +23,7 @@
 *.yri
 *.gz
 geuvadis_reanalysis/expression/kallisto/phase_hla_alleles/PHASE/phase*
+geuvadis_reanalysis/expression/star/phase_hla_alleles/PHASE/phase.out*
 geuvadis_reanalysis/expression/kallisto/quantifications_*
 geuvadis_reanalysis/expression/star/index
 geuvadis_reanalysis/expression/star/indexCHR

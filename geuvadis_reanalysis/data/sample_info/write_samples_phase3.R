@@ -21,3 +21,8 @@ geuvadis_samples_phase3 %>%
   sort() %>%
   writeLines("samples_phase3_ena_eur.txt")
 
+geuvadis_samples_phase3 %>%
+  filter(pop == "YRI") %>%
+  pull(ena_id) %>%
+  sort() %>%
+  writeLines("samples_phase3_ena_yri.txt")

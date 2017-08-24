@@ -65,8 +65,25 @@ if (quant_round == 1 || quant_round == 2) {
 
   } else if (quant_round == 2L) {
 
-    out_df <- hla_genotype_dt(quants, th = 0)
-  }
+    out_df <- hla_genotype_dt(quants, th = 0) #%>%
+   #   group_by(subject, locus) %>%
+   #   mutate(i = as.integer(any(tpm/max(tpm) < 0.2))) %>%
+   #   ungroup()
+
+   # out_df_0 <- out_df %>% filter(i == 0L) %>% select(-i)
+
+   # out_df_1 <- 
+   #   out_df %>% 
+   #   filter(i == 1L) %>%
+   #   group_by(subject, gene_id) %>%
+   #   mutate(m = as.integer(tpm == max(tpm)), 
+   #          est_counts = sum(est_counts)/2, tpm = sum(tpm)/2) %>%
+   #   ungroup() %>%
+   #   filter(m == 1L) %>%
+   #   select(-i, -m)
+
+   # out_df <- bind_rows(out_df_0, out_df_1, out_df_1) %>%
+   #   arrange(subject, locus, allele)
 
 } else if (quant_round == "CHR") {
 
