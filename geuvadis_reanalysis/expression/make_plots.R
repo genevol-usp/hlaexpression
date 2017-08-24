@@ -57,7 +57,7 @@ make_data <- function(locus1, locus2) {
 
 make_phase_plot <- function(data, locus1, locus2) {
   ggplot(data, aes_string(locus1, locus2)) +
-  geom_point(alpha = 1/2) +
+  geom_point() +
   geom_smooth(method = lm, se = FALSE) + 
   facet_wrap(~level, nrow = 1, scales = "free") +
   theme_bw() +
