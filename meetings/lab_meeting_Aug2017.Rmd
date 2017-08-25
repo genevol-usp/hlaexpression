@@ -17,6 +17,11 @@ knitr::opts_chunk$set(echo=FALSE, comment='', message=FALSE, warning=FALSE)
 
 ## Motivation
 
+-DM: in motivation include why expression is of interest: 
+  - association to cancer phenotypes
+  - association to HIV/AIDS progression
+  - transplantation
+
 - Many datasets of genome-wide data are available, but HLA estimates may be inaccurate
 - Better eQTL mapping
 - HLA allele-level estimates
@@ -26,11 +31,19 @@ knitr::opts_chunk$set(echo=FALSE, comment='', message=FALSE, warning=FALSE)
 
 \includegraphics[width=\linewidth]{../../hla_manuscript/figures/method.png}
 
+- Explored approach using 3 tools: GEM, STAR (standard aligners) Kallisto (kmer-based). 
+
 ## Simulation: Indices convering HLA diversity recover more reads
+
+- consider including reference to STAR or early on say assume star unless otherwise stated.
 
 Typing accuracy: 100%
 
 \includegraphics[width=\linewidth]{../simulation/plots/star_prop_mapped.png}
+
+- statement I would make here: confirms expectation that single refernce leads to loss of reads, and that this is not randomly distributed but concentrated on alleles which are more divergent from reference sequence.
+
+- To think about: even for HLA-B, most alleles have more than 75% reads mapped. Consistent with the similarity in expression estimates among indices. 
 
 ## Quality assessment
 
@@ -69,7 +82,12 @@ Typing accuracy: 100%
 |HLA-DQB1 |   0      |  0    |
 |HLA-DRB1 |   0.1    |  0    |
 
+- I would put STAR first and kallisto second (consistent with primary focus vs secondary). The second table states "that aligned to a different reference", think of way to make clear if this includes *any* reference, including HLA, or some non-HLA genomewide reference.
+
+
 ## Real Data (Geuvadis)
+
+- I dont like "real data" much, I prefer just "Geuvadis data", or some other more informative aspect.
 
 **Typing accuracy**
 
@@ -92,9 +110,11 @@ Typing accuracy: 100%
 
 \includegraphics[width=\linewidth]{../geuvadis_reanalysis/expression/plots/star_vs_geuvadis_final.png}
 
-## Taking the uncorrected data and running myself the correction 
+## Taking the uncorrected Geuvadis data and running myself the correction 
 
 \includegraphics[width=\linewidth]{../geuvadis_reanalysis/expression/plots/star_vs_geuvadis.png}
+
+- Conclusion: resonable locus-level for some loci. Very important to understand why the new quantification does a poorer job. IN particular, at some level, the new quantification should be similar to our quantification using the standerd reference genome, which in turn is similar to our IMGT index run. So it seems that some detail of the alignment influences the outcome. 
 
 ## New quantifications 
 
@@ -104,9 +124,16 @@ Typing accuracy: 100%
 
 \includegraphics[width=.9\linewidth]{../simulation/plots/star_mismatch_rates_PCA.png}
 
+- For this audience just one row. 
+
 ## expression of alleles from different genes on the same vs on different haplotypes
 
+
 \includegraphics[width=\linewidth]{../geuvadis_reanalysis/expression/plots/b_vs_c.png}
+
+- Not sure this id ideal for this moment. Something more useful would be some biological validation, as Manolis hwas often recommented. For example, expectations for co-expression (e.g., B and C), and class I with the trans-activator (maybe weak, bur certainly a non-random association for unlinked loci). 
+
+- Any other path to validation?
 
 
 # eQTLs
@@ -114,6 +141,8 @@ Typing accuracy: 100%
 ## Number of eGenes
 
 \includegraphics[width=\linewidth]{../geuvadis_reanalysis/qtls/plots/pca_vs_peer.png}
+
+- Stick to emphasis on star. Maybe explain to me why you said you suspect Manolis may have been conrrect to say that kallisto could be getting genomwide estimates wrong.
 
 ## eQTLs at HLA genes
 
@@ -142,3 +171,6 @@ Typing accuracy: 100%
 
 Ramsuram et al. Human Molecular Genetics, 2015, 24 (15).
 
+- Flip with previous, put this one first as motivation, then our approach with the discussion of the caveats.
+
+- Would the cis trans fit in well here, at the end?
