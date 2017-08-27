@@ -468,6 +468,11 @@ scatter_plot_color(quant_data, "resid.star.imgt.fpkm", "resid.geuvadis.old", "di
   labs(x = "PEER-corrected FPKM (STAR)", y = "PEER-corrected FPKM (GEUVADIS)")
 dev.off()
 
+#png("../../meetings/star_vs_geuvadis.png", width = 10, height = 6, units = "in", res = 200)
+#scatter_plot(quant_data, "resid.star.imgt.fpkm", "resid.geuvadis.old") +
+#  labs(x = "PEER-corrected FPKM (STAR)", y = "PEER-corrected FPKM (GEUVADIS)")
+#dev.off()
+
 png("./plots/kallisto_vs_geuvadis_final.png", width = 10, height = 6, units = "in", res = 200)
 scatter_plot_color(quant_data, "resid.kallisto.imgt.fpkm", "resid.geuvadis.final", "dist.kallisto") +
   labs(x = "PEER-corrected FPKM (kallisto)", y = "PEER-corrected FPKM (GEUVADIS)")
@@ -478,6 +483,11 @@ scatter_plot_color(quant_data, "resid.star.imgt.fpkm", "resid.geuvadis.final", "
   labs(x = "PEER-corrected FPKM (STAR)", y = "PEER-corrected FPKM (GEUVADIS)")
 dev.off()
 
+#png("../../meetings/star_vs_geuvadis_final.png", width = 10, height = 6, units = "in", res = 200)
+#scatter_plot(quant_data, "resid.star.imgt.fpkm", "resid.geuvadis.final") +
+#  labs(x = "PEER-corrected FPKM (STAR)", y = "PEER-corrected FPKM (GEUVADIS)")
+#dev.off()
+
 png("./plots/kallisto_vs_geuvadis_new.png", width = 10, height = 6, units = "in", res = 200)
 scatter_plot_color(quant_data, "resid.kallisto.imgt.fpkm", "resid.geuvadis.new", "dist.kallisto") +
   labs(x = "PEER-corrected FPKM (kallisto)", y = "PEER-corrected FPKM (GEUVADIS)")
@@ -487,6 +497,11 @@ png("./plots/star_vs_geuvadis_new.png", width = 10, height = 6, units = "in", re
 scatter_plot_color(quant_data, "resid.star.imgt.fpkm", "resid.geuvadis.new", "dist.star") +
   labs(x = "PEER-corrected FPKM (STAR)", y = "PEER-corrected FPKM (GEUVADIS)")
 dev.off()
+
+#png("../../meetings/star_vs_geuvadis_new.png", width = 10, height = 6, units = "in", res = 200)
+#scatter_plot(quant_data, "resid.star.imgt.fpkm", "resid.geuvadis.new") +
+#  labs(x = "PEER-corrected FPKM (STAR)", y = "PEER-corrected FPKM (GEUVADIS)")
+#dev.off()
 
 png("./plots/kallisto_imgt_vs_chr.png", height = 6, width = 10, units = "in", res = 200)
 scatter_plot_color(quant_data, "resid.kallisto.imgt.tpm", "resid.kallisto.chr.tpm", "dist.kallisto") +
@@ -502,6 +517,11 @@ png("./plots/star_imgt_vs_chr.png", height = 6, width = 10, units = "in", res = 
 scatter_plot_color(quant_data, "resid.star.imgt.tpm", "resid.star.chr.tpm", "dist.star") +
   labs(x = "PCA-corrected TPM (STAR-IMGT)", y = "PCA-corrected TPM (STAR REF chromosomes)")
 dev.off()
+
+#png("../../meetings/star_imgt_vs_chr.png", height = 6, width = 10, units = "in", res = 200)
+#scatter_plot(quant_data, "resid.star.imgt.tpm", "resid.star.chr.tpm") +
+#  labs(x = "PCA-corrected TPM (STAR-IMGT)", y = "PCA-corrected TPM (STAR REF chromosomes)")
+#dev.off()
 
 png("./plots/star_imgt_vs_chr_TPM.png", height = 6, width = 10, units = "in", res = 200)
 scatter_plot_color(quant_data, "tpm.star.imgt", "tpm.star.chr", "dist.star") +

@@ -17,11 +17,9 @@ knitr::opts_chunk$set(echo=FALSE, comment='', message=FALSE, warning=FALSE)
 
 ## Motivation
 
--DM: in motivation include why expression is of interest: 
-  - association to cancer phenotypes
-  - association to HIV/AIDS progression
-  - transplantation
-
+- Association to cancer phenotypes
+- Association to HIV/AIDS progression
+- Transplantation
 - Many datasets of genome-wide data are available, but HLA estimates may be inaccurate
 - Better eQTL mapping
 - HLA allele-level estimates
@@ -31,118 +29,92 @@ knitr::opts_chunk$set(echo=FALSE, comment='', message=FALSE, warning=FALSE)
 
 \includegraphics[width=\linewidth]{../../hla_manuscript/figures/method.png}
 
-- Explored approach using 3 tools: GEM, STAR (standard aligners) Kallisto (kmer-based). 
+<!-- 
+Explored approach using 3 tools: GEM, STAR (standard aligners) Kallisto (kmer-based). 
+-->
 
 ## Simulation: Indices convering HLA diversity recover more reads
-
-- consider including reference to STAR or early on say assume star unless otherwise stated.
 
 Typing accuracy: 100%
 
 \includegraphics[width=\linewidth]{../simulation/plots/star_prop_mapped.png}
 
-- statement I would make here: confirms expectation that single refernce leads to loss of reads, and that this is not randomly distributed but concentrated on alleles which are more divergent from reference sequence.
+<!--
+- statement I would make here: confirms expectation that single reference leads
+  to loss of reads, and that this is not randomly distributed but concentrated
+  on alleles which are more divergent from reference sequence.
 
-- To think about: even for HLA-B, most alleles have more than 75% reads mapped. Consistent with the similarity in expression estimates among indices. 
+- To think about: even for HLA-B, most alleles have more than 75% reads mapped.
+  Consistent with the similarity in expression estimates among indices. 
+-->
 
 ## Quality assessment
 
-\fontsize{6pt}{6}\selectfont
+| Gene    | not aligned  | aligned to different ref | false positive reads | 
+|:-------:|:------------:|:------------------------:|:--------------------:|
+|HLA-A    |         0    |                     1.66 | 0                    |
+|HLA-B    |         0    |                     0.2  | 0                    |
+|HLA-C    |         0    |                     0    | 0                    |
+|HLA-DQA1 |         0    |                     0.4  | 0                    |
+|HLA-DQB1 |         0    |                     0    | 0                    |
+|HLA-DRB1 |         0    |                     0.4  | 0                    |
 
-**Percentage of simulated reads not aligned:**
-
-| Gene    | kallisto | STAR  |
-|:-------:|:--------:|:-----:|
-|HLA-A    |   2.4    |  0    |
-|HLA-B    |   2.3    |  0    |
-|HLA-C    |   2.5    |  0    |
-|HLA-DQA1 |   1.2    |  0    |
-|HLA-DQB1 |   1.4    |  0    |
-|HLA-DRB1 |   2.1    |  0    |
-
-**Percentage of simulated reads from each HLA gene that aligned to a different reference:**
-
-| Gene    | kallisto | STAR  |
-|:-------:|:--------:|:-----:|
-|HLA-A    |   2.3    |  1.66 |
-|HLA-B    |   0.3    |  0.2  |
-|HLA-C    |   0.1    |  0    |
-|HLA-DQA1 |   0.7    |  0.4  |
-|HLA-DQB1 |   0      |  0    |
-|HLA-DRB1 |   0.9    |  0.4  |
-
-**Percentage of false positive reads:**
-
-| Gene    | kallisto | STAR  |
-|:-------:|:--------:|:-----:|
-|HLA-A    |   0      |  0    |
-|HLA-B    |   0      |  0    |
-|HLA-C    |   0.1    |  0    |
-|HLA-DQA1 |   0      |  0    |
-|HLA-DQB1 |   0      |  0    |
-|HLA-DRB1 |   0.1    |  0    |
-
-- I would put STAR first and kallisto second (consistent with primary focus vs secondary). The second table states "that aligned to a different reference", think of way to make clear if this includes *any* reference, including HLA, or some non-HLA genomewide reference.
-
-
-## Real Data (Geuvadis)
-
-- I dont like "real data" much, I prefer just "Geuvadis data", or some other more informative aspect.
+## Geuvadis Data
 
 **Typing accuracy**
 
-| Gene    | kallisto | STAR  |
-|:-------:|:--------:|:-----:|
-|HLA-A    |  97%     |  97%  |
-|HLA-B    |  98%     |  98%  |
-|HLA-C    |  95%     |  96%  |
-|HLA-DQB1 |  95%     |  95%  |
-|HLA-DRB1 |  98%     |  98%  |
+| Gene    | accuracy  |
+|:-------:|:---------:|
+|HLA-A    |  97%      |
+|HLA-B    |  98%      |
+|HLA-C    |  96%      |
+|HLA-DQB1 |  95%      |
+|HLA-DRB1 |  98%      |
 
-*Gold standard:
+\*Gold standard:
 1000 Genomes individuals HLA-typed by Gourraud et al. (2014). PLoS ONE 9(7): e97282.
 
 ## Aligner choice does not influence expression estimate
 
 \includegraphics[width=\linewidth]{../geuvadis_reanalysis/expression/plots/kallisto_vs_star_TPM.png}
 
-## Correlation with Geuvadis' published estimates
+## Validation 1: Correlation of expression
 
-\includegraphics[width=\linewidth]{../geuvadis_reanalysis/expression/plots/star_vs_geuvadis_final.png}
+\includegraphics[width=.8\linewidth]{./hlacorrelations.png}
+
+## Validation 2: Class II genes and their transactivator
+
+\includegraphics[width=\linewidth]{../geuvadis_reanalysis/expression/plots/trans_activ_corrs.png}
+
+## Correlation with Geuvadis published estimates
+
+\includegraphics[width=\linewidth]{./star_vs_geuvadis_final.png}
 
 ## Taking the uncorrected Geuvadis data and running myself the correction 
 
-\includegraphics[width=\linewidth]{../geuvadis_reanalysis/expression/plots/star_vs_geuvadis.png}
+\includegraphics[width=\linewidth]{./star_vs_geuvadis.png}
 
-- Conclusion: resonable locus-level for some loci. Very important to understand why the new quantification does a poorer job. IN particular, at some level, the new quantification should be similar to our quantification using the standerd reference genome, which in turn is similar to our IMGT index run. So it seems that some detail of the alignment influences the outcome. 
+<!-- 
+Conclusion: resonable locus-level for some loci. Very important to understand
+why the new quantification does a poorer job. In particular, at some level, the
+new quantification should be similar to our quantification using the standard
+reference genome, which in turn is similar to our IMGT index run. So it seems
+that some detail of the alignment influences the outcome. 
+-->
 
 ## New quantifications 
 
-\includegraphics[width=\linewidth]{../geuvadis_reanalysis/expression/plots/star_vs_geuvadis_new.png}
+\includegraphics[width=\linewidth]{./star_vs_geuvadis_new.png}
 
 ## Mapping to REF chromosomes may be enough for gene-level estimates
 
-\includegraphics[width=.9\linewidth]{../simulation/plots/star_mismatch_rates_PCA.png}
-
-- For this audience just one row. 
-
-## expression of alleles from different genes on the same vs on different haplotypes
-
-
-\includegraphics[width=\linewidth]{../geuvadis_reanalysis/expression/plots/b_vs_c.png}
-
-- Not sure this id ideal for this moment. Something more useful would be some biological validation, as Manolis hwas often recommented. For example, expectations for co-expression (e.g., B and C), and class I with the trans-activator (maybe weak, bur certainly a non-random association for unlinked loci). 
-
-- Any other path to validation?
-
+\includegraphics[width=.9\linewidth]{./star_imgt_vs_chr.png}
 
 # eQTLs
 
 ## Number of eGenes
 
-\includegraphics[width=\linewidth]{../geuvadis_reanalysis/qtls/plots/pca_vs_peer.png}
-
-- Stick to emphasis on star. Maybe explain to me why you said you suspect Manolis may have been conrrect to say that kallisto could be getting genomwide estimates wrong.
+\includegraphics[width=\linewidth]{./eGenes_number.png}
 
 ## eQTLs at HLA genes
 
@@ -161,16 +133,19 @@ Typing accuracy: 100%
 |HLA-DRB1 |   0  |rs9270698  | HLA-DQA1/HLA-DQB1| rs9274660        | 0.92|
 |HLA-DRB1 |   2  |rs145607970| HLA-DQA1/HLA-DQB1| rs9274660        | 0.93|
 
-## Relationship between eQTLs and HLA alleles
-
-\includegraphics[width=.75\linewidth]{../geuvadis_reanalysis/qtls/plots/lineage_and_effects.png}
-
 ## How allele-level expression is estimated in the HLA field
 
 \includegraphics[width=\linewidth]{./ramsuran_hlaA_lineages.png}
 
 Ramsuram et al. Human Molecular Genetics, 2015, 24 (15).
 
-- Flip with previous, put this one first as motivation, then our approach with the discussion of the caveats.
+## Relationship between eQTLs and HLA alleles
 
-- Would the cis trans fit in well here, at the end?
+\includegraphics[width=.75\linewidth]{../geuvadis_reanalysis/qtls/plots/lineage_and_effects.png}
+
+## expression of alleles from different genes on the same vs on different haplotypes
+
+\includegraphics[width=\linewidth]{../geuvadis_reanalysis/expression/plots/b_vs_c.png}
+
+\includegraphics[width=\linewidth]{../geuvadis_reanalysis/expression/plots/dqa_vs_drb.png}
+

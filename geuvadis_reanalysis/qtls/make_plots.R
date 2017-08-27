@@ -91,6 +91,18 @@ ggplot(egenes_df, aes(f, n, color = method, group = method)) +
   labs(x = "Number of PCs/factors", y = "Number of eGenes")
 dev.off()
 
+#png("../../meetings/eGenes_number.png", width = 8, height = 5, 
+#    units = "in", res = 300)
+#egenes_df %>%
+#  filter(method == "PCA_star") %>%
+#  ggplot(aes(f, n, group = method)) + 
+#  geom_point(size = 2.5) + 
+#  geom_line() +
+#  scale_x_continuous(breaks = sort(unique(egenes_df$f))) +
+#  theme_bw() +
+#  labs(x = "Number of PCs", y = "Number of eGenes")
+#dev.off()
+
 # Lineage and effects plot
 
 ## lineages
