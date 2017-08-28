@@ -17,8 +17,8 @@ knitr::opts_chunk$set(echo=FALSE, comment='', message=FALSE, warning=FALSE)
 
 ## The importance of HLA expression phenotypes
 
-- Association to cancer phenotypes
-- Association to HIV/AIDS progression
+- Association with cancer phenotypes
+- Association with HIV/AIDS progression
 - Transplantation
 
 ## Importance of developing HLA expression pipeline
