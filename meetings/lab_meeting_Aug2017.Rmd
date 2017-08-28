@@ -15,11 +15,14 @@ output:
 knitr::opts_chunk$set(echo=FALSE, comment='', message=FALSE, warning=FALSE)
 ```
 
-## Motivation
+## The importance of HLA expression phenotypes
 
 - Association to cancer phenotypes
 - Association to HIV/AIDS progression
 - Transplantation
+
+## Importance of developing HLA expression pipeline
+
 - Many datasets of genome-wide data are available, but HLA estimates may be inaccurate
 - Better eQTL mapping
 - HLA allele-level estimates
@@ -29,9 +32,7 @@ knitr::opts_chunk$set(echo=FALSE, comment='', message=FALSE, warning=FALSE)
 
 \includegraphics[width=\linewidth]{../../hla_manuscript/figures/method.png}
 
-<!-- 
-Explored approach using 3 tools: GEM, STAR (standard aligners) Kallisto (kmer-based). 
--->
+\*We explored approach using 3 tools: GEM, STAR (standard aligners) kallisto (kmer-based). 
 
 ## Simulation: Indices convering HLA diversity recover more reads
 
@@ -143,9 +144,18 @@ Ramsuram et al. Human Molecular Genetics, 2015, 24 (15).
 
 \includegraphics[width=.75\linewidth]{../geuvadis_reanalysis/qtls/plots/lineage_and_effects.png}
 
-## expression of alleles from different genes on the same vs on different haplotypes
+## Expression of alleles from different genes on the same vs on different haplotypes
 
 \includegraphics[width=\linewidth]{../geuvadis_reanalysis/expression/plots/b_vs_c.png}
 
 \includegraphics[width=\linewidth]{../geuvadis_reanalysis/expression/plots/dqa_vs_drb.png}
 
+## Conclusions
+
+- A pipeline which accounts for the HLA variation provides better expression estimates, especially for HLA-DQA1 and HLA-DRB1;
+
+- HLA alleles are associated with disease phenotypes, and the pipeline allows quantification of allele-level expression;
+
+- Do the eQTLs explain variation in HLA allele expression?
+
+- Much of the HLA literature is focused on the association of disease phenotypes with HLA haplotypes, but we see no correlation of expression attributed to haplotype membership.
