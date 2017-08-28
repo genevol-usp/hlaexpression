@@ -32,9 +32,9 @@ knitr::opts_chunk$set(echo=FALSE, comment='', message=FALSE, warning=FALSE)
 
 \includegraphics[width=\linewidth]{../../hla_manuscript/figures/method.png}
 
-\*We explored approach using 3 tools: GEM, STAR (standard aligners) kallisto (kmer-based). 
+\*We explored approach using 3 tools: GEM, STAR (standard aligners) and kallisto (kmer-based). 
 
-## Simulation: Indices convering HLA diversity recover more reads
+## Simulation: Indices covering HLA diversity recover more reads
 
 Typing accuracy: 100%
 
