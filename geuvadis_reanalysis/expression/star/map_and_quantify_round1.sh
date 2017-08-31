@@ -15,7 +15,7 @@ outPrefix=$outMap/$sample\_
 mkdir -p $outMap
 mkdir -p $outQuant
 
-$STAR --runMode alignReads --runThreadN 16 --genomeDir $indexDIR\
+$STAR --runMode alignReads --runThreadN 6 --genomeDir $indexDIR\
   --readFilesIn $fq1 $fq2 --readFilesCommand zcat\
   --outFilterMismatchNmax 1\
   --outFilterMultimapScoreRange 0\
@@ -32,6 +32,6 @@ bam=${outPrefix}Aligned.out.bam
 fasta=../../../imgt_index/gencode.v25.PRI.IMGT.transcripts.fa
 out=$outQuant/$sample
 
-$salmon quant -t $fasta -l IU -a $bam -o $out -p 16
+$salmon quant -t $fasta -l IU -a $bam -o $out -p 6
 
 rm $outPrefix*

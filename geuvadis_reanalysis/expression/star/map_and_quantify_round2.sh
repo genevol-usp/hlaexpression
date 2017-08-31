@@ -13,7 +13,7 @@ mkdir -p $indexDIR
 
 cat $fasta $sample_hla > $sample_fa
 
-$STAR --runThreadN 16 --runMode genomeGenerate --genomeDir $indexDIR\
+$STAR --runThreadN 6 --runMode genomeGenerate --genomeDir $indexDIR\
   --genomeFastaFiles $sample_fa --genomeChrBinNbits 11 --genomeSAindexNbases 13
 
 fq1=../../data/fastq/$sample\_1.fastq.gz
@@ -22,7 +22,7 @@ outMap=./mappings_2
 outQuant=./quantifications_2
 outPrefix=$outMap/$sample\_
 
-$STAR --runMode alignReads --runThreadN 16 --genomeDir $indexDIR\
+$STAR --runMode alignReads --runThreadN 6 --genomeDir $indexDIR\
   --readFilesIn $fq1 $fq2 --readFilesCommand zcat\
   --outFilterMismatchNmax 999\
   --outFilterMismatchNoverReadLmax 0.04\
@@ -41,6 +41,6 @@ rm -r $indexDIR
 bam=${outPrefix}Aligned.out.bam
 out=$outQuant/$sample
 
-$salmon quant -t $sample_fa -l IU -a $bam -o $out -p 16
+$salmon quant -t $sample_fa -l IU -a $bam -o $out -p 6
 
 rm $sample_fa $sample_hla $bam ${outPrefix}Log.out ${outPrefix}Log.progress.out
