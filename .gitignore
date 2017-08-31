@@ -35,7 +35,7 @@ nci/expression/alignments/
 nci/expression/quantifications_*
 simulation/expression/kallisto/quantifications_*
 simulation/expression/star/quantifications_*
-simulation/expression/star/index
-simulation/expression/star/indexCHR
+simulation/expression/star/mappings_*
+simulation/expression/star/index*
+simulation/expression/star/sample_indices
 simulation/expression/star/Log*
-simulation/expression/star/mappings_2
