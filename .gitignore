@@ -39,3 +39,5 @@ simulation/expression/star/mappings_*
 simulation/expression/star/index*
 simulation/expression/star/sample_indices
 simulation/expression/star/Log*
+simulation/expression/salmon/index*
+simulation/expression/salmon/quantifications_*
