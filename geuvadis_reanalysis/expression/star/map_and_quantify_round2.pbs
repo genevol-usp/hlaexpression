@@ -1,0 +1,14 @@
+#!/bin/bash
+
+#PBS -l nodes=1:ppn=16
+#PBS -l mem=12gb
+#PBS -l walltime=12:00:00
+#PBS -q short
+#PBS -t 1-358
+#PBS -j oe
+
+cd $PBS_O_WORKDIR
+
+SAMPLE=`awk "NR==$PBS_ARRAYID" ../../data/sample_info/samples_phase3_ena_eur.txt`
+
+./map_and_quantify_round2.sh $SAMPLE
