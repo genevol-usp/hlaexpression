@@ -6,54 +6,56 @@ samtools=/home/vitor/samtools-1.3.1/samtools
 
 sample=$1
 indexDIR=./sample_indices/$sample
-
-mkdir -p $indexDIR
-
-fasta=../../../geuvadis_reanalysis/expression/kallisto/index/gencode.v25.CHR.transcripts.noIMGT.fa
+fasta=../../../imgt_index/gencode.v25.PRI.transcripts.noIMGT.fa
 sample_hla=./sample_indices/hla_$sample.fa
 sample_fa=./sample_indices/index_$sample.fa
 
+mkdir -p $indexDIR
+
 cat $fasta $sample_hla > $sample_fa
 
-$STAR --runThreadN 6 --runMode genomeGenerate --genomeDir $indexDIR\
+$STAR --runThreadN 16 --runMode genomeGenerate --genomeDir $indexDIR\
   --genomeFastaFiles $sample_fa --genomeChrBinNbits 11 --genomeSAindexNbases 13
 
 fq1=../../data/fastq/$sample\_1.fq.gz
 fq2=../../data/fastq/$sample\_2.fq.gz
-outPrefix=./mappings_2/$sample\_
+outMap=./mappings_2
+outQuant=./quantifications_2
+outPrefix=$outMap/$sample\_
 
-$STAR --runMode alignReads --runThreadN 6 --genomeDir $indexDIR\
+$STAR --runMode alignReads --runThreadN 16 --genomeDir $indexDIR\
   --readFilesIn $fq1 $fq2 --readFilesCommand zcat\
   --outFilterMismatchNmax 999\
   --outFilterMismatchNoverReadLmax 0.04\
-  --outFilterMultimapScoreRange 0\
+  --outFilterMultimapScoreRange 1\
   --outFilterMultimapNmax 50\
   --winAnchorMultimapNmax 100\
-  --alignIntronMax 1\
+  --alignIntronMax 0\
   --alignEndsType Local\
   --outSAMunmapped Within KeepPairs\
   --outSAMprimaryFlag AllBestScore\
   --outSAMtype BAM Unsorted\
   --outFileNamePrefix $outPrefix
 
-rm -r $indexDIR
-
-bam=$outPrefix\Aligned.out.bam
-out=./quantifications_2/$sample
-
-$salmon quant -t $sample_fa -l IU -a $bam -o $out -p 6
-
-rm $sample_fa $sample_hla
-
-header=$outPrefix\header.sam
-imgtbam=$outPrefix\imgt.bam
-
-$samtools view -H $bam > $header
-
-$samtools view $bam |\
-  awk -F $'\t' '$1 ~ /IMGT/ || $3 ~ /IMGT/' |\
-  cat $header - |\
-  $samtools view -Sb - |\
-  $samtools view -b -f 0x2 -F 0x100 - > $imgtbam
-
-rm $header
+#rm -r $indexDIR
+#
+#bam=${outPrefix}Aligned.out.bam
+#out=$outQuant/$sample
+#
+#$salmon quant -t $sample_fa -l IU -a $bam -o $out -p 16
+#
+#rm $sample_fa $sample_hla
+#
+#header=$outPrefix\header.sam
+#imgtbam=$outPrefix\imgt.bam
+#
+#$samtools view -H $bam > $header
+#
+#$samtools view $bam |\
+#  awk -F $'\t' '$1 ~ /IMGT/ || $3 ~ /IMGT/' |\
+#  cat $header - |\
+#  $samtools view -Sb - |\
+#  $samtools view -b -f 0x2 -F 0x100 - > $imgtbam
+#
+#rm $header 
+#rm $outPrefix*

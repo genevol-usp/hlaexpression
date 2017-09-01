@@ -8,14 +8,19 @@ sample=$1
 indexDIR=./index
 fq1=../../data/fastq/$sample\_1.fq.gz
 fq2=../../data/fastq/$sample\_2.fq.gz
-outPrefix=./mappings_1/$sample\_
+outMap=./mappings_1
+outQuant=./quantifications_1
+outPrefix=$outMap/$sample\_
+
+mkdir -p $outMap
+mkdir -p $outQuant
 
 $STAR --runMode alignReads --runThreadN 6 --genomeDir $indexDIR\
   --readFilesIn $fq1 $fq2 --readFilesCommand zcat\
   --outFilterMismatchNmax 1\
   --outFilterMultimapScoreRange 0\
-  --outFilterMultimapNmax 4000\
-  --winAnchorMultimapNmax 8000\
+  --outFilterMultimapNmax 3000\
+  --winAnchorMultimapNmax 6000\
   --alignIntronMax 1\
   --alignEndsType EndToEnd\
   --outSAMunmapped None\
@@ -23,10 +28,10 @@ $STAR --runMode alignReads --runThreadN 6 --genomeDir $indexDIR\
   --outSAMtype BAM Unsorted\
   --outFileNamePrefix $outPrefix
 
-bam=./mappings_1/$sample\_Aligned.out.bam
-fasta=../../../geuvadis_reanalysis/expression/kallisto/index/gencode.v25.CHR.IMGT.transcripts.fa
-out=./quantifications_1/$sample
+bam=${outPrefix}Aligned.out.bam
+fasta=../../../imgt_index/gencode.v25.PRI.IMGT.transcripts.fa
+out=$outQuant/$sample
 
 $salmon quant -t $fasta -l IU -a $bam -o $out -p 6
 
-rm ./mappings_1/$sample\_*
+rm $outPrefix*

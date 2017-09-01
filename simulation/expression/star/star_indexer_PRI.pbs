@@ -1,0 +1,20 @@
+#!/bin/bash
+
+#PBS -l nodes=1:ppn=12
+#PBS -l mem=32gb
+#PBS -l walltime=12:00:00
+#PBS -q short
+#PBS -j oe
+#PBS -o /home/vitor/hlaexpression/simulation/expression/star/indexPRI.out
+
+STAR=/home/vitor/STAR
+
+indexDIR=./indexPRI
+fasta=/home/vitor/gencode_data/gencode.v25.PRI.transcripts.fa
+
+cd $PBS_O_WORKDIR
+
+mkdir -p $indexDIR
+
+$STAR --runThreadN 12 --runMode genomeGenerate --genomeDir $indexDIR\
+  --genomeFastaFiles $fasta --genomeChrBinNbits 10 --genomeSAindexNbases 13
