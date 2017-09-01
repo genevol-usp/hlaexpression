@@ -5,7 +5,7 @@ salmon=/home/vitor/Salmon-0.8.2_linux_x86_64/bin/salmon
 
 sample=$1
 
-indexDIR=./indexGENOME
+indexDIR=../../../imgt_index/star/indexGENOME
 fq1=../../data/fastq/$sample\_1.fq.gz
 fq2=../../data/fastq/$sample\_2.fq.gz
 outMap=./mappings_GENOME

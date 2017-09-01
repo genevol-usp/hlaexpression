@@ -37,25 +37,25 @@ $STAR --runMode alignReads --runThreadN 16 --genomeDir $indexDIR\
   --outSAMtype BAM Unsorted\
   --outFileNamePrefix $outPrefix
 
-#rm -r $indexDIR
-#
-#bam=${outPrefix}Aligned.out.bam
-#out=$outQuant/$sample
-#
-#$salmon quant -t $sample_fa -l IU -a $bam -o $out -p 16
-#
-#rm $sample_fa $sample_hla
-#
-#header=$outPrefix\header.sam
-#imgtbam=$outPrefix\imgt.bam
-#
-#$samtools view -H $bam > $header
-#
-#$samtools view $bam |\
-#  awk -F $'\t' '$1 ~ /IMGT/ || $3 ~ /IMGT/' |\
-#  cat $header - |\
-#  $samtools view -Sb - |\
-#  $samtools view -b -f 0x2 -F 0x100 - > $imgtbam
-#
-#rm $header 
-#rm $outPrefix*
+rm -r $indexDIR
+
+bam=${outPrefix}Aligned.out.bam
+out=$outQuant/$sample
+
+$salmon quant -t $sample_fa -l IU -a $bam -o $out -p 16
+
+rm $sample_fa $sample_hla
+
+header=$outPrefix\header.sam
+imgtbam=$outPrefix\imgt.bam
+
+$samtools view -H $bam > $header
+
+$samtools view $bam |\
+  awk -F $'\t' '$1 ~ /IMGT/ || $3 ~ /IMGT/' |\
+  cat $header - |\
+  $samtools view -Sb - |\
+  $samtools view -b -f 0x2 -F 0x100 - > $imgtbam
+
+rm $header 
+rm $outPrefix*
