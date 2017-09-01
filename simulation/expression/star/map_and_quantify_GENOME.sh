@@ -18,18 +18,15 @@ mkdir -p $outQuant
 $STAR --runMode alignReads --runThreadN 16 --genomeDir $indexDIR\
   --readFilesIn $fq1 $fq2 --readFilesCommand zcat\
   --outFilterMismatchNmax 999\
-  --outFilterMismatchNoverReadLmax 0.06\
+  --outFilterMismatchNoverReadLmax 0.04\
   --outFilterMultimapScoreRange 0\
   --outFilterType BySJout\
   --outFilterMultimapNmax 20\
   --winAnchorMultimapNmax 50\
   --alignIntronMax 0\
   --alignEndsType Local\
-  --alignSJoverhangMin 8\
-  --alignSJDBoverhangMin 3\
-  --outSAMunmapped Within KeepPairs\
   --outSAMprimaryFlag AllBestScore\
-  --outSAMtype BAM SortedByCoordinate\
+  --outSAMtype None\
   --quantMode TranscriptomeSAM\
   --quantTranscriptomeBan Singleend\
   --outFileNamePrefix $outPrefix
