@@ -15,31 +15,40 @@ sample_dt <-
 writeLines(sample_dt$sample_id, "./samples.txt")
 
 abundance_files <- 
-  file.path("../../geuvadis_reanalysis/expression/kallisto/quantifications_2", 
-	    sample_dt$subject, "abundance.tsv")
+  file.path("../../geuvadis_reanalysis/expression/star/quantifications_2", 
+	    sample_dt$subject, "quant.sf")
 names(abundance_files) <- sample_dt$subject
 
 abundances <- 
   parallel::mclapply(abundance_files, function(i) fread(i, select = c(1, 4, 5)),
 		     mc.cores = 25)
 
-abundances_dt <- rbindlist(abundances, idcol = "subject")[sample_dt, on = "subject"]
+abundances_dt <- 
+  rbindlist(abundances, idcol = "subject")[sample_dt, on = "subject"]
 
-genos <- abundances_dt[grepl("^IMGT_(A|B|C|DQA1|DQB1|DRB1)", target_id) & est_counts > 0]
-genos[, `:=`(locus = imgt_to_gname(target_id), 
-	     allele = hla_trimnames(gsub("IMGT_", "", target_id), 3))]
+genos <- 
+  abundances_dt[grepl("^IMGT_(A|B|C|DQA1|DQB1|DRB1)", Name) & NumReads > 0]
+
+genos[, `:=`(locus = imgt_to_gname(Name), 
+	     allele = hla_trimnames(gsub("IMGT_", "", Name), 3))]
+
 hom <- copy(genos)[, n := .N, by = .(subject, locus)][n == 1L][, n := NULL]
-genos <- rbind(genos, hom)[, .(subject = code, locus, allele)][order(subject, locus, allele)] 
+
+genos <- 
+  rbind(genos, hom
+      )[, .(subject = code, locus, allele)
+      ][order(subject, locus, allele)] 
 
 fwrite(genos, "./genos.tsv", sep = "\t", quote = FALSE)
 
-index <- readDNAStringSet("../../geuvadis_reanalysis/expression/kallisto/index/gencode.v25.CHR.IMGT.transcripts.fa")
+index <- 
+  readDNAStringSet("../../geuvadis_reanalysis/expression/kallisto/index/gencode.v25.CHR.IMGT.transcripts.fa")
 index <- index[width(index) >= 75]
 
-abundances_wide <- dcast(abundances_dt, target_id ~ sample_id, value.var = "est_counts")
-setkey(abundances_wide, target_id)
+abundances_wide <- dcast(abundances_dt, Name ~ sample_id, value.var = "NumReads")
+setkey(abundances_wide, Name)
 
-tx <- intersect(names(index), abundances_wide$target_id)
+tx <- intersect(names(index), abundances_wide$Name)
 
 index <- index[tx]
 abundances_wide <- abundances_wide[tx]

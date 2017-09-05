@@ -12,5 +12,5 @@ out=$outQuant/$sample
 mkdir -p $outQuant
 
 $salmon quant -i $index -l IU -1 $fastq1 -2 $fastq2 -o $out -p 6 \
-  --maxReadOcc 4000 --useVBOpt
+  --maxReadOcc 8000 --useVBOpt
   #--seqBias --gcBias --posBias --maxReadOcc 4000

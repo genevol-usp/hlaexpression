@@ -1,27 +1,33 @@
 #!/bin/bash
 
-parallel=/home/vitor/parallel
+#PBS -l nodes=1:ppn=16
+#PBS -l mem=6gb
+#PBS -l walltime=24:00:00
+#PBS -q short
+#PBS -t 1-50
+#PBS -j oe
+#PBS -o /home/vitor/hlaexpression/simulation/data/log/$PBS_JOBID.log
 
+SAMPLE=$(printf "sample_%02d" $PBS_ARRAYID)
+
+cd $PBS_O_WORKDIR
+
+mkdir -p ./log
 mkdir -p ./fastq
-mkdir -p ./fasta_{01..50}
+mkdir -p ./fasta_$PBS_ARRAYID
 
-$parallel --gnu -j 50 Rscript polyester.R {} ::: {1..50} 
+Rscript polyester.R $PBS_ARRAYID 
 
 for i in {1..2}
 do
-  for j in {01..50}
-  do
-    cat ./fasta_$j/sample_01_$i.fasta |\
-    awk -v mate=$i 'BEGIN {RS = ">" ; FS = "\n"} NR > 1 {
-      print\
-      "@"gensub(/;/, " ", 1, gensub(/\//, "_", 1, $1))"/"mate"\n"\
-      $2"\n"\
-      "+\n"\
-      gensub(/./, ">", "g", $2)\
-    }' | gzip -c > ./fastq/sample_$j\_$i.fq.gz &
-  done
-  wait
+  cat ./fasta_$PBS_ARRAYID/sample_01_$i.fasta |\
+      awk -v mate=$i 'BEGIN {RS = ">" ; FS = "\n"} NR > 1 {
+	print\
+	"@"gensub(/;/, " ", 1, gensub(/\//, "_", 1, $1))"/"mate"\n"\
+	$2"\n"\
+	"+\n"\
+	gensub(/./, ">", "g", $2)\
+      }' | gzip -c > ./fastq/${SAMPLE}_$i.fastq.gz
 done
-wait
 
-rm -r ./fasta_{01..50}
+rm -r ./fasta_$PBS_ARRAYID
