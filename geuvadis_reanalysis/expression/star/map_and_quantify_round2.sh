@@ -22,13 +22,16 @@ outMap=./mappings_2
 outQuant=./quantifications_2
 outPrefix=$outMap/$sample\_
 
+mkdir -p $outMap
+mkdir -p $outQuant
+
 $STAR --runMode alignReads --runThreadN 6 --genomeDir $indexDIR\
   --readFilesIn $fq1 $fq2 --readFilesCommand zcat\
   --outFilterMismatchNmax 999\
   --outFilterMismatchNoverReadLmax 0.04\
-  --outFilterMultimapScoreRange 0\
-  --outFilterMultimapNmax 50\
-  --winAnchorMultimapNmax 100\
+  --outFilterMultimapScoreRange 1\
+  --outFilterMultimapNmax 100\
+  --winAnchorMultimapNmax 200\
   --alignIntronMax 0\
   --alignEndsType Local\
   --outSAMunmapped Within KeepPairs\
@@ -43,4 +46,4 @@ out=$outQuant/$sample
 
 $salmon quant -t $sample_fa -l IU -a $bam -o $out -p 6
 
-rm $sample_fa $sample_hla $bam ${outPrefix}Log.out ${outPrefix}Log.progress.out
+rm $sample_fa $sample_hla $outPrefix* 

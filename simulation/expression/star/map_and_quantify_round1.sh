@@ -21,7 +21,7 @@ $STAR --runMode alignReads --runThreadN 6 --genomeDir $indexDIR\
   --outFilterMultimapScoreRange 0\
   --outFilterMultimapNmax 3000\
   --winAnchorMultimapNmax 6000\
-  --alignIntronMax 1\
+  --alignIntronMax 0\
   --alignEndsType EndToEnd\
   --outSAMunmapped None\
   --outSAMprimaryFlag AllBestScore\

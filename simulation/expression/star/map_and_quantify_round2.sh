@@ -14,7 +14,7 @@ mkdir -p $indexDIR
 
 cat $fasta $sample_hla > $sample_fa
 
-$STAR --runThreadN 16 --runMode genomeGenerate --genomeDir $indexDIR\
+$STAR --runThreadN 6 --runMode genomeGenerate --genomeDir $indexDIR\
   --genomeFastaFiles $sample_fa --genomeChrBinNbits 11 --genomeSAindexNbases 13
 
 fq1=../../data/fastq/$sample\_1.fq.gz
@@ -42,12 +42,12 @@ rm -r $indexDIR
 bam=${outPrefix}Aligned.out.bam
 out=$outQuant/$sample
 
-$salmon quant -t $sample_fa -l IU -a $bam -o $out -p 16
+$salmon quant -t $sample_fa -l IU -a $bam -o $out -p 6
 
 rm $sample_fa $sample_hla
 
-header=$outPrefix\header.sam
-imgtbam=$outPrefix\imgt.bam
+header=${outPrefix}header.sam
+imgtbam=${outPrefix}imgt.bam
 
 $samtools view -H $bam > $header
 
@@ -57,5 +57,4 @@ $samtools view $bam |\
   $samtools view -Sb - |\
   $samtools view -b -f 0x2 -F 0x100 - > $imgtbam
 
-rm $header 
-rm $outPrefix*
+rm ${outPrefix}Aligned* 
