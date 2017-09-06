@@ -89,7 +89,7 @@ kable(pval_df)
 
 ```{r}
 read_tsv("./qtls_star/rtc/geuvadis_eqtls/ld_star_geuvadis_bestSNPs.tsv") %>%
-  unite("Geuvadis|STAR", c("allele_geuvadis", "allele_star"), sep = "|") %>%
+  unite("Geuvadis_STAR", c("allele_geuvadis", "allele_star"), sep = "_") %>%
   rename(f_allele_geuv = f_geuvadis, f_allele_star = f_star) %>%
   kable(digits = 2)
 ```
