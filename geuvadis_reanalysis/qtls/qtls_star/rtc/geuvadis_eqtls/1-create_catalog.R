@@ -14,7 +14,8 @@ hla <- geuvadis[gencode12, on = .(gene_id)][grepl("^rs|^snp", snp_id)]
 bed <- data.table(chr = paste0("chr", hla$V5),
 		  start = as.integer(hla$V7) ,
 		  end = as.integer(hla$V7) + 1L,
-		  info = paste(hla$snp_id, hla$gene_name, round(hla$V12, 2), sep = ":"))
+		  info = paste(hla$snp_id, hla$gene_name, round(hla$V10, 2),
+			       round(hla$V12, 2), sep = ":"))
 
 fwrite(bed, "./geuvadis_hlaQTLs.bed", col.names = FALSE, quote = FALSE, sep = "\t")
 

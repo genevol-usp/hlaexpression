@@ -35,9 +35,9 @@ qtls_rtc_previous <-
   ungroup() %>%
   mutate(rtc = round(rtc, 3)) %>%
   distinct() %>%
-  separate(info, c("geuvadis_variant", "geuvadis_gene", "pvalue"), sep = ":") %>%
+  separate(info, c("geuvadis_variant", "geuvadis_gene", "geuvadis_eff_size", "geuvadis_pvalue"), sep = ":") %>% 
   group_by(gene, variant, rank, geuvadis_variant, rtc) %>%
-  summarise(geuvadis_gene = paste(geuvadis_gene, collapse = "/")) %>%
+  summarize(geuvadis_gene = paste(geuvadis_gene, collapse = "/")) %>%
   select(gene, variant, rank, geuvadis_gene, geuvadis_variant, rtc) %>% 
   arrange(gene, rank)
 

@@ -284,7 +284,7 @@ conditional_pca_star <-
 
 conditional_pca_star %>%
   filter(best == 1L) %>%
-  select(phen_id, rank, var_id, dist_tss, slope) %>%
+  select(phen_id, rank, var_id, dist_tss, slope, nom_pval) %>%
   write_tsv("./plots/eqtls.tsv")
 
 png("./plots/qtls_landscape_kallisto.png", height = 12, width = 10, units = "in", res = 300)

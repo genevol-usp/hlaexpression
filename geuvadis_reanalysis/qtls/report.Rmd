@@ -72,7 +72,31 @@ read_tsv("./qtls_star/rtc/gwas/results.tsv") %>%
   kable(digits = 2)
 ```
 
-## Trans-eQTLs
+# Comparison of slope and p-value with Geuvadis
+
+```{r}
+geuvadis_qtls <- 
+  read_tsv("./qtls_star/rtc/geuvadis_eqtls/catalog.tsv",
+	   col_names = c("variant", "info")) %>%
+  select(-variant) %>%
+  separate(info, c("geuvadis_variant", "geuvadis_gene", "geuvadis_slope",
+		   "geuvadis_pvalue"), sep = ":")
+
+star_qtls <- read_tsv("./plots/eqtls.tsv") %>%
+  select(gene = phen_id, rank, variant = var_id, slope, pvalue = nom_pval) %>%
+  mutate_at(vars(slope, pvalue), function(x) round(x, digits = 2))
+
+pval_df <-
+  star_qtls %>%
+  filter(rank == 0L) %>%
+  left_join(geuvadis_qtls, by = c("gene" = "geuvadis_gene")) %>%
+  select(gene, variant, geuvadis_variant, slope, geuvadis_slope, 
+	 pvalue, geuvadis_pvalue)
+
+kable(pval_df)
+```
+
+# Trans-eQTLs
 
 - Approximate pass as described on QTLtools website
 
