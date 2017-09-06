@@ -48,9 +48,9 @@ include_graphics("./plots/qtls_landscape_star.png")
 include_graphics("./plots/lineage_and_effects.png")
 ```
 
-# RTC
+# Comparison with Geuvadis
 
-## Geuvadis
+## RTC
 
 Some of our eQTLs seem to mark the same biological signal as the eQTLs found by
 Geuvadis (RTC > 0.9)
@@ -61,18 +61,7 @@ Geuvadis (RTC > 0.9)
   kable()
 ```
 
-## Association with GWAS traits
-
-```{r}
-read_tsv("./qtls_star/rtc/gwas/results.tsv") %>%
-  select(gene, rank, variant, gwas_variant, rtc, trait, studies = link) %>%
-  group_by(gene, rank, variant, gwas_variant, rtc) %>%
-  summarize(trait = paste(trait, collapse = "/"), 
-	    studies = paste(studies, collapse = " ")) %>%
-  kable(digits = 2)
-```
-
-# Comparison of slope and p-value with Geuvadis
+## slope and p-value
 
 ```{r}
 geuvadis_qtls <- 
@@ -94,6 +83,26 @@ pval_df <-
 	 pvalue, geuvadis_pvalue)
 
 kable(pval_df)
+```
+
+## LD between our best SNP (STAR) and Geuvadis best SNP
+
+```{r}
+read_tsv("./qtls_star/rtc/geuvadis_eqtls/ld_star_geuvadis_bestSNPs.tsv") %>%
+  unite("Geuvadis|STAR", c("allele_geuvadis", "allele_star"), sep = "|") %>%
+  rename(f_allele_geuv = f_geuvadis, f_allele_star = f_star) %>%
+  kable(digits = 2)
+```
+
+# Association to GWAS traits
+
+```{r}
+read_tsv("./qtls_star/rtc/gwas/results.tsv") %>%
+  select(gene, rank, variant, gwas_variant, rtc, trait, studies = link) %>%
+  group_by(gene, rank, variant, gwas_variant, rtc) %>%
+  summarize(trait = paste(trait, collapse = "/"), 
+	    studies = paste(studies, collapse = " ")) %>%
+  kable(digits = 2)
 ```
 
 # Trans-eQTLs
