@@ -57,18 +57,6 @@ Some of our eQTLs seem to mark the same biological signal as the eQTLs found by 
 | HLA-DRB1 | rs1048372   |     1| HLA-DQA1/HLA-DQB1 | rs9274660         |  0.710|
 | HLA-DRB1 | rs145607970 |     2| HLA-DQA1/HLA-DQB1 | rs9274660         |  0.929|
 
-slope and p-value
------------------
-
-| gene     | variant     | geuvadis\_variant |  slope| geuvadis\_slope |  pvalue| geuvadis\_pvalue |
-|:---------|:------------|:------------------|------:|:----------------|-------:|:-----------------|
-| HLA-A    | rs16896724  | rs114565353       |   0.88| -0.45           |   35.93| 19.4             |
-| HLA-C    | rs41561715  | rs115899777       |   1.36| 0.58            |   40.50| 34.33            |
-| HLA-B    | rs1265094   | rs137939159       |   0.57| -0.37           |   13.76| 13.08            |
-| HLA-DRB1 | rs9270698   | rs116405062       |   0.79| -0.6            |   31.61| 36.49            |
-| HLA-DQA1 | rs373884000 | rs9274660         |   0.68| -0.7            |   23.75| 55.76            |
-| HLA-DQB1 | rs1770      | rs9274660         |  -0.65| -0.72           |   19.82| 60.56            |
-
 LD between our best SNP (STAR) and Geuvadis best SNP
 ----------------------------------------------------
 
@@ -96,6 +84,18 @@ LD between our best SNP (STAR) and Geuvadis best SNP
 | HLA-DRB1 | 0\_1           |    0.41|             0.68|             0.70|  -0.06|  0.09|
 | HLA-DRB1 | 1\_0           |    0.03|             0.32|             0.30|  -0.06|  0.09|
 | HLA-DRB1 | 1\_1           |    0.29|             0.32|             0.70|   0.06|  0.09|
+
+slope and p-value
+-----------------
+
+| gene     | variant     | geuvadis\_variant |  slope| geuvadis\_slope |  pvalue| geuvadis\_pvalue |
+|:---------|:------------|:------------------|------:|:----------------|-------:|:-----------------|
+| HLA-A    | rs16896724  | rs114565353       |   0.88| -0.45           |   35.93| 19.4             |
+| HLA-C    | rs41561715  | rs115899777       |   1.36| 0.58            |   40.50| 34.33            |
+| HLA-B    | rs1265094   | rs137939159       |   0.57| -0.37           |   13.76| 13.08            |
+| HLA-DRB1 | rs9270698   | rs116405062       |   0.79| -0.6            |   31.61| 36.49            |
+| HLA-DQA1 | rs373884000 | rs9274660         |   0.68| -0.7            |   23.75| 55.76            |
+| HLA-DQB1 | rs1770      | rs9274660         |  -0.65| -0.72           |   19.82| 60.56            |
 
 Association to GWAS traits
 ==========================

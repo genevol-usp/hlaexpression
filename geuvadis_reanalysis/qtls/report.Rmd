@@ -61,6 +61,15 @@ Geuvadis (RTC > 0.9)
   kable()
 ```
 
+## LD between our best SNP (STAR) and Geuvadis best SNP
+
+```{r}
+read_tsv("./qtls_star/rtc/geuvadis_eqtls/ld_star_geuvadis_bestSNPs.tsv") %>%
+  unite("Geuvadis_STAR", c("allele_geuvadis", "allele_star"), sep = "_") %>%
+  rename(f_allele_geuv = f_geuvadis, f_allele_star = f_star) %>%
+  kable(digits = 2)
+```
+
 ## slope and p-value
 
 ```{r}
@@ -83,15 +92,6 @@ pval_df <-
 	 pvalue, geuvadis_pvalue)
 
 kable(pval_df)
-```
-
-## LD between our best SNP (STAR) and Geuvadis best SNP
-
-```{r}
-read_tsv("./qtls_star/rtc/geuvadis_eqtls/ld_star_geuvadis_bestSNPs.tsv") %>%
-  unite("Geuvadis_STAR", c("allele_geuvadis", "allele_star"), sep = "_") %>%
-  rename(f_allele_geuv = f_geuvadis, f_allele_star = f_star) %>%
-  kable(digits = 2)
 ```
 
 # Association to GWAS traits
