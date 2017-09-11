@@ -9,7 +9,9 @@ index <- readDNAStringSet("/home/vitor/hlaexpression/imgt_index/imgt_index.fa")
 genos <- 
   read_tsv(processed_quants) %>%
   select(subject, locus, allele, est_counts) %>%
-  distinct() %>%
+  group_by(subject, locus, allele) %>%
+  summarize(est_counts = sum(est_counts)) %>%
+  ungroup() %>%
   separate_rows(allele, sep = "=") %>% 
   arrange(subject, locus, desc(est_counts)) %>%
   group_by(subject, locus) %>%
