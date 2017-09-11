@@ -17,8 +17,8 @@ cat $fasta $sample_hla > $sample_fa
 $STAR --runThreadN 6 --runMode genomeGenerate --genomeDir $indexDIR\
   --genomeFastaFiles $sample_fa --genomeChrBinNbits 11 --genomeSAindexNbases 13
 
-fq1=../../data/fastq/$sample\_1.fq.gz
-fq2=../../data/fastq/$sample\_2.fq.gz
+fq1=../../data/fastq/$sample\_1.fastq.gz
+fq2=../../data/fastq/$sample\_2.fastq.gz
 outMap=./mappings_2
 outQuant=./quantifications_2
 outPrefix=$outMap/$sample\_

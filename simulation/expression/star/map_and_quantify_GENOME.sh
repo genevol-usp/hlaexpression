@@ -7,8 +7,8 @@ samtools=/home/vitor/samtools-1.3.1/samtools
 sample=$1
 
 indexDIR=../../../imgt_index/star/indexGENOME
-fq1=../../data/fastq/$sample\_1.fq.gz
-fq2=../../data/fastq/$sample\_2.fq.gz
+fq1=../../data/fastq/$sample\_1.fastq.gz
+fq2=../../data/fastq/$sample\_2.fastq.gz
 outMap=./mappings_GENOME
 outQuant=./quantifications_GENOME
 outPrefix=$outMap/$sample\_
