@@ -20,10 +20,10 @@ $STAR --runMode alignReads --runThreadN 6 --genomeDir $indexDIR\
   --readFilesIn $fq1 $fq2 --readFilesCommand zcat\
   --outFilterMismatchNmax 999\
   --outFilterMismatchNoverReadLmax 0.04\
-  --outFilterMultimapScoreRange 0\
-  --outFilterMultimapNmax 50\
-  --winAnchorMultimapNmax 100\
-  --alignIntronMax 1\
+  --outFilterMultimapScoreRange 1\
+  --outFilterMultimapNmax 100\
+  --winAnchorMultimapNmax 200\
+  --alignIntronMax 0\
   --alignEndsType Local\
   --outSAMunmapped Within KeepPairs\
   --outSAMprimaryFlag AllBestScore\
@@ -36,4 +36,14 @@ out=$outQuant/$sample
 
 $salmon quant -t $fasta -l IU -a $bam -o $out -p 6
 
-rm $outPrefix*
+header=${outPrefix}header.sam
+imgtbam=${outPrefix}imgt.bam
+
+$samtools view -H $bam > $header
+
+$samtools view -f 0x2 -F 0x100 $bam |\
+  LC_ALL=C grep -F -f ./ids_to_filter.txt |\
+  cat $header - |\
+  $samtools view -Sb - > $imgtbam
+
+rm ${outPrefix}Aligned* ${outPrefix}Log* ${outPrefix}SJ* ${outPrefix}header.sam

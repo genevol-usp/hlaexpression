@@ -43,10 +43,9 @@ imgtbam=${outPrefix}imgt.bam
 
 $samtools view -H $bam > $header
 
-$samtools view $bam |\
+$samtools view -f 0x2 -F 0x100 $bam |\
   LC_ALL=C grep -F -f ./ids_to_filter.txt |\
   cat $header - |\
-  $samtools view -Sb - |\
-  $samtools view -b -f 0x2 -F 0x100 - > $imgtbam
+  $samtools view -Sb - > $imgtbam
 
 rm ${outPrefix}Aligned* ${outPrefix}Log* ${outPrefix}SJ* ${outPrefix}header.sam

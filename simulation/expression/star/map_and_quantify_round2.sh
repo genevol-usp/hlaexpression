@@ -28,8 +28,8 @@ $STAR --runMode alignReads --runThreadN 16 --genomeDir $indexDIR\
   --outFilterMismatchNmax 999\
   --outFilterMismatchNoverReadLmax 0.04\
   --outFilterMultimapScoreRange 1\
-  --outFilterMultimapNmax 50\
-  --winAnchorMultimapNmax 100\
+  --outFilterMultimapNmax 100\
+  --winAnchorMultimapNmax 200\
   --alignIntronMax 0\
   --alignEndsType Local\
   --outSAMunmapped Within KeepPairs\
@@ -51,10 +51,9 @@ imgtbam=${outPrefix}imgt.bam
 
 $samtools view -H $bam > $header
 
-$samtools view $bam |\
+$samtools view -f 0x2 -F 0x100 $bam |\
   awk -F $'\t' '$1 ~ /IMGT/ || $3 ~ /IMGT/' |\
   cat $header - |\
-  $samtools view -Sb - |\
-  $samtools view -b -f 0x2 -F 0x100 - > $imgtbam
+  $samtools view -Sb - > $imgtbam
 
 rm ${outPrefix}Aligned* 
