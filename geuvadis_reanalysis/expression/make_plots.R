@@ -458,45 +458,45 @@ scatter_plot(quant_data, "tpm.kallisto.imgt", "tpm.star.imgt") +
        y = "TPM (STAR-Salmon)")
 dev.off()
 
-png("./plots/kallisto_vs_geuvadis.png", width = 10, height = 6, units = "in", res = 200)
-scatter_plot_color(quant_data, "resid.kallisto.imgt.fpkm", "resid.geuvadis.old", "dist.kallisto") +
-  labs(x = "PEER-corrected FPKM (kallisto)", y = "PEER-corrected FPKM (GEUVADIS)")
-dev.off()
-
-png("./plots/star_vs_geuvadis.png", width = 10, height = 6, units = "in", res = 200)
-scatter_plot_color(quant_data, "resid.star.imgt.fpkm", "resid.geuvadis.old", "dist.star") +
-  labs(x = "PEER-corrected FPKM (STAR)", y = "PEER-corrected FPKM (GEUVADIS)")
-dev.off()
+#png("./plots/kallisto_vs_geuvadis.png", width = 10, height = 6, units = "in", res = 200)
+#scatter_plot_color(quant_data, "resid.kallisto.imgt.fpkm", "resid.geuvadis.old", "dist.kallisto") +
+#  labs(x = "PEER-corrected FPKM (kallisto)", y = "PEER-corrected FPKM (GEUVADIS)")
+#dev.off()
+#
+#png("./plots/star_vs_geuvadis.png", width = 10, height = 6, units = "in", res = 200)
+#scatter_plot_color(quant_data, "resid.star.imgt.fpkm", "resid.geuvadis.old", "dist.star") +
+#  labs(x = "PEER-corrected FPKM (STAR)", y = "PEER-corrected FPKM (GEUVADIS)")
+#dev.off()
 
 #png("../../meetings/star_vs_geuvadis.png", width = 10, height = 6, units = "in", res = 200)
 #scatter_plot(quant_data, "resid.star.imgt.fpkm", "resid.geuvadis.old") +
 #  labs(x = "PEER-corrected FPKM (STAR)", y = "PEER-corrected FPKM (GEUVADIS)")
 #dev.off()
 
-png("./plots/kallisto_vs_geuvadis_final.png", width = 10, height = 6, units = "in", res = 200)
-scatter_plot_color(quant_data, "resid.kallisto.imgt.fpkm", "resid.geuvadis.final", "dist.kallisto") +
-  labs(x = "PEER-corrected FPKM (kallisto)", y = "PEER-corrected FPKM (GEUVADIS)")
-dev.off()
-
-png("./plots/star_vs_geuvadis_final.png", width = 10, height = 6, units = "in", res = 200)
-scatter_plot_color(quant_data, "resid.star.imgt.fpkm", "resid.geuvadis.final", "dist.star") +
-  labs(x = "PEER-corrected FPKM (STAR)", y = "PEER-corrected FPKM (GEUVADIS)")
-dev.off()
+#png("./plots/kallisto_vs_geuvadis_final.png", width = 10, height = 6, units = "in", res = 200)
+#scatter_plot_color(quant_data, "resid.kallisto.imgt.fpkm", "resid.geuvadis.final", "dist.kallisto") +
+#  labs(x = "PEER-corrected FPKM (kallisto)", y = "PEER-corrected FPKM (GEUVADIS)")
+#dev.off()
+#
+#png("./plots/star_vs_geuvadis_final.png", width = 10, height = 6, units = "in", res = 200)
+#scatter_plot_color(quant_data, "resid.star.imgt.fpkm", "resid.geuvadis.final", "dist.star") +
+#  labs(x = "PEER-corrected FPKM (STAR)", y = "PEER-corrected FPKM (GEUVADIS)")
+#dev.off()
 
 #png("../../meetings/star_vs_geuvadis_final.png", width = 10, height = 6, units = "in", res = 200)
 #scatter_plot(quant_data, "resid.star.imgt.fpkm", "resid.geuvadis.final") +
 #  labs(x = "PEER-corrected FPKM (STAR)", y = "PEER-corrected FPKM (GEUVADIS)")
 #dev.off()
 
-png("./plots/kallisto_vs_geuvadis_new.png", width = 10, height = 6, units = "in", res = 200)
-scatter_plot_color(quant_data, "resid.kallisto.imgt.fpkm", "resid.geuvadis.new", "dist.kallisto") +
-  labs(x = "PEER-corrected FPKM (kallisto)", y = "PEER-corrected FPKM (GEUVADIS)")
-dev.off()
-
-png("./plots/star_vs_geuvadis_new.png", width = 10, height = 6, units = "in", res = 200)
-scatter_plot_color(quant_data, "resid.star.imgt.fpkm", "resid.geuvadis.new", "dist.star") +
-  labs(x = "PEER-corrected FPKM (STAR)", y = "PEER-corrected FPKM (GEUVADIS)")
-dev.off()
+#png("./plots/kallisto_vs_geuvadis_new.png", width = 10, height = 6, units = "in", res = 200)
+#scatter_plot_color(quant_data, "resid.kallisto.imgt.fpkm", "resid.geuvadis.new", "dist.kallisto") +
+#  labs(x = "PEER-corrected FPKM (kallisto)", y = "PEER-corrected FPKM (GEUVADIS)")
+#dev.off()
+#
+#png("./plots/star_vs_geuvadis_new.png", width = 10, height = 6, units = "in", res = 200)
+#scatter_plot_color(quant_data, "resid.star.imgt.fpkm", "resid.geuvadis.new", "dist.star") +
+#  labs(x = "PEER-corrected FPKM (STAR)", y = "PEER-corrected FPKM (GEUVADIS)")
+#dev.off()
 
 #png("../../meetings/star_vs_geuvadis_new.png", width = 10, height = 6, units = "in", res = 200)
 #scatter_plot(quant_data, "resid.star.imgt.fpkm", "resid.geuvadis.new") +
@@ -541,6 +541,7 @@ dev.off()
 png("./plots/ase.png", width = 8, height = 5, units = "in", res = 200)
 ggplot(ase_error, aes(factor(error), ase)) +
   ggbeeswarm::geom_quasirandom(varwidth = TRUE, size = .75, alpha = 1/2) +
+  scale_y_continuous(limits = c(0, 0.5)) +
   facet_wrap(~locus) + 
   labs(x = "number of wrong calls in genotype") +
   theme_bw() +

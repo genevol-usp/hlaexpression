@@ -1,7 +1,7 @@
 devtools::load_all("~/hlaseqlib")
 library(tidyverse)
 
-quant_round <- commandArgs(TRUE)[1]
+quant_round <- as.integer(commandArgs(TRUE)[1])
 
 samples <- 
   geuvadis_info %>% 
@@ -10,7 +10,7 @@ samples <-
 
 doMC::registerDoMC(25)
 
-if (quant_round == 1 || quant_round == 2) {
+if (quant_round == 1L || quant_round == 2L) {
 
   quants <- 
     file.path(paste0("./quantifications_", quant_round), samples, "quant.sf") %>%
@@ -65,25 +65,39 @@ if (quant_round == 1 || quant_round == 2) {
 
   } else if (quant_round == 2L) {
 
-    out_df <- hla_genotype_dt(quants, th = 0) #%>%
-   #   group_by(subject, locus) %>%
-   #   mutate(i = as.integer(any(tpm/max(tpm) < 0.2))) %>%
-   #   ungroup()
+    out_df <- hla_genotype_dt(quants, th = 0) %>%
+      mutate(subject = as.character(subject)) %>%
+      group_by(subject, locus) %>%
+      mutate(i = as.integer(any(tpm/max(tpm) <= 0.25))) %>%
+      ungroup()
 
-   # out_df_0 <- out_df %>% filter(i == 0L) %>% select(-i)
+    out_df_0 <- out_df %>% filter(i == 0L) %>% select(-i)
 
-   # out_df_1 <- 
-   #   out_df %>% 
-   #   filter(i == 1L) %>%
-   #   group_by(subject, gene_id) %>%
-   #   mutate(m = as.integer(tpm == max(tpm)), 
-   #          est_counts = sum(est_counts)/2, tpm = sum(tpm)/2) %>%
-   #   ungroup() %>%
-   #   filter(m == 1L) %>%
-   #   select(-i, -m)
+    out_df_1 <- 
+      out_df %>% 
+      filter(i == 1L) %>%
+      group_by(subject, gene_id) %>%
+      mutate(m = as.integer(tpm == max(tpm)), 
+             est_counts = sum(est_counts)/2, tpm = sum(tpm)/2) %>%
+      ungroup() %>%
+      filter(m == 1L) %>%
+      select(-i, -m)
 
-   # out_df <- bind_rows(out_df_0, out_df_1, out_df_1) %>%
-   #   arrange(subject, locus, allele)
+    out_df <- bind_rows(out_df_0, out_df_1, out_df_1) %>%
+      mutate(subject = as.character(subject)) %>%
+      arrange(subject, locus, allele)
+    
+   # genos <- mutate(pag, allele = hla_trimnames(allele, 3))
+   # 
+   # calls <- out_df %>%
+   #   filter(locus %in% paste0("HLA-", c("A", "B", "C", "DQA1", "DQB1", "DRB1"))) %>%
+   #   select(subject, locus, allele) %>%
+   #   mutate(subject = convert_ena_ids(as.character(subject)),
+   #          locus = sub("^HLA-", "", locus),
+   #          allele = hla_trimnames(gsub("IMGT_", "", allele), 3))
+
+   # accuracy <- calc_genotyping_accuracy(calls, genos) %>%
+   #   mutate(accuracy = round(accuracy, 3))
 
 } else if (quant_round == "CHR") {
 
@@ -101,6 +115,12 @@ if (quant_round == 1 || quant_round == 2) {
 		ungroup() %>%
 		rename(locus = gene_name),
 	      .id = "subject", .parallel = TRUE)
+}
+
+if (!all(samples %in% out_df$subject)) {
+  
+  miss <- samples[! samples %in% out_df$subject]
+  stop(paste("missing samples:", miss))
 }
 
 write_tsv(out_df, paste0("./quantifications_", quant_round, "/processed_quant.tsv"))
