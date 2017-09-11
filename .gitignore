@@ -30,7 +30,7 @@ geuvadis_reanalysis/expression/star/sample_indices/
 geuvadis_reanalysis/expression/star/mappings_*
 geuvadis_reanalysis/expression/star/quantifications_*
 geuvadis_reanalysis/qtls/rtc/unmapped_to_hg38
-geuvadis_reanalysis/qtls/rtc/geuvadis_eqtls/unmapped_to_hg38
+geuvadis_reanalysis/qtls/qtls_star/rtc/geuvadis_eqtls/unmapped_to_hg38
 geuvadis_reanalysis/expression/star/log/
 nci/expression/alignments/
 nci/expression/quantifications_*
@@ -42,3 +42,4 @@ simulation/expression/star/Log*
 simulation/expression/salmon/index*
 simulation/expression/salmon/quantifications_*
 simulation/expression/star/log/
+simulation/data/log/
