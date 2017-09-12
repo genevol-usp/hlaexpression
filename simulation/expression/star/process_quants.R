@@ -1,58 +1,87 @@
 devtools::load_all("~/hlaseqlib")
 library(tidyverse)
 
+doMC::registerDoMC(25)
+
+make_genot_calls_df <- function(typings_df) {
+
+    typings_df %>%
+	mutate(subject, convert_ena_ids(as.character(subject)),
+	       allele = hla_trimnames(gsub("IMGT_", "", allele), 3))
+}
+
+read_imgt_quants <- function(f) {
+    
+    read_tsv(f, col_types = "c--dd", progress = FALSE) %>% 
+    filter(grepl("^IMGT_", Name)) %>%
+    mutate(locus = imgt_to_gname(Name), gene_id = gname_to_gid(locus)) %>%
+    select(locus, gene_id, allele = Name, est_counts = NumReads, tpm = TPM)
+}
+
+read_pri_quants <- function(f) {
+
+    read_tsv(f, col_types = "c--dd", progress = FALSE) %>%
+    separate(Name, c("tx_id", "gene_id", "dummy1", "dummy2", "tx_name", 
+		     "gene_name", "dummy3", "dummy4", "dummy5"), 
+	     sep = "\\|") %>%
+    select(tx_id, gene_name, est_counts = NumReads, tpm = TPM) %>%
+    filter(gene_name %in% hla_genes) %>%
+    group_by(gene_name) %>%
+    summarize_at(vars(tpm, est_counts), sum) %>%
+    ungroup() %>%
+    rename(locus = gene_name)
+}
+
 quant_round <- commandArgs(TRUE)[1]
 
 samples <- sprintf("sample_%02d", 1:50)
+    
+quant_files <- 
+    paste0("./quantifications_", quant_round) %>%
+    file.path(samples, "quant.sf") %>%
+    setNames(samples)
 
-doMC::registerDoMC(25)
+hla_genes <- paste0("HLA-", c("A", "B", "C", "DQA1", "DQB1", "DRB1"))
 
 if (quant_round == 1L | quant_round == 2L) {
 
-  quants <- 
-    file.path(paste0("./quantifications_", quant_round), samples, "quant.sf") %>%
-    setNames(samples) %>%
-    plyr::ldply(. %>% read_tsv(col_types = "c--dd", progress = FALSE) %>% 
-		filter(grepl("^IMGT_", Name)) %>%
-		mutate(locus = imgt_to_gname(Name),
-		       gene_id = gname_to_gid(locus)) %>%
-		select(locus, gene_id, allele = Name, est_counts = NumReads, tpm = TPM),
-	      .id = "subject", .parallel = TRUE)
-
-  if (quant_round == 1L) {
-
-    genos <- read_tsv("../../data/genos.tsv")
+    quants <- 
+	quant_files %>%
+	plyr::ldply(read_imgt_quants, .id = "subject", .parallel = TRUE)
     
-    thresholds <- as.list(seq(0, .25, .05))
-    names(thresholds) <- seq(0, .25, .05)
+    goldstd_genos <- read_tsv("../../data/genos.tsv")
 
-    typings <- plyr::ldply(thresholds, function(th) hla_genotype_dt(quants, th),
-			   .id = "th", .parallel = TRUE)
+    if (quant_round == 1L) {
+    
+	thresholds <- as.list(seq(0, .25, .05))
+	names(thresholds) <- seq(0, .25, .05)
 
-    calls <- typings %>%
-      filter(locus %in% paste0("HLA-", c("A", "B", "C", "DQA1", "DQB1", "DRB1"))) %>%
-      select(th, subject, locus, allele) %>%
-      mutate(subject = as.character(subject),
-	     allele = hla_trimnames(gsub("IMGT_", "", allele), 3))
+	typings <- 
+	    plyr::ldply(thresholds, function(th) hla_genotype_dt(quants, th),
+			.id = "th", .parallel = TRUE)
 
-    accuracies <-
-      calls %>%
-      split(.$th) %>%
-      plyr::ldply(function(df) calc_genotyping_accuracy(df, genos),
-		  .id = "th", .parallel = TRUE) %>%
-      group_by(th) %>%
-      mutate(th_average = mean(accuracy)) %>%
-      ungroup()
+	calls <- 
+	    typings %>%
+	    filter(locus %in% hla_genes) %>%
+	    select(th, subject, locus, allele) %>%
+	    make_genot_calls_df()
 
-    best_th <- accuracies %>%
-      slice(which.max(th_average)) %>%
-      pull(th)
+	accuracies <-
+	    calls %>%
+	    split(.$th) %>%
+	    plyr::ldply(function(df) calc_genotyping_accuracy(df, genos),
+			.id = "th", .parallel = TRUE) %>%
+	    group_by(th) %>%
+	    mutate(th_average = mean(accuracy)) %>%
+	    ungroup()
+	
+	best_th <- accuracies %>%
+	    slice(which.max(th_average)) %>%
+	    pull(th)
 
-    write_tsv(accuracies, "./genotyping_accuracies.tsv")
+	write_tsv(accuracies, "./genotyping_accuracies_1.tsv")
 
-    out_df <- typings %>%
-      filter(th == best_th) %>%
-      select(-th)
+	out_df <- filter(typings, th == best_th) %>% select(-th)
 
   } else if (quant_round == 2L) {
 
@@ -62,19 +91,10 @@ if (quant_round == 1L | quant_round == 2L) {
 } else if (quant_round == "PRI")  {
 
   out_df <-
-    file.path(paste0("./quantifications_", quant_round), samples, "quant.sf") %>%
-    setNames(samples) %>%
-    plyr::ldply(. %>%
-                read_tsv(col_types = "c--dd", progress = FALSE) %>%
-                separate(Name, c("tx_id", "gene_id", "dummy1", "dummy2", "tx_name", "gene_name",
-                                 "dummy3", "dummy4", "dummy5"), sep = "\\|") %>%
-                select(tx_id, gene_name, est_counts = NumReads, tpm = TPM) %>%
-                filter(gene_name %in% paste0("HLA-", c("A", "B", "C", "DQA1", "DQB1", "DRB1"))) %>%
-                group_by(gene_name) %>%
-                summarize_at(vars(tpm, est_counts), sum) %>%
-                ungroup() %>%
-                rename(locus = gene_name),
-              .id = "subject", .parallel = TRUE)
+      quant_files %>%
+      plyr::ldply(read_pri_quants, .id = "subject", .parallel = TRUE)
 }
 
-write_tsv(out_df, paste0("./quantifications_", quant_round, "/processed_quant.tsv"))
+out_df %>%
+    write_tsv(paste0("./quantifications_", quant_round, "/processed_quant.tsv"))
+
