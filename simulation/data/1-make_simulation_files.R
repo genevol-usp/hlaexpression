@@ -3,8 +3,8 @@ library(Biostrings)
 devtools::load_all("/home/vitor/hlaseqlib")
   
 setDT(geuvadis_info)
-set.seed(2)
 
+set.seed(2)
 sample_dt <- 
   geuvadis_info[kgp_phase3 == 1 & pop != "YRI", .(sample_id = name, subject = ena_id)
 	      ][sample_id %in% sample(sample_id, 50)
@@ -54,7 +54,7 @@ tx <- intersect(names(index), abundances_wide$Name)
 index <- index[tx]
 abundances_wide <- abundances_wide[tx]
 
-samples <- names(abundances_wide)[-1]
+samples <- sample_dt$code
 
 abundances_wide[, (samples) := lapply(.SD, function(x) ifelse(is.na(x), 0, x)), .SDcols = samples]
 abundances_wide[, (samples) := lapply(.SD, function(x) round(x/sum(x) * 3e7)), .SDcols = samples]

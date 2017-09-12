@@ -7,7 +7,7 @@ samples <- sprintf("sample_%02d", 1:50)
 
 doMC::registerDoMC(25)
 
-if (quant_round == 1 | quant_round == 2) {
+if (quant_round == 1L | quant_round == 2L) {
 
   quants <- 
     file.path(paste0("./quantifications_", quant_round), samples, "quant.sf") %>%
@@ -19,7 +19,7 @@ if (quant_round == 1 | quant_round == 2) {
 		select(locus, gene_id, allele = Name, est_counts = NumReads, tpm = TPM),
 	      .id = "subject", .parallel = TRUE)
 
-  if (quant_round == 1) {
+  if (quant_round == 1L) {
 
     genos <- read_tsv("../../data/genos.tsv")
     
@@ -47,10 +47,6 @@ if (quant_round == 1 | quant_round == 2) {
     best_th <- accuracies %>%
       slice(which.max(th_average)) %>%
       pull(th)
-
-    accuracies <- accuracies %>%
-      mutate(accuracy = round(accuracy, 2),
-	     th_average = round(th_average, 3))
 
     write_tsv(accuracies, "./genotyping_accuracies.tsv")
 

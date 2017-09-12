@@ -99,7 +99,7 @@ if (quant_round == 1L || quant_round == 2L) {
    # accuracy <- calc_genotyping_accuracy(calls, genos) %>%
    #   mutate(accuracy = round(accuracy, 3))
 
-} else if (quant_round == "CHR") {
+} else if (quant_round == "PRI") {
 
   out_df <- 
     file.path(paste0("./quantifications_", quant_round), samples, "quant.sf") %>%
