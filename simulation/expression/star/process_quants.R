@@ -6,8 +6,7 @@ doMC::registerDoMC(25)
 make_genot_calls_df <- function(typings_df) {
 
     typings_df %>%
-	mutate(subject, convert_ena_ids(as.character(subject)),
-	       allele = hla_trimnames(gsub("IMGT_", "", allele), 3))
+	mutate(allele = hla_trimnames(gsub("IMGT_", "", allele), 3))
 }
 
 read_imgt_quants <- function(f) {
@@ -69,7 +68,7 @@ if (quant_round == 1L | quant_round == 2L) {
 	accuracies <-
 	    calls %>%
 	    split(.$th) %>%
-	    plyr::ldply(function(df) calc_genotyping_accuracy(df, genos),
+	    plyr::ldply(function(df) calc_genotyping_accuracy(df, goldstd_genos),
 			.id = "th", .parallel = TRUE) %>%
 	    group_by(th) %>%
 	    mutate(th_average = mean(accuracy)) %>%
