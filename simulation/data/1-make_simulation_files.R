@@ -11,8 +11,6 @@ sample_dt <-
 	      ][order(sample_id)
 	      ][, code := sprintf("sample_%02d", 1:50)]
 
-writeLines(sample_dt$sample_id, "./samples.txt")
-
 abundance_files <- 
   file.path("../../geuvadis_reanalysis/expression/star/quantifications_2", 
 	    sample_dt$subject, "quant.sf")
@@ -22,26 +20,29 @@ abundances <-
   parallel::mclapply(abundance_files, function(i) fread(i, select = c(1, 4, 5)),
 		     mc.cores = 25)
 
-abundances_dt <- 
-  rbindlist(abundances, idcol = "subject"
-	  )[sample_dt, on = "subject"
-	  ][, .(subject = code, Name, TPM, NumReads)
-	  ][, .(NumReads = sum(NumReads), TPM = sum(TPM)), by = .(subject, Name)]
+abundances_imgt <- 
+    fread("../../geuvadis_reanalysis/expression/star/quantifications_2/processed_quant.tsv"
+	)[sample_dt, on = .(subject)
+	][, .(subject = code, locus, Name = allele, NumReads = est_counts)]
 
 genos <- 
-  abundances_dt[grepl("^IMGT_(A|B|C|DQA1|DQB1|DRB1)", Name) & NumReads > 0]
-
-genos[, `:=`(locus = imgt_to_gname(Name), 
-	     allele = hla_trimnames(gsub("IMGT_", "", Name), 3))]
-
-hom <- copy(genos)[, n := .N, by = .(subject, locus)][n == 1L][, n := NULL]
-
-genos <- 
-  rbind(genos, hom
-      )[, .(subject, locus, allele)
-      ][order(subject, locus, allele)] 
+    abundances_imgt[locus %in% paste0("HLA-", c("A", "B", "C", "DQA1", "DQB1", "DRB1"))
+		  ][, .(subject, locus, allele = Name)]
+genos[, allele := hla_trimnames(gsub("IMGT_", "", sub("^([^/]+).*$", "\\1", allele)), 3)] 
 
 fwrite(genos, "./genos.tsv", sep = "\t", quote = FALSE)
+
+abundances_imgt[, locus := NULL]
+
+abundances_non_imgt <- 
+  rbindlist(abundances, idcol = "subject"
+	  )[sample_dt, on = "subject"
+	  ][, .(subject = code, Name, NumReads)
+	  ][!grepl("^IMGT", Name)]
+
+abundances_dt <-
+    rbind(abundances_non_imgt, abundances_imgt
+	)[, .(NumReads = sum(NumReads)), by = .(subject, Name)]
 
 index <- readDNAStringSet("../../imgt_index/gencode.v25.CHR.IMGT.transcripts.fa")
 index <- index[width(index) >= 75]
