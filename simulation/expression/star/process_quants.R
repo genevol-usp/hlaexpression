@@ -40,6 +40,12 @@ quant_files <-
     file.path(samples, "quant.sf") %>%
     setNames(samples)
 
+miss <- quant_files[!file.exists(quant_files)]
+
+if (length(miss) > 0L) {
+    stop(paste("missing files:", miss))
+}
+
 hla_genes <- paste0("HLA-", c("A", "B", "C", "DQA1", "DQB1", "DRB1"))
 
 if (quant_round == 1L | quant_round == 2L) {

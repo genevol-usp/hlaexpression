@@ -6,10 +6,12 @@
 #PBS -q short
 #PBS -t 1-50
 #PBS -j oe
-#PBS -o /home/vitor/hlaexpression/simulation/expression/star/log/$PBS_JOBID.log
+#PBS -o /home/vitor/hlaexpression/simulation/expression/star/log/$PBS_JOBNAME.log
 
 cd $PBS_O_WORKDIR
 
-mkdir -p log
+mkdir -p ./log
+mkdir -p ./mappings_1
+mkdir -p ./quantifications_1 
 
 ./map_and_quantify_round1.sh $(printf "sample_%02d" $PBS_ARRAYID) 
