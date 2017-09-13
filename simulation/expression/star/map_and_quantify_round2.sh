@@ -17,7 +17,7 @@ cat $fasta $sample_hla > $sample_fa
 $STAR --runThreadN 6 --runMode genomeGenerate --genomeDir $indexDIR\
     --genomeFastaFiles $sample_fa\
     --genomeChrBinNbits 11 --genomeSAindexNbases 13\
-    --outFileNamePrefix ./sample_indices/$sample
+    --outFileNamePrefix ${indexDIR}_
 
 fq1=../../data/fastq/$sample\_1.fastq.gz
 fq2=../../data/fastq/$sample\_2.fastq.gz
@@ -39,7 +39,7 @@ $STAR --runMode alignReads --runThreadN 16 --genomeDir $indexDIR\
     --outSAMtype BAM Unsorted\
     --outFileNamePrefix $outPrefix
 
-rm -r $indexDIR
+rm -r $indexDIR ${indexDIR}_Log.out
 
 bam=${outPrefix}Aligned.out.bam
 out=$outQuant/$sample
