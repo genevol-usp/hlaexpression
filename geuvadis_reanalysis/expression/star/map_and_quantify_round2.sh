@@ -14,7 +14,9 @@ mkdir -p $indexDIR
 cat $fasta $sample_hla > $sample_fa
 
 $STAR --runThreadN 6 --runMode genomeGenerate --genomeDir $indexDIR\
-  --genomeFastaFiles $sample_fa --genomeChrBinNbits 11 --genomeSAindexNbases 13
+    --genomeFastaFiles $sample_fa\
+    --genomeChrBinNbits 11 --genomeSAindexNbases 13\
+    --outFileNamePrefix ./sample_indices/$sample
 
 fq1=../../data/fastq/$sample\_1.fastq.gz
 fq2=../../data/fastq/$sample\_2.fastq.gz
@@ -26,18 +28,18 @@ mkdir -p $outMap
 mkdir -p $outQuant
 
 $STAR --runMode alignReads --runThreadN 6 --genomeDir $indexDIR\
-  --readFilesIn $fq1 $fq2 --readFilesCommand zcat\
-  --outFilterMismatchNmax 999\
-  --outFilterMismatchNoverReadLmax 0.04\
-  --outFilterMultimapScoreRange 1\
-  --outFilterMultimapNmax 100\
-  --winAnchorMultimapNmax 200\
-  --alignIntronMax 0\
-  --alignEndsType Local\
-  --outSAMunmapped Within KeepPairs\
-  --outSAMprimaryFlag AllBestScore\
-  --outSAMtype BAM Unsorted\
-  --outFileNamePrefix $outPrefix
+    --readFilesIn $fq1 $fq2 --readFilesCommand zcat\
+    --outFilterMismatchNmax 999\
+    --outFilterMismatchNoverReadLmax 0.04\
+    --outFilterMultimapScoreRange 1\
+    --outFilterMultimapNmax 100\
+    --winAnchorMultimapNmax 200\
+    --alignIntronMax 0\
+    --alignEndsType Local\
+    --outSAMunmapped Within KeepPairs\
+    --outSAMprimaryFlag AllBestScore\
+    --outSAMtype BAM Unsorted\
+    --outFileNamePrefix $outPrefix
 
 rm -r $indexDIR
 
