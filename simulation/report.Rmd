@@ -21,7 +21,7 @@ read_tsv("./expression/kallisto/genotyping_accuracies.tsv") %>%
   filter(th == .05) %>%
   mutate(accuracy = accuracy * 100) %>%
   select(locus, `accuracy (%)` = accuracy) %>%
-  kable()
+  kable(digits = 2)
 ```
 
 ## Expression

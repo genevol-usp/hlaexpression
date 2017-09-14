@@ -1,119 +1,87 @@
-library(data.table)
-devtools::load_all("~/hlaseqlib")
+devtools::load_all("/home/vitor/hlaseqlib")
+library(tidyverse)
 
-process_quant_imgt <- function(quant_files) {
+doMC::registerDoMC(25)
 
-  readDT <- function(x)
-    fread(x, select = c(1, 4, 5))[grepl("^IMGT", target_id)]
+make_genot_calls_df <- function(typings_df) {
 
-  ldt <- parallel::mclapply(quant_files, readDT, mc.cores = 50)
-
-  rbindlist(ldt, idcol = "subject")[, .(subject, target_id, est_counts, tpm)]
+    typings_df %>%
+	mutate(allele = hla_trimnames(gsub("IMGT_", "", allele), 3))
 }
-
-process_quant_refgenome <- function(quant_files, gencode_hla_tx) {
-
-  readDT <- function(x)
-    fread(x, select = c(1, 4, 5)
-        )[, target_id := sub("^([^|]+).*$", "\\1", target_id)
-	][target_id %in% gencode_hla_tx$target_id]
-
-  ldt <- parallel::mclapply(quant_files, readDT, mc.cores = 50)
-
-  dt <- 
-    rbindlist(ldt, idcol = "subject")[, .(subject, target_id, est_counts, tpm)]
-
-  dt[gencode_hla_tx, on = .(target_id), nomatch = 0L
-   ][, .(subject, gene_id, gene_name, target_id, est_counts, tpm)
-   ][order(subject, gene_name)]
-}
-
-samples <- 
-  geuvadis_info$ena_id[geuvadis_info$kgp_phase3 == 1 & geuvadis_info$pop != "YRI"]
 
 quant_round <- commandArgs(TRUE)[1]
-quant_dir <- paste0("./quantifications_", quant_round)
-quant_files <- file.path(quant_dir, samples, "abundance.tsv")
-names(quant_files) <- samples
+
+samples <-
+    geuvadis_info %>%
+    filter(kgp_phase3 == 1L & pop != "YRI") %>%
+    pull(ena_id)
+
+quant_files <- 
+    paste0("./quantifications_", quant_round) %>%
+    file.path(samples, "abundance.tsv") %>%
+    setNames(samples)
   
-if (quant_round == 1 | quant_round == 2) {
-  
-  imgt_quants <- process_quant_imgt(quant_files)
-  
-  hla_names <- imgt_quants[, .(target_id = unique(target_id))]
-  hla_names[, `:=`(locus = sub("HLA-", "", imgt_to_gname(target_id)),
-		   gene_id = imgt_to_gid(target_id))]
+missing_files <- quant_files[!file.exists(quant_files)]
 
-  imgt_quants <- 
-    imgt_quants[hla_names, on = .(target_id)
-	      ][, .(subject, gene_id, locus, allele = target_id, est_counts, tpm)]
-  
-  if (quant_round == 1) {
-
-    thresholds <- as.list(seq(0, .25, .05))
-    names(thresholds) <- seq(0, .25, .05)
-
-    typings <-
-      parallel::mclapply(thresholds, 
-			 function(th) hla_genotype_dt(imgt_quants, th),
-			 mc.cores = length(thresholds))
-      
-    typings_dt <- rbindlist(typings, idcol = "th")
-
-    genos_dt <- typings_dt[locus %in% c("A", "B", "C", "DQB1", "DRB1"), 
-			   .(th, subject, locus, allele)]
-    genos_dt[, `:=`(subject = convert_ena_ids(subject),
-		    allele = hla_trimnames(gsub("IMGT_", "", allele), 3))]
-
-    pag3f <- setDT(pag)[, allele := hla_trimnames(allele, 3)]
-
-    accuracies_list <- 
-      parallel::mclapply(split(genos_dt, genos_dt$th),
-			 function(i) calc_genotyping_accuracy(i, pag3f),
-			 mc.cores = length(thresholds))
-
-    accuracies_dt <- rbindlist(accuracies_list, idcol = "th")
-    accuracies_dt[, th_average := mean(accuracy), by = th] 
-
-    best_th <- accuracies_dt[which.max(th_average), th]
-
-    accuracies_dt[, `:=`(accuracy = round(accuracy, 2), 
-			 th_average = round(th_average, 2))]
-
-    fwrite(accuracies_dt, "./genotyping_accuracies.tsv", 
-	   sep = "\t", quote = FALSE)
-
-    out_dt <- typings_dt[th == best_th]
-    out_dt[, th := NULL]
-
-  } else if (quant_round == 2) {
-
-  out_dt <- hla_genotype_dt(imgt_quants, th = 0)
-
-  }
-
-} else if (quant_round == "CHR" | quant_round == "ALL") {
-
-  hla_genes <- paste0("HLA-", c("A", "B", "C", "DQA1", "DQB1", "DRB1"))
-
-  gencode_hla_tx <- 
-    setDT(gencode_all_tx
-	)[gene_name %in% hla_genes, .(target_id = tx_id, gene_id, gene_name)]
-
-  by_tx <- process_quant_refgenome(quant_files, gencode_hla_tx)
-
-  by_gene <- by_tx[, .(est_counts = sum(est_counts), tpm = sum(tpm)), 
-		   by = .(subject, gene_name)]
-	
-  out_dt <- 
-    by_gene[, locus := sub("HLA-", "", gene_name)
-	  ][order(subject, locus), .(subject, locus, est_counts, tpm)]
-
-} else {
-
-  stop("wrong dir")
- 
+if (length(missing_files) > 0L) {
+    stop(paste("missing files:", missing_files))
 }
 
-fwrite(out_dt, file.path(quant_dir, "processed_quant.tsv"), 
-       sep = "\t", quote = FALSE)
+hla_genes <- paste0("HLA-", c("A", "B", "C", "DQA1", "DQB1", "DRB1"))
+
+if (quant_round == 1L | quant_round == 2L) {
+  
+    quants <- 
+	quant_files %>%
+        plyr::ldply(read_kallisto_imgt_quants, 
+		    .id = "subject", .parallel = TRUE)
+  
+    goldstd_genos <- read_tsv("../../data/genos.tsv")
+
+    if (quant_round == 1) {
+     
+	thresholds <- as.list(seq(0, .25, .05))
+	names(thresholds) <- seq(0, .25, .05)
+
+	typings <-
+	    plyr::ldply(thresholds, function(th) hla_genotype_dt(quants, th),
+			.id = "th", .parallel = TRUE)
+
+	calls <- 
+	    typings %>%
+	    filter(locus %in% hla_genes) %>%
+	    select(th, subject, locus, allele) %>%
+	    make_genot_calls_df()
+
+	accuracies <- 
+	    calls %>%
+	    split(.$th) %>%
+	    plyr::ldply(function(df) calc_genotyping_accuracy(df, goldstd_genos),
+			.id = "th", .parallel = TRUE) %>%
+	    group_by(th) %>%
+	    mutate(th_average = mean(accuracy)) %>%
+	    ungroup()
+
+	best_th <- accuracies %>%
+	    slice(which.max(th_average)) %>%
+	    pull(th)
+
+	write_tsv(accuracies, "./genotyping_accuracies_1.tsv")
+
+	out_df <- filter(typings, th == best_th) %>% select(-th)
+      
+    } else if (quant_round == 2L) {
+
+	out_dt <- hla_genotype_dt(quants, th = 0)
+    }
+
+} else if (quant_round == "PRI") {
+
+    out_df <-
+	quant_files %>%
+	plyr::ldply(read_kallisto_pri_quants, .id = "subject", .parallel = TRUE)
+
+}
+
+out_df %>%
+    write_tsv(paste0("./quantifications_", quant_round, "/processed_quant.tsv")) 

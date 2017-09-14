@@ -11,28 +11,7 @@ make_genot_calls_df <- function(typings_df) {
 	       allele = hla_trimnames(gsub("IMGT_", "", allele), 3))
 }
 
-read_imgt_quants <- function(f) {
-
-    read_tsv(f, col_types = "c--dd", progress = FALSE) %>% 
-	filter(grepl("^IMGT_", Name)) %>%
-	mutate(locus = imgt_to_gname(Name), gene_id = gname_to_gid(locus)) %>%
-	select(locus, gene_id, allele = Name, est_counts = NumReads, tpm = TPM)
-}
-
-read_pri_quants <- function(f) {
-    read_tsv(f, col_types = "c--dd", progress = FALSE) %>%
-    separate(Name, c("tx_id", "gene_id", "dummy1", "dummy2", "tx_name", 
-		     "gene_name", "dummy3", "dummy4", "dummy5"), 
-	     sep = "\\|") %>%
-    select(tx_id, gene_name, est_counts = NumReads, tpm = TPM) %>%
-    filter(gene_name %in% hla_genes) %>%
-    group_by(gene_name) %>%
-    summarize_at(vars(tpm, est_counts), sum) %>%
-    ungroup() %>%
-    rename(locus = gene_name)
-}
-
-quant_round <- as.integer(commandArgs(TRUE)[1])
+quant_round <- commandArgs(TRUE)[1]
 
 samples <- 
     geuvadis_info %>% 
@@ -55,7 +34,7 @@ if (quant_round == 1L || quant_round == 2L) {
 
     quants <- 
 	quant_files %>%
-	plyr::ldply(read_imgt_quants, .id = "subject", .parallel = TRUE)
+	plyr::ldply(read_star_imgt_quants, .id = "subject", .parallel = TRUE)
     
     goldstd_genos <- mutate(pag, allele = hla_trimnames(allele, 3))
     
@@ -112,7 +91,7 @@ if (quant_round == 1L || quant_round == 2L) {
 
     out_df <- 
 	quant_files %>%
-	plyr::ldply(read_pri_quants, .id = "subject", .parallel = TRUE)
+	plyr::ldply(read_star_pri_quants, .id = "subject", .parallel = TRUE)
 }
 
 out_df %>%
