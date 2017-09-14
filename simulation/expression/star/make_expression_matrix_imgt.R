@@ -41,4 +41,4 @@ gene_dt <- gene_dt[gene_id %in% expressedGenes$gene_id]
 
 gene_dt_wide <- dcast(gene_dt, subject ~ gene_id, value.var = "gene_tpm")
 
-fwrite(gene_dt_wide, "./quantifications_gene_expressed90%.csv")
+fwrite(gene_dt_wide, "./quantifications_imgt_expressed90%.csv")
