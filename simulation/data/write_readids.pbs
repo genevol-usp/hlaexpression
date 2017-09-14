@@ -1,0 +1,19 @@
+#!/bin/bash
+
+#PBS -l nodes=1:ppn=1
+#PBS -l mem=2gb
+#PBS -l walltime=04:00:00
+#PBS -q short
+#PBS -t 1-50
+#PBS -j oe
+#PBS -o /home/vitor/hlaexpression/simulation/data/log/$PBS_JOBNAME.log
+
+cd $PBS_O_WORKDIR
+
+mkdir -p read_ids
+
+SAMPLE=$(printf "sample_%02d" $PBS_ARRAYID)
+
+zcat ./fastq/${SAMPLE}_1.fastq.gz |\
+    grep "IMGT" |\
+    cut -d' ' -f1 > ./read_ids/$SAMPLE.txt

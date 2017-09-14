@@ -30,9 +30,9 @@ imgtbam=$sampledir/imgt.bam
 
 $samtools view -H $bam > $header
 
-$samtools view -b -f 0x2 $bam |\
+$samtools view -f 0x2 $bam |\
   awk -F $'\t' '$1 ~ /IMGT/ || $3 ~ /IMGT/' |\
   cat $header - |\
   $samtools view -Sb - > $imgtbam
 
-rm $sample_fa $sample_idx
+rm $sample_fa $sample_idx $bam
