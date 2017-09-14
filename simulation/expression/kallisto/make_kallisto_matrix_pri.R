@@ -10,7 +10,7 @@ gencode <- gencode_chr_tx[chr %in% 1:22, .(target_id = tx_id, gene_id)]
 
 samples <- sprintf("sample_%02d", 1:50) 
 
-abundance_files <- file.path("./quantifications_CHR", samples, "abundance.tsv")
+abundance_files <- file.path("./quantifications_PRI", samples, "abundance.tsv")
 names(abundance_files) <- samples
 
 expression_list <- parallel::mclapply(abundance_files, fread, mc.cores = 50)
@@ -28,4 +28,4 @@ expression_dt <- expression_dt[gene_id %in% expressedGenes$gene_id]
 
 expression_w <- dcast(expression_dt, subject ~ gene_id, value.var = "gene_tpm")
 
-fwrite(expression_w, "./kallisto_CHR_expressed90%.csv")
+fwrite(expression_w, "./kallisto_PRI_expressed90%.csv")

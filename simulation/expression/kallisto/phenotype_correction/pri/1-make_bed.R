@@ -3,7 +3,7 @@ devtools::load_all("/home/vitor/hlaseqlib")
 
 setDT(gencode_chr_gene)
 
-gene_exp <- fread("../../kallisto_CHR_expressed90%.csv")
+gene_exp <- fread("../../kallisto_PRI_expressed90%.csv")
   
 gene_exp <- melt(gene_exp, id = 1, measure = 2:ncol(gene_exp), 
 		 variable.name = "gene_id", value.name = "tpm")

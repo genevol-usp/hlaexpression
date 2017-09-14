@@ -72,12 +72,6 @@ read_tsv("./reads_false_pos_hla.tsv") %>% kable()
 
 ## kallisto vs STAR-Salmon; HLA-diversity index
 
-### Counts
-
-```{r}
-include_graphics("./plots/kallisto_vs_star_counts.png")
-```
-
 ### TPM
 
 ```{r}
@@ -91,12 +85,6 @@ include_graphics("./plots/kallisto_vs_star_10pc.png")
 ```
 
 ## kallisto vs STAR-Salmon; Reference chromosomes only
-
-### Counts
-
-```{r}
-include_graphics("./plots/kallisto_vs_star_CHR_counts.png")
-```
 
 ### TPM
 
@@ -112,12 +100,6 @@ include_graphics("./plots/kallisto_vs_star_CHR_10pc.png")
 
 ## kallisto; HLA-diversity vs Reference chromosomes only
 
-### Counts
-
-```{r}
-include_graphics("./plots/kallisto_imgt_vs_chr_counts.png")
-```
-
 ### TPM
 
 ```{r}
@@ -132,12 +114,6 @@ include_graphics("./plots/kallisto_imgt_vs_chr_10pc.png")
 
 ## STAR-Salmon; HLA-diversity vs Reference chromosomes only
 
-### Counts
-
-```{r}
-include_graphics("./plots/star_imgt_vs_chr_counts.png")
-```
-
 ### TPM 
 
 ```{r}
@@ -149,33 +125,3 @@ include_graphics("./plots/star_imgt_vs_chr_TPM.png")
 ```{r}
 include_graphics("./plots/star_imgt_vs_chr_10pc.png")
 ```
-
-# Varying the mismatch threshold in the alignment to REF chromosomes
-
-## TPM
-
-```{r}
-include_graphics("./plots/star_mismatch_rates_TPM.png")
-```
-
-## PCA-corrected expression
-
-```{r}
-include_graphics("./plots/star_mismatch_rates_PCA.png")
-```
-
-# Mean Absolute Relative Difference
-
-Relative difference is =
-
-- 0 if x~i~ = y~i~ = 0 
-
-- |x~i~ - y~i~| / (x~i~ + y~i~) otherwise
-
-, where x~i~ and y~i~ are the true and estimated gene counts respectively.
-Then I take the mean over all genes, obtaining a value of MRD for each sample.
-
-```{r}
-include_graphics("./plots/mrd.png")
-```
-
