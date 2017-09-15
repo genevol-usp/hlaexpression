@@ -12,12 +12,21 @@ library(tidyverse)
 library(knitr)
 ```
 
+# Notes:
+
+Index nomenclature:
+
+- pri: Primary assembly of the reference genome, containing the referece chromosomes and scaffolds (no alternate haplotypes)
+
+- imgt: the previous index supplemented with IMGT references
+
+
 # kallisto
 
 ## Genotyping
 
 ```{r}
-read_tsv("./expression/kallisto/genotyping_accuracies.tsv") %>%
+read_tsv("./expression/kallisto/genotyping_accuracies_1.tsv") %>%
   filter(th == .05) %>%
   mutate(accuracy = accuracy * 100) %>%
   select(locus, `accuracy (%)` = accuracy) %>%
@@ -35,7 +44,7 @@ include_graphics('./plots/kallisto_prop_mapped.png')
 ## Genotyping
 
 ```{r}
-read_tsv("./expression/star/genotyping_accuracies.tsv") %>%
+read_tsv("./expression/star/genotyping_accuracies_1.tsv") %>%
   filter(th == .05) %>%
   mutate(accuracy = accuracy * 100) %>%
   select(locus, `accuracy (%)` = accuracy) %>%
@@ -61,6 +70,19 @@ Percentage of simulated reads from each HLA gene that aligned to a different ref
 ```{r}
 read_tsv("./reads_false_neg_hla.tsv") %>% kable()
 ```
+
+The plot belows shows where the reads simulated from a HLA gene (x-axis) are mapped 
+in alignments to a different reference (`n` in the entire dataset).
+
+**This is just an initial exploration**
+
+**The plot is hard to interpret, both because of the y unit and amount of colors**
+
+
+```{r}
+include_graphics("./plots/diff_refs_alignments.png")
+```
+
 
 Percentage of simulated reads gained by each HLA gene (reads simulated from other references)
 
@@ -89,13 +111,13 @@ include_graphics("./plots/kallisto_vs_star_10pc.png")
 ### TPM
 
 ```{r}
-include_graphics("./plots/kallisto_vs_star_CHR_TPM.png")
+include_graphics("./plots/kallisto_vs_star_PRI_TPM.png")
 ```
 
 ### PCA-corrected expression
 
 ```{r} 
-include_graphics("./plots/kallisto_vs_star_CHR_10pc.png")
+include_graphics("./plots/kallisto_vs_star_PRI_10pc.png")
 ```
 
 ## kallisto; HLA-diversity vs Reference chromosomes only
@@ -103,13 +125,13 @@ include_graphics("./plots/kallisto_vs_star_CHR_10pc.png")
 ### TPM
 
 ```{r}
-include_graphics("./plots/kallisto_imgt_vs_chr_TPM.png")
+include_graphics("./plots/kallisto_imgt_vs_PRI_TPM.png")
 ```
 
 ### PCA-corrected expression
 
 ```{r}
-include_graphics("./plots/kallisto_imgt_vs_chr_10pc.png")
+include_graphics("./plots/kallisto_imgt_vs_PRI_10pc.png")
 ```
 
 ## STAR-Salmon; HLA-diversity vs Reference chromosomes only
@@ -117,11 +139,11 @@ include_graphics("./plots/kallisto_imgt_vs_chr_10pc.png")
 ### TPM 
 
 ```{r}
-include_graphics("./plots/star_imgt_vs_chr_TPM.png")
+include_graphics("./plots/star_imgt_vs_PRI_TPM.png")
 ```
 
 ### PCA-corrected expression
 
 ```{r}
-include_graphics("./plots/star_imgt_vs_chr_10pc.png")
+include_graphics("./plots/star_imgt_vs_PRI_10pc.png")
 ```
