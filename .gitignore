@@ -26,6 +26,7 @@ imgt_index/star/index*
 geuvadis_reanalysis/expression/kallisto/phase_hla_alleles/PHASE/phase*
 geuvadis_reanalysis/expression/star/phase_hla_alleles/PHASE/phase.out*
 geuvadis_reanalysis/expression/kallisto/quantifications_*
+geuvadis_reanalysis/expression/kallisto/log
 geuvadis_reanalysis/expression/star/sample_indices/
 geuvadis_reanalysis/expression/star/mappings_*
 geuvadis_reanalysis/expression/star/quantifications_*
