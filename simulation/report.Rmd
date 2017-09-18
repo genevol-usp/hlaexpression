@@ -16,9 +16,9 @@ library(knitr)
 
 Index nomenclature:
 
-- pri: Primary assembly of the reference genome, containing the referece chromosomes and scaffolds (no alternate haplotypes)
+- pri: Primary assembly of the reference genome, containing the reference chromosomes and scaffolds (no alternate haplotypes)
 
-- imgt: the previous index supplemented with IMGT references
+- imgt: "pri" index supplemented with IMGT references
 
 
 # kallisto
@@ -65,18 +65,17 @@ Percentage of simulated reads not aligned:
 read_tsv("./reads_not_aligned_hla.tsv") %>% kable()
 ```
 
-Percentage of simulated reads from each HLA gene that aligned to a different reference:
+Percentage of simulated reads from each HLA gene that aligned to a different
+reference:
 
 ```{r}
 read_tsv("./reads_false_neg_hla.tsv") %>% kable()
 ```
 
-The plot belows shows where the reads simulated from a HLA gene (x-axis) are mapped 
-in alignments to a different reference (`n` in the entire dataset).
+The plot below shows where the reads simulated from a HLA gene (x-axis) are
+mapped when they aligned to a different reference (`n` in the entire dataset).
 
-**This is just an initial exploration**
-
-**The plot is hard to interpret, both because of the y unit and amount of colors**
+*This is just an initial exploration. The plot is hard to interpret, both because of the y unit and amount of colors*
 
 
 ```{r}
@@ -84,7 +83,8 @@ include_graphics("./plots/diff_refs_alignments.png")
 ```
 
 
-Percentage of simulated reads gained by each HLA gene (reads simulated from other references)
+Percentage of simulated reads gained by each HLA gene (reads simulated from
+other references)
 
 ```{r}
 read_tsv("./reads_false_pos_hla.tsv") %>% kable()

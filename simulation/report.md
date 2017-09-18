@@ -6,9 +6,9 @@ Notes:
 
 Index nomenclature:
 
--   pri: Primary assembly of the reference genome, containing the referece chromosomes and scaffolds (no alternate haplotypes)
+-   pri: Primary assembly of the reference genome, containing the reference chromosomes and scaffolds (no alternate haplotypes)
 
--   imgt: the previous index supplemented with IMGT references
+-   imgt: "pri" index supplemented with IMGT references
 
 kallisto
 ========
@@ -75,11 +75,9 @@ Percentage of simulated reads from each HLA gene that aligned to a different ref
 | HLA-DQB1   |            0.12|           3.74|        0.02|       7.58|
 | HLA-DRB1   |            0.94|          19.94|        0.45|      21.28|
 
-The plot belows shows where the reads simulated from a HLA gene (x-axis) are mapped in alignments to a different reference (`n` in the entire dataset).
+The plot below shows where the reads simulated from a HLA gene (x-axis) are mapped when they aligned to a different reference (`n` in the entire dataset).
 
-**This is just an initial exploration**
-
-**The plot is hard to interpret, both because of the y unit and amount of colors**
+*This is just an initial exploration. The plot is hard to interpret, both because of the y unit and amount of colors*
 
 ![](./plots/diff_refs_alignments.png)
 
