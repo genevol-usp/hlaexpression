@@ -6,7 +6,10 @@ doMC::registerDoMC(25)
 make_genot_calls_df <- function(typings_df) {
 
     typings_df %>%
-	mutate(allele = hla_trimnames(gsub("IMGT_", "", allele), 3))
+	mutate(subject = convert_ena_ids(as.character(subject)),
+	       locus = sub("^HLA-", "", locus),
+	       allele = hla_trimnames(gsub("IMGT_", "", allele), 3)) %>%
+	arrange(subject, locus, allele)
 }
 
 quant_round <- commandArgs(TRUE)[1]
@@ -36,7 +39,7 @@ if (quant_round == 1L | quant_round == 2L) {
         plyr::ldply(read_kallisto_imgt_quants, 
 		    .id = "subject", .parallel = TRUE)
   
-    goldstd_genos <- read_tsv("../../data/genos.tsv")
+    goldstd_genos <- mutate(pag, allele = hla_trimnames(allele, 3))
 
     if (quant_round == 1) {
      
@@ -64,7 +67,8 @@ if (quant_round == 1L | quant_round == 2L) {
 
 	best_th <- accuracies %>%
 	    slice(which.max(th_average)) %>%
-	    pull(th)
+	    pull(th) %>%
+	    as.character()
 
 	write_tsv(accuracies, "./genotyping_accuracies_1.tsv")
 
@@ -72,7 +76,18 @@ if (quant_round == 1L | quant_round == 2L) {
       
     } else if (quant_round == 2L) {
 
-	out_dt <- hla_genotype_dt(quants, th = 0)
+	out_dt <- hla_genotype_dt(quants, th = 0) %>%
+	    hla_apply_zigosity_threshold(th = 0.25)
+
+	calls <- 
+	    out_df %>%
+	    filter(locus %in% hla_genes) %>%
+	    select(subject, locus, allele) %>%
+	    make_genot_calls_df()
+
+	accuracies <- calc_genotyping_accuracy(calls, goldstd_genos)
+
+	write_tsv(accuracies, "./genotyping_accuracies_2.tsv")
     }
 
 } else if (quant_round == "PRI") {
@@ -80,8 +95,8 @@ if (quant_round == 1L | quant_round == 2L) {
     out_df <-
 	quant_files %>%
 	plyr::ldply(read_kallisto_pri_quants, .id = "subject", .parallel = TRUE)
-
 }
 
 out_df %>%
     write_tsv(paste0("./quantifications_", quant_round, "/processed_quant.tsv")) 
+
