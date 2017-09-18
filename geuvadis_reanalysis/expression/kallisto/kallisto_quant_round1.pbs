@@ -4,7 +4,7 @@
 #PBS -l mem=6gb
 #PBS -l walltime=24:00:00
 #PBS -q short
-#PBS -t 1-358
+#PBS -t 309-358
 #PBS -j oe
 #PBS -o /home/vitor/hlaexpression/geuvadis_reanalysis/expression/kallisto/log/$PBS_JOBNAME.log
 
