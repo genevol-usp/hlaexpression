@@ -1,0 +1,17 @@
+#!/bin/bash
+
+#PBS -l nodes=1:ppn=1
+#PBS -l mem=12gb
+#PBS -l walltime=12:00:00
+#PBS -q short
+#PBS -j oe
+#PBS -o /home/vitor/hlaexpression/imgt_index/kallisto/indexIMGT.out
+
+kallisto=/home/vitor/kallisto_linux-v0.43.1/kallisto 
+
+fasta=../gencode.v25.PRI.IMGT.transcripts.fa
+out=./gencode.v25.PRI.IMGT.transcripts.idx
+
+cd $PBS_O_WORKDIR
+
+$kallisto index -i $out $fasta
