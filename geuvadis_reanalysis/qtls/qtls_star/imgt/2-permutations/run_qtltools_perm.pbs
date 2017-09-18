@@ -5,7 +5,7 @@
 #PBS -l walltime=24:00:00 
 #PBS -q short 
 #PBS -j oe 
-#PBS -o /home/vitor/hlaexpression/geuvadis_reanalysis/qtls/qtls_star/pri/2-permutations/log/$PBS_JOBID.log
+#PBS -o /home/vitor/hlaexpression/geuvadis_reanalysis/qtls/qtls_star/imgt/2-permutations/log/$PBS_JOBID.log
 
 cd $PBS_O_WORKDIR
 
@@ -16,7 +16,7 @@ parallel=/home/vitor/parallel
 SAMPLES=../../../genotypes/samples.eur
 VCF=../../../genotypes/eur_maf05.vcf.gz
 COV=../../../pca_genotypes/covariates_genos.txt
-BED=../phenotypes/phenotypes_eur_$PC.bed.gz
+BED=../1-phenotypes/phenotypes_eur_$PC.bed.gz
 OUT=./results/permutations_$PC
 
 $QTLtools cis --vcf $VCF --bed $BED --cov $COV --include-samples $SAMPLES\

@@ -30,8 +30,8 @@ geuvadis_reanalysis/expression/kallisto/log
 geuvadis_reanalysis/expression/star/sample_indices/
 geuvadis_reanalysis/expression/star/mappings_*
 geuvadis_reanalysis/expression/star/quantifications_*
-geuvadis_reanalysis/qtls/rtc/unmapped_to_hg38
-geuvadis_reanalysis/qtls/qtls_star/rtc/geuvadis_eqtls/unmapped_to_hg38
+geuvadis_reanalysis/qtls/imgt/rtc/unmapped_to_hg38
+geuvadis_reanalysis/qtls/qtls_star/imgt/rtc/geuvadis_eqtls/unmapped_to_hg38
 geuvadis_reanalysis/expression/star/log/
 nci/expression/alignments/
 nci/expression/quantifications_*
