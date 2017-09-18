@@ -1,6 +1,6 @@
 devtools::load_all("/home/vitor/hlaseqlib")
 
-doMC::registerDoMC(48)
+doMC::registerDoMC(20)
 
 hla_haps <- readr::read_tsv("./hla_haps_mapped_to_1000G.tsv")
 
