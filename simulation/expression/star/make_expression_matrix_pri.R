@@ -13,7 +13,7 @@ samples <- sprintf("sample_%02d", 1:50)
 abundance_files <- file.path("./quantifications_PRI", samples, "quant.sf")
 names(abundance_files) <- samples
 
-expression_list <- parallel::mclapply(abundance_files, read_quant, mc.cores = 50)
+expression_list <- parallel::mclapply(abundance_files, fread, mc.cores = 50)
 
 expression_dt <- 
   rbindlist(expression_list, idcol = "subject"
