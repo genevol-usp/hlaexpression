@@ -3,15 +3,11 @@
 kallisto=/home/vitor/kallisto_linux-v0.43.1/kallisto
 
 sample=$1
-fastq_dir=/home/vitor/hlaexpression/geuvadis_reanalysis/data/fastq
-fastqR1=$fastq_dir/$sample\_1.fastq.gz
-fastqR2=$fastq_dir/$sample\_2.fastq.gz
+fastqR1=../../data/fastq/$sample\_1.fastq.gz
+fastqR2=../../data/fastq/$sample\_2.fastq.gz
 
-index=./index/gencode.v25.CHR.IMGT.transcripts.idx
+index=../../../imgt_index/kallisto/gencode.v25.PRI.IMGT.transcripts.idx
 
 outdir=./quantifications_1
-log=$outdir/log/$sample.quant.log
 
-mkdir -p $outdir/log
-
-$kallisto quant -i $index -t 1 -o $outdir/$sample $fastqR1 $fastqR2 &> $log
+$kallisto quant -i $index -t 4 -o $outdir/$sample $fastqR1 $fastqR2
