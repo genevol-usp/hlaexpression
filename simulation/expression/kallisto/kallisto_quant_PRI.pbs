@@ -10,6 +10,7 @@
 
 cd $PBS_O_WORKDIR
 
-mkdir -p ./quantifications_PRI/log
+mkdir -p ./log
+mkdir -p ./quantifications_PRI
 
 ./kallisto_quant_PRI.sh $(printf "sample_%02d" $PBS_ARRAYID)

@@ -13,7 +13,7 @@ bam=$sampledir/alignments.bam
 
 mkdir -p $sampledir
 
-$kallisto quant -i $index -t 1 -o $outdir/$sample --bias --pseudobam \
+$kallisto quant -i $index -t 1 -o $sampledir --bias --pseudobam \
     $fastqR1 $fastqR2 | $samtools view -Sb - > $bam
 
 header=$sampledir/header.sam
