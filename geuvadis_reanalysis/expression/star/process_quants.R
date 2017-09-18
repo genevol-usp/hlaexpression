@@ -8,7 +8,8 @@ make_genot_calls_df <- function(typings_df) {
     typings_df %>%
         mutate(subject = convert_ena_ids(as.character(subject)),
 	       locus = sub("^HLA-", "", locus),
-	       allele = hla_trimnames(gsub("IMGT_", "", allele), 3))
+	       allele = hla_trimnames(gsub("IMGT_", "", allele), 3)) %>%
+    arrange(subject, locus, allele)
 }
 
 quant_round <- commandArgs(TRUE)[1]
@@ -24,7 +25,7 @@ quant_files <- paste0("./quantifications_", quant_round) %>%
 
 missing_files <- quant_files[!file.exists(quant_files)]
 
-if (length(missing_files) == 0L) {
+if (length(missing_files) > 0L) {
     stop(paste("missing files:", missing_files))
 }
 
@@ -79,7 +80,7 @@ if (quant_round == 1L || quant_round == 2L) {
 	calls <- 
 	    out_df %>%
 	    filter(locus %in% hla_genes) %>%
-	    select(th, subject, locus, allele) %>%
+	    select(subject, locus, allele) %>%
 	    make_genot_calls_df()
 	
         accuracies <- calc_genotyping_accuracy(calls, goldstd_genos)
