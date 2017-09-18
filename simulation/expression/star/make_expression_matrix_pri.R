@@ -1,11 +1,6 @@
 devtools::load_all("/home/vitor/hlaseqlib")
 library(data.table)
 
-read_quant <- function(x) {
-
-  fread(x)[, Name := sub("^([^|]+).*$", "\\1", Name)]
-}
-
 setDTthreads(36)
 setDT(geuvadis_info)
 setDT(gencode_chr_tx)
