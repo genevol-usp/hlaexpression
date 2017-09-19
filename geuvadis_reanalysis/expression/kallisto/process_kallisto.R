@@ -27,7 +27,7 @@ quant_files <-
 missing_files <- quant_files[!file.exists(quant_files)]
 
 if (length(missing_files) > 0L) {
-    stop(paste("missing files:", missing_files))
+    stop(paste("missing files:", paste(missing_files, collapse = " ")))
 }
 
 hla_genes <- paste0("HLA-", c("A", "B", "C", "DQA1", "DQB1", "DRB1"))
@@ -76,7 +76,7 @@ if (quant_round == 1L | quant_round == 2L) {
       
     } else if (quant_round == 2L) {
 
-	out_dt <- hla_genotype_dt(quants, th = 0) %>%
+	out_df <- hla_genotype_dt(quants, th = 0) %>%
 	    hla_apply_zigosity_threshold(th = 0.25)
 
 	calls <- 
