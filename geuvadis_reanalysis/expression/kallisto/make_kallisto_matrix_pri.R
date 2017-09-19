@@ -12,7 +12,7 @@ samples_dt <-
   geuvadis_info[kgp_phase3 == 1 & pop != "YRI", .(name, subject = ena_id)]
 
 abundance_files <- 
-    file.path("./kallisto_quant_PRI", samples_dt$subject, "abundance.tsv")
+    file.path("./quantifications_PRI", samples_dt$subject, "abundance.tsv")
 names(abundance_files) <- samples_dt$subject
 
 expression_list <- parallel::mclapply(abundance_files, fread, mc.cores = 50)
