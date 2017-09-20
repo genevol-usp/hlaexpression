@@ -9,7 +9,7 @@
 *.gem
 *.idx
 *.inp
-*.log
+*.log*
 *.out
 *.pca
 *.pca_stats
@@ -33,6 +33,8 @@ geuvadis_reanalysis/expression/star/quantifications_*
 geuvadis_reanalysis/qtls/imgt/rtc/unmapped_to_hg38
 geuvadis_reanalysis/qtls/qtls_star/imgt/rtc/geuvadis_eqtls/unmapped_to_hg38
 geuvadis_reanalysis/expression/star/log/
+geuvadis_reanalysis/qtls/qtls_star/imgt/3-conditional_analysis/log/
+geuvadis_reanalysis/qtls/qtls_star/pri/3-conditional_analysis/log/
 nci/expression/alignments/
 nci/expression/quantifications_*
 simulation/expression/kallisto/quantifications_*

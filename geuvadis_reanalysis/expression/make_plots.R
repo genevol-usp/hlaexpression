@@ -26,30 +26,16 @@ scatter_plot <- function(df, x_var, y_var) {
           strip.text = element_text(size = 16))
 }
 
-scatter_plot_color <- function(df, x_var, y_var, alpha_var) {
-  ggplot(df, aes_string(x_var, y_var, alpha = alpha_var)) +
-    geom_abline() +
-    geom_point() +
-    facet_wrap(~locus, scales = "free") +
-    ggpmisc::stat_poly_eq(aes(label = ..adj.rr.label..), rr.digits = 2,
-                          formula = y ~ x, parse = TRUE, size = 6) +
-    theme_bw() +
-    theme(axis.text = element_text(size = 12),
-          axis.title = element_text(size = 16),
-          strip.text = element_text(size = 16)) +
-    labs(alpha = "distance to ref")
-}
-
 make_data <- function(locus1, locus2) {
   l1 <- enquo(locus1)
   l2 <- enquo(locus2)
 
-  cis <- select(residuals_by_allele_wide, subject, !!l1, !!l2)
+  cis <- select(tpm_by_allele_wide, subject, !!l1, !!l2)
   trans <- cis %>% 
     group_by(subject) %>%
     mutate(!!quo_name(l2) := rev(!!l2)) %>%
     ungroup()
-  gene <- select(residuals_gene_level, subject, !!l1, !!l2)
+  gene <- select(tpm_by_gene_wide, subject, !!l1, !!l2)
   
   bind_rows(list(Overall = gene, Cis = cis, Trans = trans), .id = "level") %>%
     mutate(level = factor(level, levels = c("Overall", "Cis", "Trans")))
@@ -61,7 +47,7 @@ make_phase_plot <- function(data, locus1, locus2) {
   geom_smooth(method = lm, se = FALSE) + 
   facet_wrap(~level, nrow = 1, scales = "free") +
   theme_bw() +
-  theme(axis.text.x = element_text(size = 12),
+  theme(axis.text = element_text(size = 12),
         axis.title = element_text(size = 16),
         strip.text = element_text(size = 16)) + 
   labs(x = paste0("HLA-", locus1), y = paste0("HLA-", locus2)) +
@@ -70,462 +56,216 @@ make_phase_plot <- function(data, locus1, locus2) {
 }
 
 # data
+hla_genes <- paste0("HLA-", c("A", "B", "C", "DQA1", "DQB1", "DRB1")) 
+
 geuvadis_ids <- geuvadis_info %>%
   filter(kgp_phase3 == 1, pop != "YRI") %>%
   select(subject = ena_id, name)
 
-library_size <- 
-  read_tsv("../data/sample_info/library_sizes.txt", 
-	   col_names = c("subject", "total")) %>%
-  inner_join(geuvadis_ids, by = "subject") %>%
-  select(subject, total) %>%
-  arrange(subject)
-
-kallisto_aligned <- read_tsv("./kallisto/aligned_reads.tsv")
-star_aligned <- read_tsv("./star/aligned_reads.tsv")
-
-reads_df <- 
-  left_join(kallisto_aligned, star_aligned, by = "subject") %>%
-  rename(kallisto = V1.x, STAR_salmon = V1.y) %>%
-  left_join(library_size, by = "subject") %>%
-  gather("source", "n_reads", -1) %>%
-  mutate(source = factor(source, levels = c("total", "kallisto", "STAR_salmon"))) %>%
-  arrange(subject, source)
-
 gencode_hla <- gencode_chr_gene %>%
-  filter(gene_name %in% paste0("HLA-", c("A", "B", "C", "DQA1", "DQB1", "DRB1")))
-
-gencode12 <-
-  "/home/vitor/gencode_data/gencode.v12.annotation.gtf.gz" %>%
-  get_gencode_coords(feature = "gene") %>%
-  filter(gene_name %in% paste0("HLA-", c("A", "B", "C", "DQA1", "DQB1", "DRB1"))) %>%
-  select(gene_name, gene_id)
-
-gencode19 <-
-  "/home/vitor/gencode_data/gencode.v19.annotation.gtf.gz" %>%
-  get_gencode_coords(feature = "gene") %>%
-  filter(gene_name %in% paste0("HLA-", c("A", "B", "C", "DQA1", "DQB1", "DRB1"))) %>%
-  select(gene_name, gene_id)
+  filter(gene_name %in% hla_genes)
 
 distances <- read_tsv("../../simulation/data/distances_to_reference.tsv")
 
 kallisto_imgt_tpm <- 
-  read_tsv("./kallisto/quantifications_2/processed_quant.tsv") %>%
-  filter(locus %in% c("A", "B", "C", "DQA1", "DQB1", "DRB1")) %>%
-  inner_join(geuvadis_ids, by = "subject") %>%
-  select(subject = name, locus, allele, est_counts, tpm) %>%
-  mutate(locus = paste0("HLA-", locus),
-	 allele = sub("IMGT_", "", allele)) %>%
-  left_join(distances, by = c("locus", "allele")) %>%
-  group_by(subject, locus) %>%
-  summarize(est_counts = sum(est_counts), tpm = sum(tpm), dist = mean(dist)) %>%
-  ungroup()
+    read_tsv("./kallisto/quantifications_2/processed_quant.tsv") %>%
+    filter(locus %in% hla_genes) %>%
+    inner_join(geuvadis_ids, by = "subject") %>%
+    select(subject = name, locus, allele, est_counts, tpm) %>%
+    mutate(allele = sub("IMGT_", "", allele)) %>%
+    left_join(distances, by = c("locus", "allele")) %>%
+    group_by(subject, locus) %>%
+    summarize(est_counts = sum(est_counts), tpm = sum(tpm), dist = mean(dist)) %>%
+    ungroup()
 
-kallisto_chr_tpm <- 
-  read_tsv("./kallisto/quantifications_CHR/processed_quant.tsv") %>%
-  mutate(locus = paste0("HLA-", locus)) %>%
-  inner_join(geuvadis_ids, by = "subject") %>%
-  select(subject = name, locus, tpm) %>%
-  arrange(subject, locus)
-
-kallisto_all_tpm <- 
-  read_tsv("./kallisto/quantifications_ALL/processed_quant.tsv") %>%
-  mutate(locus = paste0("HLA-", locus)) %>%
-  inner_join(geuvadis_ids, by = "subject") %>%
-  select(subject = name, locus, tpm) %>%
-  arrange(subject, locus)
+kallisto_pri_tpm <- 
+    read_tsv("./kallisto/quantifications_PRI/processed_quant.tsv") %>%
+    inner_join(geuvadis_ids, by = "subject") %>%
+    select(subject = name, locus, tpm) %>%
+    arrange(subject, locus)
 
 kallisto_imgt_10pc <-
-  "../qtls/qtls_kallisto/qtltools_correction/phenotypes/phenotypes_eur_10.bed.gz" %>%
-  read_tsv() %>%
-  inner_join(select(gencode_hla, gene_id, gene_name), by = c("gid" = "gene_id")) %>%
-  select(locus = gene_name, starts_with("HG"), starts_with("NA")) %>%
-  gather(subject, resid, -locus)
+    "../qtls/qtls_kallisto/pca_correction/imgt/phenotypes/phenotypes_eur_10.bed.gz" %>%
+    read_tsv() %>%
+    inner_join(select(gencode_hla, gene_id, gene_name), by = c("gid" = "gene_id")) %>%
+    select(locus = gene_name, starts_with("HG"), starts_with("NA")) %>%
+    gather(subject, resid, -locus)
 
-kallisto_chr_10pc <- 
-  "../qtls/qtls_kallisto/qtltools_correction/phenotypes_chr/phenotypes_eur_10.bed.gz" %>%
-  read_tsv() %>%
-  inner_join(select(gencode_hla, gene_id, gene_name), by = c("gid" = "gene_id")) %>%
-  select(locus = gene_name, starts_with("HG"), starts_with("NA")) %>%
-  gather(subject, resid, -locus)
+kallisto_pri_10pc <- 
+    "../qtls/qtls_kallisto/pca_correction/pri/phenotypes/phenotypes_eur_10.bed.gz" %>%
+    read_tsv() %>%
+    inner_join(select(gencode_hla, gene_id, gene_name), by = c("gid" = "gene_id")) %>%
+    select(locus = gene_name, starts_with("HG"), starts_with("NA")) %>%
+    gather(subject, resid, -locus)
 
 star_imgt <- 
-  read_tsv("./star/quantifications_2/processed_quant.tsv") %>%
-  filter(locus %in% paste0("HLA-", c("A", "B", "C", "DQA1", "DQB1", "DRB1"))) %>%
-  inner_join(geuvadis_ids, by = "subject") %>%
-  select(subject = name, locus, allele, est_counts, tpm) %>%
-  mutate(allele = sub("IMGT_", "", allele)) %>%
-  left_join(distances, by = c("locus", "allele")) 
+    read_tsv("./star/quantifications_2/processed_quant.tsv") %>%
+    filter(locus %in% hla_genes) %>%
+    inner_join(geuvadis_ids, by = "subject") %>%
+    select(subject = name, locus, allele, est_counts, tpm) %>%
+    mutate(allele = sub("IMGT_", "", allele)) %>%
+    left_join(distances, by = c("locus", "allele")) 
 
 star_imgt_tpm <-
-  star_imgt %>%
-  group_by(subject, locus) %>%
-  summarize(est_counts = sum(est_counts), tpm = sum(tpm), dist = mean(dist)) %>%
-  ungroup()
+    star_imgt %>%
+    group_by(subject, locus) %>%
+    summarize(est_counts = sum(est_counts), tpm = sum(tpm), dist = mean(dist)) %>%
+    ungroup()
 
-star_chr_tpm <- 
-  read_tsv("./star/quantifications_CHR/processed_quant.tsv") %>%
-  inner_join(geuvadis_ids, by = "subject") %>%
-  select(subject = name, locus, tpm)
+star_pri_tpm <- 
+    read_tsv("./star/quantifications_PRI/processed_quant.tsv") %>%
+    inner_join(geuvadis_ids, by = "subject") %>%
+    select(subject = name, locus, tpm)
 
 star_imgt_10pc <-
-  "../qtls/qtls_star/phenotypes/phenotypes_eur_10.bed.gz" %>%
-  read_tsv() %>%
-  inner_join(select(gencode_hla, gene_id, gene_name), by = c("gid" = "gene_id")) %>%
-  select(locus = gene_name, starts_with("HG"), starts_with("NA")) %>%
-  gather(subject, resid, -locus)
+    "../qtls/qtls_star/imgt/1-phenotypes/phenotypes_eur_10.bed.gz" %>%
+    read_tsv() %>%
+    inner_join(select(gencode_hla, gene_id, gene_name), by = c("gid" = "gene_id")) %>%
+    select(locus = gene_name, starts_with("HG"), starts_with("NA")) %>%
+    gather(subject, resid, -locus)
 
-star_chr_10pc <- 
-  "../qtls/qtls_star/phenotypes_chr/phenotypes_eur_10.bed.gz" %>%
-  read_tsv() %>%
-  inner_join(select(gencode_hla, gene_id, gene_name), by = c("gid" = "gene_id")) %>%
-  select(locus = gene_name, starts_with("HG"), starts_with("NA")) %>%
-  gather(subject, resid, -locus)
-
-geuvadis_final <- 
-  read_tsv("../data/quantifications/GD462.GeneQuantRPKM.50FN.samplename.resk10.txt.gz") %>%
-  select(gene_id = Gene_Symbol, geuvadis_ids$name) %>%
-  gather(subject, resid, -gene_id) %>% 
-  group_by(gene_id) %>%
-  mutate(resid = GenABEL::rntransform(resid)) %>%
-  ungroup() %>%
-  inner_join(gencode12, by = "gene_id") %>%
-  select(subject, locus = gene_name, resid) %>%
-  arrange(subject, locus)
-
-geuvadis <- 
-  read_tsv("../data/quantifications/peer/published/phenotypes_eur_10.bed.gz") %>%
-  inner_join(gencode12, by = c("gid" = "gene_id")) %>%
-  select(locus = gene_name, starts_with("HG"), starts_with("NA")) %>%
-  gather(subject, resid, -locus)
-
-geuvadis_new <-
-  read_tsv("../data/quantifications/peer/new/phenotypes_eur_10.bed.gz") %>%
-  inner_join(gencode19, by = c("gid" = "gene_id")) %>%
-  select(locus = gene_name, starts_with("HG"), starts_with("NA")) %>%
-  gather(subject, resid, -locus)
-
-kallisto_fpkms_10pcs <- 
-  read_tsv("../qtls/qtls_kallisto/peer_correction/phenotypes_fpkm/phenotypes_eur_10.bed.gz") %>%
-  inner_join(select(gencode_hla, gene_id, gene_name), by = c("gid" = "gene_id")) %>%
-  select(locus = gene_name, starts_with("HG"), starts_with("NA")) %>%
-  gather(subject, resid, -locus)
-
-star_fpkms_10pcs <-
-  read_tsv("../qtls/qtls_star/phenotypes_fpkm_peer/phenotypes_eur_10.bed.gz") %>%
-  inner_join(select(gencode_hla, gene_id, gene_name), by = c("gid" = "gene_id")) %>%
-  select(locus = gene_name, starts_with("HG"), starts_with("NA")) %>%
-  gather(subject, resid, -locus)
+star_pri_10pc <- 
+    "../qtls/qtls_star/pri/1-phenotypes/phenotypes_eur_10.bed.gz" %>%
+    read_tsv() %>%
+    inner_join(select(gencode_hla, gene_id, gene_name), by = c("gid" = "gene_id")) %>%
+    select(locus = gene_name, starts_with("HG"), starts_with("NA")) %>%
+    gather(subject, resid, -locus)
 
 quant_data <- 
-  left_join(kallisto_imgt_tpm, star_imgt_tpm, by = c("subject", "locus")) %>%
-  rename(est_counts.kallisto.imgt = est_counts.x,
-	 est_counts.star.imgt = est_counts.y, 
-	 tpm.kallisto.imgt = tpm.x,
-	 tpm.star.imgt = tpm.y, 
-	 dist.kallisto = dist.x,
-	 dist.star = dist.y) %>%
-  left_join(kallisto_chr_tpm, by = c("subject", "locus")) %>%
-  rename(tpm.kallisto.chr = tpm) %>%
-  left_join(kallisto_all_tpm, by = c("subject", "locus")) %>%
-  rename(tpm.kallist.all = tpm) %>%
-  left_join(star_chr_tpm, by = c("subject", "locus")) %>%
-  rename(tpm.star.chr = tpm) %>%
-  left_join(kallisto_imgt_10pc, by = c("subject", "locus")) %>%
-  rename(resid.kallisto.imgt.tpm = resid) %>%
-  left_join(star_imgt_10pc, by = c("subject", "locus")) %>%
-  rename(resid.star.imgt.tpm = resid) %>%
-  left_join(kallisto_chr_10pc, by = c("subject", "locus")) %>%
-  rename(resid.kallisto.chr.tpm = resid) %>%
-  left_join(star_chr_10pc, by = c("subject", "locus")) %>%
-  rename(resid.star.chr.tpm = resid) %>%
-  left_join(kallisto_fpkms_10pcs, by = c("subject", "locus")) %>%
-  rename(resid.kallisto.imgt.fpkm = resid) %>%
-  left_join(star_fpkms_10pcs, by = c("subject", "locus")) %>%
-  rename(resid.star.imgt.fpkm = resid) %>%
-  left_join(geuvadis, by = c("subject", "locus")) %>%
-  rename(resid.geuvadis.old = resid) %>%
-  left_join(geuvadis_new, by = c("subject", "locus")) %>%
-  rename(resid.geuvadis.new = resid) %>%
-  left_join(geuvadis_final, by = c("subject", "locus")) %>%
-  rename(resid.geuvadis.final = resid)
+    left_join(kallisto_imgt_tpm, star_imgt_tpm, by = c("subject", "locus"),
+              suffix = c(".kallisto.imgt", ".star.imgt")) %>%
+    left_join(kallisto_pri_tpm, by = c("subject", "locus")) %>%
+    rename(tpm.kallisto.pri = tpm) %>%
+    left_join(star_pri_tpm, by = c("subject", "locus")) %>%
+    rename(tpm.star.pri = tpm) %>%
+    left_join(kallisto_imgt_10pc, by = c("subject", "locus")) %>%
+    rename(resid.kallisto.imgt.tpm = resid) %>%
+    left_join(star_imgt_10pc, by = c("subject", "locus")) %>%
+    rename(resid.star.imgt.tpm = resid) %>%
+    left_join(kallisto_pri_10pc, by = c("subject", "locus")) %>%
+    rename(resid.kallisto.pri.tpm = resid) %>%
+    left_join(star_pri_10pc, by = c("subject", "locus")) %>%
+    rename(resid.star.pri.tpm = resid)
 
 star_tpm_df <- 
-  quant_data %>%
-  select(subject, locus, tpm.star.imgt, tpm.star.chr) %>%
-  gather(index, tpm, 3:4) %>%
-  mutate(index = sub("^tpm\\.star\\.", "", index)) %>%
-  arrange(subject, locus, index)
-
-kallisto_rsq <- 
-  quant_data %>%
-  group_by(locus) %>%
-  mutate(qt_dist = ntile(dist.kallisto, 4)) %>%
-  filter(qt_dist %in% c(1, 4)) %>%
-  group_by(locus, qt_dist) %>%
-  summarize(rsq.kallisto.tpm = summary(lm(tpm.kallisto.imgt~tpm.kallisto.chr))$adj.r.square,
-	    rsq.kallisto.pca = summary(lm(resid.kallisto.imgt.tpm~resid.kallisto.chr.tpm))$adj.r.square) %>%
-  ungroup()
-
-star_rsq <- 
-  quant_data %>%
-  group_by(locus) %>%
-  mutate(qt_dist = ntile(dist.star, 4)) %>%
-  filter(qt_dist %in% c(1, 4)) %>%
-  group_by(locus, qt_dist) %>%
-  summarize(rsq.star.tpm = summary(lm(tpm.star.imgt~tpm.star.chr))$adj.r.square,
-	    rsq.star.pca = summary(lm(resid.star.imgt.tpm~resid.star.chr.tpm))$adj.r.square) %>%
-  ungroup()
-
-rsq_df <- left_join(kallisto_rsq, star_rsq, by = c("locus", "qt_dist"),)
-
-write_tsv(rsq_df, "./plots/rsq_by_quartile.tsv")
+    quant_data %>%
+    select(subject, locus, tpm.star.imgt, tpm.star.pri) %>%
+    gather(index, tpm, 3:4) %>%
+    mutate(index = sub("^tpm\\.star\\.", "", index)) %>%
+    arrange(subject, locus, index)
 
 pag3f <- mutate(pag, allele = hla_trimnames(allele, 3))
 
 ase_df <- 
-  star_imgt %>%
-  group_by(subject, locus) %>%
-  filter(n_distinct(allele) == 2) %>%
-  summarize(ase = calc_ase(est_counts)) %>%
-  ungroup()
+    star_imgt %>%
+    group_by(subject, locus) %>%
+    filter(n_distinct(allele) == 2) %>%
+    summarize(ase = calc_ase(est_counts)) %>%
+    ungroup()
   
 ase_error <- 
-  star_imgt %>%
-  select(subject, locus, allele) %>%
-  mutate(locus = sub("^HLA-", "", locus)) %>%
-  calc_genotyping_accuracy(pag3f, by_locus = FALSE) %>%
-  group_by(subject, locus) %>%
-  summarize(error = sum(!correct)) %>%
-  ungroup() %>%
-  mutate(locus = paste0("HLA-", locus)) %>%
-  inner_join(ase_df, by = c("subject", "locus"))
+    star_imgt %>%
+    select(subject, locus, allele) %>%
+    mutate(locus = sub("^HLA-", "", locus),
+           allele = hla_trimnames(allele)) %>%
+    calc_genotyping_accuracy(pag3f, by_locus = FALSE) %>%
+    group_by(subject, locus) %>%
+    summarize(error = sum(!correct)) %>%
+    ungroup() %>%
+    mutate(locus = paste0("HLA-", locus)) %>%
+    inner_join(ase_df, by = c("subject", "locus"))
 
-hla_and_transAct_genes <- gencode_chr_gene %>%
-  filter(gene_name %in% c("HLA-A", "HLA-B", "HLA-C", "HLA-DQA1", "HLA-DQB1", 
-			  "HLA-DRB1", "CIITA"))
+hla_and_transAct_genes <- 
+    filter(gencode_chr_gene, gene_name %in% c(hla_genes, "CIITA"))
 
-pcs <- c(seq(0, 30, 5), seq(40, 100, 10))
-
-pca_kallisto_df <-
-  sprintf("../qtls/qtls_kallisto/qtltools_correction/phenotypes/phenotypes_eur_%d.bed.gz", pcs) %>%
-  setNames(pcs) %>%
-  parallel::mclapply(function(i) 
-		       read_tsv(i, progress = FALSE) %>% 
-		       inner_join(hla_and_transAct_genes, by = c("id" = "gene_id")) %>%
-		       select(gene_name, HG00096:NA20828),
-		     mc.cores = length(pcs)) %>%
-  bind_rows(.id = "PCs") %>%
-  gather(subject, value, HG00096:NA20828) %>%
-  mutate(gene_name = sub("^HLA-", "", gene_name)) %>%
-  spread(gene_name, value) 
+pcs <- c(seq(0, 20, 5), seq(30, 100, 10))
 
 pca_star_df <-
-  sprintf("../qtls/qtls_star/phenotypes/phenotypes_eur_%d.bed.gz", pcs) %>%
-  setNames(pcs) %>%
-  parallel::mclapply(function(i) 
-		       read_tsv(i, progress = FALSE) %>% 
-		       inner_join(hla_and_transAct_genes, by = c("id" = "gene_id")) %>%
-		       select(gene_name, HG00096:NA20828),
-		     mc.cores = length(pcs)) %>%
-  bind_rows(.id = "PCs") %>%
-  gather(subject, value, HG00096:NA20828) %>%
-  mutate(gene_name = sub("^HLA-", "", gene_name)) %>%
-  spread(gene_name, value) 
+    sprintf("../qtls/qtls_star/imgt/1-phenotypes/phenotypes_eur_%d.bed.gz", pcs) %>%
+    setNames(pcs) %>%
+    parallel::mclapply(function(i) 
+        read_tsv(i, progress = FALSE) %>% 
+            inner_join(hla_and_transAct_genes, by = c("id" = "gene_id")) %>%
+            select(gene_name, HG00096:NA20828),
+        mc.cores = length(pcs)) %>%
+    bind_rows(.id = "PCs") %>%
+    gather(subject, value, HG00096:NA20828) %>%
+    mutate(gene_name = sub("^HLA-", "", gene_name)) %>%
+    spread(gene_name, value) 
 
 phen10 <- filter(pca_star_df, PCs == 10) %>% select(-PCs)
 
-class_2_trans_df <- 
-  phen10 %>%
-  select(subject, DQA1, DQB1, DRB1, CIITA) %>%
-  gather(locus, value, DQA1, DQB1, DRB1) %>%
-  arrange(subject, locus)
-
-residuals_by_allele_10pcs <- 
-  read_tsv("./star/phase_hla_alleles/data/hla_allele_expression_10pcs.bed") %>%
-  gather(subject, resid, -locus, -hap)
+class_2_trans_df <- phen10 %>%
+    select(subject, DQA1, DQB1, DRB1, CIITA) %>%
+    gather(locus, value, DQA1, DQB1, DRB1) %>%
+    arrange(subject, locus)
 
 concordant_haps <- 
-  read_tsv("./star/phase_hla_alleles/data/concordant_haps_classIandII.tsv") %>%
-  select(subject, hap)
+    read_tsv("./star/phase_hla_alleles/data/concordant_haps_classIandII.tsv") %>%
+    select(subject, hap)
 
-residuals_by_allele_wide <- 
-  spread(residuals_by_allele_10pcs, locus, resid) %>%
-  select(subject, hap, everything()) %>%
-  inner_join(concordant_haps, by = c("subject", "hap")) %>%
-  arrange(subject, hap)
+tpm_by_allele_wide <- 
+    read_tsv("./star/phase_hla_alleles/data/1000G_haps_expression_snps.tsv") %>%
+    filter(rank == 0L) %>%
+    select(subject, locus, hap, tpm) %>%
+    spread(locus, tpm) %>%
+    inner_join(concordant_haps, by = c("subject", "hap")) %>%
+    arrange(subject, hap)
 
-residuals_gene_level <- 
-  phen10 %>%
-  select(subject, A, B, C, DQA1, DQB1, DRB1) %>%
-  filter(subject %in% concordant_haps$subject)
-
-cors_pca_kallisto <- 
-  pca_kallisto_df %>%
-  group_by(PCs) %>%
-  summarize(AxB = cor(A, B), 
-            AxC = cor(A, C), 
-	    BxC = cor(B, C),
-	    DQA1xDQB1 = cor(DQA1, DQB1), 
-	    DQA1xDRB1 = cor(DQA1, DRB1), 
-	    DQB1xDRB1 = cor(DQB1, DRB1),  
-	    DQA1xCIITA = cor(DQA1, CIITA),
-	    DQB1xCIITA = cor(DQB1, CIITA), 
-	    DRB1xCIITA = cor(DRB1, CIITA)) %>%
-  gather(gene_pair, correlation, -1)
+tpm_by_gene_wide <- 
+    star_imgt_tpm %>%
+    mutate(locus = sub("HLA-", "", locus)) %>%
+    select(subject, locus, tpm) %>%
+    spread(locus, tpm) %>%
+    filter(subject %in% concordant_haps$subject)
 
 cors_pca_star <- 
-  pca_star_df %>%
-  group_by(PCs) %>%
-  summarize(AxB = cor(A, B), 
-            AxC = cor(A, C), 
-	    BxC = cor(B, C),
-	    DQA1xDQB1 = cor(DQA1, DQB1), 
-	    DQA1xDRB1 = cor(DQA1, DRB1), 
-	    DQB1xDRB1 = cor(DQB1, DRB1),  
-	    DQA1xCIITA = cor(DQA1, CIITA),
-	    DQB1xCIITA = cor(DQB1, CIITA), 
-	    DRB1xCIITA = cor(DRB1, CIITA)) %>%
-  gather(gene_pair, correlation, -1)
-
-peer_expression_files <- 
-  list.files("../qtls/qtls_kallisto/peer_correction/phenotypes", pattern = "\\.bed\\.gz$", full.names = TRUE)
- 
-names(peer_expression_files) <- sub("^.+eur_(\\d+)\\.bed\\.gz$", "\\1", peer_expression_files)
-
-peer_expression_df <-
-  parallel::mclapply(peer_expression_files, 
-		     function(i) 
-		       read_tsv(i, progress = FALSE) %>% 
-		       inner_join(hla_and_transAct_genes, by = c("id" = "gene_id")) %>%
-		       select(gene_name, HG00096:NA20828),
-		     mc.cores = length(peer_expression_files)) %>%
-  bind_rows(.id = "K") %>%
-  gather(subject, value, HG00096:NA20828) %>%
-  mutate(gene_name = sub("^HLA-", "", gene_name)) %>%
-  spread(gene_name, value) 
-
-cors_peer <- 
-  peer_expression_df %>%
-  group_by(K) %>%
-  summarize(AxB = cor(A, B), 
-            AxC = cor(A, C), 
-	    BxC = cor(B, C),
-	    DQA1xDQB1 = cor(DQA1, DQB1), 
-	    DQA1xDRB1 = cor(DQA1, DRB1), 
-	    DQB1xDRB1 = cor(DQB1, DRB1),  
-	    DQA1xCIITA = cor(DQA1, CIITA),
-	    DQB1xCIITA = cor(DQB1, CIITA), 
-	    DRB1xCIITA = cor(DRB1, CIITA)) %>%
-  gather(gene_pair, correlation, -1)
-
-cors_data <-
-  left_join(cors_pca_kallisto, cors_pca_star, by = c("PCs", "gene_pair")) %>%
-  rename(kallisto.PCA = correlation.x, star_salmon.PCA = correlation.y) %>%
-  left_join(cors_peer, by = c("gene_pair", "PCs" = "K")) %>%
-  rename(covariates = PCs, kallisto.PEER = correlation) %>%
-  gather(method, correlation, -covariates, -gene_pair) %>%
-  mutate(covariates = as.integer(covariates),
-         gene_pair = factor(gene_pair, levels = c("AxB", "AxC", "BxC",
-                                                  "DQA1xDQB1", "DQA1xDRB1", "DQB1xDRB1",
-                                                  "DQA1xCIITA", "DQB1xCIITA", "DRB1xCIITA"))) %>%
-  arrange(covariates, gene_pair, method)
+    pca_star_df %>%
+    group_by(PCs) %>%
+    summarize(AxB = cor(A, B), 
+              AxC = cor(A, C), 
+              BxC = cor(B, C),
+              DQA1xDQB1 = cor(DQA1, DQB1), 
+              DQA1xDRB1 = cor(DQA1, DRB1), 
+              DQB1xDRB1 = cor(DQB1, DRB1),  
+              DQA1xCIITA = cor(DQA1, CIITA),
+              DQB1xCIITA = cor(DQB1, CIITA), 
+              DRB1xCIITA = cor(DRB1, CIITA)) %>%
+    gather(gene_pair, correlation, -1) %>%
+    mutate(PCs = as.integer(PCs)) %>%
+    arrange(PCs, gene_pair)
 
 # plots
-png("./plots/library_sizes.png", height = 4, width = 10, units = "in", res = 200)
-ggplot(reads_df) +
-  geom_line(aes(x = reorder(subject, n_reads, FUN = "max"), y = n_reads, 
-                color = source, group = source), size = 1.5, alpha = 1/2) +
-  ggsci::scale_color_aaas() +
-  scale_y_continuous(labels = scales::comma) +
-  theme_bw() +
-  theme(axis.text.x = element_blank(),
-        axis.ticks.x = element_blank(),
-	panel.grid.major = element_blank(), 
-	panel.grid.minor = element_blank()) +
-  labs(x = NULL, y = NULL)
-dev.off()
-
-png("./plots/kallisto_vs_star.png", width = 10, height = 6, units = "in", res = 200)
-scatter_plot(quant_data, "resid.kallisto.imgt.tpm", "resid.star.imgt.tpm") +
-  labs(x = "PCA-corrected TPM (kallisto)", 
-       y = "PCA-corrected TPM (STAR-Salmon)")
-dev.off()
-
-png("./plots/kallisto_vs_star_TPM.png", width = 10, height = 6, units = "in", res = 200)
+png("./plots/star_vs_kallisto_TPM.png", width = 10, height = 6, units = "in", res = 200)
 scatter_plot(quant_data, "tpm.kallisto.imgt", "tpm.star.imgt") +
-  labs(x = "TPM (kallisto)", 
-       y = "TPM (STAR-Salmon)")
+    labs(x = "TPM (kallisto)", y = "TPM (STAR-Salmon)")
 dev.off()
 
-#png("./plots/kallisto_vs_geuvadis.png", width = 10, height = 6, units = "in", res = 200)
-#scatter_plot_color(quant_data, "resid.kallisto.imgt.fpkm", "resid.geuvadis.old", "dist.kallisto") +
-#  labs(x = "PEER-corrected FPKM (kallisto)", y = "PEER-corrected FPKM (GEUVADIS)")
-#dev.off()
-#
-#png("./plots/star_vs_geuvadis.png", width = 10, height = 6, units = "in", res = 200)
-#scatter_plot_color(quant_data, "resid.star.imgt.fpkm", "resid.geuvadis.old", "dist.star") +
-#  labs(x = "PEER-corrected FPKM (STAR)", y = "PEER-corrected FPKM (GEUVADIS)")
-#dev.off()
-
-#png("../../meetings/star_vs_geuvadis.png", width = 10, height = 6, units = "in", res = 200)
-#scatter_plot(quant_data, "resid.star.imgt.fpkm", "resid.geuvadis.old") +
-#  labs(x = "PEER-corrected FPKM (STAR)", y = "PEER-corrected FPKM (GEUVADIS)")
-#dev.off()
-
-#png("./plots/kallisto_vs_geuvadis_final.png", width = 10, height = 6, units = "in", res = 200)
-#scatter_plot_color(quant_data, "resid.kallisto.imgt.fpkm", "resid.geuvadis.final", "dist.kallisto") +
-#  labs(x = "PEER-corrected FPKM (kallisto)", y = "PEER-corrected FPKM (GEUVADIS)")
-#dev.off()
-#
-#png("./plots/star_vs_geuvadis_final.png", width = 10, height = 6, units = "in", res = 200)
-#scatter_plot_color(quant_data, "resid.star.imgt.fpkm", "resid.geuvadis.final", "dist.star") +
-#  labs(x = "PEER-corrected FPKM (STAR)", y = "PEER-corrected FPKM (GEUVADIS)")
-#dev.off()
-
-#png("../../meetings/star_vs_geuvadis_final.png", width = 10, height = 6, units = "in", res = 200)
-#scatter_plot(quant_data, "resid.star.imgt.fpkm", "resid.geuvadis.final") +
-#  labs(x = "PEER-corrected FPKM (STAR)", y = "PEER-corrected FPKM (GEUVADIS)")
-#dev.off()
-
-#png("./plots/kallisto_vs_geuvadis_new.png", width = 10, height = 6, units = "in", res = 200)
-#scatter_plot_color(quant_data, "resid.kallisto.imgt.fpkm", "resid.geuvadis.new", "dist.kallisto") +
-#  labs(x = "PEER-corrected FPKM (kallisto)", y = "PEER-corrected FPKM (GEUVADIS)")
-#dev.off()
-#
-#png("./plots/star_vs_geuvadis_new.png", width = 10, height = 6, units = "in", res = 200)
-#scatter_plot_color(quant_data, "resid.star.imgt.fpkm", "resid.geuvadis.new", "dist.star") +
-#  labs(x = "PEER-corrected FPKM (STAR)", y = "PEER-corrected FPKM (GEUVADIS)")
-#dev.off()
-
-#png("../../meetings/star_vs_geuvadis_new.png", width = 10, height = 6, units = "in", res = 200)
-#scatter_plot(quant_data, "resid.star.imgt.fpkm", "resid.geuvadis.new") +
-#  labs(x = "PEER-corrected FPKM (STAR)", y = "PEER-corrected FPKM (GEUVADIS)")
-#dev.off()
-
-png("./plots/kallisto_imgt_vs_chr.png", height = 6, width = 10, units = "in", res = 200)
-scatter_plot_color(quant_data, "resid.kallisto.imgt.tpm", "resid.kallisto.chr.tpm", "dist.kallisto") +
-  labs(x = "PCA-corrected TPM (kallisto-IMGT)", y = "PCA-corrected TPM (kallisto REF chromosomes)")
+png("./plots/star_vs_kallisto_PCA.png", width = 10, height = 6, units = "in", res = 200)
+scatter_plot(quant_data, "resid.kallisto.imgt.tpm", "resid.star.imgt.tpm") +
+    labs(x = "PCA-corrected TPM (kallisto)", y = "PCA-corrected TPM (STAR-Salmon)")
 dev.off()
 
-png("./plots/kallisto_imgt_vs_chr_TPM.png", height = 6, width = 10, units = "in", res = 200)
-scatter_plot_color(quant_data, "tpm.kallisto.imgt", "tpm.kallisto.chr", "dist.kallisto") +
-  labs(x = "TPM (kallisto-IMGT)", y = "TPM (kallisto REF chromosomes)")
+png("./plots/star_imgt_vs_pri_TPM.png", height = 6, width = 10, units = "in", res = 200)
+scatter_plot(quant_data, "tpm.star.imgt", "tpm.star.pri") +
+    labs(x = "TPM (STAR-IMGT)", y = "TPM (STAR REF chromosomes)")
 dev.off()
 
-png("./plots/star_imgt_vs_chr.png", height = 6, width = 10, units = "in", res = 200)
-scatter_plot_color(quant_data, "resid.star.imgt.tpm", "resid.star.chr.tpm", "dist.star") +
-  labs(x = "PCA-corrected TPM (STAR-IMGT)", y = "PCA-corrected TPM (STAR REF chromosomes)")
+png("./plots/star_imgt_vs_pri_PCA.png", width = 10, height = 6, units = "in", res = 200)
+scatter_plot(quant_data, "resid.star.imgt.tpm", "resid.star.pri.tpm") +
+    labs(x = "PCA-corrected TPM (STAR-IMGT)", 
+         y = "PCA-corrected TPM (STAR REF chromosomes)")
 dev.off()
 
-#png("../../meetings/star_imgt_vs_chr.png", height = 6, width = 10, units = "in", res = 200)
-#scatter_plot(quant_data, "resid.star.imgt.tpm", "resid.star.chr.tpm") +
-#  labs(x = "PCA-corrected TPM (STAR-IMGT)", y = "PCA-corrected TPM (STAR REF chromosomes)")
-#dev.off()
+png("./plots/kallisto_imgt_vs_pri_TPM.png", width = 10, height = 6, units = "in", res = 200)
+scatter_plot(quant_data, "tpm.kallisto.imgt", "tpm.kallisto.pri") +
+    labs(x = "TPM (kallisto-IMGT)", y = "TPM (kallisto REF chromosomes)")
+dev.off()
 
-png("./plots/star_imgt_vs_chr_TPM.png", height = 6, width = 10, units = "in", res = 200)
-scatter_plot_color(quant_data, "tpm.star.imgt", "tpm.star.chr", "dist.star") +
-  labs(x = "TPM (STAR-IMGT)", y = "TPM (STAR REF chromosomes)")
+png("./plots/kallisto_imgt_vs_pri_PCA.png", width = 10, height = 6, units = "in", res = 200)
+scatter_plot(quant_data, "resid.kallisto.imgt.tpm", "resid.kallisto.pri.tpm") +
+    labs(x = "PCA-corrected TPM (kallisto-IMGT)", 
+         y = "PCA-corrected TPM (kallisto REF chromosomes)")
 dev.off()
 
 png("./plots/tpm_distributions.png", height = 6, width = 10, units = "in", res = 200)
@@ -610,9 +350,8 @@ make_phase_plot(dqa_drb, "DQA1", "DRB1")
 dev.off()
 
 png("./plots/correlation_decrease.png", width = 10, height = 5, units = "in", res = 200)
-ggplot(cors_data, aes(covariates, correlation, color = method)) +
+ggplot(cors_pca_star, aes(PCs, correlation)) +
   geom_point(size = 3) +
-  ggthemes::scale_color_colorblind() +
   scale_x_continuous(breaks = pcs) +
   facet_wrap(~gene_pair) +
   theme_bw() +
@@ -623,4 +362,14 @@ ggplot(cors_data, aes(covariates, correlation, color = method)) +
 	strip.text = element_text(size = 16),
 	axis.text.x = element_text(angle = 90)) +
   labs(x = "Number of PCs/factors")
+dev.off()
+
+png("./plots/expression_boxplot.png", width = 8, height = 5, units = "in", res = 200)
+ggplot(star_imgt_tpm, aes(locus, tpm)) +
+    geom_boxplot(fill = "grey") +
+    theme_bw() +
+    theme(axis.title.x = element_blank(),
+          axis.title.y = element_text(size = 16),
+          axis.text = element_text(size = 12)) +
+    labs(y = "TPM")
 dev.off()

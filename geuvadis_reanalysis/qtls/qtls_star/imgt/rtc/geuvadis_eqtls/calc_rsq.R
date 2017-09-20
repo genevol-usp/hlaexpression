@@ -11,7 +11,7 @@ geuvadis_qtls <-
   select(gene = V2, variant = V1)
 
 star_qtls <- 
-  read_tsv("../../../plots/eqtls.tsv") %>%
+  read_tsv("../../../../plots/eqtls.tsv") %>%
   filter(rank == 0) %>%
   select(gene = phen_id, variant = var_id)
 

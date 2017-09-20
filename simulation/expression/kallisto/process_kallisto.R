@@ -21,7 +21,7 @@ quant_files <-
 missing_files <- quant_files[!file.exists(quant_files)]
 
 if (length(missing_files) > 0L) {
-    stop(paste("missing files:", missing_files))
+    stop(paste("missing files:", paste(missing_files, collapse = " ")))
 }
 
 hla_genes <- paste0("HLA-", c("A", "B", "C", "DQA1", "DQB1", "DRB1"))

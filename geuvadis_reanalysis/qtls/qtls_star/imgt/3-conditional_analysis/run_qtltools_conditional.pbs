@@ -1,0 +1,23 @@
+#!/bin/bash
+
+#PBS -l nodes=1:ppn=1
+#PBS -l mem=1gb
+#PBS -l walltime=02:00:00
+#PBS -q short 
+#PBS -j oe
+#PBS -o /home/vitor/hlaexpression/geuvadis_reanalysis/qtls/qtls_star/imgt/3-conditional_analysis/log/
+
+cd $PBS_O_WORKDIR
+
+QTLtools=/home/vitor/QTLtools/QTLtools_1.1_Ubuntu16.04_x86_64
+
+SAMPLES=../../../genotypes/samples.eur
+VCF=../../../genotypes/eur_maf05.vcf.gz
+COV=../../../pca_genotypes/covariates_genos.txt
+BED=../1-phenotypes/phenotypes_eur_$PC.bed.gz
+THR=../2-permutations/results/permutations_$PC.thresholds.txt
+OUT=./conditional_$PC
+
+$QTLtools cis --vcf $VCF --bed $BED --cov $COV --mapping $THR\
+    --include-samples $SAMPLES --normal --chunk $CHUNK 60 --out ${OUT}_$CHUNK.txt
+

@@ -11,7 +11,7 @@ hla_by_allele <-
   select(subject, locus, hap, hla_allele, tpm) 
 
 hla_by_gene_best <-
-  read_tsv("../../../qtls/qtls_kallisto/qtltools_correction/phenotypes/phenotypes_eur_60.bed.gz") %>%
+  read_tsv("../../../qtls/qtls_star/imgt/1-phenotypes/phenotypes_eur_60.bed.gz") %>%
   inner_join(gencode_hla, c("gid" = "gene_id")) %>%
   gather(subject, tpm_pc, HG00096:NA20828) %>%
   select(subject, locus = gene_name, tpm_pc) %>%
@@ -25,7 +25,11 @@ bed_best <-
   mutate(r = tpm/sum(tpm)) %>%
   ungroup() %>%
   left_join(hla_by_gene_best, by = c("subject", "locus")) %>%
-  mutate(tpm = tpm_pc * r) %>%
+  group_by(locus) %>%
+  mutate(tpm_pc = tpm_pc + max(tpm_pc),
+	 tpm = tpm_pc * r,
+	 tpm = GenABEL::rntransform(tpm)) %>%
+  ungroup() %>%
   select(subject, id, tpm) %>%
   spread(subject, tpm) %>%
   separate(id, c("locus", "hap"), sep = "_")
@@ -33,7 +37,7 @@ bed_best <-
 write_tsv(bed_best, "./data/hla_allele_expression_bestpc.bed")
 
 hla_by_gene_10 <-
-  read_tsv("../../../qtls/qtls_kallisto/qtltools_correction/phenotypes/phenotypes_eur_10.bed.gz") %>%
+  read_tsv("../../../qtls/qtls_star/imgt/1-phenotypes/phenotypes_eur_10.bed.gz") %>%
   inner_join(gencode_hla, c("gid" = "gene_id")) %>%
   gather(subject, tpm_pc, HG00096:NA20828) %>%
   select(subject, locus = gene_name, tpm_pc) %>%
@@ -47,7 +51,11 @@ bed_10 <-
   mutate(r = tpm/sum(tpm)) %>%
   ungroup() %>%
   left_join(hla_by_gene_10, by = c("subject", "locus")) %>%
-  mutate(tpm = tpm_pc * r) %>%
+  group_by(locus) %>%
+  mutate(tpm_pc = tpm_pc + max(tpm_pc),
+	 tpm = tpm_pc * r,
+	 tpm = GenABEL::rntransform(tpm)) %>%
+  ungroup() %>%
   select(subject, id, tpm) %>%
   spread(subject, tpm) %>%
   separate(id, c("locus", "hap"), sep = "_")

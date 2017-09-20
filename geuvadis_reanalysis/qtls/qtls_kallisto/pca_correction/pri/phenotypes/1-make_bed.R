@@ -1,11 +1,11 @@
 library(data.table)
 devtools::load_all("/home/vitor/hlaseqlib")
 
-samples <- setDT(geuvadis_info)[pop != "YRI" & kgp_phase3 == 1, name]
+samples <- setDT(geuvadis_info)[pop != "YRI" & kgp_phase3 == 1L, name]
 
-gene_exp <- 
-  fread("../../../../expression/star/quantifications_pri_expressed90%.csv"
-      )[subject %in% samples]
+gene_exp <-
+    fread("../../../../expression/kallisto/quantifications_pri_expressed90%.csv"
+	)[subject %in% samples]
   
 gene_exp <- melt(gene_exp, id = 1, measure = 2:ncol(gene_exp), 
 		 variable.name = "gene_id", value.name = "tpm")

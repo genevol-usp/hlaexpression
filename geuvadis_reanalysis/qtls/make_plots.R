@@ -6,23 +6,23 @@ library(ggplot2)
 
 # genotype PCA 
 make_pca_plot <- function(PC_x, PC_y) {
-  ggplot(pcs, aes_string(PC_x, PC_y)) +
-    geom_point(aes(color = pop)) +
-    scale_color_manual(values = c(GBR = "darkolivegreen4", FIN = "dodgerblue2",
-                                  CEU = "red", TSI = "purple", YRI = "goldenrod")) +
-    theme_bw()
+    
+    ggplot(pcs, aes_string(PC_x, PC_y)) +
+        geom_point(aes(color = pop)) +
+        ggthemes::scale_color_colorblind() +
+        theme_bw()
 }
 
 geuvadis_pops <- select(geuvadis_info, subject = name, pop)
 
 pcs <- 
-  read_delim("./pca_genotypes/eur.pca", delim = " ") %>%
-  mutate(SampleID = sub("^.+_(PC\\d+)$", "\\1", SampleID)) %>%
-  filter(SampleID %in% paste0("PC", 1:100)) %>%
-  gather(subject, value, -1) %>%
-  spread(SampleID, value) %>%
-  mutate_at(vars(-subject), function(x) x/sqrt(sum(x^2))) %>%
-  inner_join(geuvadis_pops, by = "subject")
+    read_delim("./pca_genotypes/eur.pca", delim = " ") %>%
+    mutate(SampleID = sub("^.+_(PC\\d+)$", "\\1", SampleID)) %>%
+    filter(SampleID %in% paste0("PC", 1:100)) %>%
+    gather(subject, value, -1) %>%
+    spread(SampleID, value) %>%
+    mutate_at(vars(-subject), function(x) x/sqrt(sum(x^2))) %>%
+    inner_join(geuvadis_pops, by = "subject")
 
 png("./plots/genotype_pca.png", width = 10, height = 5, units = "in", res = 300)
 p1 <- make_pca_plot("PC1", "PC2")
@@ -41,117 +41,88 @@ plot_grid(p1 + guides(color=FALSE),
 dev.off()
 
 # Number of eQTLs per method of phenotype correction / aligner
-pcs <- c(seq(0, 30, 5), seq(40, 100, 10))
+pcs <- c(seq(0, 20, 5), seq(30, 100, 10))
 
-egenes_pca_kallisto <-
-  sprintf("./qtls_kallisto/qtltools_correction/permutations/results/permutations_%d.significant.txt", pcs) %>%
-  setNames(pcs) %>%
-  parallel::mclapply(function(x) read_delim(x, delim = " ", col_names = FALSE), 
-                     mc.cores = 21) %>%
-  bind_rows(.id = "f") %>%
-  count(f)
+egenes_pca_star_imgt <- 
+    sprintf("./qtls_star/imgt/2-permutations/results/permutations_%d.significant.txt", pcs) %>%
+    setNames(pcs) %>%
+    parallel::mclapply(function(x) read_delim(x, delim = " ", col_names = FALSE), 
+                       mc.cores = length(pcs)) %>%
+    bind_rows(.id = "f") %>%
+    count(f)
 
-peer_perm_files <- 
-  list.files("./qtls_kallisto/peer_correction/permutations/results", 
-	     pattern = "permutations_\\d+\\.significant", full.names = TRUE)
-
-names(peer_perm_files) <- 
-  sub("^.+permutations_(\\d+)\\.significant\\.txt$", "\\1", peer_perm_files)
-
-egenes_peer_kallisto <-
-  peer_perm_files %>%
-  parallel::mclapply(function(x) read_delim(x, delim = " ", col_names = FALSE),
-                     mc.cores = length(peer_perm_files)) %>%
-  bind_rows(.id = "f") %>%
-  count(f)
-
-egenes_pca_star <- 
-  sprintf("./qtls_star/permutations/results/permutations_%d.significant.txt", pcs) %>%
-  setNames(pcs) %>%
-  parallel::mclapply(function(x) read_delim(x, delim = " ", col_names = FALSE), 
-                     mc.cores = 21) %>%
-  bind_rows(.id = "f") %>%
-  count(f)
+egenes_pca_star_pri <- 
+    sprintf("./qtls_star/pri/2-permutations/results/permutations_%d.significant.txt", pcs) %>%
+    setNames(pcs) %>%
+    parallel::mclapply(function(x) read_delim(x, delim = " ", col_names = FALSE), 
+                       mc.cores = length(pcs)) %>%
+    bind_rows(.id = "f") %>%
+    count(f)
 
 egenes_df <- 
-  list(PCA_kallisto = egenes_pca_kallisto, 
-       PCA_star = egenes_pca_star,
-       PEER_kallisto = egenes_peer_kallisto) %>%
-  bind_rows(.id = "method") %>%
-  mutate(f = as.integer(f)) %>%
-  arrange(f, method)
+    list(imgt = egenes_pca_star_imgt, pri = egenes_pca_star_pri) %>%
+    bind_rows(.id = "index") %>%
+    mutate(f = as.integer(f)) %>%
+    arrange(f, method)
 
-png("./plots/pca_vs_peer.png", width = 8, height = 5, units = "in", res = 300)
+png("./plots/n_of_egenes.png", width = 8, height = 5, units = "in", res = 300)
 ggplot(egenes_df, aes(f, n, color = method, group = method)) + 
-  geom_point(size = 2.5) + 
-  geom_line() +
-  scale_x_continuous(breaks = sort(unique(egenes_df$f))) +
-  ggsci::scale_color_aaas() +
-  theme_bw() +
-  labs(x = "Number of PCs/factors", y = "Number of eGenes")
+    geom_point(size = 2.5) + 
+    geom_line() +
+    scale_x_continuous(breaks = sort(unique(egenes_df$f))) +
+    ggsci::scale_color_aaas() +
+    theme_bw() +
+    labs(x = "Number of PCs/factors", y = "Number of eGenes")
 dev.off()
 
-#png("../../meetings/eGenes_number.png", width = 8, height = 5, 
-#    units = "in", res = 300)
-#egenes_df %>%
-#  filter(method == "PCA_star") %>%
-#  ggplot(aes(f, n, group = method)) + 
-#  geom_point(size = 2.5) + 
-#  geom_line() +
-#  scale_x_continuous(breaks = sort(unique(egenes_df$f))) +
-#  theme_bw() +
-#  labs(x = "Number of PCs", y = "Number of eGenes")
-#dev.off()
-
 # Lineage and effects plot
-
 ## lineages
 concordant <- 
-  bind_rows(
-    read_tsv("../expression/kallisto/phase_hla_alleles/data/concordant_haps_classI.tsv") %>%
-      gather(locus, allele, A:C), 
-    read_tsv("../expression/kallisto/phase_hla_alleles/data/concordant_haps_classII.tsv") %>%
-      gather(locus, allele, DQA1:DRB1)) %>%
-  arrange(subject, locus, hap) %>%
-  mutate(concordant_phase = TRUE)
+    bind_rows(
+        read_tsv("../expression/star/phase_hla_alleles/data/concordant_haps_classI.tsv") %>%
+            gather(locus, allele, A:C), 
+        read_tsv("../expression/star/phase_hla_alleles/data/concordant_haps_classII.tsv") %>%
+            gather(locus, allele, DQA1:DRB1)) %>%
+    arrange(subject, locus, hap) %>%
+    mutate(concordant_phase = TRUE)
 
 residuals_by_allele_best <- 
-  read_tsv("../expression/kallisto/phase_hla_alleles/data/hla_allele_expression_bestpc.bed") %>%
-  gather(subject, resid, -locus, -hap)
+    read_tsv("../expression/star/phase_hla_alleles/data/hla_allele_expression_bestpc.bed") %>%
+    gather(subject, resid, -locus, -hap)
 
 expression_data <-
-  read_tsv("../expression/kallisto/phase_hla_alleles/data/1000G_haps_expression_snps.tsv") %>%
-  filter(rank == 0) %>%
-  left_join(concordant, by = c("subject", "locus", "hap")) %>%
-  left_join(residuals_by_allele_best, by = c("subject", "locus", "hap")) %>%
-  select(subject, hap, locus, hla_allele, rank, resid,
-                variant, variant_allele, concordant_phase)
+    read_tsv("../expression/star/phase_hla_alleles/data/1000G_haps_expression_snps.tsv") %>%
+    filter(rank == 0) %>%
+    left_join(concordant, by = c("subject", "locus", "hap")) %>%
+    left_join(residuals_by_allele_best, by = c("subject", "locus", "hap")) %>%
+    select(subject, hap, locus, hla_allele, rank, resid,
+           variant, variant_allele, concordant_phase)
 
 exp_levels <-
-  expression_data %>% 
-  filter(!is.na(concordant_phase)) %>%
-  group_by(locus, rank, variant, variant_allele) %>% 
-  summarize(eQTL = mean(resid)) %>%
-  group_by(locus, variant) %>%
-  mutate(eQTL = ifelse(eQTL == max(eQTL), "High", "Low")) %>%
-  ungroup()
+    expression_data %>% 
+    filter(!is.na(concordant_phase)) %>%
+    group_by(locus, rank, variant, variant_allele) %>% 
+    summarize(eQTL = mean(resid)) %>%
+    group_by(locus, variant) %>%
+    mutate(eQTL = ifelse(eQTL == max(eQTL), "High", "Low")) %>%
+    ungroup()
 
 k_levels <-
-  expression_data %>%
-  left_join(exp_levels, by = c("locus", "rank", "variant", "variant_allele")) %>%
-  mutate(eQTL = ifelse(is.na(concordant_phase), NA_character_, eQTL)) %>%
-  select(subject, locus, rank, hla_allele, eQTL, resid) %>%
-  mutate(hla_allele = hla_trimnames(hla_allele, 1),
-         eQTL = factor(eQTL, levels = c("High", "Low"))) %>%
-  arrange(subject, locus, hla_allele)
+    expression_data %>%
+    left_join(exp_levels, by = c("locus", "rank", "variant", "variant_allele")) %>%
+    mutate(eQTL = ifelse(is.na(concordant_phase), NA_character_, eQTL)) %>%
+    select(subject, locus, rank, hla_allele, eQTL, resid) %>%
+    mutate(hla_allele = hla_trimnames(hla_allele, 1),
+           eQTL = factor(eQTL, levels = c("High", "Low"))) %>%
+    arrange(subject, locus, hla_allele)
 
 ## effects
 gencode_hla <- gencode_chr_gene %>%
-  filter(gene_name %in% paste0("HLA-", c("A", "B", "C", "DQA1", "DQB1", "DRB1"))) %>%
-  select(gene_id, gene_name)
+    filter(gene_name %in% paste0("HLA-", c("A", "B", "C", "DQA1", "DQB1", "DRB1"))) %>%
+    select(gene_id, gene_name)
 
 phen_best <-
-  "./qtls_kallisto/qtltools_correction/phenotypes/phenotypes_eur_60.bed.gz" %>%
+  "./qtls_star/imgt/1-phenotypes/phenotypes_eur_60.bed.gz" %>%
   read_tsv() %>%
   inner_join(gencode_hla, by = c("gid" = "gene_id")) %>%
   select(gene_name, HG00096:NA20828) %>%
@@ -159,13 +130,13 @@ phen_best <-
   select(subject, locus = gene_name, resid)
 
 best_eqtl_locus <-
-  read_tsv("../expression/kallisto/phase_hla_alleles/best_eqtls.tsv") %>%
+  read_tsv("../expression/star/phase_hla_alleles/best_eqtls.tsv") %>%
   filter(rank == 0L) %>%
   left_join(gencode_hla, by = c("phen_id" = "gene_id")) %>%
   select(locus = gene_name, variant = var_id)
 
 eqtl_info <- 
-  read_tsv("../expression/kallisto/phase_hla_alleles/best_eqtl_snps.vcf", comment = "##") %>%
+  read_tsv("../expression/star/phase_hla_alleles/best_eqtl_snps.vcf", comment = "##") %>%
   select(-`#CHROM`, -POS, -QUAL, -FILTER, -INFO, -FORMAT) %>%
   gather(subject, genotype, -(ID:ALT)) %>%
   inner_join(best_eqtl_locus, by = c("ID" = "variant")) %>%
@@ -235,7 +206,7 @@ read_conditional <- function(path) {
                            var_from - phen_from,
                            phen_to - var_from),
          nom_pval = -log10(bwd_pval)) %>%
-  select(phen_id = gene_name, rank, var_id, dist_tss, nom_pval, 
+  select(phen_id = gene_name, rank, var_id, var_from, var_to, dist_tss, nom_pval, 
          slope = bwd_slope, best = bwd_best, signif = bwd_signif) %>%
   group_by(phen_id, var_id, best) %>%
   filter(rank == min(rank)) %>%
@@ -245,7 +216,7 @@ read_conditional <- function(path) {
 
 plot_qtls <- function(conditional_df) {
 
-  ggplot() +
+  ggplot(conditional_df) +
     geom_vline(xintercept = 0, color = "grey25", size = 2) + 
     geom_point(data = filter(conditional_df, signif == 0), 
 	       aes(dist_tss, nom_pval),
@@ -274,24 +245,24 @@ plot_qtls <- function(conditional_df) {
     guides(color = guide_legend(override.aes = list(alpha = 1, size = 3)))
 }
 
-conditional_pca_kallisto <-
-  "./qtls_kallisto/qtltools_correction/conditional_analysis/conditional_60_all.txt.gz" %>%
-  read_conditional()
+conditional_star_imgt <-
+    "./qtls_star/imgt/3-conditional_analysis/conditional_60_all.txt.gz" %>%
+    read_conditional()
 
-conditional_pca_star <-
-  "./qtls_star/conditional_analysis/conditional_60_all.txt.gz" %>%
-  read_conditional()
+conditional_star_imgt %>%
+    filter(best == 1L) %>%
+    select(phen_id, rank, var_id, var_from, var_to, dist_tss, slope, nom_pval) %>%
+    write_tsv("./plots/eqtls.tsv")
 
-conditional_pca_star %>%
-  filter(best == 1L) %>%
-  select(phen_id, rank, var_id, dist_tss, slope, nom_pval) %>%
-  write_tsv("./plots/eqtls.tsv")
+conditional_star_pri <-
+    "./qtls_star/pri/3-conditional_analysis/conditional_60_all.txt.gz" %>%
+    read_conditional()
 
-png("./plots/qtls_landscape_kallisto.png", height = 12, width = 10, units = "in", res = 300)
-plot_qtls(conditional_pca_kallisto)
+png("./plots/qtls_landscape_imgt.png", height = 12, width = 10, units = "in", res = 300)
+plot_qtls(conditional_star_imgt)
 dev.off()
 
-png("./plots/qtls_landscape_star.png", height = 12, width = 10, units = "in", res = 300)
-plot_qtls(conditional_pca_star)
+png("./plots/qtls_landscape_pri.png", height = 12, width = 10, units = "in", res = 300)
+plot_qtls(conditional_star_pri)
 dev.off()
 
