@@ -83,109 +83,117 @@ concordant <-
             gather(locus, allele, A:C), 
         read_tsv("../expression/star/phase_hla_alleles/data/concordant_haps_classII.tsv") %>%
             gather(locus, allele, DQA1:DRB1)) %>%
-    arrange(subject, locus, hap) %>%
-    mutate(concordant_phase = TRUE)
+    arrange(subject, locus, hap)
+    
+haps_expression <-
+    "../expression/star/phase_hla_alleles/data/1000G_haps_expression_snps.tsv" %>%
+    read_tsv() %>%
+    filter(rank == 0)
 
-residuals_by_allele_best <- 
-    read_tsv("../expression/star/phase_hla_alleles/data/hla_allele_expression_bestpc.bed") %>%
-    gather(subject, resid, -locus, -hap)
+hap_hla_genot <-
+    haps_expression %>%
+    select(subject, locus, hap, hla_allele)
 
-expression_data <-
-    read_tsv("../expression/star/phase_hla_alleles/data/1000G_haps_expression_snps.tsv") %>%
-    filter(rank == 0) %>%
-    left_join(concordant, by = c("subject", "locus", "hap")) %>%
-    left_join(residuals_by_allele_best, by = c("subject", "locus", "hap")) %>%
-    select(subject, hap, locus, hla_allele, rank, resid,
-           variant, variant_allele, concordant_phase)
-
-exp_levels <-
-    expression_data %>% 
-    filter(!is.na(concordant_phase)) %>%
-    group_by(locus, rank, variant, variant_allele) %>% 
-    summarize(eQTL = mean(resid)) %>%
-    group_by(locus, variant) %>%
-    mutate(eQTL = ifelse(eQTL == max(eQTL), "High", "Low")) %>%
-    ungroup()
-
-k_levels <-
-    expression_data %>%
-    left_join(exp_levels, by = c("locus", "rank", "variant", "variant_allele")) %>%
-    mutate(eQTL = ifelse(is.na(concordant_phase), NA_character_, eQTL)) %>%
-    select(subject, locus, rank, hla_allele, eQTL, resid) %>%
-    mutate(hla_allele = hla_trimnames(hla_allele, 1),
-           eQTL = factor(eQTL, levels = c("High", "Low"))) %>%
-    arrange(subject, locus, hla_allele)
-
-## effects
-gencode_hla <- gencode_chr_gene %>%
-    filter(gene_name %in% paste0("HLA-", c("A", "B", "C", "DQA1", "DQB1", "DRB1"))) %>%
-    select(gene_id, gene_name)
+hap_snps <-
+    haps_expression %>%
+    select(subject, locus, hap, variant_allele)
 
 phen_best <-
   "./qtls_star/imgt/1-phenotypes/phenotypes_eur_60.bed.gz" %>%
   read_tsv() %>%
   inner_join(gencode_hla, by = c("gid" = "gene_id")) %>%
   select(gene_name, HG00096:NA20828) %>%
+  mutate(gene_name = sub("HLA-", "", gene_name)) %>%
   gather(subject, resid, -gene_name) %>%
   select(subject, locus = gene_name, resid)
 
+qtls_high_low <-
+    left_join(hap_snps, phen_best, by = c("subject", "locus")) %>%
+    inner_join(select(concordant, -allele)) %>%
+    group_by(locus, variant_allele) %>% 
+    summarize(eQTL = mean(resid)) %>%
+    group_by(locus) %>%
+    mutate(eQTL = ifelse(eQTL == max(eQTL), "High", "Low")) %>%
+    ungroup()
+
+residuals_by_allele_best <- 
+    read_tsv("../expression/star/phase_hla_alleles/data/hla_allele_expression_bestpc.bed") %>%
+    gather(subject, resid, -locus, -hap)
+
+lineage_df <- 
+    left_join(hap_snps, qtls_high_low, by = c("locus", "variant_allele")) %>%
+    left_join(residuals_by_allele_best, by = c("subject", "locus", "hap")) %>%
+    left_join(concordant, by = c("subject", "locus", "hap")) %>%
+    mutate(eQTL = ifelse(is.na(allele), NA_character_, eQTL)) %>%
+    left_join(hap_hla_genot, by = c("subject", "locus", "hap")) %>%
+    select(subject, locus, hla_allele, eQTL, resid) %>%
+    mutate(hla_allele = hla_trimnames(hla_allele, 1),
+           eQTL = factor(eQTL, levels = c("High", "Low")))
+
+## effects
+gencode_hla <- gencode_chr_gene %>%
+    filter(gene_name %in% paste0("HLA-", c("A", "B", "C", "DQA1", "DQB1", "DRB1"))) %>%
+    select(gene_id, gene_name)
+
 best_eqtl_locus <-
-  read_tsv("../expression/star/phase_hla_alleles/best_eqtls.tsv") %>%
-  filter(rank == 0L) %>%
-  left_join(gencode_hla, by = c("phen_id" = "gene_id")) %>%
-  select(locus = gene_name, variant = var_id)
+    read_tsv("../expression/star/phase_hla_alleles/best_eqtls.tsv") %>%
+    filter(rank == 0L) %>%
+    left_join(gencode_hla, by = c("phen_id" = "gene_id")) %>%
+    select(locus = gene_name, variant = var_id)
 
 eqtl_info <- 
-  read_tsv("../expression/star/phase_hla_alleles/best_eqtl_snps.vcf", comment = "##") %>%
-  select(-`#CHROM`, -POS, -QUAL, -FILTER, -INFO, -FORMAT) %>%
-  gather(subject, genotype, -(ID:ALT)) %>%
-  inner_join(best_eqtl_locus, by = c("ID" = "variant")) %>%
-  separate(genotype, c("h1", "h2"), convert = TRUE) %>%
-  gather(hap, allele, h1:h2) %>%
-  mutate(allele = ifelse(allele == 0, REF, ALT)) %>%
-  arrange(subject, locus, ID, allele) %>%
-  group_by(subject, locus, ID) %>%
-  summarize(genotype = paste(sort(allele), collapse = "/")) %>%
-  select(subject, locus, variant = ID, genotype) %>%
-  ungroup() %>%
-  unite(id, genotype, locus, sep = "_", remove = FALSE)
+    read_tsv("../expression/star/phase_hla_alleles/best_eqtl_snps.vcf", comment = "##") %>%
+    select(-`#CHROM`, -POS, -QUAL, -FILTER, -INFO, -FORMAT) %>%
+    gather(subject, genotype, -(ID:ALT)) %>%
+    inner_join(best_eqtl_locus, by = c("ID" = "variant")) %>%
+    separate(genotype, c("h1", "h2"), convert = TRUE) %>%
+    gather(hap, allele, h1:h2) %>%
+    mutate(locus = sub("HLA-", "", locus),
+	 allele = ifelse(allele == 0, REF, ALT)) %>%
+    arrange(subject, locus, ID, allele) %>%
+    group_by(subject, locus, ID) %>%
+    summarize(genotype = paste(sort(allele), collapse = "/")) %>%
+    select(subject, locus, variant = ID, genotype) %>%
+    ungroup() %>%
+    unite(id, genotype, locus, sep = "_", remove = FALSE)
 
 eqtls_expression_df <- left_join(eqtl_info, phen_best, by = c("subject", "locus"))
 
 ## plot
 png("./plots/lineage_and_effects.png", width = 12, height = 12, units = "in", res = 300)
 p1 <- 
-  ggplot(k_levels, aes(x = reorder(hla_allele, resid, FUN = median, na.rm = TRUE), 
-                       y = resid)) +
-  geom_jitter(aes(color = eQTL), alpha = .5) +
-  geom_boxplot(outlier.shape = NA, fill = NA, color = "grey5", alpha = .1) +
-  scale_color_manual(values = c("Low" = "royalblue", "High" = "red"), 
-                     na.value = "grey") +
-  scale_x_discrete(labels = function(x) gsub("\\*", "*\n", x)) +
-  facet_wrap(~locus, scales = "free", ncol = 1, strip.position = "left") +
-  labs(x = " ", y = "TPM residualized by 60 PCs") +
-  theme_bw() +
-  theme(axis.title = element_text(size = rel(1.2)),
-        axis.text = element_text(size = rel(1)),
-        legend.text = element_text(size = rel(1)),
-        strip.text = element_text(face = "bold", size = rel(1.2)),
-        legend.position = "top") +
-  guides(color = guide_legend(override.aes = list(alpha = 1, size = 2)))
+    ggplot(lineage_df, 
+	   aes(x = reorder(hla_allele, resid, FUN = median, na.rm = TRUE), 
+	       y = resid)) +
+    geom_jitter(aes(color = eQTL), alpha = .5) +
+    geom_boxplot(outlier.shape = NA, fill = NA, color = "grey5", alpha = .1) +
+    scale_color_manual(values = c("Low" = "royalblue", "High" = "red"), 
+		       na.value = "grey") +
+    scale_x_discrete(labels = function(x) gsub("\\*", "*\n", x)) +
+    facet_wrap(~locus, scales = "free", ncol = 1, strip.position = "left") +
+    labs(x = " ", y = "TPM residualized by 60 PCs") +
+    theme_bw() +
+    theme(axis.title = element_text(size = rel(1.2)),
+	  axis.text = element_text(size = rel(1)),
+	  legend.text = element_text(size = rel(1)),
+	  strip.text = element_text(face = "bold", size = rel(1.2)),
+	  legend.position = "top") +
+    guides(color = guide_legend(override.aes = list(alpha = 1, size = 2)))
 
 p2 <-
-  ggplot(eqtls_expression_df, aes(reorder(id, resid, "mean"), resid)) +
-  geom_jitter(width = .25, alpha = 1/2, size = .75) +
-  geom_smooth(aes(group = 1), method = lm, se = FALSE) +
-  scale_x_discrete(labels = function(x) paste0(sub("^([^_]+).+$", "\\1", x), "\n")) +
-  scale_y_continuous(position = "right") +
-  geom_text(data = distinct(eqtls_expression_df, locus, variant), 
-            aes(x = 1.5, y = 3, label = variant)) +
-  coord_cartesian(ylim = c(-3, 3.2)) +
-  facet_wrap(~locus, ncol = 1, scales = "free") +
-  labs(x = " ", y = NULL) +
-  theme_bw() +
-  theme(axis.text = element_text(size = rel(1)),
-        strip.text = element_blank())
+    ggplot(eqtls_expression_df, aes(reorder(id, resid, "mean"), resid)) +
+    geom_jitter(width = .25, alpha = 1/2, size = .75) +
+    geom_smooth(aes(group = 1), method = lm, se = FALSE) +
+    scale_x_discrete(labels = function(x) paste0(sub("^([^_]+).+$", "\\1", x), "\n")) +
+    scale_y_continuous(position = "right") +
+    geom_text(data = distinct(eqtls_expression_df, locus, variant), 
+	      aes(x = 1.5, y = 3, label = variant)) +
+    coord_cartesian(ylim = c(-3, 3.2)) +
+    facet_wrap(~locus, ncol = 1, scales = "free") +
+    labs(x = " ", y = NULL) +
+    theme_bw() +
+    theme(axis.text = element_text(size = rel(1)),
+	  strip.text = element_blank())
 
 legend <- get_legend(p1)
 p1 <- p1 + theme(legend.position = "none")
@@ -194,24 +202,24 @@ grid1 <- plot_grid(legend, NULL, p1, p2, ncol = 2,
                    rel_widths = c(4, 1), rel_heights = c(.07, 1))
 
 ggdraw(grid1) + 
-  draw_label("HLA lineage", 0.44, 0.02, size = 16) +
-  draw_label("1000G genotype", 0.88, 0.02, size = 16)
+    draw_label("HLA lineage", 0.44, 0.02, size = 16) +
+    draw_label("1000G genotype", 0.88, 0.02, size = 16)
 dev.off()
 
 # eQTL landscape around TSS
 read_conditional <- function(path) {
-  read_qtltools(path) %>%
-  inner_join(select(gencode_hla, gene_id, gene_name), by = c("phen_id" = "gene_id")) %>%
-  mutate(dist_tss = ifelse(strand == "+", 
-                           var_from - phen_from,
-                           phen_to - var_from),
-         nom_pval = -log10(bwd_pval)) %>%
-  select(phen_id = gene_name, rank, var_id, var_from, var_to, dist_tss, nom_pval, 
-         slope = bwd_slope, best = bwd_best, signif = bwd_signif) %>%
-  group_by(phen_id, var_id, best) %>%
-  filter(rank == min(rank)) %>%
-  ungroup() %>%
-  mutate(rank = factor(rank))
+      read_qtltools(path) %>%
+      inner_join(select(gencode_hla, gene_id, gene_name), by = c("phen_id" = "gene_id")) %>%
+      mutate(dist_tss = ifelse(strand == "+", 
+			       var_from - phen_from,
+			       phen_to - var_from),
+	     nom_pval = -log10(bwd_pval)) %>%
+      select(phen_id = gene_name, rank, var_id, var_from, var_to, dist_tss, nom_pval, 
+	     slope = bwd_slope, best = bwd_best, signif = bwd_signif) %>%
+      group_by(phen_id, var_id, best) %>%
+      filter(rank == min(rank)) %>%
+      ungroup() %>%
+      mutate(rank = factor(rank))
 }
 
 plot_qtls <- function(conditional_df) {
