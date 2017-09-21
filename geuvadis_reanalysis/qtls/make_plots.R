@@ -69,14 +69,14 @@ egenes_df <-
     mutate(f = as.integer(f)) %>%
     arrange(f, index)
 
-png("./plots/n_of_egenes.png", width = 8, height = 5, units = "in", res = 300)
+png("./plots/n_of_egenes.png", width = 6, height = 4, units = "in", res = 300)
 ggplot(egenes_df, aes(f, n, color = index, group = index)) + 
     geom_point(size = 2.5) + 
     geom_line() +
     scale_x_continuous(breaks = sort(unique(egenes_df$f))) +
     ggsci::scale_color_aaas() +
     theme_bw() +
-    labs(x = "Number of PCs/factors", y = "Number of eGenes")
+    labs(x = "Number of PCs", y = "Number of eGenes")
 dev.off()
 
 # Lineage and effects plot
