@@ -26,7 +26,7 @@ abundances_imgt <-
 	][, .(subject = code, locus, Name = allele, NumReads = est_counts)]
 
 genos <- 
-    abundances_imgt[locus %in% paste0("HLA-", c("A", "B", "C", "DQA1", "DQB1", "DRB1"))
+    abundances_imgt[locus %in% paste0("HLA-", c("A", "B", "C", "DPB1", "DQA1", "DQB1", "DRB1"))
 		  ][, .(subject, locus, allele = Name)]
 genos[, allele := hla_trimnames(gsub("IMGT_", "", sub("^([^/]+).*$", "\\1", allele)), 3)] 
 
