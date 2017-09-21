@@ -33,6 +33,10 @@ left_join(star_typing, kallisto_typing, by = "locus") %>%
 
 # Expression estimates
 
+```{r}
+include_graphics("./expression/plots/expression_boxplot.png")
+```
+
 ## kallisto vs STAR-Salmon
 
 ### TPM
@@ -162,9 +166,7 @@ include_graphics("./qtls/plots/genotype_pca.png")
 
 ## Number of eGenes according to index
 
-**coming soon**
-
-```{r eval=FALSE}
+```{r}
 include_graphics("./qtls/plots/n_of_egenes.png")
 ```
 
@@ -178,9 +180,7 @@ include_graphics("./qtls/plots/qtls_landscape_imgt.png")
 
 ### Reference transcriptome
 
-**coming soon**
-
-```{r eval=FALSE}
+```{r}
 include_graphics("./qtls/plots/qtls_landscape_pri.png")
 ```
 

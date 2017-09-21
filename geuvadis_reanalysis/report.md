@@ -17,6 +17,8 @@ Typing accuracies
 Expression estimates
 ====================
 
+![](./expression/plots/expression_boxplot.png)
+
 kallisto vs STAR-Salmon
 -----------------------
 
@@ -117,7 +119,7 @@ PCA of genotypes
 Number of eGenes according to index
 -----------------------------------
 
-**coming soon**
+![](./qtls/plots/n_of_egenes.png)
 
 Distribution of eQTLs around the TSS
 ------------------------------------
@@ -128,7 +130,7 @@ Distribution of eQTLs around the TSS
 
 ### Reference transcriptome
 
-**coming soon**
+![](./qtls/plots/qtls_landscape_pri.png)
 
 HLA lineages
 ------------

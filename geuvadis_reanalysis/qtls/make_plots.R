@@ -4,6 +4,10 @@ library(cowplot)
 library(ggpmisc)
 library(ggplot2)
 
+gencode_hla <- gencode_chr_gene %>%
+    filter(gene_name %in% paste0("HLA-", c("A", "B", "C", "DQA1", "DQB1", "DRB1"))) %>%
+    select(gene_id, gene_name)
+
 # genotype PCA 
 make_pca_plot <- function(PC_x, PC_y) {
     
@@ -40,7 +44,7 @@ plot_grid(p1 + guides(color=FALSE),
           nrow = 2, ncol = 3, rel_widths = c(3, 3, 1))
 dev.off()
 
-# Number of eQTLs per method of phenotype correction / aligner
+# Number of eQTLs according to index
 pcs <- c(seq(0, 20, 5), seq(30, 100, 10))
 
 egenes_pca_star_imgt <- 
@@ -63,10 +67,10 @@ egenes_df <-
     list(imgt = egenes_pca_star_imgt, pri = egenes_pca_star_pri) %>%
     bind_rows(.id = "index") %>%
     mutate(f = as.integer(f)) %>%
-    arrange(f, method)
+    arrange(f, index)
 
 png("./plots/n_of_egenes.png", width = 8, height = 5, units = "in", res = 300)
-ggplot(egenes_df, aes(f, n, color = method, group = method)) + 
+ggplot(egenes_df, aes(f, n, color = index, group = index)) + 
     geom_point(size = 2.5) + 
     geom_line() +
     scale_x_continuous(breaks = sort(unique(egenes_df$f))) +
@@ -99,13 +103,13 @@ hap_snps <-
     select(subject, locus, hap, variant_allele)
 
 phen_best <-
-  "./qtls_star/imgt/1-phenotypes/phenotypes_eur_60.bed.gz" %>%
-  read_tsv() %>%
-  inner_join(gencode_hla, by = c("gid" = "gene_id")) %>%
-  select(gene_name, HG00096:NA20828) %>%
-  mutate(gene_name = sub("HLA-", "", gene_name)) %>%
-  gather(subject, resid, -gene_name) %>%
-  select(subject, locus = gene_name, resid)
+    "./qtls_star/imgt/1-phenotypes/phenotypes_eur_60.bed.gz" %>%
+    read_tsv() %>%
+    inner_join(gencode_hla, by = c("gid" = "gene_id")) %>%
+    select(gene_name, HG00096:NA20828) %>%
+    mutate(gene_name = sub("HLA-", "", gene_name)) %>%
+    gather(subject, resid, -gene_name) %>%
+    select(subject, locus = gene_name, resid)
 
 qtls_high_low <-
     left_join(hap_snps, phen_best, by = c("subject", "locus")) %>%
@@ -116,25 +120,17 @@ qtls_high_low <-
     mutate(eQTL = ifelse(eQTL == max(eQTL), "High", "Low")) %>%
     ungroup()
 
-residuals_by_allele_best <- 
-    read_tsv("../expression/star/phase_hla_alleles/data/hla_allele_expression_bestpc.bed") %>%
-    gather(subject, resid, -locus, -hap)
-
-lineage_df <- 
-    left_join(hap_snps, qtls_high_low, by = c("locus", "variant_allele")) %>%
-    left_join(residuals_by_allele_best, by = c("subject", "locus", "hap")) %>%
+lineage_df <-
+    haps_expression %>%
+    select(subject, locus, hla_allele, hap, tpm, variant_allele) %>%
+    left_join(qtls_high_low, by = c("locus", "variant_allele")) %>%
     left_join(concordant, by = c("subject", "locus", "hap")) %>%
     mutate(eQTL = ifelse(is.na(allele), NA_character_, eQTL)) %>%
-    left_join(hap_hla_genot, by = c("subject", "locus", "hap")) %>%
-    select(subject, locus, hla_allele, eQTL, resid) %>%
+    select(subject, locus, hla_allele, eQTL, tpm) %>%
     mutate(hla_allele = hla_trimnames(hla_allele, 1),
            eQTL = factor(eQTL, levels = c("High", "Low")))
 
 ## effects
-gencode_hla <- gencode_chr_gene %>%
-    filter(gene_name %in% paste0("HLA-", c("A", "B", "C", "DQA1", "DQB1", "DRB1"))) %>%
-    select(gene_id, gene_name)
-
 best_eqtl_locus <-
     read_tsv("../expression/star/phase_hla_alleles/best_eqtls.tsv") %>%
     filter(rank == 0L) %>%
@@ -149,7 +145,7 @@ eqtl_info <-
     separate(genotype, c("h1", "h2"), convert = TRUE) %>%
     gather(hap, allele, h1:h2) %>%
     mutate(locus = sub("HLA-", "", locus),
-	 allele = ifelse(allele == 0, REF, ALT)) %>%
+           allele = ifelse(allele == 0, REF, ALT)) %>%
     arrange(subject, locus, ID, allele) %>%
     group_by(subject, locus, ID) %>%
     summarize(genotype = paste(sort(allele), collapse = "/")) %>%
@@ -163,15 +159,15 @@ eqtls_expression_df <- left_join(eqtl_info, phen_best, by = c("subject", "locus"
 png("./plots/lineage_and_effects.png", width = 12, height = 12, units = "in", res = 300)
 p1 <- 
     ggplot(lineage_df, 
-	   aes(x = reorder(hla_allele, resid, FUN = median, na.rm = TRUE), 
-	       y = resid)) +
+	   aes(x = reorder(hla_allele, tpm, FUN = median, na.rm = TRUE), 
+	       y = tpm)) +
     geom_jitter(aes(color = eQTL), alpha = .5) +
     geom_boxplot(outlier.shape = NA, fill = NA, color = "grey5", alpha = .1) +
     scale_color_manual(values = c("Low" = "royalblue", "High" = "red"), 
 		       na.value = "grey") +
     scale_x_discrete(labels = function(x) gsub("\\*", "*\n", x)) +
     facet_wrap(~locus, scales = "free", ncol = 1, strip.position = "left") +
-    labs(x = " ", y = "TPM residualized by 60 PCs") +
+    labs(x = " ", y = "TPM") +
     theme_bw() +
     theme(axis.title = element_text(size = rel(1.2)),
 	  axis.text = element_text(size = rel(1)),
@@ -190,7 +186,7 @@ p2 <-
 	      aes(x = 1.5, y = 3, label = variant)) +
     coord_cartesian(ylim = c(-3, 3.2)) +
     facet_wrap(~locus, ncol = 1, scales = "free") +
-    labs(x = " ", y = NULL) +
+    labs(x = " ", y = " ") +
     theme_bw() +
     theme(axis.text = element_text(size = rel(1)),
 	  strip.text = element_blank())
@@ -203,7 +199,9 @@ grid1 <- plot_grid(legend, NULL, p1, p2, ncol = 2,
 
 ggdraw(grid1) + 
     draw_label("HLA lineage", 0.44, 0.02, size = 16) +
-    draw_label("1000G genotype", 0.88, 0.02, size = 16)
+    draw_label("1000G genotype", 0.88, 0.02, size = 16) +
+    draw_label("PCA-corrected expession", .985, 0.5, size = 16, angle = 90)
+
 dev.off()
 
 # eQTL landscape around TSS
