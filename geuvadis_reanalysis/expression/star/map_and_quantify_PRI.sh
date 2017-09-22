@@ -32,4 +32,9 @@ out=$outQuant/$sample
 
 $salmon quant -t $fasta -l IU -a $bam -o $out -p 6
 
+awk 'NR==1 {print $1"\t"$4"\t"$5}' $out/quant.sf > $out/quant_imgt.sf
+
+grep -F -f ../../../imgt_index/hla_ids_pri.txt $out/quant.sf |\
+    awk -F $"\t" '{print $1"\t"$4"\t"$5}' >> $out/quant_imgt.sf
+
 rm ${outPrefix}Aligned* ${outPrefix}Log* ${outPrefix}SJ*

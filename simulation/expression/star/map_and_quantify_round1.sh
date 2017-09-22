@@ -33,6 +33,5 @@ $salmon quant -t $fasta -l IU -a $bam -o $out -p 6
 
 rm $outPrefix*
 
-awk 'NR==1 {print $1"\t"$4"\t"$5}' $out/quant.sf > $out/quant_imgt.sf
-awk -F $"\t" '$1 ~ /IMGT/ {print $1"\t"$4"\t"$5}' $out/quant.sf >>\
+awk 'NR==1 || $1 ~ /IMGT/ {print $1"\t"$4"\t"$5}' $out/quant.sf >\
     $out/quant_imgt.sf

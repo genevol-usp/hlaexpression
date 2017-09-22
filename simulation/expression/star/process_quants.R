@@ -1,8 +1,6 @@
 devtools::load_all("~/hlaseqlib")
 library(tidyverse)
 
-doMC::registerDoMC(25)
-
 make_genot_calls_df <- function(typings_df) {
 
     typings_df %>%
@@ -15,7 +13,7 @@ samples <- sprintf("sample_%02d", 1:50)
     
 quant_files <- 
     paste0("./quantifications_", quant_round) %>%
-    file.path(samples, "quant.sf") %>%
+    file.path(samples, "quant_imgt.sf") %>%
     setNames(samples)
 
 missing_files <- quant_files[!file.exists(quant_files)]
@@ -28,9 +26,8 @@ hla_genes <- paste0("HLA-", c("A", "B", "C", "DPB1", "DQA1", "DQB1", "DRB1"))
 
 if (quant_round == 1L | quant_round == 2L) {
 
-    quants <- 
-	quant_files %>%
-	plyr::ldply(read_star_imgt_quants, .id = "subject", .parallel = TRUE)
+    quants <- quant_files %>%
+	plyr::ldply(read_star_imgt_quants, .id = "subject")
     
     goldstd_genos <- read_tsv("../../data/genos.tsv")
 
@@ -40,8 +37,9 @@ if (quant_round == 1L | quant_round == 2L) {
 	names(thresholds) <- seq(0, .25, .05)
 
 	typings <- 
-	    plyr::ldply(thresholds, function(th) hla_genotype_dt(quants, th),
-			.id = "th", .parallel = TRUE)
+	    plyr::ldply(thresholds, 
+			function(th) hla_genotype_dt(quants, th),
+			.id = "th")
 
 	calls <- 
 	    typings %>%
@@ -53,7 +51,7 @@ if (quant_round == 1L | quant_round == 2L) {
 	    calls %>%
 	    split(.$th) %>%
 	    plyr::ldply(function(df) calc_genotyping_accuracy(df, goldstd_genos),
-			.id = "th", .parallel = TRUE) %>%
+			.id = "th") %>%
 	    group_by(th) %>%
 	    mutate(th_average = mean(accuracy)) %>%
 	    ungroup()
@@ -73,9 +71,8 @@ if (quant_round == 1L | quant_round == 2L) {
 
 } else if (quant_round == "PRI")  {
 
-  out_df <-
-      quant_files %>%
-      plyr::ldply(read_star_pri_quants, .id = "subject", .parallel = TRUE)
+  out_df <- quant_files %>%
+      plyr::ldply(read_star_pri_quants, .id = "subject")
 }
 
 out_df %>%

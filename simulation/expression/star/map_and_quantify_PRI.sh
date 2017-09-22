@@ -7,10 +7,10 @@ samtools=/home/vitor/samtools-1.3.1/samtools
 sample=$1
 
 indexDIR=../../../imgt_index/star/indexPRI
-fq1=../../data/fastq/$sample\_1.fastq.gz
-fq2=../../data/fastq/$sample\_2.fastq.gz
+fq1=../../data/fastq/${sample}_1.fastq.gz
+fq2=../../data/fastq/${sample}_2.fastq.gz
 outMap=./mappings_PRI
-outPrefix=$outMap/$sample\_
+outPrefix=$outMap/${sample}_
 outQuant=./quantifications_PRI
 
 $STAR --runMode alignReads --runThreadN 6 --genomeDir $indexDIR\
@@ -32,6 +32,11 @@ fasta=/home/vitor/gencode_data/gencode.v25.PRI.transcripts.fa
 out=$outQuant/$sample
 
 $salmon quant -t $fasta -l IU -a $bam -o $out -p 6
+
+awk 'NR==1 {print $1"\t"$4"\t"$5}' $out/quant.sf > $out/quant_imgt.sf
+
+grep -F -f ../../../imgt_index/hla_ids_pri.txt $out/quant.sf |\
+    awk -F $"\t" '{print $1"\t"$4"\t"$5}' >> $out/quant_imgt.sf
 
 header=${outPrefix}header.sam
 imgtbam=${outPrefix}imgt.bam

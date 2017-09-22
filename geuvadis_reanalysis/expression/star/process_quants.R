@@ -1,15 +1,13 @@
 devtools::load_all("~/hlaseqlib")
 library(tidyverse)
 
-doMC::registerDoMC(25)
-
 make_genot_calls_df <- function(typings_df) {
     
     typings_df %>%
         mutate(subject = convert_ena_ids(as.character(subject)),
 	       locus = sub("^HLA-", "", locus),
 	       allele = hla_trimnames(gsub("IMGT_", "", allele), 3)) %>%
-    arrange(subject, locus, allele)
+	arrange(subject, locus, allele)
 }
 
 quant_round <- commandArgs(TRUE)[1]
@@ -20,7 +18,7 @@ samples <-
     pull(ena_id)
 
 quant_files <- paste0("./quantifications_", quant_round) %>%
-      file.path(samples, "quant.sf") %>%
+      file.path(samples, "quant_imgt.sf") %>%
       setNames(samples)
 
 missing_files <- quant_files[!file.exists(quant_files)]
@@ -33,9 +31,8 @@ hla_genes <- paste0("HLA-", c("A", "B", "C", "DPB1", "DQA1", "DQB1", "DRB1"))
 
 if (quant_round == 1L || quant_round == 2L) {
 
-    quants <- 
-	quant_files %>%
-	plyr::ldply(read_star_imgt_quants, .id = "subject", .parallel = TRUE)
+    quants <- quant_files %>%
+	plyr::ldply(read_star_imgt_quants, .id = "subject")
     
     goldstd_genos <- mutate(pag, allele = hla_trimnames(allele, 3))
     
@@ -45,8 +42,9 @@ if (quant_round == 1L || quant_round == 2L) {
         names(thresholds) <- seq(0, .25, .05)
 
         typings <- 
-	  plyr::ldply(thresholds, function(th) hla_genotype_dt(quants, th),
-		      .id = "th", .parallel = TRUE)
+	  plyr::ldply(thresholds, 
+		      function(th) hla_genotype_dt(quants, th),
+		      .id = "th")
 
 	calls <- 
 	    typings %>%
@@ -57,8 +55,8 @@ if (quant_round == 1L || quant_round == 2L) {
         accuracies <-
             calls %>%
             split(.$th) %>%
-            plyr::ldply(function(df) calc_genotyping_accuracy(df, genos),
-			.id = "th", .parallel = TRUE) %>%
+            plyr::ldply(function(df) calc_genotyping_accuracy(df, goldstd_genos),
+			.id = "th") %>%
             group_by(th) %>%
             mutate(th_average = mean(accuracy)) %>%
             ungroup()
@@ -92,7 +90,7 @@ if (quant_round == 1L || quant_round == 2L) {
 
     out_df <- 
 	quant_files %>%
-	plyr::ldply(read_star_pri_quants, .id = "subject", .parallel = TRUE)
+	plyr::ldply(read_star_pri_quants, .id = "subject")
 }
 
 out_df %>%

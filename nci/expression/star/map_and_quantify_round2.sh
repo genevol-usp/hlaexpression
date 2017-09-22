@@ -48,8 +48,7 @@ out=$outQuant/$sample
 
 $salmon quant -t $sample_fa -l IU -a $bam -o $out -p 8
 
-awk 'NR==1 {print $1"\t"$4"\t"$5}' $out/quant.sf > $out/quant_imgt.sf
-awk -F $"\t" '$1 ~ /IMGT/ {print $1"\t"$4"\t"$5}' $out/quant.sf >>\
+awk 'NR==1 || $1 ~ /IMGT/ {print $1"\t"$4"\t"$5}' $out/quant.sf >\
     $out/quant_imgt.sf
 
 rm $sample_fa $sample_hla $outPrefix* 
