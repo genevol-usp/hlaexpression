@@ -39,7 +39,7 @@ imgtbam=${outPrefix}imgt.bam
 $samtools view -H $bam > $header
 
 $samtools view -f 0x2 -F 0x100 $bam |\
-    grep -F -f ./ids_to_filter.txt - |\
+    grep -F -f ../../data/ids_to_filter.txt - |\
     cat $header - |\
     $samtools view -Sb - > $imgtbam
 

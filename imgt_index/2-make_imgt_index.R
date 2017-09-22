@@ -2,7 +2,7 @@ devtools::load_all("/home/vitor/hlaseqlib")
 library(Biostrings)
 library(tidyverse)
 
-main_loci <- c("A", "B", "C", "DQA1", "DQB1", "DRB")
+main_loci <- c("A", "B", "C", "DPB1", "DQA1", "DQB1", "DRB")
 
 other_loci <-
   list.files("/home/vitor/IMGTHLA/alignments/", pattern = "_nuc\\.txt") %>% 
@@ -53,7 +53,7 @@ ref_pos_df <-
 
 index_ref_pos_df <-
   seqs_df %>%
-  filter(grepl("^(A|B|C|DQA1|DQB1|DRB1)", allele)) %>%
+  filter(grepl("^(A|B|C|DPB1|DQA1|DQB1|DRB1)", allele)) %>%
   mutate(locus = sub("^([^*]+).+$", "HLA-\\1", allele)) %>%
   left_join(ref_pos_df, by = "locus") %>%
   mutate(cds = map2_chr(cds, pos, ~paste(substring(.x, .y, .y), collapse = "")),

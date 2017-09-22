@@ -12,7 +12,6 @@ cd $PBS_O_WORKDIR
 
 mkdir -p ./log
 
-#SAMPLE=`awk "NR==$PBS_ARRAYID" ../../data/sample_info/samples_phase3_ena_eur.txt`
-SAMPLE=`awk "NR==$PBS_ARRAYID" ./repeat_samples.txt`
+SAMPLE=`awk "NR==$PBS_ARRAYID" ../../data/sample_info/samples_phase3_ena_eur.txt`
 
 ./map_and_quantify_round2.sh $SAMPLE

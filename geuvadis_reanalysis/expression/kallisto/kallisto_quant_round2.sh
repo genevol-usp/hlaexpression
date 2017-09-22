@@ -18,6 +18,6 @@ cat $gencode $sample_hla > $sample_fa
 
 $kallisto index -i $sample_idx $sample_fa
 
-$kallisto quant -i $sample_idx -t 4 -o $sampledir --bias $fastqR1 $fastqR2
+$kallisto quant -i $sample_idx -t 1 -o $sampledir --bias $fastqR1 $fastqR2
 
 rm $sample_fa $sample_idx

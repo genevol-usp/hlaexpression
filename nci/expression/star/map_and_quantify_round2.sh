@@ -13,13 +13,13 @@ mkdir -p $indexDIR
 
 cat $fasta $sample_hla > $sample_fa
 
-$STAR --runThreadN 6 --runMode genomeGenerate --genomeDir $indexDIR\
+$STAR --runThreadN 8 --runMode genomeGenerate --genomeDir $indexDIR\
     --genomeFastaFiles $sample_fa\
     --genomeChrBinNbits 11 --genomeSAindexNbases 13\
     --outFileNamePrefix ${indexDIR}_
 
-fq1=../../data/fastq/${sample}_1.fastq.gz
-fq2=../../data/fastq/${sample}_2.fastq.gz
+fq1=$(ls -v ../../data/fastq/$sample*R1_001.fastq.gz | paste -d, - -)
+fq2=$(ls -v ../../data/fastq/$sample*R2_001.fastq.gz | paste -d, - -)
 outMap=./mappings_2
 outQuant=./quantifications_2
 outPrefix=$outMap/${sample}_
@@ -27,7 +27,7 @@ outPrefix=$outMap/${sample}_
 mkdir -p $outMap
 mkdir -p $outQuant
 
-$STAR --runMode alignReads --runThreadN 6 --genomeDir $indexDIR\
+$STAR --runMode alignReads --runThreadN 8 --genomeDir $indexDIR\
     --readFilesIn $fq1 $fq2 --readFilesCommand zcat\
     --outFilterMismatchNmax 999\
     --outFilterMismatchNoverReadLmax 0.04\
@@ -46,7 +46,7 @@ rm -r $indexDIR ${indexDIR}_Log.out
 bam=${outPrefix}Aligned.out.bam
 out=$outQuant/$sample
 
-$salmon quant -t $sample_fa -l IU -a $bam -o $out -p 6
+$salmon quant -t $sample_fa -l IU -a $bam -o $out -p 8
 
 awk 'NR==1 {print $1"\t"$4"\t"$5}' $out/quant.sf > $out/quant_imgt.sf
 awk -F $"\t" '$1 ~ /IMGT/ {print $1"\t"$4"\t"$5}' $out/quant.sf >>\

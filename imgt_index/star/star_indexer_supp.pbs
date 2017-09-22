@@ -10,7 +10,7 @@
 STAR=/home/vitor/STAR
 
 indexDIR=./index
-fasta=../../../imgt_index/gencode.v25.PRI.IMGT.transcripts.fa
+fasta=../gencode.v25.PRI.IMGT.transcripts.fa
 
 cd $PBS_O_WORKDIR
 

@@ -1,4 +1,4 @@
-devtools::load_all("~/hlaseqlib")
+devtools::load_all("/home/vitor/hlaseqlib")
 library(tidyverse)
 
 doMC::registerDoMC(25)
@@ -88,12 +88,7 @@ if (quant_round == 1L || quant_round == 2L) {
 	write_tsv(accuracies, "./genotyping_accuracies_2.tsv")
     }
 
-} else if (quant_round == "PRI") {
-
-    out_df <- 
-	quant_files %>%
-	plyr::ldply(read_star_pri_quants, .id = "subject", .parallel = TRUE)
-}
+} 
 
 out_df %>%
     write_tsv(paste0("./quantifications_", quant_round, "/processed_quant.tsv"))

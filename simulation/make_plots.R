@@ -2,7 +2,6 @@ devtools::load_all("/home/vitor/hlaseqlib")
 library(tidyverse)
 
 # Functions
-
 read_imgt_quants <- function(f) {
   
     read_tsv(f) %>%
@@ -150,8 +149,7 @@ counts_star <-
            prop_mapped = counts/true_counts) %>%
     rename(dist = dist.star.imgt)
 
-diff_refs_alignment <-
-    read_tsv("./diff_refs_hla.tsv")
+diff_refs_alignment <- read_tsv("./diff_refs_hla.tsv")
 
 # Plots
 png("./plots/kallisto_prop_mapped.png", width = 8, height = 5, units = "in", res = 200)

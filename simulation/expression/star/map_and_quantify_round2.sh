@@ -19,11 +19,11 @@ $STAR --runThreadN 6 --runMode genomeGenerate --genomeDir $indexDIR\
     --genomeChrBinNbits 11 --genomeSAindexNbases 13\
     --outFileNamePrefix ${indexDIR}_
 
-fq1=../../data/fastq/$sample\_1.fastq.gz
-fq2=../../data/fastq/$sample\_2.fastq.gz
+fq1=../../data/fastq/${sample}_1.fastq.gz
+fq2=../../data/fastq/${sample}_2.fastq.gz
 outMap=./mappings_2
 outQuant=./quantifications_2
-outPrefix=$outMap/$sample\_
+outPrefix=$outMap/${sample}_
 
 $STAR --runMode alignReads --runThreadN 16 --genomeDir $indexDIR\
     --readFilesIn $fq1 $fq2 --readFilesCommand zcat\
@@ -46,6 +46,10 @@ out=$outQuant/$sample
 
 $salmon quant -t $sample_fa -l IU -a $bam -o $out -p 6
 
+awk 'NR==1 {print $1"\t"$4"\t"$5}' $out/quant.sf > $out/quant_imgt.sf
+awk -F $"\t" '$1 ~ /IMGT/ {print $1"\t"$4"\t"$5}' $out/quant.sf >>\
+    $out/quant_imgt.sf
+
 rm $sample_fa $sample_hla
 
 header=${outPrefix}header.sam
@@ -54,7 +58,7 @@ imgtbam=${outPrefix}imgt.bam
 $samtools view -H $bam > $header
 
 $samtools view -f 0x2 -F 0x100 $bam |\
-    awk -F $'\t' '$1 ~ /IMGT/ || $3 ~ /IMGT/' |\
+    grep -F -f ../../data/ids_to_filter.txt - |\
     cat $header - |\
     $samtools view -Sb - > $imgtbam
 
