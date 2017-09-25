@@ -49,7 +49,7 @@ plot_dist <- function(df) {
 scatter_plot <- function(df, x_var, y_var) {
   
     ggplot(df, aes_string(x_var, y_var)) +
-	    geom_abline() +
+	geom_abline() +
     	geom_point() +
     	facet_wrap(~locus, scales = "free") +
     	ggpmisc::stat_poly_eq(aes(label = ..adj.rr.label..), rr.digits = 3,
@@ -66,17 +66,16 @@ allele_dist <- read_tsv("./data/distances_to_reference.tsv")
 samples <- tibble(subject = readLines("./data/samples.txt"),
                   code = sprintf("sample_%02d", 1:50))
 
-gencode_hla <- gencode_chr_gene %>%
-    filter(gene_name %in% paste0("HLA-", c("A", "B", "C", "DQA1", "DQB1", "DRB1")))
+hla_genes <- paste0("HLA-", c("A", "B", "C", "DPB1", "DQA1", "DQB1", "DRB1"))
+
+gencode_hla <- filter(gencode_chr_gene, gene_name %in% hla_genes)
 
 index <- Biostrings::readDNAStringSet("./data/polyester_index.fa")
-
-hla_genes <- paste0("HLA-", c("A", "B", "C", "DQA1", "DQB1", "DRB1"))
 
 ground_truth <- 
     read_tsv("./data/phenotypes.tsv") %>%
     mutate(target_id = names(index)) %>%
-    filter(grepl("IMGT_(A|B|C|DQA1|DQB1|DRB1)", target_id)) %>%
+    filter(grepl("IMGT_(A|B|C|DPB1|DQA1|DQB1|DRB1)", target_id)) %>%
     gather(subject, true_counts, -target_id) %>%
     mutate(locus = sub("^IMGT_([^*]+).+$", "HLA-\\1", target_id)) %>%
     group_by(subject, locus) %>%
