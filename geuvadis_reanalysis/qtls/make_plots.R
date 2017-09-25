@@ -4,8 +4,10 @@ library(cowplot)
 library(ggpmisc)
 library(ggplot2)
 
+hla_genes <- paste0("HLA-", c("A", "B", "C", "DPB1", "DQA1", "DQB1", "DRB1"))
+
 gencode_hla <- gencode_chr_gene %>%
-    filter(gene_name %in% paste0("HLA-", c("A", "B", "C", "DQA1", "DQB1", "DRB1"))) %>%
+    filter(gene_name %in% hla_genes) %>%
     select(gene_id, gene_name)
 
 # genotype PCA 

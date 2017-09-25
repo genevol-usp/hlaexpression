@@ -8,62 +8,67 @@ library(ggpmisc)
 calc_ase <- function(counts) min(counts)/sum(counts)
 
 plot_lower <- function(data, mapping, ...) {
-  ggplot(data = data, mapping = mapping) +
-  geom_point(size = .6, alpha = .5) +
-  geom_smooth(method = lm) 
+    
+    ggplot(data = data, mapping = mapping) +
+	geom_point(size = .6, alpha = .5) +
+	geom_smooth(method = lm) 
 }
 
 scatter_plot <- function(df, x_var, y_var) {
-  ggplot(df, aes_string(x_var, y_var)) +
-    geom_abline() +
-    geom_point() +
-    facet_wrap(~locus, scales = "free") +
-    ggpmisc::stat_poly_eq(aes(label = ..adj.rr.label..), rr.digits = 2,
-                          formula = y ~ x, parse = TRUE, size = 6) +
-    theme_bw() +
-    theme(axis.text = element_text(size = 12),
-          axis.title = element_text(size = 16),
-          strip.text = element_text(size = 16))
+  
+    ggplot(df, aes_string(x_var, y_var)) +
+	geom_abline() +
+	geom_point() +
+	facet_wrap(~locus, scales = "free") +
+	ggpmisc::stat_poly_eq(aes(label = ..adj.rr.label..), rr.digits = 2,
+			      formula = y ~ x, parse = TRUE, size = 6) +
+	theme_bw() +
+	theme(axis.text = element_text(size = 12),
+	      axis.title = element_text(size = 16),
+	      strip.text = element_text(size = 16))
 }
 
 make_data <- function(locus1, locus2) {
-  l1 <- enquo(locus1)
-  l2 <- enquo(locus2)
-
-  cis <- select(tpm_by_allele_wide, subject, !!l1, !!l2)
-  trans <- cis %>% 
-    group_by(subject) %>%
-    mutate(!!quo_name(l2) := rev(!!l2)) %>%
-    ungroup()
-  gene <- select(tpm_by_gene_wide, subject, !!l1, !!l2)
   
-  bind_rows(list(Overall = gene, Cis = cis, Trans = trans), .id = "level") %>%
-    mutate(level = factor(level, levels = c("Overall", "Cis", "Trans")))
+    l1 <- enquo(locus1)
+    l2 <- enquo(locus2)
+
+    cis <- select(tpm_by_allele_wide, subject, !!l1, !!l2)
+
+    trans <- cis %>% 
+	group_by(subject) %>%
+	mutate(!!quo_name(l2) := rev(!!l2)) %>%
+	ungroup()
+
+    gene <- select(tpm_by_gene_wide, subject, !!l1, !!l2)
+
+    bind_rows(list(Overall = gene, Cis = cis, Trans = trans), .id = "level") %>%
+	mutate(level = factor(level, levels = c("Overall", "Cis", "Trans")))
 }
 
 make_phase_plot <- function(data, locus1, locus2) {
-  ggplot(data, aes_string(locus1, locus2)) +
-  geom_point() +
-  geom_smooth(method = lm, se = FALSE) + 
-  facet_wrap(~level, nrow = 1, scales = "free") +
-  theme_bw() +
-  theme(axis.text = element_text(size = 12),
-        axis.title = element_text(size = 16),
-        strip.text = element_text(size = 16)) + 
-  labs(x = paste0("HLA-", locus1), y = paste0("HLA-", locus2)) +
-  stat_poly_eq(aes(label = ..adj.rr.label..), rr.digits = 2,
-               formula = y ~ x, parse = TRUE, size = 6)
+
+    ggplot(data, aes_string(locus1, locus2)) +
+	geom_point() +
+	geom_smooth(method = lm, se = FALSE) + 
+	facet_wrap(~level, nrow = 1, scales = "free") +
+	theme_bw() +
+	theme(axis.text = element_text(size = 12),
+	      axis.title = element_text(size = 16),
+	      strip.text = element_text(size = 16)) + 
+	labs(x = paste0("HLA-", locus1), y = paste0("HLA-", locus2)) +
+	stat_poly_eq(aes(label = ..adj.rr.label..), rr.digits = 2,
+		   formula = y ~ x, parse = TRUE, size = 6)
 }
 
 # data
-hla_genes <- paste0("HLA-", c("A", "B", "C", "DQA1", "DQB1", "DRB1")) 
+hla_genes <- paste0("HLA-", c("A", "B", "C", "DPB1", "DQA1", "DQB1", "DRB1")) 
 
 geuvadis_ids <- geuvadis_info %>%
-  filter(kgp_phase3 == 1, pop != "YRI") %>%
-  select(subject = ena_id, name)
+    filter(kgp_phase3 == 1, pop != "YRI") %>%
+    select(subject = ena_id, name)
 
-gencode_hla <- gencode_chr_gene %>%
-  filter(gene_name %in% hla_genes)
+gencode_hla <- filter(gencode_chr_gene, gene_name %in% hla_genes)
 
 distances <- read_tsv("../../simulation/data/distances_to_reference.tsv")
 
