@@ -21,3 +21,6 @@ $kallisto index -i $sample_idx $sample_fa
 $kallisto quant -i $sample_idx -t 1 -o $sampledir --bias $fastqR1 $fastqR2
 
 rm $sample_fa $sample_idx
+
+awk 'NR==1 || $1 ~ /IMGT/ {print $1"\t"$4"\t"$5}' $sampledir/abundance.tsv >\
+    $sampledir/abundance_imgt.tsv
