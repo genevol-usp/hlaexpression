@@ -10,7 +10,8 @@
 
 cd $PBS_O_WORKDIR
 
-mkdir -p ./log
+mkdir -p ./mappings_2
+mkdir -p ./quantifications_2
 
 SAMPLE=`awk "NR==$PBS_ARRAYID" ../../data/nci_sample_ids.txt`
 

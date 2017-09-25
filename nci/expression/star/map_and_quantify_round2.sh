@@ -24,9 +24,6 @@ outMap=./mappings_2
 outQuant=./quantifications_2
 outPrefix=$outMap/${sample}_
 
-mkdir -p $outMap
-mkdir -p $outQuant
-
 $STAR --runMode alignReads --runThreadN 8 --genomeDir $indexDIR\
     --readFilesIn $fq1 $fq2 --readFilesCommand zcat\
     --outFilterMismatchNmax 999\
