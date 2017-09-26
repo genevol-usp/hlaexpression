@@ -4,7 +4,7 @@
 #PBS -l mem=6gb
 #PBS -l walltime=24:00:00
 #PBS -q short
-#PBS -t 1-358
+#PBS -t 1-217
 #PBS -j oe
 #PBS -o /home/vitor/hlaexpression/geuvadis_reanalysis/expression/star/log/$PBS_NAMEID.log
 
@@ -14,6 +14,7 @@ mkdir -p ./log
 mkdir -p ./mappings_PRI
 mkdir -p ./quantifications_PRI
 
-SAMPLE=`awk "NR==$PBS_ARRAYID" ../../data/sample_info/samples_phase3_ena_eur.txt`
+#SAMPLE=`awk "NR==$PBS_ARRAYID" ../../data/sample_info/samples_phase3_ena_eur.txt`
+SAMPLE=`awk "NR==$PBS_ARRAYID" ./samples_to_repeat_PRI.txt`
 
 ./map_and_quantify_PRI.sh $SAMPLE

@@ -28,19 +28,34 @@ scatter_plot <- function(df, x_var, y_var) {
 	      strip.text = element_text(size = 16))
 }
 
+#make_data <- function(locus1, locus2) {
+#  
+#    l1 <- enquo(locus1)
+#    l2 <- enquo(locus2)
+#
+#    cis <- select(tpm_by_allele_wide, subject, !!l1, !!l2)
+#
+#    trans <- cis %>% 
+#	group_by(subject) %>%
+#	mutate(!!quo_name(l2) := rev(!!l2)) %>%
+#	ungroup()
+#
+#    gene <- select(tpm_by_gene_wide, subject, !!l1, !!l2)
+#
+#    bind_rows(list(Overall = gene, Cis = cis, Trans = trans), .id = "level") %>%
+#	mutate(level = factor(level, levels = c("Overall", "Cis", "Trans")))
+#}
+
 make_data <- function(locus1, locus2) {
   
-    l1 <- enquo(locus1)
-    l2 <- enquo(locus2)
-
-    cis <- select(tpm_by_allele_wide, subject, !!l1, !!l2)
+    cis <- select(tpm_by_allele_wide, subject, !!locus1, !!locus2)
 
     trans <- cis %>% 
 	group_by(subject) %>%
-	mutate(!!quo_name(l2) := rev(!!l2)) %>%
+	mutate(!!quo_name(locus2) := rev(!!locus2)) %>%
 	ungroup()
 
-    gene <- select(tpm_by_gene_wide, subject, !!l1, !!l2)
+    gene <- select(tpm_by_gene_wide, subject, !!locus1, !!locus2)
 
     bind_rows(list(Overall = gene, Cis = cis, Trans = trans), .id = "level") %>%
 	mutate(level = factor(level, levels = c("Overall", "Cis", "Trans")))
@@ -70,17 +85,14 @@ geuvadis_ids <- geuvadis_info %>%
 
 gencode_hla <- filter(gencode_chr_gene, gene_name %in% hla_genes)
 
-distances <- read_tsv("../../simulation/data/distances_to_reference.tsv")
-
 kallisto_imgt_tpm <- 
     read_tsv("./kallisto/quantifications_2/processed_quant.tsv") %>%
     filter(locus %in% hla_genes) %>%
     inner_join(geuvadis_ids, by = "subject") %>%
     select(subject = name, locus, allele, est_counts, tpm) %>%
     mutate(allele = sub("IMGT_", "", allele)) %>%
-    left_join(distances, by = c("locus", "allele")) %>%
     group_by(subject, locus) %>%
-    summarize(est_counts = sum(est_counts), tpm = sum(tpm), dist = mean(dist)) %>%
+    summarize(est_counts = sum(est_counts), tpm = sum(tpm)) %>%
     ungroup()
 
 kallisto_pri_tpm <- 
@@ -108,13 +120,18 @@ star_imgt <-
     filter(locus %in% hla_genes) %>%
     inner_join(geuvadis_ids, by = "subject") %>%
     select(subject = name, locus, allele, est_counts, tpm) %>%
-    mutate(allele = sub("IMGT_", "", allele)) %>%
-    left_join(distances, by = c("locus", "allele")) 
+    mutate(allele = sub("IMGT_", "", allele))
 
 star_imgt_tpm <-
     star_imgt %>%
     group_by(subject, locus) %>%
-    summarize(est_counts = sum(est_counts), tpm = sum(tpm), dist = mean(dist)) %>%
+    summarize(est_counts = sum(est_counts), tpm = sum(tpm)) %>%
+    ungroup()
+
+star_imgt_with_nonclassical <- 
+    read_tsv("./star/quantifications_2/processed_quant.tsv") %>%
+    group_by(subject, locus) %>%
+    summarize(tpm = sum(tpm)) %>%
     ungroup()
 
 star_pri_tpm <- 
@@ -370,7 +387,7 @@ ggplot(cors_pca_star, aes(PCs, correlation)) +
 dev.off()
 
 png("./plots/expression_boxplot.png", width = 8, height = 5, units = "in", res = 200)
-ggplot(star_imgt_tpm, aes(locus, tpm)) +
+ggplot(star_imgt_with_nonclassical, aes(locus, tpm)) +
     geom_boxplot(fill = "grey") +
     theme_bw() +
     theme(axis.title.x = element_blank(),

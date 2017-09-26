@@ -30,8 +30,8 @@ $STAR --runMode alignReads --runThreadN 16 --genomeDir $indexDIR\
     --outFilterMismatchNmax 999\
     --outFilterMismatchNoverReadLmax 0.04\
     --outFilterMultimapScoreRange 1\
-    --outFilterMultimapNmax 100\
-    --winAnchorMultimapNmax 200\
+    --outFilterMultimapNmax 150\
+    --winAnchorMultimapNmax 300\
     --alignIntronMax 0\
     --alignEndsType Local\
     --outSAMunmapped Within KeepPairs\
