@@ -11,9 +11,9 @@ bgzip ./phenotypes_eur_0.bed && tabix -p bed ./phenotypes_eur_0.bed.gz
 # 5-100 PCs
 for pcs in $(seq 5 5 20; seq 30 10 100)
 do
-  COV=./covariates/covariates_pheno_$pcs.txt
-  OUT=./phenotypes_eur_$pcs.bed
-  
-  $QTLtools correct --bed $BED --cov $COV --normal --out $OUT
-  bgzip $OUT && tabix -p bed $OUT.gz
+    COV=./covariates/covariates_pheno_$pcs.txt
+    OUT=./phenotypes_eur_$pcs.bed
+
+    $QTLtools correct --bed $BED --cov $COV --normal --out $OUT
+    bgzip $OUT && tabix -p bed $OUT.gz
 done
