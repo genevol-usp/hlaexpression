@@ -20,14 +20,14 @@ Rscript polyester.R $PBS_ARRAYID
 
 for i in {1..2}
 do
-  cat ./fasta_$PBS_ARRAYID/sample_01_$i.fasta |\
-      awk -v mate=$i 'BEGIN {RS = ">" ; FS = "\n"} NR > 1 {
-	print\
-	"@"gensub(/;/, " ", 1, gensub(/\//, "_", 1, $1))"/"mate"\n"\
-	$2"\n"\
-	"+\n"\
-	gensub(/./, ">", "g", $2)\
-      }' | gzip -c > ./fastq/${SAMPLE}_$i.fastq.gz
+    cat ./fasta_$PBS_ARRAYID/sample_01_$i.fasta |\
+	awk -v mate=$i 'BEGIN {RS = ">" ; FS = "\n"} NR > 1 {
+	    print\
+	    "@"gensub(/;/, " ", 1, gensub(/\//, "_", 1, $1))"/"mate"\n"\
+	    $2"\n"\
+	    "+\n"\
+	    gensub(/./, ">", "g", $2)\
+	}' | gzip -c > ./fastq/${SAMPLE}_$i.fastq.gz
 done
 
 rm -r ./fasta_$PBS_ARRAYID
