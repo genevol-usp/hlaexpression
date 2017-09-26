@@ -275,24 +275,24 @@ dev.off()
 
 png("./plots/tpm_distributions.png", height = 6, width = 10, units = "in", res = 200)
 ggplot(star_tpm_df, aes(tpm, fill = index)) +
-  geom_density(alpha = 1/2) +
-  scale_x_continuous(breaks = function(x) scales::pretty_breaks(3)(x)) +
-  ggthemes::scale_fill_colorblind() +
-  theme_bw() +
-  theme(axis.text.x = element_text(angle = 45, margin = margin(t = 10))) +
-  facet_wrap(~locus, scales = "free")
+    geom_density(alpha = 1/2) +
+    scale_x_continuous(breaks = function(x) scales::pretty_breaks(3)(x)) +
+    ggthemes::scale_fill_colorblind() +
+    theme_bw() +
+    theme(axis.text.x = element_text(angle = 45, margin = margin(t = 10))) +
+    facet_wrap(~locus, scales = "free")
 dev.off()
 
 png("./plots/ase.png", width = 8, height = 5, units = "in", res = 200)
 ggplot(ase_error, aes(factor(error), ase)) +
-  ggbeeswarm::geom_quasirandom(varwidth = TRUE, size = .75, alpha = 1/2) +
-  scale_y_continuous(limits = c(0, 0.5)) +
-  facet_wrap(~locus) + 
-  labs(x = "number of wrong calls in genotype") +
-  theme_bw() +
-  theme(axis.text.x = element_text(size = 12),
-        axis.title = element_text(size = 16),
-        strip.text = element_text(size = 16))
+    ggbeeswarm::geom_quasirandom(varwidth = TRUE, size = .75, alpha = 1/2) +
+    scale_y_continuous(limits = c(0, 0.5)) +
+    facet_wrap(~locus) + 
+    labs(x = "number of wrong calls in genotype") +
+    theme_bw() +
+    theme(axis.text.x = element_text(size = 12),
+	  axis.title = element_text(size = 16),
+	  strip.text = element_text(size = 16))
 dev.off()
 
 png("./plots/ase_histogram.png", width = 8, height = 4, units = "in", res = 200)
@@ -307,26 +307,26 @@ dev.off()
 
 png("./plots/hlacorrelations.png", width = 8, height = 8, units = "in", res = 200)
 pairs_hla_k <-
-  ggpairs(select(phen10, -subject, -CIITA), 
-          lower = list(continuous = plot_lower), upper = list()) + 
-  theme_bw() +
-  theme(title = element_text(size = 14))
+    ggpairs(select(phen10, -subject, -CIITA), 
+	    lower = list(continuous = plot_lower), upper = list()) + 
+    theme_bw() +
+    theme(title = element_text(size = 14))
 
 print(pairs_hla_k, left = .3, bottom = .3)
 dev.off()
 
 png("./plots/trans_activ_corrs.png", width = 10, height = 3.5, units = "in", res = 200)
-ggplot(class_2_trans_df, aes(value, CIITA)) +
-  geom_point(alpha = 1/2) +
-  geom_smooth(method = lm, se = FALSE) +
-  theme_bw() +
-  theme(axis.text.x = element_text(size = 12),
-        axis.title = element_text(size = 16),
-        strip.text = element_text(size = 16)) + 
-  facet_wrap(~locus) +
-  labs(x = NULL) +
-  stat_poly_eq(aes(label = ..adj.rr.label..), rr.digits = 2,
-               formula = y ~ x, parse = TRUE, size = 6)
+    ggplot(class_2_trans_df, aes(value, CIITA)) +
+    geom_point(alpha = 1/2) +
+    geom_smooth(method = lm, se = FALSE) +
+    theme_bw() +
+    theme(axis.text.x = element_text(size = 12),
+	  axis.title = element_text(size = 16),
+	  strip.text = element_text(size = 16)) + 
+    facet_wrap(~locus) +
+    labs(x = NULL) +
+    stat_poly_eq(aes(label = ..adj.rr.label..), rr.digits = 2,
+	       formula = y ~ x, parse = TRUE, size = 6)
 dev.off()
 
 png("./plots/a_vs_b.png", height = 3.5, width = 10, units = "in", res = 200)
@@ -356,17 +356,17 @@ dev.off()
 
 png("./plots/correlation_decrease.png", width = 10, height = 5, units = "in", res = 200)
 ggplot(cors_pca_star, aes(PCs, correlation)) +
-  geom_point(size = 3) +
-  scale_x_continuous(breaks = pcs) +
-  facet_wrap(~gene_pair) +
-  theme_bw() +
-  theme(legend.title = element_blank(),
-	legend.text = element_text(size = 16),
-	legend.position = "top",	
-	axis.title = element_text(size = 16),
-	strip.text = element_text(size = 16),
-	axis.text.x = element_text(angle = 90)) +
-  labs(x = "Number of PCs/factors")
+    geom_point(size = 3) +
+    scale_x_continuous(breaks = pcs) +
+    facet_wrap(~gene_pair) +
+    theme_bw() +
+    theme(legend.title = element_blank(),
+	  legend.text = element_text(size = 16),
+	  legend.position = "top",	
+	  axis.title = element_text(size = 16),
+	  strip.text = element_text(size = 16),
+	  axis.text.x = element_text(angle = 90)) +
+    labs(x = "Number of PCs/factors")
 dev.off()
 
 png("./plots/expression_boxplot.png", width = 8, height = 5, units = "in", res = 200)
