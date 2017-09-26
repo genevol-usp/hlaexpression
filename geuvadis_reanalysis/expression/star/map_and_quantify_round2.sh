@@ -24,9 +24,6 @@ outMap=./mappings_2
 outQuant=./quantifications_2
 outPrefix=$outMap/${sample}_
 
-mkdir -p $outMap
-mkdir -p $outQuant
-
 $STAR --runMode alignReads --runThreadN 6 --genomeDir $indexDIR\
     --readFilesIn $fq1 $fq2 --readFilesCommand zcat\
     --outFilterMismatchNmax 999\
@@ -41,8 +38,6 @@ $STAR --runMode alignReads --runThreadN 6 --genomeDir $indexDIR\
     --outSAMtype BAM Unsorted\
     --outFileNamePrefix $outPrefix
 
-rm -r $indexDIR ${indexDIR}_Log.out
-
 bam=${outPrefix}Aligned.out.bam
 out=$outQuant/$sample
 
@@ -51,4 +46,4 @@ $salmon quant -t $sample_fa -l IU -a $bam -o $out -p 6
 awk 'NR==1 || $1 ~ /IMGT/ {print $1"\t"$4"\t"$5}' $out/quant.sf >\
     $out/quant_imgt.sf
 
-rm $sample_fa $sample_hla $outPrefix* 
+rm -r $indexDIR ${indexDIR}_Log.out $sample_fa $sample_hla $outPrefix* 

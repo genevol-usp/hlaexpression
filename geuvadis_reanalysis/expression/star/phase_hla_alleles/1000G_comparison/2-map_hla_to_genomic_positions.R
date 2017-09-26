@@ -51,9 +51,11 @@ samples <-
 
 ref_alleles <- read_tsv("../../../../../imgt_index/hla_ref_alleles.tsv")
 
+hla_genes <- paste0("HLA-", c("A", "B", "C", "DPB1", "DQA1", "DQB1", "DRB1"))
+
 genos <- 
     read_tsv("../../quantifications_2/processed_quant.tsv") %>%
-    filter(locus %in% paste0("HLA-", c("A", "B", "C", "DQA1", "DQB1", "DRB1"))) %>%
+    filter(locus %in% hla_genes) %>%
     select(subject, locus, allele) %>%
     mutate(subject = convert_ena_ids(subject),
 	   allele = sub("^([^=]+).*$", "\\1", allele))

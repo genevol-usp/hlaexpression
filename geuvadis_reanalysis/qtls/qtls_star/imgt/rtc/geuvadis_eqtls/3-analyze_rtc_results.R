@@ -1,8 +1,9 @@
 devtools::load_all("/home/vitor/hlaseqlib")
 library(tidyverse)
 
-gencode_hla <- gencode_chr_gene %>%
-  filter(gene_name %in% paste0("HLA-", c("A", "B", "C", "DQA1", "DQB1", "DRB1")))
+hla_genes <- paste0("HLA-", c("A", "B", "C", "DQA1", "DQB1", "DRB1"))
+
+gencode_hla <- filter(gencode_chr_gene, gene_name %in% hla_genes)
 
 qtls <-
   read_qtltools("../../conditional_analysis/conditional_60_all.txt.gz") %>%

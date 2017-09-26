@@ -6,9 +6,11 @@ setDT(geuvadis_info)
 setDT(gencode_chr_tx)
 setDT(gencode_chr_gene)
 
-gencode <- gencode_chr_tx[chr %in% 1:22, .(target_id = tx_id, gene_id, gene_name)]
+gencode <- 
+    gencode_chr_tx[chr %in% 1:22, .(target_id = tx_id, gene_id, gene_name)]
 
-samples_dt <- geuvadis_info[kgp_phase3 == 1 & pop != "YRI", .(name, subject = ena_id)]
+samples_dt <- 
+    geuvadis_info[kgp_phase3 == 1 & pop != "YRI", .(name, subject = ena_id)]
 
 abundance_files <- 
   file.path("./quantifications_2", samples_dt$subject, "abundance.tsv")

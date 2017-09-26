@@ -12,10 +12,7 @@ outMap=./mappings_1
 outQuant=./quantifications_1
 outPrefix=$outMap/${sample}_
 
-mkdir -p $outMap
-mkdir -p $outQuant
-
-$STAR --runMode alignReads --runThreadN 4 --genomeDir $indexDIR\
+$STAR --runMode alignReads --runThreadN 16 --genomeDir $indexDIR\
   --readFilesIn $fq1 $fq2 --readFilesCommand zcat\
   --outFilterMismatchNmax 1\
   --outFilterMultimapScoreRange 0\
@@ -32,6 +29,9 @@ bam=${outPrefix}Aligned.out.bam
 fasta=/home/vitor/hlaexpression/imgt_index/gencode.v25.PRI.IMGT.transcripts.fa
 out=$outQuant/$sample
 
-$salmon quant -t $fasta -l IU -a $bam -o $out -p 4
+$salmon quant -t $fasta -l IU -a $bam -o $out -p 16
+
+awk 'NR==1 || $1 ~ /IMGT/ {print $1"\t"$4"\t"$5}' $out/quant.sf >\
+    $out/quant_imgt.sf
 
 rm $outPrefix*
