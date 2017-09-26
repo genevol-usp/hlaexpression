@@ -12,8 +12,7 @@ make_genot_calls_df <- function(typings_df) {
 
 quant_round <- commandArgs(TRUE)[1]
 
-samples <- 
-    geuvadis_info %>% 
+samples <- geuvadis_info %>% 
     filter(kgp_phase3 == 1L & pop != "YRI") %>%
     pull(ena_id)
 
@@ -46,14 +45,12 @@ if (quant_round == 1L || quant_round == 2L) {
 		      function(th) hla_genotype_dt(quants, th),
 		      .id = "th")
 
-	calls <- 
-	    typings %>%
+	calls <- typings %>%
 	    filter(locus %in% hla_genes) %>%
 	    select(th, subject, locus, allele) %>%
 	    make_genot_calls_df() 
 
-        accuracies <-
-            calls %>%
+        accuracies <- calls %>%
             split(.$th) %>%
             plyr::ldply(function(df) calc_genotyping_accuracy(df, goldstd_genos),
 			.id = "th") %>%
@@ -75,8 +72,7 @@ if (quant_round == 1L || quant_round == 2L) {
         out_df <- hla_genotype_dt(quants, th = 0) %>%
 	    hla_apply_zigosity_threshold(th = 0.25)
     
-	calls <- 
-	    out_df %>%
+	calls <- out_df %>%
 	    filter(locus %in% hla_genes) %>%
 	    select(subject, locus, allele) %>%
 	    make_genot_calls_df()
@@ -88,8 +84,7 @@ if (quant_round == 1L || quant_round == 2L) {
 
 } else if (quant_round == "PRI") {
 
-    out_df <- 
-	quant_files %>%
+    out_df <- quant_files %>%
 	plyr::ldply(read_star_pri_quants, .id = "subject")
 }
 

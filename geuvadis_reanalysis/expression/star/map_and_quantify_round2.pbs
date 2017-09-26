@@ -6,7 +6,7 @@
 #PBS -q short
 #PBS -t 1-358
 #PBS -j oe
-#PBS -o /home/vitor/hlaexpression/geuvadis_reanalysis/expression/star/log/$PBS_JOBID.log
+#PBS -o /home/vitor/hlaexpression/geuvadis_reanalysis/expression/star/log/$PBS_NAMEID.log
 
 cd $PBS_O_WORKDIR
 
