@@ -14,4 +14,6 @@ mkdir -p ./log
 mkdir -p ./mappings_PRI
 mkdir -p ./quantifications_PRI
 
-./map_and_quantify_PRI.sh $(printf "sample_%02d" $PBS_ARRAYID) 
+SAMPLE=$(printf "sample_%02d" $PBS_ARRAYID)
+
+./map_and_quantify_PRI.sh $SAMPLE

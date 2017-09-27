@@ -13,4 +13,6 @@ cd $PBS_O_WORKDIR
 mkdir -p ./log
 mkdir -p ./quantifications_PRI
 
-./kallisto_quant_PRI.sh $(printf "sample_%02d" $PBS_ARRAYID)
+SAMPLE=$(printf "sample_%02d" $PBS_ARRAYID)
+
+./kallisto_quant_PRI.sh $SAMPLE 

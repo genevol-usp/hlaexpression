@@ -14,4 +14,6 @@ mkdir -p ./log
 mkdir -p ./mappings_1
 mkdir -p ./quantifications_1 
 
-./map_and_quantify_round1.sh $(printf "sample_%02d" $PBS_ARRAYID) 
+SAMPLE=$(printf "sample_%02d" $PBS_ARRAYID) 
+
+./map_and_quantify_round1.sh $SAMPLE 

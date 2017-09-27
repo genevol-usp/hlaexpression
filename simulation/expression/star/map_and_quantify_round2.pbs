@@ -13,4 +13,6 @@ cd $PBS_O_WORKDIR
 mkdir -p ./mappings_2
 mkdir -p ./quantifications_2
 
-./map_and_quantify_round2.sh $(printf "sample_%02d" $PBS_ARRAYID) 
+SAMPLE=$(printf "sample_%02d" $PBS_ARRAYID) 
+
+./map_and_quantify_round2.sh $SAMPLE 

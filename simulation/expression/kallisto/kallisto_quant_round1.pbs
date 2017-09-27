@@ -10,6 +10,9 @@
 
 cd $PBS_O_WORKDIR
 
-mkdir -p ./quantifications_1/log
+mkdir -p ./log
+mkdir -p ./quantifications_1
 
-./kallisto_quant_round1.sh $(printf "sample_%02d" $PBS_ARRAYID)
+SAMPLE=$(printf "sample_%02d" $PBS_ARRAYID) 
+
+./kallisto_quant_round1.sh $SAMPLE 
