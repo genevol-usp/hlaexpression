@@ -11,7 +11,8 @@ pri_ids <-
 imgt_ids <- 
     read_tsv("./genos.tsv") %>%
     pull(allele) %>%
-    unique()
+    unique() %>%
+    sort()
 
 write(c(imgt_ids, pri_ids), "./ids_to_filter.txt")
 

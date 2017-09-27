@@ -17,8 +17,8 @@ samples <- geuvadis_info %>%
     pull(ena_id)
 
 quant_files <- paste0("./quantifications_", quant_round) %>%
-      file.path(samples, "quant_imgt.sf") %>%
-      setNames(samples)
+    file.path(samples, "quant_imgt.sf") %>%
+    setNames(samples)
 
 missing_files <- quant_files[!file.exists(quant_files)]
 

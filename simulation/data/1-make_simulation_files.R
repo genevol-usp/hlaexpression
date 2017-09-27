@@ -44,7 +44,7 @@ abundances_dt <-
     rbind(abundances_non_imgt, abundances_imgt
 	)[, .(NumReads = sum(NumReads)), by = .(subject, Name)]
 
-index <- readDNAStringSet("../../imgt_index/gencode.v25.CHR.IMGT.transcripts.fa")
+index <- readDNAStringSet("../../imgt_index/gencode.v25.PRI.IMGT.transcripts.fa")
 index <- index[width(index) >= 75]
 
 abundances_wide <- dcast(abundances_dt, Name ~ subject, value.var = "NumReads")
