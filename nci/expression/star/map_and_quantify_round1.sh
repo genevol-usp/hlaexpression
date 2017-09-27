@@ -13,8 +13,8 @@ outQuant=./quantifications_1
 outPrefix=$outMap/${sample}_
 
 if [ "${#fastqs1[@]}" == 1 ]; then
-    fq1=fastqs1
-    fq2=fastqs2
+    fq1=$fastqs1
+    fq2=$fastqs2
 elif [ "${#fastqs1[@]}" == 2 ]; then
     fq1=$(echo $fastqs1 | paste -d, - -)
     fq2=$(echo $fastqs2 | paste -d, - -)
