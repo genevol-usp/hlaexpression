@@ -10,3 +10,6 @@ outdir=./quantifications_1
 sampledir=$outdir/$sample
 
 $kallisto quant -i $index -t 1 -o $sampledir $fastqR1 $fastqR2 
+
+awk 'NR==1 || $1 ~ /IMGT/ {print $1"\t"$4"\t"$5}' $sampledir/abundance.tsv >\
+    $sampledir/abundance_imgt.tsv

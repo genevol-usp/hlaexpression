@@ -16,6 +16,12 @@ mkdir -p $sampledir
 $kallisto quant -i $index -t 1 -o $sampledir --bias --pseudobam \
     $fastqR1 $fastqR2 | $samtools view -Sb - > $bam
 
+awk 'NR==1 {print $1"\t"$4"\t"$5}' $sampledir/abundance.tsv >\
+    $sampledir/abundance_imgt.tsv
+
+grep -F -f ../../../imgt_index/hla_ids_pri.txt $sampledir/abundance.tsv |\
+    awk -F $"\t" '{print $1"\t"$4"\t"$5}' >> $sampledir/abundance_imgt.tsv
+
 header=$sampledir/header.sam
 imgtbam=$sampledir/imgt.bam
 
