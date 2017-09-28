@@ -18,8 +18,8 @@ $STAR --runMode alignReads --runThreadN 6 --genomeDir $indexDIR\
   --outFilterMismatchNmax 999\
   --outFilterMismatchNoverReadLmax 0.04\
   --outFilterMultimapScoreRange 1\
-  --outFilterMultimapNmax 100\
-  --winAnchorMultimapNmax 200\
+  --outFilterMultimapNmax 150\
+  --winAnchorMultimapNmax 300\
   --alignIntronMax 0\
   --alignEndsType Local\
   --outSAMunmapped Within KeepPairs\
@@ -39,7 +39,8 @@ grep -F -f ../../../imgt_index/hla_ids_pri.txt $out/quant.sf |\
     awk -F $"\t" '{print $1"\t"$4"\t"$5}' >> $out/quant_imgt.sf
 
 header=${outPrefix}header.sam
-imgtbam=${outPrefix}imgt.bam
+sampledir=$outMap/$sample
+imgtbam=$sampledir/imgt.bam
 
 $samtools view -H $bam > $header
 
@@ -47,5 +48,7 @@ $samtools view -f 0x2 -F 0x100 $bam |\
     grep -F -f ../../data/ids_to_filter.txt - |\
     cat $header - |\
     $samtools view -Sb - > $imgtbam
+
+Rscript ./parse_alignments.R $sample $imgtbam $sampledir
 
 rm ${outPrefix}Aligned* ${outPrefix}Log* ${outPrefix}SJ* ${outPrefix}header.sam

@@ -32,4 +32,6 @@ $samtools view -f 0x2 $bam |\
     cat $header - |\
     $samtools view -Sb - > $imgtbam
 
+Rscript ./parse_alignments.R $sample $imgtbam $sampledir
+
 rm $bam

@@ -52,7 +52,10 @@ awk 'NR==1 || $1 ~ /IMGT/ {print $1"\t"$4"\t"$5}' $out/quant.sf >\
 rm $sample_fa $sample_hla
 
 header=${outPrefix}header.sam
-imgtbam=${outPrefix}imgt.bam
+sampledir=$outMap/$sample
+imgtbam=$sampledir/imgt.bam
+
+mkdir -p $sampledir
 
 $samtools view -H $bam > $header
 
@@ -60,5 +63,7 @@ $samtools view -f 0x2 -F 0x100 $bam |\
     grep -F -f ../../data/ids_to_filter.txt - |\
     cat $header - |\
     $samtools view -Sb - > $imgtbam
+
+Rscript ./parse_alignments.R $sample $imgtbam $sampledir
 
 rm ${outPrefix}Aligned* ${outPrefix}Log* ${outPrefix}SJ* $header 

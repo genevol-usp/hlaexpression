@@ -69,7 +69,7 @@ if (quant_round == 1L | quant_round == 2L) {
 	    hla_apply_zigosity_threshold(th = 0.25)
 
 	calls <- out_df %>%
-	    filter(locus %in% hla_gens) %>%
+	    filter(locus %in% hla_genes) %>%
 	    select(subject, locus, allele) %>%
 	    make_genot_calls_df()
 
