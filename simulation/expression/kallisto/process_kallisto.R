@@ -65,7 +65,17 @@ if (quant_round == 1L | quant_round == 2L) {
       
     } else if (quant_round == 2L) {
 
-	out_df <- hla_genotype_dt(quants, th = 0)
+	out_df <- hla_genotype_dt(quants, th = 0) %>%
+	    hla_apply_zigosity_threshold(th = 0.25)
+
+	calls <- out_df %>%
+	    filter(locus %in% hla_gens) %>%
+	    select(subject, locus, allele) %>%
+	    make_genot_calls_df()
+
+	accuracies <- calc_genotyping_accuracy(calls, goldstd_genos)
+
+	write_tsv(accuracies, "./genotyping_accuracies_2.tsv")
     }
 
 } else if (quant_round == "PRI") {

@@ -27,7 +27,8 @@ hla_genes <- paste0("HLA-", c("A", "B", "C", "DPB1", "DQA1", "DQB1", "DRB1"))
 if (quant_round == 1L | quant_round == 2L) {
 
     quants <- quant_files %>%
-	plyr::ldply(read_star_imgt_quants, .id = "subject")
+	plyr::ldply(read_star_imgt_quants, .id = "subject") %>%
+	mutate(subject = as.character(subject))
     
     goldstd_genos <- read_tsv("../../data/genos.tsv")
 
@@ -66,8 +67,17 @@ if (quant_round == 1L | quant_round == 2L) {
 
   } else if (quant_round == 2L) {
 
-    out_df <- hla_genotype_dt(quants, th = 0)
-  }
+    out_df <- hla_genotype_dt(quants, th = 0) %>%
+	hla_apply_zigosity_threshold(th = 0.25)
+
+    calls <- out_df %>%
+	filter(locus %in% hla_genes) %>%
+	select(subject, locus, allele) %>%
+	make_genot_calls_df()
+
+    accuracies <- calc_genotyping_accuracy(calls, goldstd_genos)
+
+    write_tsv(accuracies, "./genotyping_accuracies_2.tsv")  }
 
 } else if (quant_round == "PRI")  {
 
