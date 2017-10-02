@@ -34,7 +34,8 @@ if (quant_round == 1L || quant_round == 2L) {
     quants <- quant_files %>%
 	plyr::ldply(read_star_imgt_quants, .id = "subject")
     
-    goldstd_genos <- mutate(pag, allele = hla_trimnames(allele, 3))
+    goldstd_genos <- read_tsv("../../data/nci_expression.tsv") %>%
+	select(subject, locus, allele)
     
     if (quant_round == 1L) {
     
