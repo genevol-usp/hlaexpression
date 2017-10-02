@@ -1,8 +1,6 @@
 devtools::load_all("/home/vitor/hlaseqlib")
 library(tidyverse)
 
-pops_df <- select(geuvadis_info, subject = name, pop)
-
 allele_codes <- read_tsv("./PHASE/codes-phase.inp")
 
 hla_genes <- paste0("HLA-", c("A", "B", "C", "DPB1", "DQA1", "DQB1", "DRB1"))
@@ -15,8 +13,6 @@ PHASE_calls <-
     read_phase("./PHASE/phase.out", loci = gencode_hla$locus) %>%
     rename(code = allele) %>%
     left_join(allele_codes, by = c("locus", "code")) %>%
-    left_join(pops_df) %>%
-    filter(pop != "YRI") %>%
     select(subject, locus, hap, hla_allele = allele)
 
 kgp_calls <- 
@@ -24,8 +20,6 @@ kgp_calls <-
     select(-S) %>%
     gather(locus, hla_allele, A:DRB1) %>% 
     mutate(hap = sub("^a", "", hap)) %>% 
-    left_join(pops_df) %>%
-    filter(pop != "YRI") %>%
     select(subject, locus, hap, hla_allele)
 
 PHASE_haps <-
@@ -60,19 +54,19 @@ expression_df <-
     arrange(subject, locus)
 
 eqtl_df <-
-    read_tsv("./best_eqtls.tsv") %>%
+    read_tsv("./best_eqtl.tsv") %>%
     left_join(gencode_hla, by = c("phen_id" = "gene_id")) %>%
-    select(locus, rank, variant = var_id)
+    select(locus, variant = var_id)
 
 eqtl_info <- 
     read_tsv("./best_eqtl_snps.vcf", comment = "##") %>%
     select(-`#CHROM`, -POS, -REF, -ALT, -QUAL, -FILTER, -INFO, -FORMAT) %>%
     gather(subject, genotype, -ID) %>%
     inner_join(eqtl_df, by = c("ID" = "variant")) %>%
-    select(subject, locus, rank, variant = ID, genotype) %>%
+    select(subject, locus, variant = ID, genotype) %>%
     separate(genotype, c("1", "2"), sep = "\\|") %>%
     gather(hap, allele, `1`:`2`) %>%
-    arrange(subject, locus, rank, variant, hap)
+    arrange(subject, locus, variant, hap)
 
 kgp_calls_and_expr <- 
     kgp_calls %>%
@@ -86,7 +80,7 @@ kgp_calls_and_expr <-
 	      by = c("subject", "locus", "hla_allele" = "allele")) %>%
     distinct() %>%
     left_join(eqtl_info, by = c("subject", "locus", "hap")) %>%
-    arrange(subject, locus, hap, hla_allele, rank) %>%
+    arrange(subject, locus, hap, hla_allele) %>%
     rename(variant_allele = allele)
 
 PHASE_calls_and_expr <-
