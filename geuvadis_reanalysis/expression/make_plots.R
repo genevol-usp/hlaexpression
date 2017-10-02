@@ -28,37 +28,20 @@ scatter_plot <- function(df, x_var, y_var) {
 	      strip.text = element_text(size = 16))
 }
 
-#make_data <- function(locus1, locus2) {
-#  
-#    l1 <- enquo(locus1)
-#    l2 <- enquo(locus2)
-#
-#    cis <- select(tpm_by_allele_wide, subject, !!l1, !!l2)
-#
-#    trans <- cis %>% 
-#	group_by(subject) %>%
-#	mutate(!!quo_name(l2) := rev(!!l2)) %>%
-#	ungroup()
-#
-#    gene <- select(tpm_by_gene_wide, subject, !!l1, !!l2)
-#
-#    bind_rows(list(Overall = gene, Cis = cis, Trans = trans), .id = "level") %>%
-#	mutate(level = factor(level, levels = c("Overall", "Cis", "Trans")))
-#}
-
-make_data <- function(locus1, locus2) {
+make_data <- function(df_allele, df_gene, locus1, locus2) {
   
-    cis <- select(tpm_by_allele_wide, subject, !!locus1, !!locus2)
+    cis <- select(df_allele, subject, locus1, locus2)
 
     trans <- cis %>% 
-	group_by(subject) %>%
-	mutate(!!quo_name(locus2) := rev(!!locus2)) %>%
-	ungroup()
+	    group_by(subject) %>%
+	    mutate_at(vars(!!locus2), rev) %>%
+	    ungroup()
 
-    gene <- select(tpm_by_gene_wide, subject, !!locus1, !!locus2)
+    gene <- select(df_gene, subject, locus1, locus2) %>%
+        drop_na()
 
     bind_rows(list(Overall = gene, Cis = cis, Trans = trans), .id = "level") %>%
-	mutate(level = factor(level, levels = c("Overall", "Cis", "Trans")))
+	    mutate(level = factor(level, levels = c("Overall", "Cis", "Trans")))
 }
 
 make_phase_plot <- function(data, locus1, locus2) {
@@ -128,8 +111,13 @@ star_imgt_tpm <-
     summarize(est_counts = sum(est_counts), tpm = sum(tpm)) %>%
     ungroup()
 
+all_hla_genes <- 
+    c(hla_genes, paste0("HLA-", c("DRB2", "DRB3", "DRB4", "DRB5", "DRB7", "E", 
+                                  "F", "G", "H", "J", "K", "L")))
+                   
 star_imgt_with_nonclassical <- 
     read_tsv("./star/quantifications_2/processed_quant.tsv") %>%
+    filter(locus %in% all_hla_genes) %>%
     group_by(subject, locus) %>%
     summarize(tpm = sum(tpm)) %>%
     ungroup()
@@ -218,29 +206,40 @@ pca_star_df <-
 phen10 <- filter(pca_star_df, PCs == 10) %>% select(-PCs)
 
 class_2_trans_df <- phen10 %>%
-    select(subject, DQA1, DQB1, DRB1, CIITA) %>%
-    gather(locus, value, DQA1, DQB1, DRB1) %>%
+    select(subject, DPB1, DQA1, DQB1, DRB1, CIITA) %>%
+    gather(locus, value, DPB1, DQA1, DQB1, DRB1) %>%
     arrange(subject, locus)
 
-concordant_haps <- 
-    read_tsv("./star/phase_hla_alleles/data/concordant_haps_classIandII.tsv") %>%
+concordant_haps_I <- 
+    read_tsv("./star/phase_hla_alleles/data/concordant_haps_classI.tsv") %>%
     select(subject, hap)
 
-tpm_by_allele_wide <- 
+concordant_haps_II <- 
+    read_tsv("./star/phase_hla_alleles/data/concordant_haps_classII.tsv") %>%
+    select(subject, hap)
+
+tpm_by_allele_wide_I <- 
     read_tsv("./star/phase_hla_alleles/data/1000G_haps_expression_snps.tsv") %>%
-    filter(rank == 0L) %>%
     select(subject, locus, hap, tpm) %>%
+    filter(locus %in% c("A", "B", "C")) %>%
     spread(locus, tpm) %>%
-    inner_join(concordant_haps, by = c("subject", "hap")) %>%
+    inner_join(concordant_haps_I, by = c("subject", "hap")) %>%
+    arrange(subject, hap)
+
+tpm_by_allele_wide_II <- 
+    read_tsv("./star/phase_hla_alleles/data/1000G_haps_expression_snps.tsv") %>%
+    select(subject, locus, hap, tpm) %>%
+    filter(!locus %in% c("A", "B", "C")) %>%
+    spread(locus, tpm) %>%
+    inner_join(concordant_haps_II, by = c("subject", "hap")) %>%
     arrange(subject, hap)
 
 tpm_by_gene_wide <- 
-    star_imgt_tpm %>%
-    mutate(locus = sub("HLA-", "", locus)) %>%
-    select(subject, locus, tpm) %>%
-    spread(locus, tpm) %>%
-    filter(subject %in% concordant_haps$subject)
-
+    full_join(tpm_by_allele_wide_I, tpm_by_allele_wide_II, by = c("subject", "hap")) %>%
+    group_by(subject) %>%
+    summarize_at(vars(A:DRB1), sum) %>%
+    ungroup()
+    
 cors_pca_star <- 
     pca_star_df %>%
     group_by(PCs) %>%
@@ -333,41 +332,41 @@ print(pairs_hla_k, left = .3, bottom = .3)
 dev.off()
 
 png("./plots/trans_activ_corrs.png", width = 10, height = 3.5, units = "in", res = 200)
-    ggplot(class_2_trans_df, aes(value, CIITA)) +
+ggplot(class_2_trans_df, aes(value, CIITA)) +
     geom_point(alpha = 1/2) +
     geom_smooth(method = lm, se = FALSE) +
     theme_bw() +
     theme(axis.text.x = element_text(size = 12),
-	  axis.title = element_text(size = 16),
-	  strip.text = element_text(size = 16)) + 
-    facet_wrap(~locus) +
+          axis.title = element_text(size = 16),
+          strip.text = element_text(size = 16)) + 
+    facet_wrap(~locus, nrow = 1) +
     labs(x = NULL) +
     stat_poly_eq(aes(label = ..adj.rr.label..), rr.digits = 2,
 	       formula = y ~ x, parse = TRUE, size = 6)
 dev.off()
 
 png("./plots/a_vs_b.png", height = 3.5, width = 10, units = "in", res = 200)
-a_b <- make_data(A, B)
+a_b <- make_data(tpm_by_allele_wide_I, tpm_by_gene_wide, "A", "B")
 make_phase_plot(a_b, "A", "B")
 dev.off()
 
 png("./plots/a_vs_c.png", height = 3.5, width = 10, units = "in", res = 200)
-a_c <- make_data(A, C)
+a_c <- make_data(tpm_by_allele_wide_I, tpm_by_gene_wide, "A", "C")
 make_phase_plot(a_c, "A", "C")
 dev.off()
 
 png("./plots/b_vs_c.png", height = 3.5, width = 10, units = "in", res = 200)
-b_c <- make_data(B, C)
+b_c <- make_data(tpm_by_allele_wide_I, tpm_by_gene_wide, "B", "C")
 make_phase_plot(b_c, "B", "C")
 dev.off()
 
 png("./plots/dqa_vs_dqb.png", height = 3.5, width = 10, units = "in", res = 200)
-dqa_dqb <- make_data(DQA1, DQB1)
+dqa_dqb <- make_data(tpm_by_allele_wide_II, tpm_by_gene_wide, "DQA1", "DQB1")
 make_phase_plot(dqa_dqb, "DQA1", "DQB1")
 dev.off()
 
 png("./plots/dqa_vs_drb.png", height = 3.5, width = 10, units = "in", res = 200)
-dqa_drb <- make_data(DQA1, DRB1)
+dqa_drb <- make_data(tpm_by_allele_wide_II, tpm_by_gene_wide, "DQA1", "DRB1")
 make_phase_plot(dqa_drb, "DQA1", "DRB1")
 dev.off()
 
@@ -378,11 +377,11 @@ ggplot(cors_pca_star, aes(PCs, correlation)) +
     facet_wrap(~gene_pair) +
     theme_bw() +
     theme(legend.title = element_blank(),
-	  legend.text = element_text(size = 16),
-	  legend.position = "top",	
-	  axis.title = element_text(size = 16),
-	  strip.text = element_text(size = 16),
-	  axis.text.x = element_text(angle = 90)) +
+          legend.text = element_text(size = 16),
+          legend.position = "top",	
+          axis.title = element_text(size = 16),
+          strip.text = element_text(size = 16),
+          axis.text.x = element_text(angle = 90)) +
     labs(x = "Number of PCs/factors")
 dev.off()
 
@@ -392,6 +391,7 @@ ggplot(star_imgt_with_nonclassical, aes(locus, tpm)) +
     theme_bw() +
     theme(axis.title.x = element_blank(),
           axis.title.y = element_text(size = 16),
-          axis.text = element_text(size = 12)) +
+          axis.text.x = element_text(size = 12, angle = 90),
+          axis.text.y = element_text(size = 12)) +
     labs(y = "TPM")
 dev.off()

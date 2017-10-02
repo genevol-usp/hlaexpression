@@ -9,7 +9,7 @@ index=../../../imgt_index/kallisto/gencode.v25.PRI.transcripts.idx
 outdir=./quantifications_PRI
 sampledir=$outdir/$sample
 
-$kallisto quant -i $index -t 1 -o $sampledir --bias $fastqR1 $fastqR2
+#$kallisto quant -i $index -t 1 -o $sampledir --bias $fastqR1 $fastqR2
 
 awk 'NR==1 {print $1"\t"$4"\t"$5}' $sampledir/abundance.tsv >\
     $sampledir/abundance_imgt.tsv

@@ -197,38 +197,22 @@ include_graphics("./qtls/plots/lineage_and_effects.png")
 Some of our eQTLs seem to mark the same biological signal as the eQTLs found by
 Geuvadis (RTC > 0.9)
 
-**coming soon**
-
-```{r eval=FALSE}
-"./qtls/qtls_star/rtc/geuvadis_eqtls/results.tsv" %>%
-    read_tsv() %>%
+```{r}
+read_tsv("./qtls/qtls_star/imgt/rtc/geuvadis_eqtls/results.tsv") %>%
     kable()
-```
-
-### LD between our best SNP (STAR) and Geuvadis best SNP
-
-**coming soon**
-
-```{r eval=FALSE}
-read_tsv("./qtls/qtls_star/rtc/geuvadis_eqtls/ld_star_geuvadis_bestSNPs.tsv") %>%
-    unite("Geuvadis_STAR", c("allele_geuvadis", "allele_star"), sep = "_") %>%
-    rename(f_allele_geuv = f_geuvadis, f_allele_star = f_star) %>%
-    kable(digits = 2)
 ```
 
 ### slope and p-value
 
-**coming soon**
-
-```{r eval=FALSE}
+```{r}
 geuvadis_qtls <- 
-    read_tsv("./qtls/qtls_star/rtc/geuvadis_eqtls/catalog.tsv",
+    read_tsv("./qtls/qtls_star/imgt/rtc/geuvadis_eqtls/catalog.tsv",
              col_names = c("variant", "info")) %>%
     select(-variant) %>%
     separate(info, c("geuvadis_variant", "geuvadis_gene", "geuvadis_slope",
                      "geuvadis_pvalue"), sep = ":")
 
-star_qtls <- read_tsv("./qtls/plots/eqtls.tsv") %>%
+star_qtls <- read_tsv("./qtls/plots/eqtl.tsv") %>%
     select(gene = phen_id, rank, variant = var_id, slope, pvalue = nom_pval) %>%
     mutate_at(vars(slope, pvalue), function(x) round(x, digits = 2))
 
@@ -244,10 +228,8 @@ kable(pval_df)
 
 # Association to GWAS traits
 
-**coming soon**
-
-```{r eval=FALSE}
-read_tsv("./qtls/qtls_star/rtc/gwas/results.tsv") %>%
+```{r}
+read_tsv("./qtls/qtls_star/imgt/rtc/gwas/results.tsv") %>%
     select(gene, rank, variant, gwas_variant, rtc, trait, studies = link) %>%
     group_by(gene, rank, variant, gwas_variant, rtc) %>%
     summarize(trait = paste(trait, collapse = "/"), 

@@ -88,13 +88,12 @@ concordant <-
         read_tsv("../expression/star/phase_hla_alleles/data/concordant_haps_classI.tsv") %>%
             gather(locus, allele, A:C), 
         read_tsv("../expression/star/phase_hla_alleles/data/concordant_haps_classII.tsv") %>%
-            gather(locus, allele, DQA1:DRB1)) %>%
+            gather(locus, allele, DPB1:DRB1)) %>%
     arrange(subject, locus, hap)
     
 haps_expression <-
     "../expression/star/phase_hla_alleles/data/1000G_haps_expression_snps.tsv" %>%
-    read_tsv() %>%
-    filter(rank == 0)
+    read_tsv()
 
 hap_hla_genot <-
     haps_expression %>%
@@ -134,8 +133,7 @@ lineage_df <-
 
 ## effects
 best_eqtl_locus <-
-    read_tsv("../expression/star/phase_hla_alleles/best_eqtls.tsv") %>%
-    filter(rank == 0L) %>%
+    read_tsv("../expression/star/phase_hla_alleles/best_eqtl.tsv") %>%
     left_join(gencode_hla, by = c("phen_id" = "gene_id")) %>%
     select(locus = gene_name, variant = var_id)
 
@@ -166,13 +164,13 @@ p1 <-
     geom_jitter(aes(color = eQTL), alpha = .5) +
     geom_boxplot(outlier.shape = NA, fill = NA, color = "grey5", alpha = .1) +
     scale_color_manual(values = c("Low" = "royalblue", "High" = "red"), 
-		       na.value = "grey") +
+                       na.value = "grey") +
     scale_x_discrete(labels = function(x) gsub("\\*", "*\n", x)) +
     facet_wrap(~locus, scales = "free", ncol = 1, strip.position = "left") +
     labs(x = " ", y = "TPM") +
     theme_bw() +
     theme(axis.title = element_text(size = rel(1.2)),
-	  axis.text = element_text(size = rel(1)),
+	  axis.text = element_text(size = rel(.75)),
 	  legend.text = element_text(size = rel(1)),
 	  strip.text = element_text(face = "bold", size = rel(1.2)),
 	  legend.position = "top") +
@@ -185,13 +183,13 @@ p2 <-
     scale_x_discrete(labels = function(x) paste0(sub("^([^_]+).+$", "\\1", x), "\n")) +
     scale_y_continuous(position = "right") +
     geom_text(data = distinct(eqtls_expression_df, locus, variant), 
-	      aes(x = 1.5, y = 3, label = variant)) +
+              aes(x = 1.5, y = 3, label = variant)) +
     coord_cartesian(ylim = c(-3, 3.2)) +
     facet_wrap(~locus, ncol = 1, scales = "free") +
     labs(x = " ", y = " ") +
     theme_bw() +
     theme(axis.text = element_text(size = rel(1)),
-	  strip.text = element_blank())
+          strip.text = element_blank())
 
 legend <- get_legend(p1)
 p1 <- p1 + theme(legend.position = "none")
@@ -202,8 +200,7 @@ grid1 <- plot_grid(legend, NULL, p1, p2, ncol = 2,
 ggdraw(grid1) + 
     draw_label("HLA lineage", 0.44, 0.02, size = 16) +
     draw_label("1000G genotype", 0.88, 0.02, size = 16) +
-    draw_label("PCA-corrected expession", .985, 0.5, size = 16, angle = 90)
-
+    draw_label("PCA-corrected expression", .985, 0.5, size = 16, angle = 90)
 dev.off()
 
 # eQTL landscape around TSS
@@ -260,7 +257,7 @@ conditional_star_imgt <-
 conditional_star_imgt %>%
     filter(best == 1L) %>%
     select(phen_id, rank, var_id, var_from, var_to, dist_tss, slope, nom_pval) %>%
-    write_tsv("./plots/eqtls.tsv")
+    write_tsv("./plots/eqtl.tsv")
 
 conditional_star_pri <-
     "./qtls_star/pri/3-conditional_analysis/conditional_60_all.txt.gz" %>%
@@ -273,4 +270,3 @@ dev.off()
 png("./plots/qtls_landscape_pri.png", height = 12, width = 10, units = "in", res = 300)
 plot_qtls(conditional_star_pri)
 dev.off()
-

@@ -37,8 +37,8 @@ concordant_class1 <-
 	       PHASE_haps %>% select(subject:C) %>% distinct())
 
 concordant_class2 <- 
-    inner_join(kgp_haps %>% select(subject, hap, DQA1:DRB1), 
-	       PHASE_haps %>% select(subject, DQA1:DRB1) %>% distinct)
+    inner_join(kgp_haps %>% select(subject, hap, DPB1:DRB1), 
+	       PHASE_haps %>% select(subject, DPB1:DRB1) %>% distinct)
 
 write_tsv(concordant_class1, "./data/concordant_haps_classI.tsv")
 write_tsv(concordant_class2, "./data/concordant_haps_classII.tsv")
