@@ -21,6 +21,7 @@ Genotyping
 | HLA-A    |           100|
 | HLA-B    |           100|
 | HLA-C    |           100|
+| HLA-DPB1 |            91|
 | HLA-DQA1 |           100|
 | HLA-DQB1 |           100|
 | HLA-DRB1 |           100|
@@ -41,6 +42,7 @@ Genotyping
 | HLA-A    |           100|
 | HLA-B    |           100|
 | HLA-C    |           100|
+| HLA-DPB1 |            92|
 | HLA-DQA1 |           100|
 | HLA-DQB1 |           100|
 | HLA-DRB1 |           100|
@@ -57,27 +59,29 @@ Percentage of simulated reads not aligned:
 
 | gene\_read |  kallisto\_imgt|  kallisto\_pri|  star\_imgt|  star\_pri|
 |:-----------|---------------:|--------------:|-----------:|----------:|
-| HLA-A      |            2.30|          17.90|           0|       0.77|
-| HLA-B      |            2.16|          37.31|           0|       3.53|
-| HLA-C      |            2.31|          23.71|           0|       0.93|
-| HLA-DQA1   |            1.13|          17.93|           0|       4.61|
-| HLA-DQB1   |            1.37|          17.75|           0|       4.30|
-| HLA-DRB1   |            1.98|          66.64|           0|       7.48|
+| HLA-A      |          2.3216|        20.3804|      0.0004|     0.7588|
+| HLA-B      |          2.1864|        38.2640|      0.0002|     3.5494|
+| HLA-C      |          2.2980|        28.8020|      0.0004|     0.8900|
+| HLA-DPB1   |          1.2432|        10.4550|      0.0006|     0.6730|
+| HLA-DQA1   |          1.1666|        20.8500|      0.0004|     4.7542|
+| HLA-DQB1   |          1.3754|        22.5052|      0.0026|     5.2698|
+| HLA-DRB1   |          1.9876|        66.8854|      0.0002|     7.8766|
 
 Percentage of simulated reads from each HLA gene that aligned to a different reference:
 
 | gene\_read |  kallisto\_imgt|  kallisto\_pri|  star\_imgt|  star\_pri|
 |:-----------|---------------:|--------------:|-----------:|----------:|
-| HLA-A      |            1.98|           4.11|        1.38|       3.54|
-| HLA-B      |            0.37|          13.93|        0.32|      28.51|
-| HLA-C      |            0.07|           6.10|        0.01|       9.64|
-| HLA-DQA1   |            0.84|           4.60|        0.56|       6.05|
-| HLA-DQB1   |            0.12|           3.74|        0.02|       7.58|
-| HLA-DRB1   |            0.94|          19.94|        0.45|      21.28|
+| HLA-A      |          1.8524|         5.1044|      1.3774|     3.6446|
+| HLA-B      |          0.4026|        15.0642|      0.3470|    28.4666|
+| HLA-C      |          0.0740|         9.8402|      0.0082|     9.8112|
+| HLA-DPB1   |          0.0004|         0.0082|      0.0000|     0.0016|
+| HLA-DQA1   |          0.8952|         5.9270|      0.5840|     6.1890|
+| HLA-DQB1   |          0.1184|         5.7800|      0.0260|     9.4782|
+| HLA-DRB1   |          0.9258|        24.4876|      0.4192|    20.5300|
 
-The plot below shows where the reads simulated from a HLA gene (x-axis) are mapped when they aligned to a different reference (`n` in the entire dataset).
+The plot below shows where the reads simulated from a HLA gene (x-axis) are mapped when they aligned to a different reference.
 
-*This is just an initial exploration. The plot is hard to interpret, both because of the y unit and amount of colors*
+The dot diameters represent the average percentage of mappings across all individuals.
 
 ![](./plots/diff_refs_alignments.png)
 
@@ -85,12 +89,13 @@ Percentage of simulated reads gained by each HLA gene (reads simulated from othe
 
 | gene\_ref |  kallisto\_imgt|  kallisto\_pri|  star\_imgt|  star\_pri|
 |:----------|---------------:|--------------:|-----------:|----------:|
-| HLA-A     |            0.03|           1.95|        0.02|       1.56|
-| HLA-B     |            0.04|           5.39|        0.01|       8.82|
-| HLA-C     |            0.11|          12.78|        0.01|      25.21|
-| HLA-DQA1  |            0.11|           0.00|        0.08|       0.00|
-| HLA-DQB1  |            0.00|           0.00|        0.00|       0.00|
-| HLA-DRB1  |            0.13|           0.00|        0.08|       0.00|
+| HLA-A     |          0.0312|         2.5858|      0.0192|     1.6834|
+| HLA-B     |          0.0368|         6.5590|      0.0120|     9.0920|
+| HLA-C     |          0.1148|        16.8928|      0.0140|    24.5266|
+| HLA-DPB1  |          0.0000|         0.0012|      0.0000|     0.0006|
+| HLA-DQA1  |          0.1082|         0.3302|      0.0696|     0.1696|
+| HLA-DQB1  |          0.0004|         0.0380|      0.0000|     0.0010|
+| HLA-DRB1  |          0.1258|         9.3788|      0.0718|    10.4316|
 
 Comparisons between indices and aligners
 ========================================

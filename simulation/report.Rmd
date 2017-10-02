@@ -62,20 +62,21 @@ include_graphics("./plots/star_prop_mapped.png")
 Percentage of simulated reads not aligned:
 
 ```{r}
-read_tsv("./reads_not_aligned_hla.tsv") %>% kable()
+read_tsv("./expression/reads_not_aligned_hla.tsv") %>% kable()
 ```
 
 Percentage of simulated reads from each HLA gene that aligned to a different
 reference:
 
 ```{r}
-read_tsv("./reads_false_neg_hla.tsv") %>% kable()
+read_tsv("./expression/reads_false_neg_hla.tsv") %>% kable()
 ```
 
 The plot below shows where the reads simulated from a HLA gene (x-axis) are
-mapped when they aligned to a different reference (`n` in the entire dataset).
+mapped when they aligned to a different reference.
 
-*This is just an initial exploration. The plot is hard to interpret, both because of the y unit and amount of colors*
+The dot diameters represent the average percentage of mappings across all 
+individuals.
 
 
 ```{r}
@@ -87,7 +88,7 @@ Percentage of simulated reads gained by each HLA gene (reads simulated from
 other references)
 
 ```{r}
-read_tsv("./reads_false_pos_hla.tsv") %>% kable()
+read_tsv("./expression/reads_false_pos_hla.tsv") %>% kable()
 ```
 
 # Comparisons between indices and aligners

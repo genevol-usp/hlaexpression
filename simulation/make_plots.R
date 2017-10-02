@@ -29,18 +29,19 @@ plot_dist <- function(df) {
 	    geom_point() +
 	    geom_line(stat = "smooth", method = "loess", span = 1, se = FALSE, 
 	              alpha = 0.4, size = 1.5) +
-	    scale_x_continuous(labels = scales::percent) +
+	    scale_x_continuous(labels = scales::percent,
+	                       breaks = scales::pretty_breaks(n = 3)) +
     	scale_y_continuous(breaks = seq(0, 1.5, 0.5)) +
     	facet_wrap(~locus, scales = "free_x") +
     	ggsci::scale_color_aaas(labels = c(pri = "Ref chromosomes",
-    	                                   imgt = stringr::str_wrap("Ref chromosomes + HLA diversity", 20))) +
+    	                                   imgt = "Ref chromosomes + HLA diversity")) +
     	theme_bw() +
     	theme(axis.text = element_text(size = 14),
     	      axis.title = element_text(size = 18),
-    	      legend.title = element_text(size = 16),
+    	      legend.title = element_text(size = 14),
     	      legend.text = element_text(size = 14),
     	      strip.text = element_text(size = 16, face = "bold"),
-    	      legend.position = "top") +
+    	      legend.position = c(.75, .1)) +
     	guides(color = guide_legend(override.aes = list(size = 4))) +
     	labs(x = "proportion of sites with mismatches to the reference allele", 
     	     y = "proportion of reads recovered")
@@ -62,9 +63,6 @@ scatter_plot <- function(df, x_var, y_var) {
 
 # Data
 allele_dist <- read_tsv("./data/distances_to_reference.tsv")
-
-samples <- tibble(subject = readLines("./data/samples.txt"),
-                  code = sprintf("sample_%02d", 1:50))
 
 hla_genes <- paste0("HLA-", c("A", "B", "C", "DPB1", "DQA1", "DQB1", "DRB1"))
 
@@ -148,7 +146,19 @@ counts_star <-
            prop_mapped = counts/true_counts) %>%
     rename(dist = dist.star.imgt)
 
-diff_refs_alignment <- read_tsv("./diff_refs_hla.tsv")
+diff_refs_alignment <- 
+    file.path("./expression/star/mappings_2", unique(quant_data$subject), "diff_refs_hla.tsv") %>%
+    setNames(unique(quant_data$subject)) %>%
+    plyr::ldply(read_tsv, .id = "subject") %>%
+    select(-n) %>%
+    complete(subject, gene_read, gene_ref, fill = list(perc = 0)) %>%
+    filter(gene_read != gene_ref) %>%
+    group_by(gene_read, gene_ref) %>%
+    summarize(perc = mean(perc)) %>%
+    ungroup() %>%
+    filter(perc > 0) %>%
+    mutate_at(vars(gene_read, gene_ref), factor)
+
 
 # Plots
 png("./plots/kallisto_prop_mapped.png", width = 8, height = 5, units = "in", res = 200)
@@ -204,10 +214,8 @@ scatter_plot(quant_data, "resid.star.imgt", "resid.star.pri") +
 dev.off()
 
 png("./plots/diff_refs_alignments.png", width = 10, height = 6, units = "in", res = 200)
-ggplot(filter(diff_refs_alignment, n >= 200L), 
-       aes(gene_read, n, fill = gene_ref)) +
-    geom_bar(stat = 'identity', position = "dodge") +
-    theme(axis.text.x = element_text(angle = 30),
-          axis.title.x = element_blank()) +
-    facet_wrap(~aligner, scales = "free")
+ggplot(diff_refs_alignment, aes(gene_read, gene_ref)) +
+    geom_point(aes(size = perc)) +
+    theme_bw() +
+    labs(x = "gene from", y = "gene to", size = "average percentage")
 dev.off()
