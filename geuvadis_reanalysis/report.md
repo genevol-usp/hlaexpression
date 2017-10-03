@@ -132,6 +132,17 @@ Distribution of eQTLs around the TSS
 
 ![](./qtls/plots/qtls_landscape_pri.png)
 
+Entire region
+-------------
+
+### Class I
+
+![](./qtls/plots/landscape_class1.png)
+
+### Class II
+
+![](./qtls/plots/landscape_class2.png)
+
 HLA lineages
 ------------
 

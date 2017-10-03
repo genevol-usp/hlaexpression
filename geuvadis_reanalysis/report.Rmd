@@ -184,6 +184,21 @@ include_graphics("./qtls/plots/qtls_landscape_imgt.png")
 include_graphics("./qtls/plots/qtls_landscape_pri.png")
 ```
 
+## Entire region
+
+### Class I
+
+```{r}
+include_graphics("./qtls/plots/landscape_class1.png")
+```
+
+### Class II
+
+```{r}
+include_graphics("./qtls/plots/landscape_class2.png")
+```
+
+
 ## HLA lineages
 
 ```{r}

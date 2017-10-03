@@ -2,7 +2,7 @@ devtools::load_all("/home/vitor/hlaseqlib")
 library(Biostrings)
 library(tidyverse)
 
-hla_fasta <- readDNAStringSet("../../imgt_index/imgt_index.fa")
+hla_fasta <- readDNAStringSet("../../../imgt_index/imgt_index.fa")
 hla_fasta <- hla_fasta[grep("IMGT_(A|B|C|DPB1|DQA1|DQB1|DRB1)", names(hla_fasta))] 
 
 hla_df <-
@@ -12,7 +12,7 @@ hla_df <-
     select(locus, allele, cds)
 
 ref_alleles <- 
-    read_tsv("../../imgt_index/hla_ref_alleles.tsv") %>%
+    read_tsv("../../../imgt_index/hla_ref_alleles.tsv") %>%
     mutate(allele = hla_trimnames(allele, 3)) %>%
     left_join(hla_df, by = c("locus", "allele")) %>% 
     rename(ref_allele = allele, ref_sequence = cds)

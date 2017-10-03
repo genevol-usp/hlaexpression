@@ -206,13 +206,14 @@ dev.off()
 # eQTL landscape around TSS
 read_conditional <- function(path) {
       read_qtltools(path) %>%
-      inner_join(select(gencode_hla, gene_id, gene_name), by = c("phen_id" = "gene_id")) %>%
+      inner_join(select(gencode_hla, gene_id, gene_name), 
+                 by = c("phen_id" = "gene_id")) %>%
       mutate(dist_tss = ifelse(strand == "+", 
-			       var_from - phen_from,
-			       phen_to - var_from),
-	     nom_pval = -log10(bwd_pval)) %>%
-      select(phen_id = gene_name, rank, var_id, var_from, var_to, dist_tss, nom_pval, 
-	     slope = bwd_slope, best = bwd_best, signif = bwd_signif) %>%
+                               var_from - phen_from, phen_to - var_from),
+             nom_pval = -log10(bwd_pval)) %>%
+      select(phen_id = gene_name, rank, var_id, var_from, var_to, dist_tss, 
+             nom_pval, slope = bwd_slope, best = bwd_best, 
+             signif = bwd_signif) %>%
       group_by(phen_id, var_id, best) %>%
       filter(rank == min(rank)) %>%
       ungroup() %>%
@@ -270,3 +271,150 @@ dev.off()
 png("./plots/qtls_landscape_pri.png", height = 12, width = 10, units = "in", res = 300)
 plot_qtls(conditional_star_pri)
 dev.off()
+
+# Entire region
+mhc_coords <- left_join(gencode_hla, gencode_chr_gene)
+
+genes_class1 <- c("HLA-A", "HLA-B", "HLA-C")
+genes_class2 <- c("HLA-DPB1", "HLA-DQA1", "HLA-DQB1", "HLA-DRB1")
+
+mhc_coords_class1 <- mhc_coords %>%
+    filter(gene_name %in% genes_class1)
+
+mhc_coords_class2 <- mhc_coords %>%
+    filter(gene_name %in% genes_class2)
+
+mhc_qtl <- 
+    "./qtls_star/imgt/3-conditional_analysis/conditional_60_all.txt.gz" %>%
+    read_qtltools() %>%
+    filter(phen_chr == 6,
+           phen_from >= min(mhc_coords$start), 
+           phen_from <= max(mhc_coords$start) + 1) %>%
+    left_join(gencode_chr_gene, by = c("phen_id" = "gene_id")) %>%
+    mutate(nom_pval = -log10(bwd_pval)) %>%
+    select(phen_id = gene_name, phen_from, rank, var_id, var_from, nom_pval, 
+           slope = bwd_slope, best = bwd_best, signif = bwd_signif) %>%
+    group_by(phen_id, var_id, best) %>%
+    filter(rank == min(rank)) %>%
+    ungroup() %>%
+    mutate(rank = factor(rank))
+
+mhc_qtl_class1 <- mhc_qtl %>%
+    filter(phen_from >= min(mhc_coords_class1$start), 
+           phen_from <= max(mhc_coords_class1$start) + 1)
+
+mhc_qtl_class2 <- mhc_qtl %>%
+    filter(phen_from >= min(mhc_coords_class2$start), 
+           phen_from <= max(mhc_coords_class2$start) + 1)
+
+lines_df_class1 <-
+    mhc_qtl %>% 
+    filter(phen_id %in% genes_class1) %>%
+    group_by(phen_id) %>%
+    summarize(phen_from = unique(phen_from), 
+              nom_pval = max(nom_pval) + 5) %>%
+    left_join(mhc_coords, by = c("phen_id" = "gene_name")) %>%
+    mutate(xend = ifelse(strand == "+", phen_from + 1e5, phen_from - 1e5),
+           xlabel = ifelse(strand == "-", phen_from + 1e4, phen_from - 1e4)) %>%
+    select(phen_id, phen_from, nom_pval, xend, xlabel)
+
+lines_df_class2 <-
+    mhc_qtl %>% 
+    filter(phen_id %in% genes_class2) %>%
+    group_by(phen_id) %>%
+    summarize(phen_from = unique(phen_from), 
+              nom_pval = max(nom_pval) + 5) %>%
+    left_join(mhc_coords, by = c("phen_id" = "gene_name")) %>%
+    mutate(xend = ifelse(strand == "+", phen_from + 1e5, phen_from - 1e5),
+           xlabel = ifelse(strand == "-", phen_from + 1e4, phen_from - 1e4)) %>%
+    select(phen_id, phen_from, nom_pval, xend, xlabel)
+
+png("./plots/landscape_class1.png", height = 4, width = 12, units = "in", res = 300)
+ggplot(mhc_qtl_class1) +
+    geom_point(data = filter(mhc_qtl_class1, signif == 0), 
+               aes(var_from, nom_pval),
+               color = "grey", alpha = .1, show.legend = FALSE) +
+    geom_point(data = filter(mhc_qtl_class1, 
+                             !phen_id %in% genes_class1,
+                             signif == 1L), 
+               aes(var_from, nom_pval), color = "grey25", alpha = .1, shape = 1) +
+    geom_point(data = filter(mhc_qtl_class1, 
+                             phen_id %in% mhc_coords_class1$gene_name,
+                             signif == 1L), 
+               aes(var_from, nom_pval, color = rank), alpha = .1) +
+    geom_segment(data = lines_df_class1,
+                 aes(x = phen_from, xend = phen_from, y = 0, yend = nom_pval),
+                 size = 1.5) +
+    geom_segment(data = lines_df_class1,
+                 aes(x = phen_from, xend = xend, y = nom_pval, yend = nom_pval),
+                 arrow = arrow(length = unit(0.2, "cm")),
+                 size = 1.5) +
+    geom_label(data = lines_df_class1, 
+              aes(x = xlabel, y = nom_pval, label = phen_id, fontface = "bold"), 
+              size = 3) +
+    geom_point(data = filter(mhc_qtl_class1, 
+                             phen_id %in% mhc_coords_class1$gene_name, 
+                             best == 1L), 
+               aes(var_from, nom_pval, color = rank), size = 2) +
+    ggsci::scale_color_aaas() +
+    geom_label(data = filter(mhc_qtl_class1, 
+                             phen_id %in% mhc_coords_class1$gene_name, 
+                             best == 1L),
+               aes(x = var_from, y = nom_pval, fill = rank, fontface = "bold",
+                   label = phen_id), color = "white",
+               size = 2.5, alpha = .9, hjust = 1.05, show.legend = FALSE) +
+    ggsci::scale_fill_aaas() +
+    geom_point(data = filter(mhc_qtl_class1, 
+                             phen_id %in% mhc_coords_class1$gene_name, 
+                             best == 1L), 
+               aes(var_from, nom_pval), 
+               shape = 1, size = 2, color = "black", stroke = 1.5) +
+    labs(x = "position", 
+         y = expression(paste("-log"[10], italic(Pvalue))))
+dev.off()
+
+
+png("./plots/landscape_class2.png", height = 4, width = 12, units = "in", res = 300)
+ggplot(mhc_qtl_class2) +
+    geom_point(data = filter(mhc_qtl_class2, signif == 0), 
+               aes(var_from, nom_pval),
+               color = "grey", alpha = .1, show.legend = FALSE) +
+    geom_point(data = filter(mhc_qtl_class2, 
+                             !phen_id %in% genes_class2,
+                             signif == 1L), 
+               aes(var_from, nom_pval), color = "grey25", alpha = .1, shape = 1) +
+    geom_point(data = filter(mhc_qtl_class2, 
+                             phen_id %in% mhc_coords_class2$gene_name,
+                             signif == 1L), 
+               aes(var_from, nom_pval, color = rank), alpha = .1) +
+    geom_segment(data = lines_df_class2,
+                 aes(x = phen_from, xend = phen_from, y = 0, yend = nom_pval),
+                 size = 1.5) +
+    geom_segment(data = lines_df_class2,
+                 aes(x = phen_from, xend = xend, y = nom_pval, yend = nom_pval),
+                 arrow = arrow(length = unit(0.2, "cm")),
+                 size = 1.5) +
+    geom_label(data = lines_df_class2, 
+               aes(x = xlabel, y = nom_pval, label = phen_id, fontface = "bold"), 
+               size = 3) +
+    geom_point(data = filter(mhc_qtl_class2, 
+                             phen_id %in% mhc_coords_class2$gene_name, 
+                             best == 1L), 
+               aes(var_from, nom_pval, color = rank), size = 2) +
+    ggsci::scale_color_aaas() +
+    geom_label(data = filter(mhc_qtl_class2, 
+                             phen_id %in% mhc_coords_class2$gene_name, 
+                             best == 1L),
+               aes(x = var_from, y = nom_pval, fill = rank, fontface = "bold",
+                   label = phen_id), color = "white",
+               size = 2.5, alpha = .9, hjust = 1.05, show.legend = FALSE) +
+    ggsci::scale_fill_aaas() +
+    geom_point(data = filter(mhc_qtl_class2, 
+                             phen_id %in% mhc_coords_class2$gene_name, 
+                             best == 1L), 
+               aes(var_from, nom_pval), 
+               shape = 1, size = 2, color = "black", stroke = 1.5) +
+    labs(x = "position", 
+         y = expression(paste("-log"[10], italic(Pvalue))))
+dev.off()
+  

@@ -62,16 +62,16 @@ scatter_plot <- function(df, x_var, y_var) {
 }
 
 # Data
-allele_dist <- read_tsv("./data/distances_to_reference.tsv")
+allele_dist <- read_tsv("./PEreads_75bp/data/distances_to_reference.tsv")
 
 hla_genes <- paste0("HLA-", c("A", "B", "C", "DPB1", "DQA1", "DQB1", "DRB1"))
 
 gencode_hla <- filter(gencode_chr_gene, gene_name %in% hla_genes)
 
-index <- Biostrings::readDNAStringSet("./data/polyester_index.fa")
+index <- Biostrings::readDNAStringSet("./PEreads_75bp/data/polyester_index.fa")
 
 ground_truth <- 
-    read_tsv("./data/phenotypes.tsv") %>%
+    read_tsv("./PEreads_75bp/data/phenotypes.tsv") %>%
     mutate(target_id = names(index)) %>%
     filter(grepl("IMGT_(A|B|C|DPB1|DQA1|DQB1|DRB1)", target_id)) %>%
     gather(subject, true_counts, -target_id) %>%
@@ -80,33 +80,33 @@ ground_truth <-
     summarize(true_counts = sum(true_counts))
 
 kallisto_quant_imgt <- 
-    "./expression/kallisto/quantifications_2/processed_quant.tsv" %>%
+    "./PEreads_75bp/expression/kallisto/quantifications_2/processed_quant.tsv" %>%
     read_imgt_quants()
 
 kallisto_quant_pri <- 
-    read_tsv("./expression/kallisto/quantifications_PRI/processed_quant.tsv")
+    read_tsv("./PEreads_75bp/expression/kallisto/quantifications_PRI/processed_quant.tsv")
 
 star_quant_imgt <- 
-    "./expression/star/quantifications_2/processed_quant.tsv" %>%
+    "./PEreads_75bp/expression/star/quantifications_2/processed_quant.tsv" %>%
     read_imgt_quants()
 
 star_quant_pri <- 
-    read_tsv("./expression/star/quantifications_PRI/processed_quant.tsv")
+    read_tsv("./PEreads_75bp/expression/star/quantifications_PRI/processed_quant.tsv")
 
 kallisto_10pc <-
-    "./expression/kallisto/phenotype_correction/imgt/phenotypes_10.bed.gz" %>%
+    "./PEreads_75bp/expression/kallisto/phenotype_correction/imgt/phenotypes_10.bed.gz" %>%
     read_pcanorm()
 
 star_10pc <-
-    "./expression/star/phenotype_correction/imgt/phenotypes_10.bed.gz" %>%
+    "./PEreads_75bp/expression/star/phenotype_correction/imgt/phenotypes_10.bed.gz" %>%
     read_pcanorm()
 
 kallisto_pri_10pc <-
-    "./expression/kallisto/phenotype_correction/pri/phenotypes_10.bed.gz" %>%
+    "./PEreads_75bp/expression/kallisto/phenotype_correction/pri/phenotypes_10.bed.gz" %>%
     read_pcanorm()
 
 star_pri_10pc <-
-    "./expression/star/phenotype_correction/pri/phenotypes_10.bed.gz" %>%
+    "./PEreads_75bp/expression/star/phenotype_correction/pri/phenotypes_10.bed.gz" %>%
     read_pcanorm()
 
 quant_data <-
@@ -147,7 +147,7 @@ counts_star <-
     rename(dist = dist.star.imgt)
 
 diff_refs_alignment <- 
-    file.path("./expression/star/mappings_2", unique(quant_data$subject), "diff_refs_hla.tsv") %>%
+    file.path("./PEreads_75bp/expression/star/mappings_2", unique(quant_data$subject), "diff_refs_hla.tsv") %>%
     setNames(unique(quant_data$subject)) %>%
     plyr::ldply(read_tsv, .id = "subject") %>%
     select(-n) %>%
