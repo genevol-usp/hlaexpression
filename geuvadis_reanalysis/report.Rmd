@@ -256,7 +256,7 @@ read_tsv("./qtls/qtls_star/imgt/rtc/gwas/results.tsv") %>%
 
 - Approximate pass as described on QTLtools website
 
-```{r eval=FALSE}
+```{r}
 read_tsv("./qtls/qtls_star/imgt/trans/trans_results.tsv") %>%
     kable(digits = 2)
 ```

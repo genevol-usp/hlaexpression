@@ -212,3 +212,10 @@ Trans-eQTLs
 ===========
 
 -   Approximate pass as described on QTLtools website
+
+| gene\_name | variant\_id |  variant\_chr|  variant\_pos|  log10\_nom\_pval|
+|:-----------|:------------|-------------:|-------------:|-----------------:|
+| HLA-DQA1   | rs3997880   |             2|     178431654|             31.06|
+| HLA-DQA1   | rs145339215 |             2|     178431521|             30.62|
+| HLA-DQA1   | rs3997878   |             2|     178431899|             27.23|
+| HLA-DQA1   | rs141354030 |             2|     178451007|             20.85|
