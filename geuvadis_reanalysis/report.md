@@ -212,5 +212,3 @@ Trans-eQTLs
 ===========
 
 -   Approximate pass as described on QTLtools website
-
-**coming soon**
