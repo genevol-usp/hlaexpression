@@ -354,7 +354,7 @@ ggplot(mhc_qtl_class1) +
                  size = 1.5) +
     geom_label(data = lines_df_class1, 
               aes(x = phen_from + c(0, -1e4, +1e4), y = 0, label = phen_id, fontface = "bold"), 
-              size = 3) +
+              size = 2.5) +
     geom_point(data = filter(mhc_qtl_class1, 
                              phen_id %in% mhc_coords_class1$gene_name, 
                              best == 1L), 
@@ -396,7 +396,7 @@ ggplot(mhc_qtl_class2) +
                  size = 1.5) +
     geom_segment(data = lines_df_class2,
                  aes(x = phen_from, xend = xend, y = nom_pval, yend = nom_pval),
-                 arrow = arrow(length = unit(0.2, "cm")),
+                 arrow = arrow(length = unit(0.3, "cm")),
                  size = 1.5) +
     geom_label(data = lines_df_class2, 
                aes(x = phen_from + c(-5e4, -2e4, 4e4, 0), y = c(0, 2, 0, 0), 
