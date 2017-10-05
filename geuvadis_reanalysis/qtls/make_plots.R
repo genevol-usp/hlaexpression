@@ -313,9 +313,11 @@ lines_df_class1 <-
     group_by(phen_id) %>%
     summarize(phen_from = unique(phen_from), 
               nom_pval = max(nom_pval) + 5) %>%
+    ungroup() %>%
     left_join(mhc_coords, by = c("phen_id" = "gene_name")) %>%
-    mutate(xend = ifelse(strand == "+", phen_from + 5e4, phen_from - 5e4)) %>%
-    select(phen_id, phen_from, nom_pval, xend)
+    mutate(xend = ifelse(strand == "+", phen_from + 2.5e4, phen_from - 2.5e4)) %>%
+    select(phen_id, phen_from, nom_pval, xend) %>%
+    arrange(phen_from)
 
 lines_df_class2 <-
     mhc_qtl %>% 
@@ -323,9 +325,11 @@ lines_df_class2 <-
     group_by(phen_id) %>%
     summarize(phen_from = unique(phen_from), 
               nom_pval = max(nom_pval) + 5) %>%
+    ungroup() %>%
     left_join(mhc_coords, by = c("phen_id" = "gene_name")) %>%
-    mutate(xend = ifelse(strand == "+", phen_from + 5e4, phen_from - 5e4)) %>%
-    select(phen_id, phen_from, nom_pval, xend)
+    mutate(xend = ifelse(strand == "+", phen_from + 2.5e4, phen_from - 2.5e4)) %>%
+    select(phen_id, phen_from, nom_pval, xend) %>%
+    arrange(phen_from)
 
 png("./plots/landscape_class1.png", height = 4, width = 12, units = "in", res = 300)
 ggplot(mhc_qtl_class1) +
@@ -346,10 +350,10 @@ ggplot(mhc_qtl_class1) +
                  size = 1.5) +
     geom_segment(data = lines_df_class1,
                  aes(x = phen_from, xend = xend, y = nom_pval, yend = nom_pval),
-                 arrow = arrow(length = unit(0.2, "cm")),
+                 arrow = arrow(length = unit(0.3, "cm")),
                  size = 1.5) +
     geom_label(data = lines_df_class1, 
-              aes(x = xend, y = nom_pval + 2, label = phen_id, fontface = "bold"), 
+              aes(x = phen_from + c(0, -1e4, +1e4), y = 0, label = phen_id, fontface = "bold"), 
               size = 3) +
     geom_point(data = filter(mhc_qtl_class1, 
                              phen_id %in% mhc_coords_class1$gene_name, 
@@ -395,8 +399,9 @@ ggplot(mhc_qtl_class2) +
                  arrow = arrow(length = unit(0.2, "cm")),
                  size = 1.5) +
     geom_label(data = lines_df_class2, 
-               aes(x = xend, y = nom_pval + 2, label = phen_id, fontface = "bold"), 
-               size = 3) +
+               aes(x = phen_from + c(-5e4, -2e4, 4e4, 0), y = c(0, 2, 0, 0), 
+                   label = phen_id, fontface = "bold"), 
+               size = 2.5) +
     geom_point(data = filter(mhc_qtl_class2, 
                              phen_id %in% mhc_coords_class2$gene_name, 
                              best == 1L), 
