@@ -314,9 +314,8 @@ lines_df_class1 <-
     summarize(phen_from = unique(phen_from), 
               nom_pval = max(nom_pval) + 5) %>%
     left_join(mhc_coords, by = c("phen_id" = "gene_name")) %>%
-    mutate(xend = ifelse(strand == "+", phen_from + 1e5, phen_from - 1e5),
-           xlabel = ifelse(strand == "-", phen_from + 1e4, phen_from - 1e4)) %>%
-    select(phen_id, phen_from, nom_pval, xend, xlabel)
+    mutate(xend = ifelse(strand == "+", phen_from + 5e4, phen_from - 5e4)) %>%
+    select(phen_id, phen_from, nom_pval, xend)
 
 lines_df_class2 <-
     mhc_qtl %>% 
@@ -325,12 +324,12 @@ lines_df_class2 <-
     summarize(phen_from = unique(phen_from), 
               nom_pval = max(nom_pval) + 5) %>%
     left_join(mhc_coords, by = c("phen_id" = "gene_name")) %>%
-    mutate(xend = ifelse(strand == "+", phen_from + 1e5, phen_from - 1e5),
-           xlabel = ifelse(strand == "-", phen_from + 1e4, phen_from - 1e4)) %>%
-    select(phen_id, phen_from, nom_pval, xend, xlabel)
+    mutate(xend = ifelse(strand == "+", phen_from + 5e4, phen_from - 5e4)) %>%
+    select(phen_id, phen_from, nom_pval, xend)
 
 png("./plots/landscape_class1.png", height = 4, width = 12, units = "in", res = 300)
 ggplot(mhc_qtl_class1) +
+    coord_cartesian(xlim = c(2.95e7, 3.175e7)) +
     geom_point(data = filter(mhc_qtl_class1, signif == 0), 
                aes(var_from, nom_pval),
                color = "grey", alpha = .1, show.legend = FALSE) +
@@ -350,7 +349,7 @@ ggplot(mhc_qtl_class1) +
                  arrow = arrow(length = unit(0.2, "cm")),
                  size = 1.5) +
     geom_label(data = lines_df_class1, 
-              aes(x = xlabel, y = nom_pval, label = phen_id, fontface = "bold"), 
+              aes(x = xend, y = nom_pval + 2, label = phen_id, fontface = "bold"), 
               size = 3) +
     geom_point(data = filter(mhc_qtl_class1, 
                              phen_id %in% mhc_coords_class1$gene_name, 
@@ -376,6 +375,7 @@ dev.off()
 
 png("./plots/landscape_class2.png", height = 4, width = 12, units = "in", res = 300)
 ggplot(mhc_qtl_class2) +
+    coord_cartesian(xlim = c(3.2e7, max(mhc_qtl_class2$var_from))) +
     geom_point(data = filter(mhc_qtl_class2, signif == 0), 
                aes(var_from, nom_pval),
                color = "grey", alpha = .1, show.legend = FALSE) +
@@ -395,7 +395,7 @@ ggplot(mhc_qtl_class2) +
                  arrow = arrow(length = unit(0.2, "cm")),
                  size = 1.5) +
     geom_label(data = lines_df_class2, 
-               aes(x = xlabel, y = nom_pval, label = phen_id, fontface = "bold"), 
+               aes(x = xend, y = nom_pval + 2, label = phen_id, fontface = "bold"), 
                size = 3) +
     geom_point(data = filter(mhc_qtl_class2, 
                              phen_id %in% mhc_coords_class2$gene_name, 
