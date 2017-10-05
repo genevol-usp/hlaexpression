@@ -184,6 +184,13 @@ include_graphics("./qtls/plots/qtls_landscape_imgt.png")
 include_graphics("./qtls/plots/qtls_landscape_pri.png")
 ```
 
+## RegulomeDB score
+
+```{r}
+read_tsv("./qtls/qtls_with_regulome_score.tsv") %>%
+    kable()
+```
+
 ## Entire region
 
 ### Class I

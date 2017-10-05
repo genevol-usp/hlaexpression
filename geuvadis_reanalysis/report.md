@@ -132,6 +132,51 @@ Distribution of eQTLs around the TSS
 
 ![](./qtls/plots/qtls_landscape_pri.png)
 
+RegulomeDB score
+----------------
+
+| gene\_name |  rank| index | var\_id     | score |
+|:-----------|-----:|:------|:------------|:------|
+| HLA-A      |     0| imgt  | rs16896724  | 5     |
+| HLA-A      |     0| pri   | rs28724990  | 6     |
+| HLA-A      |     1| imgt  | rs2517827   | 7     |
+| HLA-A      |     1| pri   | rs2916818   | 5     |
+| HLA-A      |     2| imgt  | rs7383537   | 6     |
+| HLA-A      |     2| pri   | rs2248162   | 4     |
+| HLA-B      |     0| imgt  | rs1265094   | 4     |
+| HLA-B      |     0| pri   | rs1265159   | 4     |
+| HLA-B      |     1| imgt  | rs9264803   | 6     |
+| HLA-B      |     1| pri   | rs2844623   | 6     |
+| HLA-B      |     2| pri   | rs72443738  | 5     |
+| HLA-B      |     3| pri   | rs28380929  | 4     |
+| HLA-C      |     0| imgt  | rs41561715  | 4     |
+| HLA-C      |     0| pri   | rs9468965   | 6     |
+| HLA-C      |     1| imgt  | rs2394941   | 5     |
+| HLA-C      |     1| pri   | rs2074491   | 4     |
+| HLA-C      |     2| imgt  | rs2249741   | 1f    |
+| HLA-C      |     2| pri   | rs2394941   | 5     |
+| HLA-DPB1   |     0| imgt  | rs9277538   | 4     |
+| HLA-DPB1   |     0| pri   | rs9277538   | 4     |
+| HLA-DPB1   |     1| imgt  | rs9296068   | 6     |
+| HLA-DPB1   |     1| pri   | rs9296068   | 6     |
+| HLA-DPB1   |     2| imgt  | rs688209    | 4     |
+| HLA-DQA1   |     0| imgt  | rs9272316   | 6     |
+| HLA-DQA1   |     0| pri   | rs144150162 | NA    |
+| HLA-DQA1   |     1| imgt  | rs9271375   | 7     |
+| HLA-DQA1   |     1| pri   | rs35407265  | 3a    |
+| HLA-DQB1   |     0| imgt  | rs1770      | 1f    |
+| HLA-DQB1   |     0| pri   | rs28746846  | 3a    |
+| HLA-DQB1   |     1| imgt  | rs9272209   | 3a    |
+| HLA-DQB1   |     1| pri   | rs9273595   | 5     |
+| HLA-DQB1   |     2| imgt  | rs9269386   | 7     |
+| HLA-DQB1   |     2| pri   | rs114969562 | 5     |
+| HLA-DQB1   |     3| pri   | rs3134988   | 7     |
+| HLA-DRB1   |     0| imgt  | rs3104412   | 6     |
+| HLA-DRB1   |     0| pri   | rs9269749   | 5     |
+| HLA-DRB1   |     1| imgt  | rs9270700   | 5     |
+| HLA-DRB1   |     1| pri   | rs9271365   | 7     |
+| HLA-DRB1   |     2| pri   | rs182670197 | 7     |
+
 Entire region
 -------------
 
