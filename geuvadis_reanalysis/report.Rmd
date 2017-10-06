@@ -216,7 +216,9 @@ include_graphics("./qtls/plots/lineage_and_effects.png")
 
 ```{r}
 read_tsv("./qtls/f_test_lineages.tsv") %>%
-    kable()
+    mutate(p.value = format(p.value, digits = 3)) %>%
+    select(-term) %>%
+    kable(digits = 3)
 ```
 
 ## Comparison with Geuvadis
