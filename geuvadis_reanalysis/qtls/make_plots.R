@@ -131,6 +131,29 @@ lineage_df <-
     mutate(hla_allele = hla_trimnames(hla_allele, 1),
            eQTL = factor(eQTL, levels = c("High", "Low")))
 
+lineage_exp <-
+    haps_expression %>%
+    mutate(lineage = hla_trimnames(hla_allele, 1)) %>%
+    select(subject, locus, lineage, tpm) 
+
+lineage_exp %>%
+    group_by(lineage) %>%
+    filter(n() > 1) %>%
+    ungroup() %>%
+    split(.$locus) %>%
+    map(~oneway.test(tpm~lineage, data = .) %>% broom::tidy()) %>%
+    bind_rows(.id = "locus") %>%
+    select(locus, num.df, denom.df, F = statistic, p.value) %>%
+    write_tsv("./f_onewaytest_lineages.tsv")
+
+lineage_exp %>%
+    split(.$locus) %>%
+    map(~lm(tpm~lineage, data = .) %>% anova() %>% broom::tidy()) %>%
+    bind_rows(.id = "locus") %>%
+    filter(term == "lineage") %>%
+    select(locus, df, F = statistic, p.value) %>%
+    write_tsv("./f_test_lineages.tsv")
+
 ## effects
 best_eqtl_locus <-
     read_tsv("../expression/star/phase_hla_alleles/best_eqtl.tsv") %>%
