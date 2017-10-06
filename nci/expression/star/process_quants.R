@@ -1,21 +1,9 @@
 devtools::load_all("/home/vitor/hlaseqlib")
 library(tidyverse)
 
-make_genot_calls_df <- function(typings_df) {
-    
-    typings_df %>%
-        mutate(subject = convert_ena_ids(as.character(subject)),
-	       locus = sub("^HLA-", "", locus),
-	       allele = hla_trimnames(gsub("IMGT_", "", allele), 3)) %>%
-    arrange(subject, locus, allele)
-}
-
 quant_round <- commandArgs(TRUE)[1]
 
-samples <- 
-    geuvadis_info %>% 
-    filter(kgp_phase3 == 1L & pop != "YRI") %>%
-    pull(ena_id)
+samples <- readLines("../../data/nci_sample_ids.txt") 
 
 quant_files <- paste0("./quantifications_", quant_round) %>%
       file.path(samples, "quant_imgt.sf") %>%
@@ -32,7 +20,8 @@ hla_genes <- paste0("HLA-", c("A", "B", "C", "DPB1", "DQA1", "DQB1", "DRB1"))
 if (quant_round == 1L || quant_round == 2L) {
 
     quants <- quant_files %>%
-	plyr::ldply(read_star_imgt_quants, .id = "subject")
+	plyr::ldply(read_star_imgt_quants, .id = "subject") %>%
+	mutate(subject = as.character(subject))
     
     goldstd_genos <- read_tsv("../../data/nci_expression.tsv") %>%
 	select(subject, locus, allele)
@@ -43,20 +32,19 @@ if (quant_round == 1L || quant_round == 2L) {
         names(thresholds) <- seq(0, .25, .05)
 
         typings <- 
-	  plyr::ldply(thresholds, 
-		      function(th) hla_genotype_dt(quants, th),
-		      .id = "th")
+	    plyr::ldply(thresholds, 
+			function(th) hla_genotype_dt(quants, th),
+			.id = "th")
 
-	calls <- 
-	    typings %>%
+	calls <- typings %>%
 	    filter(locus %in% hla_genes) %>%
 	    select(th, subject, locus, allele) %>%
-	    make_genot_calls_df() 
+	    mutate(allele = hla_trimnames(gsub("IMGT_", "", allele), 3))
 
         accuracies <-
             calls %>%
             split(.$th) %>%
-            plyr::ldply(function(df) calc_genotyping_accuracy(df, genos),
+            plyr::ldply(function(df) calc_genotyping_accuracy(df, goldstd_genos),
 			.id = "th") %>%
             group_by(th) %>%
             mutate(th_average = mean(accuracy)) %>%
