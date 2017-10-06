@@ -193,6 +193,18 @@ HLA lineages
 
 ![](./qtls/plots/lineage_and_effects.png)
 
+### F-test: do the grouping into lineages explain the variance?
+
+| locus | term    |   df|     sumsq|     meansq|           F|  p.value|
+|:------|:--------|----:|---------:|----------:|-----------:|--------:|
+| A     | lineage |   14|  11855313|   846808.0|   10.523137|        0|
+| B     | lineage |   25|  13384476|   535379.1|    4.858555|        0|
+| C     | lineage |   13|  12001846|   923218.9|   27.398400|        0|
+| DPB1  | lineage |   21|   2505297|   119299.8|    7.949565|        0|
+| DQA1  | lineage |    5|  18367822|  3673564.4|  107.820537|        0|
+| DQB1  | lineage |    4|   1491870|   372967.6|   37.588688|        0|
+| DRB1  | lineage |   12|  30242143|  2520178.6|   27.992456|        0|
+
 Comparison with Geuvadis
 ------------------------
 
