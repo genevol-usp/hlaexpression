@@ -212,12 +212,12 @@ include_graphics("./qtls/plots/landscape_class2.png")
 include_graphics("./qtls/plots/lineage_and_effects.png")
 ```
 
-### F-test: do the grouping into lineages explain the variance?
+### F-test: is there a difference between lineages?
 
 ```{r}
 read_tsv("./qtls/f_test_lineages.tsv") %>%
     mutate(p.value = format(p.value, digits = 3)) %>%
-    select(-term) %>%
+    select(locus, df, F, p.value) %>%
     kable(digits = 3)
 ```
 
