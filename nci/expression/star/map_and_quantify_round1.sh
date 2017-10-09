@@ -1,9 +1,9 @@
 #!/bin/bash
 
+function join { local IFS="$1"; shift; echo "$*"; }
+
 STAR=/home/vitor/STAR
 salmon=/home/vitor/Salmon-0.8.2_linux_x86_64/bin/salmon
-
-function join { local IFS="$1"; shift; echo "$*"; }
 
 sample=$1
 

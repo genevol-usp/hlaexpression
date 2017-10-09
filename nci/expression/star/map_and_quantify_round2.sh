@@ -1,5 +1,7 @@
 #!/bin/bash
 
+function join { local IFS="$1"; shift; echo "$*"; }
+
 STAR=/home/vitor/STAR
 salmon=/home/vitor/Salmon-0.8.2_linux_x86_64/bin/salmon
 
@@ -18,11 +20,21 @@ $STAR --runThreadN 8 --runMode genomeGenerate --genomeDir $indexDIR\
     --genomeChrBinNbits 11 --genomeSAindexNbases 13\
     --outFileNamePrefix ${indexDIR}_
 
-fq1=$(ls -v ../../data/fastq/$sample*R1_001.fastq.gz | paste -d, - -)
-fq2=$(ls -v ../../data/fastq/$sample*R2_001.fastq.gz | paste -d, - -)
+fastqs1=(`ls -v ../../data/fastq/$sample*R1_001.fastq.gz`)
+fastqs2=(`ls -v ../../data/fastq/$sample*R2_001.fastq.gz`)
 outMap=./mappings_2
 outQuant=./quantifications_2
 outPrefix=$outMap/${sample}_
+
+if [ "${#fastqs1[@]}" == 1 ]; then
+    fq1=$fastqs1
+    fq2=$fastqs2
+elif [ "${#fastqs1[@]}" == 2 ]; then 
+    fq1=$(join , ${fastqs1[@]})
+    fq2=$(join , ${fastqs2[@]})
+else
+    echo "wrong number of fastq files"
+fi
 
 $STAR --runMode alignReads --runThreadN 8 --genomeDir $indexDIR\
     --readFilesIn $fq1 $fq2 --readFilesCommand zcat\

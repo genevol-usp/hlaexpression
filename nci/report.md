@@ -19,20 +19,20 @@ Typing concordance with NCI genotyping
 
 We first quantfied our ability to correctly genotype individuals based on the RNAseq data. Our method is quite simple, and in very general terms simply involves identifying which of the alleles in the IMGT database have more NGS reads aligning to it. The table below identifies the proportion of genotypes for which our RNAseq-based genotyping matched that reported by conventional HLA typing.
 
-\*Concordance: the proportion of the called alleles that are concordant with the NCI typing
+\*Concordance: the proportion of the called alleles that are concordant with the NCI typing.
 
-\*Allele calls were compared at the maximum resolution possible at each pair
+\*Allele calls were compared at the maximum resolution possible at each pair.
 
 | locus |  concordance|
 |:------|------------:|
-| HLA-A |         0.96|
-| HLA-B |         0.96|
-| HLA-C |         0.97|
+| HLA-A |         0.98|
+| HLA-B |         0.95|
+| HLA-C |         0.96|
 
-Library Sizes
--------------
+Expression boxplot
+------------------
 
-![](./plots/library_sizes.png)
+![](./plots/expression_boxplot.png)
 
 Correlation between qPCR and RNAseq expression estimates
 --------------------------------------------------------
@@ -47,38 +47,6 @@ HLA-C expression: RNA vs Antibody
 Both qPCR and RNAseq strategies have similarly low correlations with the antibody-base expression estimates.
 
 ![](./plots/ab_vs_rna.png)
-
-RNAseq: TPM vs B2M-normalized counts
-====================================
-
-Sample 66K00755 has an abnormally low B2M expression
-
-![](./plots/tpm_vs_B2MnormCounts.png)
-
-RNAseq: TPM vs GAPDH-normalized counts
-======================================
-
-![](./plots/tpm_vs_GAPDHnormCounts.png)
-
-RNAseq: TPM vs ACTB-normalized counts
-=====================================
-
-![](./plots/tpm_vs_ACTBnormCounts.png)
-
-Coverage
-========
-
-The coverage measure is the gene-level coverage, which is the sum of the coverage at each position over the 2 alleles of a locus (black line in the plot below). It was necessary to use this measure because the allele-level coverage that comes out from kallisto is not really meaningful. For example, consider the allele C\*07:02:01 (red line in the plot below). Looking at this plot, one could say that the expression estimates from the 2 HLA-C alleles are very different, but they are actually almost the same. This allele has only 2 differences from C\*07:01:01 in exons 2 and 3. Reads aligning to the rest of the gene, where the 2 alleles are identical, are attributed to C\*07:01:01 as "primary alignment", which samtools uses to calculate coverage.
-
-This behavior of kallisto is like the default behavior of STAR, i.e. from all alignments with the best score, choose one to be reported as primary. However, you can control this behavior in STAR, but not in kallisto.
-
-![](./plots/covs_measure.png)
-
-It does not make sense to compare coverage with a normalized measure of expression, such as qPCR and TPM. For example, two samples with the same coverage at a given gene may have different TPM values, because TPM normalization depends on the mRNA composition of the sample.
-
-On the other hand, coverage is very well correlated with kallisto's estimated counts.
-
-![](./plots/covs_expression.png)
 
 RNAseq: expression estimates per lineage
 ----------------------------------------
