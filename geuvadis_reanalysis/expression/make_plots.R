@@ -111,13 +111,9 @@ star_imgt_tpm <-
     summarize(est_counts = sum(est_counts), tpm = sum(tpm)) %>%
     ungroup()
 
-all_hla_genes <- 
-    c(hla_genes, paste0("HLA-", c("DRB2", "DRB3", "DRB4", "DRB5", "DRB7", "E", 
-                                  "F", "G", "H", "J", "K", "L")))
-                   
 star_imgt_with_nonclassical <- 
     read_tsv("./star/quantifications_2/processed_quant.tsv") %>%
-    filter(locus %in% all_hla_genes) %>%
+    filter(grepl("HLA", locus)) %>%
     group_by(subject, locus) %>%
     summarize(tpm = sum(tpm)) %>%
     ungroup()
@@ -391,7 +387,7 @@ ggplot(star_imgt_with_nonclassical, aes(locus, tpm)) +
     theme_bw() +
     theme(axis.title.x = element_blank(),
           axis.title.y = element_text(size = 16),
-          axis.text.x = element_text(size = 12, angle = 90),
+          axis.text.x = element_text(size = 12, angle = 90, hjust = 1, vjust = 0.5),
           axis.text.y = element_text(size = 12)) +
     labs(y = "TPM")
 dev.off()

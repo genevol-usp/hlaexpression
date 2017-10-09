@@ -99,10 +99,24 @@ ggplot(hlac_df, aes(expression, c_surface)) +
 dev.off()
 
 png("./plots/rnaseq_lineages.png", width=12, height=6, units="in", res=300)
-plot_lineages(rnaseq_lineage) + labs(y = "TPM")
+rnaseq_lineage %>%
+    filter(locus %in% c("HLA-A", "HLA-B", "HLA-C")) %>%
+    plot_lineages() + 
+    labs(y = "TPM")
 dev.off()
 
 png("./plots/nci_lineages.png", width=12, height=6, units="in", res=300)
 plot_lineages(nci_lineage) + labs(y = "mRNA (qPCR)")
 dev.off()
 
+png("./plots/expression_boxplot.png", width = 8, height = 5, units = "in", res = 200)
+ggplot(rnaseq_gene, aes(locus, tpm)) +
+    geom_boxplot(fill = "grey") +
+    theme_bw() +
+    theme(axis.title.x = element_blank(),
+          axis.title.y = element_text(size = 16),
+          axis.text.x = element_text(size = 12, angle = 90, 
+				     hjust = 1, vjust = 0.5),
+          axis.text.y = element_text(size = 12)) +
+    labs(y = "TPM")
+dev.off()
