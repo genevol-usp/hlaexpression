@@ -29,6 +29,8 @@ lineage_df <- expression_df %>%
 
 ## Gene-level expression
 
+*HLA genes with mean expression > 10 TPM*
+
 ```{r fig.width=12, fig.height=4, dpi=200}
 ggplot(gene_df, aes(gene, tpm)) +
     geom_jitter(size = 2, width = 0.25) +
@@ -48,7 +50,7 @@ ggplot(gene_df, aes(gene, tpm)) +
 lineage_df %>%
     filter(gene %in% paste0("HLA-", c("A", "B", "C", "DPB1", "DQA1", "DQB1", "DRB1"))) %>%
     ggplot(aes(x = reorder(lineage, tpm, FUN = median, na.rm = TRUE), y = tpm)) +
-	ggbeeswarm::geom_quasirandom(aes(color = factor(subject)), 
+	ggbeeswarm::geom_quasirandom(aes(color = subject), 
 				     varwidth = TRUE, dodge.width = 0.5, size = 2.5) +   
     geom_boxplot(outlier.shape = NA, fill = NA, color = "grey55", alpha = .1) +
     ggsci::scale_color_aaas() +
