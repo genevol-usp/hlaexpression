@@ -257,22 +257,22 @@ Some of our eQTLs seem to mark the same biological signal as the eQTLs found by 
 Comparison with previous eQTLs
 ------------------------------
 
-| gene     | variant    |  rank| qtl\_previous |  distance\_variants|  distance\_eqtl\_previous\_gene|    rtc| study                                                     |
-|:---------|:-----------|-----:|:--------------|-------------------:|-------------------------------:|------:|:----------------------------------------------------------|
-| HLA-A    | rs16896724 |     0| rs2904758     |                3388|                           14313|  0.754| HLA-A: Nedelec (2016)                                     |
-| HLA-A    | rs2517827  |     1| rs2734971     |                1603|                           74589|  0.870| HLA-A: Lappalainen (2013)                                 |
-| HLA-B    | rs9264803  |     1| rs9264942     |                3929|                           47270|  0.999| HLA-C: Thomas (2009)                                      |
-| HLA-C    | rs41561715 |     0| rs9265628     |               61632|                           63372|  0.967| HLA-C: Lappalainen (2013)                                 |
-| HLA-C    | rs2394941  |     1| rs2853922     |               45917|                           29663|  0.960| HLA-B: Battle (2014)                                      |
-| HLA-C    | rs2249741  |     2| rs67384697    |                4030|                             155|  0.999| HLA-C: Kulkarni (2011)                                    |
-| HLA-DPB1 | rs9296068  |     1| rs13203715    |                 107|                           55116|  0.640| HLA-DPB1: Battle (2014)                                   |
-| HLA-DQA1 | rs9272316  |     0| rs28366302    |               43116|                           35023|  0.976| HLA-DRB1: Battle (2014)                                   |
-| HLA-DQA1 | rs9271375  |     1| rs72844177    |               66077|                           74967|  0.977| HLA-DRB1: Nedelec (2016)                                  |
-| HLA-DQB1 | rs1770     |     0| rs9274660     |                8601|                            9189|  0.984| HLA-DQA1: Lappalainen (2013)/HLA-DQB1: Lappalainen (2013) |
-| HLA-DQB1 | rs9272209  |     1| rs35957722    |              151397|                          176665|  0.813| HLA-DRB1: Lappalainen (2013)                              |
-| HLA-DQB1 | rs9269386  |     2| rs28366302    |               19884|                           66311|  0.806| HLA-DRB1: Battle (2014)                                   |
-| HLA-DRB1 | rs3104412  |     0| rs9274660     |               50467|                          115666|  0.998| HLA-DQA1: Lappalainen (2013)/HLA-DQB1: Lappalainen (2013) |
-| HLA-DRB1 | rs9270700  |     1| rs72844177    |               46316|                             222|  0.840| HLA-DRB1: Nedelec (2016)                                  |
+| gene     | variant    |  rank| qtl\_previous |  distance\_variants|    rtc| study                                                     |
+|:---------|:-----------|-----:|:--------------|-------------------:|------:|:----------------------------------------------------------|
+| HLA-A    | rs16896724 |     0| rs2904758     |                3388|  0.754| HLA-A: Nedelec (2016)                                     |
+| HLA-A    | rs2517827  |     1| rs2734971     |                1603|  0.870| HLA-A: Lappalainen (2013)                                 |
+| HLA-B    | rs9264803  |     1| rs9264942     |                3929|  0.999| HLA-C: Thomas (2009)                                      |
+| HLA-C    | rs41561715 |     0| rs9265628     |               61632|  0.967| HLA-C: Lappalainen (2013)                                 |
+| HLA-C    | rs2394941  |     1| rs2853922     |               45917|  0.960| HLA-B: Battle (2014)                                      |
+| HLA-C    | rs2249741  |     2| rs67384697    |                4030|  0.999| HLA-C: Kulkarni (2011)                                    |
+| HLA-DPB1 | rs9296068  |     1| rs13203715    |                 107|  0.640| HLA-DPB1: Battle (2014)                                   |
+| HLA-DQA1 | rs9272316  |     0| rs28366302    |               43116|  0.976| HLA-DRB1: Battle (2014)                                   |
+| HLA-DQA1 | rs9271375  |     1| rs72844177    |               66077|  0.977| HLA-DRB1: Nedelec (2016)                                  |
+| HLA-DQB1 | rs1770     |     0| rs9274660     |                8601|  0.984| HLA-DQA1: Lappalainen (2013)/HLA-DQB1: Lappalainen (2013) |
+| HLA-DQB1 | rs9272209  |     1| rs35957722    |              151397|  0.813| HLA-DRB1: Lappalainen (2013)                              |
+| HLA-DQB1 | rs9269386  |     2| rs28366302    |               19884|  0.806| HLA-DRB1: Battle (2014)                                   |
+| HLA-DRB1 | rs3104412  |     0| rs9274660     |               50467|  0.998| HLA-DQA1: Lappalainen (2013)/HLA-DQB1: Lappalainen (2013) |
+| HLA-DRB1 | rs9270700  |     1| rs72844177    |               46316|  0.840| HLA-DRB1: Nedelec (2016)                                  |
 
 Association to GWAS traits
 --------------------------

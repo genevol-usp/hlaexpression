@@ -270,6 +270,7 @@ kable(pval_df)
 
 ```{r}
 read_tsv("./qtls/qtls_star/imgt/rtc/previous_qtls/results.tsv") %>%
+    select(-distance_eqtl_previous_gene) %>%
     kable()
 ```
 
