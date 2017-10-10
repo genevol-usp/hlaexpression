@@ -266,7 +266,15 @@ pval_df <-
 kable(pval_df)
 ```
 
-# Association to GWAS traits
+## Comparison with previous eQTLs
+
+```{r}
+previous <- 
+    read_tsv("./qtls/qtls_star/imgt/rtc/previous_qtls/results.tsv") %>%
+    kable()
+```
+
+## Association to GWAS traits
 
 ```{r}
 read_tsv("./qtls/qtls_star/imgt/rtc/gwas/results.tsv") %>%
