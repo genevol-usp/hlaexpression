@@ -269,8 +269,7 @@ kable(pval_df)
 ## Comparison with previous eQTLs
 
 ```{r}
-previous <- 
-    read_tsv("./qtls/qtls_star/imgt/rtc/previous_qtls/results.tsv") %>%
+read_tsv("./qtls/qtls_star/imgt/rtc/previous_qtls/results.tsv") %>%
     kable()
 ```
 
