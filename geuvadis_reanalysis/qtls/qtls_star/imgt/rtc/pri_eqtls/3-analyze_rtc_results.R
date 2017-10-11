@@ -38,10 +38,10 @@ qtls_rtc_pri <-
     left_join(pri_eqtls, by = c("qtl_pri" =  "variant"), 
 	      suffix = c("_imgt", "_pri")) %>%
     drop_na() %>%
+    filter(rtc > 0.9) %>%
     select(gene_imgt, variant_imgt = variant, rank_imgt,
 	   gene_pri, variant_pri = qtl_pri, rank_pri, rtc) %>%
-    filter(rtc > 0.9) %>%
     mutate(rtc = round(rtc, 3)) %>%
-    arrange(gene_imgt, rank_imgt)
+    arrange(gene_imgt, rank_imgt, rank_pri)
 
 write_tsv(qtls_rtc_pri, "./results.tsv")
