@@ -205,6 +205,70 @@ include_graphics("./qtls/plots/landscape_class1.png")
 include_graphics("./qtls/plots/landscape_class2.png")
 ```
 
+## RTC between IMGT and Ref Transcriptome eQTLs
+
+Variants with RTC > 0.9 likely mark the same biological signal.
+
+```{r}
+read_tsv("./qtls/qtls_star/imgt/rtc/pri_eqtls/results.tsv") %>%
+    select(-distance_eqtl_pri_gene) %>%
+    kable()
+```
+
+## Comparison with previous eQTLs
+
+### RTC
+
+```{r}
+read_tsv("./qtls/qtls_star/imgt/rtc/previous_qtls/results.tsv") %>%
+    select(-distance_eqtl_previous_gene) %>%
+    kable()
+```
+
+### comparison of slope and p-value with Geuvadis
+
+```{r}
+geuvadis_qtls <- 
+    read_tsv("./qtls/qtls_star/imgt/rtc/geuvadis_eqtls/catalog.tsv",
+             col_names = c("variant", "info")) %>%
+    select(-variant) %>%
+    separate(info, c("geuvadis_variant", "geuvadis_gene", "geuvadis_slope",
+                     "geuvadis_pvalue"), sep = ":")
+
+star_qtls <- read_tsv("./qtls/plots/eqtl.tsv") %>%
+    select(gene = phen_id, rank, variant = var_id, slope, pvalue = nom_pval) %>%
+    mutate_at(vars(slope, pvalue), function(x) round(x, digits = 2))
+
+pval_df <-
+    star_qtls %>%
+    filter(rank == 0L) %>%
+    left_join(geuvadis_qtls, by = c("gene" = "geuvadis_gene")) %>%
+    select(gene, variant, geuvadis_variant, slope, geuvadis_slope, 
+           pvalue, geuvadis_pvalue)
+
+kable(pval_df)
+```
+
+## Association with GWAS traits
+
+```{r}
+read_tsv("./qtls/qtls_star/imgt/rtc/gwas/results.tsv") %>%
+    select(gene, rank, variant, gwas_variant, rtc, trait, studies = link) %>%
+    group_by(gene, rank, variant, gwas_variant, rtc) %>%
+    summarize(trait = paste(trait, collapse = "/"), 
+              studies = paste(studies, collapse = " ")) %>%
+    kable(digits = 2)
+```
+
+# Trans-eQTLs
+
+- Approximate pass as described on QTLtools website
+
+```{r}
+read_tsv("./qtls/qtls_star/imgt/trans/trans_results.tsv") %>%
+    kable(digits = 2)
+```
+
 ## HLA lineages
 
 ```{r}
@@ -230,66 +294,3 @@ read_tsv("./qtls/f_onewaytest_lineages.tsv") %>%
     kable(digits = 3)
 ```
 
-## Comparison with Geuvadis
-
-### RTC
-
-Some of our eQTLs seem to mark the same biological signal as the eQTLs found by
-Geuvadis (RTC > 0.9)
-
-```{r}
-read_tsv("./qtls/qtls_star/imgt/rtc/geuvadis_eqtls/results.tsv") %>%
-    kable()
-```
-
-### slope and p-value
-
-```{r}
-geuvadis_qtls <- 
-    read_tsv("./qtls/qtls_star/imgt/rtc/geuvadis_eqtls/catalog.tsv",
-             col_names = c("variant", "info")) %>%
-    select(-variant) %>%
-    separate(info, c("geuvadis_variant", "geuvadis_gene", "geuvadis_slope",
-                     "geuvadis_pvalue"), sep = ":")
-
-star_qtls <- read_tsv("./qtls/plots/eqtl.tsv") %>%
-    select(gene = phen_id, rank, variant = var_id, slope, pvalue = nom_pval) %>%
-    mutate_at(vars(slope, pvalue), function(x) round(x, digits = 2))
-
-pval_df <-
-    star_qtls %>%
-    filter(rank == 0L) %>%
-    left_join(geuvadis_qtls, by = c("gene" = "geuvadis_gene")) %>%
-    select(gene, variant, geuvadis_variant, slope, geuvadis_slope, 
-           pvalue, geuvadis_pvalue)
-
-kable(pval_df)
-```
-
-## Comparison with previous eQTLs
-
-```{r}
-read_tsv("./qtls/qtls_star/imgt/rtc/previous_qtls/results.tsv") %>%
-    select(-distance_eqtl_previous_gene) %>%
-    kable()
-```
-
-## Association to GWAS traits
-
-```{r}
-read_tsv("./qtls/qtls_star/imgt/rtc/gwas/results.tsv") %>%
-    select(gene, rank, variant, gwas_variant, rtc, trait, studies = link) %>%
-    group_by(gene, rank, variant, gwas_variant, rtc) %>%
-    summarize(trait = paste(trait, collapse = "/"), 
-              studies = paste(studies, collapse = " ")) %>%
-    kable(digits = 2)
-```
-
-# Trans-eQTLs
-
-- Approximate pass as described on QTLtools website
-
-```{r}
-read_tsv("./qtls/qtls_star/imgt/trans/trans_results.tsv") %>%
-    kable(digits = 2)
-```
