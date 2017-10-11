@@ -37,7 +37,7 @@ qtls_rtc_previous <-
 	      by = c("gene", "variant" =  "qtl_variant")) %>%
     inner_join(previous_eqtls, by = c("qtl_previous" =  "variant")) %>%
     group_by(gene, rank) %>%
-    filter(rtc == max(rtc)) %>%
+    filter(rtc > 0.9) %>%
     ungroup() %>%
     mutate(rtc = round(rtc, 3)) %>%
     distinct() %>%
