@@ -193,26 +193,26 @@ RTC between IMGT and Ref Transcriptome eQTLs
 
 Variants with RTC &gt; 0.9 likely mark the same biological signal.
 
-| gene     | variant    |  rank| qtl\_pri    |  distance\_variants|    rtc| study         |
-|:---------|:-----------|-----:|:------------|-------------------:|------:|:--------------|
-| HLA-B    | rs9264803  |     1| rs2844623   |               37908|  0.985| HLA-B: PRI    |
-| HLA-C    | rs41561715 |     0| rs9468965   |               61980|  0.991| HLA-C: PRI    |
-| HLA-C    | rs2394941  |     1| rs2394941   |                   0|  1.000| HLA-C: PRI    |
-| HLA-C    | rs2394941  |     1| rs1265159   |               80226|  0.993| HLA-B: PRI    |
-| HLA-C    | rs2249741  |     2| rs2074491   |                 816|  0.982| HLA-C: PRI    |
-| HLA-C    | rs2249741  |     2| rs2844623   |                8169|  0.936| HLA-B: PRI    |
-| HLA-DPB1 | rs9277538  |     0| rs9277538   |                   0|  1.000| HLA-DPB1: PRI |
-| HLA-DPB1 | rs9296068  |     1| rs9296068   |                   0|  1.000| HLA-DPB1: PRI |
-| HLA-DQA1 | rs9272316  |     0| rs144150162 |              146702|  0.976| HLA-DQA1: PRI |
-| HLA-DQA1 | rs9272316  |     0| rs28746846  |               30211|  0.902| HLA-DQB1: PRI |
-| HLA-DQA1 | rs9271375  |     1| rs9271365   |                 273|  1.000| HLA-DRB1: PRI |
-| HLA-DQA1 | rs9271375  |     1| rs114969562 |                7232|  0.926| HLA-DQB1: PRI |
-| HLA-DQB1 | rs1770     |     0| rs28746846  |                6428|  0.994| HLA-DQB1: PRI |
-| HLA-DQB1 | rs9272209  |     1| rs114969562 |                7678|  0.982| HLA-DQB1: PRI |
-| HLA-DQB1 | rs9272209  |     1| rs9273595   |               27114|  0.969| HLA-DQB1: PRI |
-| HLA-DQB1 | rs9269386  |     2| rs182670197 |               38290|  0.957| HLA-DRB1: PRI |
-| HLA-DRB1 | rs3104412  |     0| rs9271365   |                 827|  1.000| HLA-DRB1: PRI |
-| HLA-DRB1 | rs3104412  |     0| rs3134988   |               54805|  0.941| HLA-DQB1: PRI |
+| gene\_imgt | variant\_imgt |  rank\_imgt| gene\_pri | variant\_pri |  rank\_pri|    rtc|
+|:-----------|:--------------|-----------:|:----------|:-------------|----------:|------:|
+| HLA-B      | rs9264803     |           1| HLA-B     | rs2844623    |          1|  0.985|
+| HLA-C      | rs41561715    |           0| HLA-C     | rs9468965    |          0|  0.991|
+| HLA-C      | rs2394941     |           1| HLA-B     | rs1265159    |          0|  0.993|
+| HLA-C      | rs2394941     |           1| HLA-C     | rs2394941    |          2|  1.000|
+| HLA-C      | rs2249741     |           2| HLA-B     | rs2844623    |          1|  0.936|
+| HLA-C      | rs2249741     |           2| HLA-C     | rs2074491    |          1|  0.982|
+| HLA-DPB1   | rs9277538     |           0| HLA-DPB1  | rs9277538    |          0|  1.000|
+| HLA-DPB1   | rs9296068     |           1| HLA-DPB1  | rs9296068    |          1|  1.000|
+| HLA-DQA1   | rs9272316     |           0| HLA-DQA1  | rs144150162  |          0|  0.976|
+| HLA-DQA1   | rs9272316     |           0| HLA-DQB1  | rs28746846   |          0|  0.902|
+| HLA-DQA1   | rs9271375     |           1| HLA-DRB1  | rs9271365    |          1|  1.000|
+| HLA-DQA1   | rs9271375     |           1| HLA-DQB1  | rs114969562  |          2|  0.926|
+| HLA-DQB1   | rs1770        |           0| HLA-DQB1  | rs28746846   |          0|  0.994|
+| HLA-DQB1   | rs9272209     |           1| HLA-DQB1  | rs114969562  |          2|  0.982|
+| HLA-DQB1   | rs9272209     |           1| HLA-DQB1  | rs9273595    |          1|  0.969|
+| HLA-DQB1   | rs9269386     |           2| HLA-DRB1  | rs182670197  |          2|  0.957|
+| HLA-DRB1   | rs3104412     |           0| HLA-DRB1  | rs9271365    |          1|  1.000|
+| HLA-DRB1   | rs3104412     |           0| HLA-DQB1  | rs3134988    |          3|  0.941|
 
 Comparison with previous eQTLs
 ------------------------------

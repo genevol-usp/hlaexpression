@@ -252,6 +252,16 @@ cors_pca_star <-
     mutate(PCs = as.integer(PCs)) %>%
     arrange(PCs, gene_pair)
 
+mir <- read_tsv("../data/quantifications/mir148b_counts.tsv")
+
+hlaC_mir_df <- 
+    star_imgt %>%
+    filter(locus == "HLA-C") %>%
+    mutate(lineage = hla_trimnames(allele, 1)) %>%
+    select(subject, lineage, tpm) %>%
+    left_join(mir, by = "subject") %>%
+    drop_na()
+
 # plots
 png("./plots/star_vs_kallisto_TPM.png", width = 10, height = 6, units = "in", res = 200)
 scatter_plot(quant_data, "tpm.kallisto.imgt", "tpm.star.imgt") +
@@ -391,3 +401,19 @@ ggplot(star_imgt_with_nonclassical, aes(locus, tpm)) +
           axis.text.y = element_text(size = 12)) +
     labs(y = "TPM")
 dev.off()
+
+
+ggplot(hlaC_mir_df, aes(tpm, count)) +
+    geom_point() +
+    facet_wrap(~mir, scales = "free", ncol = 1) +
+    ggpmisc::stat_poly_eq(aes(label = ..adj.rr.label..), rr.digits = 2,
+                          formula = y ~ x, parse = TRUE, size = 6) +
+    labs(x = "HLA-C TPM", y = "mir counts")
+
+star_imgt %>%
+    filter(locus == "HLA-C") %>%
+    ggplot(aes(tpm, est_counts)) +
+    geom_point() +
+    ggpmisc::stat_poly_eq(aes(label = ..adj.rr.label..), rr.digits = 2,
+                          formula = y ~ x, parse = TRUE, size = 6) +
+    labs(x = "TPM", y = "est_counts")

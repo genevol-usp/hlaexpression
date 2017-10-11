@@ -33,7 +33,9 @@ barreiro <-
     mutate(source = "Nedelec (2016)")
 
 mary <- 
-    tibble(phenotype = "HLA-C", variant = "rs2395471", source = "Vince (2016)")
+    tibble(phenotype = "HLA-C", 
+	   variant = c("rs2395471", "rs9264942", "rs67384697"), 
+	   source = c("Vince (2016)", "Thomas (2009)", "Kulkarni (2011)"))
  
 qtls_df <-
     bind_rows(battle, geuvadis_eur, barreiro, mary) %>%

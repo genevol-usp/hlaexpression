@@ -211,7 +211,6 @@ Variants with RTC > 0.9 likely mark the same biological signal.
 
 ```{r}
 read_tsv("./qtls/qtls_star/imgt/rtc/pri_eqtls/results.tsv") %>%
-    select(-distance_eqtl_pri_gene) %>%
     kable()
 ```
 

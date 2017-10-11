@@ -13,7 +13,12 @@ qtls <-
     inner_join(gencode_hla, by = c("phen_id" = "gene_id")) %>%
     select(gene = gene_name, variant = var_id, rank)
 
-pri_eqtls <- read_tsv("./pri_eQTL.tsv", col_names = c("variant", "study"))
+pri_eqtls <- 
+    "../../../pri/3-conditional_analysis/conditional_60_all.txt.gz" %>%
+    read_qtltools() %>%
+    filter(bwd_best == 1) %>%
+    inner_join(gencode_hla, by = c("phen_id" = "gene_id")) %>%
+    select(gene = gene_name, variant = var_id, rank)
 
 rtc_names <- 
     c("gwas_variant", "qtl_variant", "gene", "gene_group", "gwas_variant_chr",
@@ -25,24 +30,18 @@ rtc_names <-
 
 rtc_pri <- 
     read_delim("./rtc_results.txt", delim = " ", col_names = rtc_names) %>% 
-    rename(qtl_pri = gwas_variant, 
-	   distance_eqtl_pri_gene = distance_gwas_gene) %>%
     inner_join(gencode_hla, by = c("gene" = "gene_id")) %>%
-    select(gene = gene_name, qtl_variant, qtl_pri, distance_variants,
-	   distance_eqtl_pri_gene, rtc)
+    select(gene = gene_name, qtl_variant, qtl_pri = gwas_variant, rtc)
 
 qtls_rtc_pri <- 
     left_join(qtls, rtc_pri, by = c("gene", "variant" =  "qtl_variant")) %>%
-    inner_join(pri_eqtls, by = c("qtl_pri" =  "variant")) %>%
-    group_by(gene, rank) %>%
+    left_join(pri_eqtls, by = c("qtl_pri" =  "variant"), 
+	      suffix = c("_imgt", "_pri")) %>%
+    drop_na() %>%
+    select(gene_imgt, variant_imgt = variant, rank_imgt,
+	   gene_pri, variant_pri = qtl_pri, rank_pri, rtc) %>%
     filter(rtc > 0.9) %>%
-    ungroup() %>%
     mutate(rtc = round(rtc, 3)) %>%
-    distinct() %>%
-    group_by(gene, variant, rank, qtl_pri, distance_variants, 
-	     distance_eqtl_pri_gene, rtc) %>%
-    summarise(study = paste(study, collapse = "/")) %>%
-    ungroup() %>%
-    arrange(gene, rank, desc(rtc))
+    arrange(gene_imgt, rank_imgt)
 
 write_tsv(qtls_rtc_pri, "./results.tsv")
