@@ -195,62 +195,143 @@ Variants with RTC &gt; 0.9 likely mark the same biological signal.
 
 | gene\_imgt | variant\_imgt |  rank\_imgt| gene\_pri | variant\_pri |  rank\_pri|    rtc|
 |:-----------|:--------------|-----------:|:----------|:-------------|----------:|------:|
+| HLA-A      | rs16896724    |           0| HLA-A     | rs28724990   |          0|  0.596|
+| HLA-A      | rs16896724    |           0| HLA-A     | rs2916818    |          1|  0.684|
+| HLA-A      | rs16896724    |           0| HLA-A     | rs2248162    |          2|  0.834|
+| HLA-A      | rs2517827     |           1| HLA-A     | rs28724990   |          0|  0.192|
+| HLA-A      | rs2517827     |           1| HLA-A     | rs2916818    |          1|  0.675|
+| HLA-A      | rs2517827     |           1| HLA-A     | rs2248162    |          2|  0.701|
+| HLA-B      | rs9264803     |           1| HLA-B     | rs1265159    |          0|  0.778|
+| HLA-B      | rs9264803     |           1| HLA-C     | rs9468965    |          0|  0.638|
 | HLA-B      | rs9264803     |           1| HLA-B     | rs2844623    |          1|  0.985|
+| HLA-B      | rs9264803     |           1| HLA-C     | rs2074491    |          1|  0.639|
+| HLA-B      | rs9264803     |           1| HLA-C     | rs2394941    |          2|  0.685|
+| HLA-B      | rs9264803     |           1| HLA-B     | rs72443738   |          2|  0.024|
+| HLA-B      | rs9264803     |           1| HLA-B     | rs28380929   |          3|  0.191|
+| HLA-C      | rs41561715    |           0| HLA-B     | rs1265159    |          0|  0.115|
 | HLA-C      | rs41561715    |           0| HLA-C     | rs9468965    |          0|  0.991|
+| HLA-C      | rs41561715    |           0| HLA-B     | rs2844623    |          1|  0.567|
+| HLA-C      | rs41561715    |           0| HLA-C     | rs2074491    |          1|  0.425|
+| HLA-C      | rs41561715    |           0| HLA-C     | rs2394941    |          2|  0.181|
+| HLA-C      | rs41561715    |           0| HLA-B     | rs72443738   |          2|  0.551|
+| HLA-C      | rs41561715    |           0| HLA-B     | rs28380929   |          3|  0.413|
 | HLA-C      | rs2394941     |           1| HLA-B     | rs1265159    |          0|  0.993|
+| HLA-C      | rs2394941     |           1| HLA-C     | rs9468965    |          0|  0.108|
+| HLA-C      | rs2394941     |           1| HLA-B     | rs2844623    |          1|  0.488|
+| HLA-C      | rs2394941     |           1| HLA-C     | rs2074491    |          1|  0.837|
 | HLA-C      | rs2394941     |           1| HLA-C     | rs2394941    |          2|  1.000|
+| HLA-C      | rs2394941     |           1| HLA-B     | rs72443738   |          2|  0.311|
+| HLA-C      | rs2394941     |           1| HLA-B     | rs28380929   |          3|  0.772|
+| HLA-C      | rs2249741     |           2| HLA-B     | rs1265159    |          0|  0.257|
+| HLA-C      | rs2249741     |           2| HLA-C     | rs9468965    |          0|  0.379|
 | HLA-C      | rs2249741     |           2| HLA-B     | rs2844623    |          1|  0.936|
 | HLA-C      | rs2249741     |           2| HLA-C     | rs2074491    |          1|  0.982|
+| HLA-C      | rs2249741     |           2| HLA-C     | rs2394941    |          2|  0.263|
+| HLA-C      | rs2249741     |           2| HLA-B     | rs72443738   |          2|  0.161|
+| HLA-C      | rs2249741     |           2| HLA-B     | rs28380929   |          3|  0.061|
 | HLA-DPB1   | rs9277538     |           0| HLA-DPB1  | rs9277538    |          0|  1.000|
 | HLA-DPB1   | rs9296068     |           1| HLA-DPB1  | rs9296068    |          1|  1.000|
 | HLA-DQA1   | rs9272316     |           0| HLA-DQA1  | rs144150162  |          0|  0.976|
+| HLA-DQA1   | rs9272316     |           0| HLA-DRB1  | rs9269749    |          0|  0.553|
 | HLA-DQA1   | rs9272316     |           0| HLA-DQB1  | rs28746846   |          0|  0.902|
+| HLA-DQA1   | rs9272316     |           0| HLA-DRB1  | rs9271365    |          1|  0.206|
+| HLA-DQA1   | rs9272316     |           0| HLA-DQA1  | rs35407265   |          1|  0.227|
+| HLA-DQA1   | rs9272316     |           0| HLA-DQB1  | rs9273595    |          1|  0.004|
+| HLA-DQA1   | rs9272316     |           0| HLA-DRB1  | rs182670197  |          2|  0.399|
+| HLA-DQA1   | rs9272316     |           0| HLA-DQB1  | rs114969562  |          2|  0.544|
+| HLA-DQA1   | rs9272316     |           0| HLA-DQB1  | rs3134988    |          3|  0.745|
+| HLA-DQA1   | rs9271375     |           1| HLA-DQA1  | rs144150162  |          0|  0.295|
+| HLA-DQA1   | rs9271375     |           1| HLA-DRB1  | rs9269749    |          0|  0.519|
+| HLA-DQA1   | rs9271375     |           1| HLA-DQB1  | rs28746846   |          0|  0.142|
 | HLA-DQA1   | rs9271375     |           1| HLA-DRB1  | rs9271365    |          1|  1.000|
+| HLA-DQA1   | rs9271375     |           1| HLA-DQA1  | rs35407265   |          1|  0.280|
+| HLA-DQA1   | rs9271375     |           1| HLA-DQB1  | rs9273595    |          1|  0.001|
+| HLA-DQA1   | rs9271375     |           1| HLA-DRB1  | rs182670197  |          2|  0.524|
 | HLA-DQA1   | rs9271375     |           1| HLA-DQB1  | rs114969562  |          2|  0.926|
+| HLA-DQA1   | rs9271375     |           1| HLA-DQB1  | rs3134988    |          3|  0.601|
+| HLA-DQB1   | rs1770        |           0| HLA-DQA1  | rs144150162  |          0|  0.896|
+| HLA-DQB1   | rs1770        |           0| HLA-DRB1  | rs9269749    |          0|  0.137|
 | HLA-DQB1   | rs1770        |           0| HLA-DQB1  | rs28746846   |          0|  0.994|
-| HLA-DQB1   | rs9272209     |           1| HLA-DQB1  | rs114969562  |          2|  0.982|
+| HLA-DQB1   | rs1770        |           0| HLA-DRB1  | rs9271365    |          1|  0.249|
+| HLA-DQB1   | rs1770        |           0| HLA-DQA1  | rs35407265   |          1|  0.459|
+| HLA-DQB1   | rs1770        |           0| HLA-DQB1  | rs9273595    |          1|  0.805|
+| HLA-DQB1   | rs1770        |           0| HLA-DRB1  | rs182670197  |          2|  0.393|
+| HLA-DQB1   | rs1770        |           0| HLA-DQB1  | rs114969562  |          2|  0.217|
+| HLA-DQB1   | rs1770        |           0| HLA-DQB1  | rs3134988    |          3|  0.865|
+| HLA-DQB1   | rs9272209     |           1| HLA-DQA1  | rs144150162  |          0|  0.786|
+| HLA-DQB1   | rs9272209     |           1| HLA-DRB1  | rs9269749    |          0|  0.805|
+| HLA-DQB1   | rs9272209     |           1| HLA-DQB1  | rs28746846   |          0|  0.597|
+| HLA-DQB1   | rs9272209     |           1| HLA-DRB1  | rs9271365    |          1|  0.549|
+| HLA-DQB1   | rs9272209     |           1| HLA-DQA1  | rs35407265   |          1|  0.239|
 | HLA-DQB1   | rs9272209     |           1| HLA-DQB1  | rs9273595    |          1|  0.969|
+| HLA-DQB1   | rs9272209     |           1| HLA-DRB1  | rs182670197  |          2|  0.272|
+| HLA-DQB1   | rs9272209     |           1| HLA-DQB1  | rs114969562  |          2|  0.982|
+| HLA-DQB1   | rs9272209     |           1| HLA-DQB1  | rs3134988    |          3|  0.000|
+| HLA-DQB1   | rs9269386     |           2| HLA-DQA1  | rs144150162  |          0|  0.662|
+| HLA-DQB1   | rs9269386     |           2| HLA-DRB1  | rs9269749    |          0|  0.390|
+| HLA-DQB1   | rs9269386     |           2| HLA-DQB1  | rs28746846   |          0|  0.465|
+| HLA-DQB1   | rs9269386     |           2| HLA-DRB1  | rs9271365    |          1|  0.110|
+| HLA-DQB1   | rs9269386     |           2| HLA-DQA1  | rs35407265   |          1|  0.459|
+| HLA-DQB1   | rs9269386     |           2| HLA-DQB1  | rs9273595    |          1|  0.393|
 | HLA-DQB1   | rs9269386     |           2| HLA-DRB1  | rs182670197  |          2|  0.957|
+| HLA-DQB1   | rs9269386     |           2| HLA-DQB1  | rs114969562  |          2|  0.876|
+| HLA-DQB1   | rs9269386     |           2| HLA-DQB1  | rs3134988    |          3|  0.711|
+| HLA-DRB1   | rs3104412     |           0| HLA-DQA1  | rs144150162  |          0|  0.112|
+| HLA-DRB1   | rs3104412     |           0| HLA-DRB1  | rs9269749    |          0|  0.648|
+| HLA-DRB1   | rs3104412     |           0| HLA-DQB1  | rs28746846   |          0|  0.729|
 | HLA-DRB1   | rs3104412     |           0| HLA-DRB1  | rs9271365    |          1|  1.000|
+| HLA-DRB1   | rs3104412     |           0| HLA-DQA1  | rs35407265   |          1|  0.576|
+| HLA-DRB1   | rs3104412     |           0| HLA-DQB1  | rs9273595    |          1|  0.312|
+| HLA-DRB1   | rs3104412     |           0| HLA-DRB1  | rs182670197  |          2|  0.605|
+| HLA-DRB1   | rs3104412     |           0| HLA-DQB1  | rs114969562  |          2|  0.454|
 | HLA-DRB1   | rs3104412     |           0| HLA-DQB1  | rs3134988    |          3|  0.941|
+| HLA-DRB1   | rs9270700     |           1| HLA-DQA1  | rs144150162  |          0|  0.459|
+| HLA-DRB1   | rs9270700     |           1| HLA-DRB1  | rs9269749    |          0|  0.684|
+| HLA-DRB1   | rs9270700     |           1| HLA-DQB1  | rs28746846   |          0|  0.165|
+| HLA-DRB1   | rs9270700     |           1| HLA-DRB1  | rs9271365    |          1|  0.116|
+| HLA-DRB1   | rs9270700     |           1| HLA-DQA1  | rs35407265   |          1|  0.263|
+| HLA-DRB1   | rs9270700     |           1| HLA-DQB1  | rs9273595    |          1|  0.539|
+| HLA-DRB1   | rs9270700     |           1| HLA-DRB1  | rs182670197  |          2|  0.525|
+| HLA-DRB1   | rs9270700     |           1| HLA-DQB1  | rs114969562  |          2|  0.536|
+| HLA-DRB1   | rs9270700     |           1| HLA-DQB1  | rs3134988    |          3|  0.669|
 
 Comparison with previous eQTLs
 ------------------------------
 
 ### RTC
 
-| gene     | variant    |  rank| qtl\_previous |  distance\_variants|    rtc| study                                                     |
-|:---------|:-----------|-----:|:--------------|-------------------:|------:|:----------------------------------------------------------|
-| HLA-B    | rs9264803  |     1| rs9264942     |                3929|  0.999| HLA-C: Thomas (2009)                                      |
-| HLA-B    | rs9264803  |     1| rs67384697    |               33769|  0.998| HLA-C: Kulkarni (2011)                                    |
-| HLA-B    | rs9264803  |     1| rs1050118     |               32675|  0.995| HLA-B: Nedelec (2016)                                     |
-| HLA-C    | rs41561715 |     0| rs9265628     |               61632|  0.967| HLA-C: Lappalainen (2013)                                 |
-| HLA-C    | rs2394941  |     1| rs2853922     |               45917|  0.960| HLA-B: Battle (2014)                                      |
-| HLA-C    | rs2394941  |     1| rs9266216     |              104817|  0.934| HLA-B: Lappalainen (2013)                                 |
-| HLA-C    | rs2394941  |     1| rs6931332     |               53972|  0.932| HLA-C: Battle (2014)                                      |
-| HLA-C    | rs2249741  |     2| rs2395471     |                  20|  0.999| HLA-C: Vince (2016)                                       |
-| HLA-C    | rs2249741  |     2| rs67384697    |                4030|  0.999| HLA-C: Kulkarni (2011)                                    |
-| HLA-C    | rs2249741  |     2| rs1050118     |                2936|  0.998| HLA-B: Nedelec (2016)                                     |
-| HLA-C    | rs2249741  |     2| rs9264942     |               33668|  0.997| HLA-C: Thomas (2009)                                      |
-| HLA-DQA1 | rs9272316  |     0| rs28366302    |               43116|  0.976| HLA-DRB1: Battle (2014)                                   |
-| HLA-DQA1 | rs9272316  |     0| rs35957722    |              153470|  0.973| HLA-DRB1: Lappalainen (2013)                              |
-| HLA-DQA1 | rs9271375  |     1| rs72844177    |               66077|  0.977| HLA-DRB1: Nedelec (2016)                                  |
-| HLA-DQB1 | rs1770     |     0| rs9274660     |                8601|  0.984| HLA-DQA1: Lappalainen (2013)/HLA-DQB1: Lappalainen (2013) |
-| HLA-DQB1 | rs1770     |     0| rs9273584     |                1231|  0.960| HLA-DQA1: Nedelec (2016)                                  |
-| HLA-DRB1 | rs3104412  |     0| rs9274660     |               50467|  0.998| HLA-DQA1: Lappalainen (2013)/HLA-DQB1: Lappalainen (2013) |
-| HLA-DRB1 | rs3104412  |     0| rs9273584     |               43097|  0.965| HLA-DQA1: Nedelec (2016)                                  |
+| gene     | variant    |  rank| qtl\_previous |    rtc| study                                                     |
+|:---------|:-----------|-----:|:--------------|------:|:----------------------------------------------------------|
+| HLA-B    | rs9264803  |     1| rs9264942     |  0.999| HLA-C: Thomas (2009)                                      |
+| HLA-B    | rs9264803  |     1| rs67384697    |  0.998| HLA-C: Kulkarni (2011)                                    |
+| HLA-B    | rs9264803  |     1| rs1050118     |  0.995| HLA-B: Nedelec (2016)                                     |
+| HLA-C    | rs41561715 |     0| rs9265628     |  0.967| HLA-C: Lappalainen (2013)                                 |
+| HLA-C    | rs2394941  |     1| rs2853922     |  0.960| HLA-B: Battle (2014)                                      |
+| HLA-C    | rs2394941  |     1| rs9266216     |  0.934| HLA-B: Lappalainen (2013)                                 |
+| HLA-C    | rs2394941  |     1| rs6931332     |  0.932| HLA-C: Battle (2014)                                      |
+| HLA-C    | rs2249741  |     2| rs2395471     |  0.999| HLA-C: Vince (2016)                                       |
+| HLA-C    | rs2249741  |     2| rs67384697    |  0.999| HLA-C: Kulkarni (2011)                                    |
+| HLA-C    | rs2249741  |     2| rs1050118     |  0.998| HLA-B: Nedelec (2016)                                     |
+| HLA-C    | rs2249741  |     2| rs9264942     |  0.997| HLA-C: Thomas (2009)                                      |
+| HLA-DQA1 | rs9272316  |     0| rs28366302    |  0.976| HLA-DRB1: Battle (2014)                                   |
+| HLA-DQA1 | rs9272316  |     0| rs35957722    |  0.973| HLA-DRB1: Lappalainen (2013)                              |
+| HLA-DQA1 | rs9271375  |     1| rs72844177    |  0.977| HLA-DRB1: Nedelec (2016)                                  |
+| HLA-DQB1 | rs1770     |     0| rs9274660     |  0.984| HLA-DQA1: Lappalainen (2013)/HLA-DQB1: Lappalainen (2013) |
+| HLA-DQB1 | rs1770     |     0| rs9273584     |  0.960| HLA-DQA1: Nedelec (2016)                                  |
+| HLA-DRB1 | rs3104412  |     0| rs9274660     |  0.998| HLA-DQA1: Lappalainen (2013)/HLA-DQB1: Lappalainen (2013) |
+| HLA-DRB1 | rs3104412  |     0| rs9273584     |  0.965| HLA-DQA1: Nedelec (2016)                                  |
 
 ### comparison of slope and p-value with Geuvadis
 
-| gene     | variant    | geuvadis\_variant |  slope| geuvadis\_slope |  pvalue| geuvadis\_pvalue |
-|:---------|:-----------|:------------------|------:|:----------------|-------:|:-----------------|
-| HLA-A    | rs16896724 | rs114565353       |   0.85| -0.45           |   33.06| 19.4             |
-| HLA-C    | rs41561715 | rs115899777       |   1.30| 0.58            |   35.71| 34.33            |
-| HLA-B    | rs1265094  | rs137939159       |   0.63| -0.37           |   17.10| 13.08            |
-| HLA-DRB1 | rs3104412  | rs116405062       |   0.68| -0.6            |   21.35| 36.49            |
-| HLA-DQA1 | rs9272316  | rs9274660         |   0.86| -0.7            |   41.56| 55.76            |
-| HLA-DQB1 | rs1770     | rs9274660         |  -0.70| -0.72           |   23.53| 60.56            |
-| HLA-DPB1 | rs9277538  | NA                |   1.01| NA              |   40.81| NA               |
+| gene     | variant    | geuvadis\_variant |  slope|  geuvadis\_slope|  pvalue|  geuvadis\_pvalue|
+|:---------|:-----------|:------------------|------:|----------------:|-------:|-----------------:|
+| HLA-A    | rs16896724 | rs2734971         |   0.85|       -0.4516518|   33.06|          19.40016|
+| HLA-C    | rs41561715 | rs9265628         |   1.30|        0.5814953|   35.71|          34.33122|
+| HLA-B    | rs1265094  | rs9266216         |   0.63|       -0.3738578|   17.10|          13.08181|
+| HLA-DRB1 | rs3104412  | rs35957722        |   0.68|       -0.5963285|   21.35|          36.48896|
+| HLA-DQA1 | rs9272316  | rs9274660         |   0.86|       -0.7020240|   41.56|          55.76189|
+| HLA-DQB1 | rs1770     | rs9274660         |  -0.70|       -0.7226485|   23.53|          60.55591|
+| HLA-DPB1 | rs9277538  | NA                |   1.01|               NA|   40.81|                NA|
 
 Association with GWAS traits
 ----------------------------

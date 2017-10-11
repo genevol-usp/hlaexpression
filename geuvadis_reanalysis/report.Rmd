@@ -220,20 +220,17 @@ read_tsv("./qtls/qtls_star/imgt/rtc/pri_eqtls/results.tsv") %>%
 
 ```{r}
 read_tsv("./qtls/qtls_star/imgt/rtc/previous_qtls/results.tsv") %>%
-    select(-distance_eqtl_previous_gene) %>%
     kable()
 ```
 
 ### comparison of slope and p-value with Geuvadis
 
 ```{r}
-geuvadis_qtls <- 
-    read_tsv("./qtls/qtls_star/imgt/rtc/geuvadis_eqtls/catalog.tsv",
-             col_names = c("variant", "info")) %>%
-    select(-variant) %>%
-    separate(info, c("geuvadis_variant", "geuvadis_gene", "geuvadis_slope",
-                     "geuvadis_pvalue"), sep = ":")
-
+geuvadis_qtls <- "./data/previous_qtls/geuvadis_eqtl_slope_pvals.tsv" %>%
+    read_tsv() %>%
+    select(geuvadis_gene = phenotype, geuvadis_variant = variant,
+	   geuvadis_slope = slope, geuvadis_pvalue = pval)
+    
 star_qtls <- read_tsv("./qtls/plots/eqtl.tsv") %>%
     select(gene = phen_id, rank, variant = var_id, slope, pvalue = nom_pval) %>%
     mutate_at(vars(slope, pvalue), function(x) round(x, digits = 2))
