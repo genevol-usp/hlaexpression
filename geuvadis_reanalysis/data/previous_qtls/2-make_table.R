@@ -20,11 +20,20 @@ battle <-
 	   source = "Battle (2014)")
 
 geuvadis_eur <- 
-    "../../qtls/qtls_star/imgt/rtc/geuvadis_eqtls/catalog.tsv" %>%
-    read_tsv(col_names = FALSE) %>%
-    separate(X2, c("junk1", "phenotype", "junk2", "junk3"), sep = ":") %>%
-    select(phenotype, variant = X1) %>%
-    mutate(source = "Lappalainen (2013)")
+    read_tsv("./geuvadis_eur_eqtls.txt.gz", col_names = FALSE) %>%
+    inner_join(gencode_hla_V12, by = c("X4" = "gene_id")) %>%
+    select(phenotype = gene_name, variant = X1, slope = X10, pval = X12) %>%
+    mutate(variant = recode(variant, 
+			    "rs114565353" = "rs2734971",
+			    "rs137939159" = "rs9266216",
+			    "rs115899777" = "rs9265628",
+			    "rs116405062" = "rs35957722"),
+	   source = "Lappalainen (2013)") %>%
+    arrange(phenotype) 
+
+geuvadis_eur %>%
+    select(-source) %>%
+    write_tsv("./geuvadis_eqtl_slope_pvals.tsv")
 
 barreiro <- 
     readxl::read_excel("./barreiro_eqtls.xlsx", 1, skip = 2) %>%
@@ -38,7 +47,7 @@ mary <-
 	   source = c("Vince (2016)", "Thomas (2009)", "Kulkarni (2011)"))
  
 qtls_df <-
-    bind_rows(battle, geuvadis_eur, barreiro, mary) %>%
+    bind_rows(battle, select(geuvadis_eur, -slope, -pval), barreiro, mary) %>%
     select(source, phenotype, variant) %>%
     arrange(source, phenotype)
 

@@ -16,33 +16,20 @@ qtls <-
 previous_eqtls <-
     read_tsv("./previous_eQTL.tsv", col_names = c("variant", "study"))
 
-rtc_names <- 
-    c("gwas_variant", "qtl_variant", "gene", "gene_group", "gwas_variant_chr",
-      "gwas_variant_pos", "gwas_variant_rank", "qtl_variant_chr", 
-      "qtl_variant_pos", "qtl_variant_rank", "gene_chr", "gene_pos", 
-      "distance_variants", "distance_gwas_gene", "gwas_variant_region_index",
-      "qtl_variant_region_index", "region_start", "region_end", "n_variants",
-      "rtc", "d_prime", "r_squared")
-
 rtc_previous <- 
-    read_delim("./rtc_results.txt", delim = " ", col_names = rtc_names) %>% 
-    rename(qtl_previous = gwas_variant, 
-	   distance_eqtl_previous_gene = distance_gwas_gene) %>%
+    read_qtltools_rtc("./rtc_results.txt") %>% 
+    rename(qtl_previous = gwas_var) %>%
     inner_join(gencode_hla, by = c("gene" = "gene_id")) %>%
-    select(gene = gene_name, qtl_variant, qtl_previous, distance_variants,
-	   distance_eqtl_previous_gene, rtc)
+    select(gene = gene_name, qtl_var, qtl_previous, d_prime, rtc)
 
 qtls_rtc_previous <- 
     left_join(qtls, rtc_previous, 
-	      by = c("gene", "variant" =  "qtl_variant")) %>%
+	      by = c("gene", "variant" =  "qtl_var")) %>%
     inner_join(previous_eqtls, by = c("qtl_previous" =  "variant")) %>%
-    group_by(gene, rank) %>%
     filter(rtc > 0.9) %>%
-    ungroup() %>%
     mutate(rtc = round(rtc, 3)) %>%
     distinct() %>%
-    group_by(gene, variant, rank, qtl_previous, distance_variants, 
-	     distance_eqtl_previous_gene, rtc) %>%
+    group_by(gene, variant, rank, qtl_previous, d_prime, rtc) %>%
     summarise(study = paste(study, collapse = "/")) %>%
     ungroup() %>%
     arrange(gene, rank, desc(rtc))

@@ -5,9 +5,11 @@
 #PBS -l walltime=24:00:00
 #PBS -q short
 #PBS -j oe
-#PBS -o /home/vitor/hlaexpression/geuvadis_reanalysis/qtls/qtls_star/imgt/rtc/previous_qtls/$PBS_JOBID.log
+#PBS -o /home/vitor/hlaexpression/geuvadis_reanalysis/qtls/qtls_star/imgt/rtc/previous_qtls/log/$PBS_JOBID.log
 
 cd $PBS_O_WORKDIR
+
+mkdir -p ./log
 
 QTLtools=/home/vitor/QTLtools/QTLtools_1.1_Ubuntu16.04_x86_64
 
@@ -21,6 +23,6 @@ COND=../../3-conditional_analysis/conditional_60_all.txt.gz
 OUT=./rtc_results.txt
 
 $QTLtools rtc --vcf $VCF --bed $BED --include-samples $SAMPLES\
-    --region 6:28000000-35000000\
+    --region 6:28000000-35000000 --D-prime-threshold 0.5\
     --cov $COV --hotspot $HOTSPOTS --gwas-cis $CATALOG $COND --normal\
     --conditional --out $OUT

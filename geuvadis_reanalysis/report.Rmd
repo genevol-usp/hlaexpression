@@ -211,7 +211,7 @@ Variants with RTC > 0.9 likely mark the same biological signal.
 
 ```{r}
 read_tsv("./qtls/qtls_star/imgt/rtc/pri_eqtls/results.tsv") %>%
-    kable()
+    kable(digits = 2)
 ```
 
 ## Comparison with previous eQTLs
@@ -220,7 +220,7 @@ read_tsv("./qtls/qtls_star/imgt/rtc/pri_eqtls/results.tsv") %>%
 
 ```{r}
 read_tsv("./qtls/qtls_star/imgt/rtc/previous_qtls/results.tsv") %>%
-    kable()
+    kable(digits = 2)
 ```
 
 ### comparison of slope and p-value with Geuvadis
