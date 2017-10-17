@@ -69,17 +69,25 @@ make_data <- function(df_allele, df_gene, locus1, locus2) {
 
 make_phase_plot <- function(data, locus1, locus2) {
 
+    cor_df <- data %>%
+        group_by(level) %>%
+        do(data.frame(pearson = cor(.[[locus1]], .[[locus2]], method = "pearson"),
+                      x = min(.[[locus1]]),
+                      y = max(.[[locus2]]))) %>%
+        ungroup() %>%
+        mutate(pearson = round(pearson, digits = 3))
+    
     ggplot(data, aes_string(locus1, locus2)) +
-	geom_point() +
+	geom_point(size = .8) +
 	geom_smooth(method = lm, se = FALSE) + 
+    geom_text(data = cor_df, aes(x, y, label = paste("r =", pearson)),
+              hjust = "inward", vjust = "inward", size = 5) +
 	facet_wrap(~level, nrow = 1, scales = "free") +
 	theme_bw() +
 	theme(axis.text = element_text(size = 12),
 	      axis.title = element_text(size = 16),
 	      strip.text = element_text(size = 16)) + 
-	labs(x = paste0("HLA-", locus1), y = paste0("HLA-", locus2)) +
-	stat_poly_eq(aes(label = ..adj.rr.label..), rr.digits = 2,
-		   formula = y ~ x, parse = TRUE, size = 6)
+	labs(x = paste0("HLA-", locus1), y = paste0("HLA-", locus2))
 }
 
 # data
@@ -361,17 +369,25 @@ print(pairs_hla_k, left = .3, bottom = .3)
 dev.off()
 
 png("./plots/trans_activ_corrs.png", width = 10, height = 3.5, units = "in", res = 200)
+cor_df <- class_2_trans_df %>%
+    group_by(locus) %>%
+    do(data.frame(pearson = cor(.$value, .$CIITA, method = "pearson"),
+                  x = min(.$value),
+                  y = max(.$CIITA))) %>%
+    ungroup() %>%
+    mutate(pearson = round(pearson, digits = 3))
+
 ggplot(class_2_trans_df, aes(value, CIITA)) +
-    geom_point(alpha = 1/2) +
+    geom_point(size = .8) +
     geom_smooth(method = lm, se = FALSE) +
+    geom_text(data = cor_df, aes(x, y, label = paste("r =", pearson)),
+              hjust = "inward", vjust = "inward", size = 5) +
     theme_bw() +
     theme(axis.text.x = element_text(size = 12),
           axis.title = element_text(size = 16),
           strip.text = element_text(size = 16)) + 
     facet_wrap(~locus, nrow = 1) +
-    labs(x = NULL) +
-    stat_poly_eq(aes(label = ..adj.rr.label..), rr.digits = 2,
-	       formula = y ~ x, parse = TRUE, size = 6)
+    labs(x = NULL)
 dev.off()
 
 png("./plots/a_vs_b.png", height = 3.5, width = 10, units = "in", res = 200)
@@ -425,18 +441,17 @@ ggplot(star_imgt_with_nonclassical, aes(locus, tpm)) +
     labs(y = "TPM")
 dev.off()
 
+#ggplot(hlaC_mir_df, aes(tpm, count)) +
+#    geom_point() +
+#    facet_wrap(~mir, scales = "free", ncol = 1) +
+#    ggpmisc::stat_poly_eq(aes(label = ..adj.rr.label..), rr.digits = 2,
+#                          formula = y ~ x, parse = TRUE, size = 6) +
+#    labs(x = "HLA-C TPM", y = "mir counts")
 
-ggplot(hlaC_mir_df, aes(tpm, count)) +
-    geom_point() +
-    facet_wrap(~mir, scales = "free", ncol = 1) +
-    ggpmisc::stat_poly_eq(aes(label = ..adj.rr.label..), rr.digits = 2,
-                          formula = y ~ x, parse = TRUE, size = 6) +
-    labs(x = "HLA-C TPM", y = "mir counts")
-
-star_imgt %>%
-    filter(locus == "HLA-C") %>%
-    ggplot(aes(tpm, est_counts)) +
-    geom_point() +
-    ggpmisc::stat_poly_eq(aes(label = ..adj.rr.label..), rr.digits = 2,
-                          formula = y ~ x, parse = TRUE, size = 6) +
-    labs(x = "TPM", y = "est_counts")
+#star_imgt %>%
+#    filter(locus == "HLA-C") %>%
+#    ggplot(aes(tpm, est_counts)) +
+#    geom_point() +
+#    ggpmisc::stat_poly_eq(aes(label = ..adj.rr.label..), rr.digits = 2,
+#                          formula = y ~ x, parse = TRUE, size = 6) +
+#    labs(x = "TPM", y = "est_counts")
