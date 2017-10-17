@@ -2,7 +2,7 @@ devtools::load_all("/home/vitor/hlaseqlib")
 library(tidyverse)
 library(cowplot)
 library(GGally)
-library(ggpmisc)
+#library(ggpmisc)
 
 # functions
 calc_ase <- function(counts) min(counts)/sum(counts)
@@ -14,18 +14,41 @@ plot_lower <- function(data, mapping, ...) {
 	geom_smooth(method = lm) 
 }
 
-scatter_plot <- function(df, x_var, y_var) {
-  
+#scatter_plot <- function(df, x_var, y_var) {
+#  
+#    ggplot(df, aes_string(x_var, y_var)) +
+#	geom_abline() +
+#	geom_point() +
+#	facet_wrap(~locus, scales = "free") +
+#	ggpmisc::stat_poly_eq(aes(label = ..adj.rr.label..), rr.digits = 2,
+#			      formula = y ~ x, parse = TRUE, size = 6) +
+#	theme_bw() +
+#	theme(axis.text = element_text(size = 12),
+#	      axis.title = element_text(size = 16),
+#	      strip.text = element_text(size = 16))
+#}
+
+scatter_plot_cors <- function(df, x_var, y_var) {
+    
+    cor_df <- df %>%
+        group_by(locus) %>%
+        do(data.frame(pearson = cor(.[[x_var]], .[[y_var]], method = "pearson"),
+                      spearman = cor(.[[x_var]], .[[y_var]], method = "spearman"),
+                      x = min(.[[x_var]]),
+                      y = max(.[[y_var]]))) %>%
+        ungroup() %>%
+        mutate_at(vars(pearson, spearman), ~round(., digits = 3))
+        
     ggplot(df, aes_string(x_var, y_var)) +
-	geom_abline() +
-	geom_point() +
-	facet_wrap(~locus, scales = "free") +
-	ggpmisc::stat_poly_eq(aes(label = ..adj.rr.label..), rr.digits = 2,
-			      formula = y ~ x, parse = TRUE, size = 6) +
-	theme_bw() +
-	theme(axis.text = element_text(size = 12),
-	      axis.title = element_text(size = 16),
-	      strip.text = element_text(size = 16))
+        geom_abline() +
+        geom_point(size = .8) +
+        geom_text(data = cor_df, aes(x, y, label = paste("r =", pearson)),
+                  hjust = "inward", vjust = "inward", size = 5) +
+        facet_wrap(~locus, scales = "free") +
+        theme_bw() +
+        theme(axis.text = element_text(size = 12),
+              axis.title = element_text(size = 16),
+              strip.text = element_text(size = 16))
 }
 
 make_data <- function(df_allele, df_gene, locus1, locus2) {
@@ -252,45 +275,45 @@ cors_pca_star <-
     mutate(PCs = as.integer(PCs)) %>%
     arrange(PCs, gene_pair)
 
-mir <- read_tsv("../data/quantifications/mir148b_counts.tsv")
+#mir <- read_tsv("../data/quantifications/mir148b_counts.tsv")
 
-hlaC_mir_df <- 
-    star_imgt %>%
-    filter(locus == "HLA-C") %>%
-    mutate(lineage = hla_trimnames(allele, 1)) %>%
-    select(subject, lineage, tpm) %>%
-    left_join(mir, by = "subject") %>%
-    drop_na()
+#hlaC_mir_df <- 
+#    star_imgt %>%
+#    filter(locus == "HLA-C") %>%
+#    mutate(lineage = hla_trimnames(allele, 1)) %>%
+#    select(subject, lineage, tpm) %>%
+#    left_join(mir, by = "subject") %>%
+#    drop_na()
 
 # plots
 png("./plots/star_vs_kallisto_TPM.png", width = 10, height = 6, units = "in", res = 200)
-scatter_plot(quant_data, "tpm.kallisto.imgt", "tpm.star.imgt") +
+scatter_plot_cors(quant_data, "tpm.kallisto.imgt", "tpm.star.imgt") +
     labs(x = "TPM (kallisto)", y = "TPM (STAR-Salmon)")
 dev.off()
 
 png("./plots/star_vs_kallisto_PCA.png", width = 10, height = 6, units = "in", res = 200)
-scatter_plot(quant_data, "resid.kallisto.imgt.tpm", "resid.star.imgt.tpm") +
+scatter_plot_cors(quant_data, "resid.kallisto.imgt.tpm", "resid.star.imgt.tpm") +
     labs(x = "PCA-corrected TPM (kallisto)", y = "PCA-corrected TPM (STAR-Salmon)")
 dev.off()
 
 png("./plots/star_imgt_vs_pri_TPM.png", height = 6, width = 10, units = "in", res = 200)
-scatter_plot(quant_data, "tpm.star.imgt", "tpm.star.pri") +
+scatter_plot_cors(quant_data, "tpm.star.imgt", "tpm.star.pri") +
     labs(x = "TPM (STAR-IMGT)", y = "TPM (STAR REF chromosomes)")
 dev.off()
 
 png("./plots/star_imgt_vs_pri_PCA.png", width = 10, height = 6, units = "in", res = 200)
-scatter_plot(quant_data, "resid.star.imgt.tpm", "resid.star.pri.tpm") +
+scatter_plot_cors(quant_data, "resid.star.imgt.tpm", "resid.star.pri.tpm") +
     labs(x = "PCA-corrected TPM (STAR-IMGT)", 
          y = "PCA-corrected TPM (STAR REF chromosomes)")
 dev.off()
 
 png("./plots/kallisto_imgt_vs_pri_TPM.png", width = 10, height = 6, units = "in", res = 200)
-scatter_plot(quant_data, "tpm.kallisto.imgt", "tpm.kallisto.pri") +
+scatter_plot_cors(quant_data, "tpm.kallisto.imgt", "tpm.kallisto.pri") +
     labs(x = "TPM (kallisto-IMGT)", y = "TPM (kallisto REF chromosomes)")
 dev.off()
 
 png("./plots/kallisto_imgt_vs_pri_PCA.png", width = 10, height = 6, units = "in", res = 200)
-scatter_plot(quant_data, "resid.kallisto.imgt.tpm", "resid.kallisto.pri.tpm") +
+scatter_plot_cors(quant_data, "resid.kallisto.imgt.tpm", "resid.kallisto.pri.tpm") +
     labs(x = "PCA-corrected TPM (kallisto-IMGT)", 
          y = "PCA-corrected TPM (kallisto REF chromosomes)")
 dev.off()
