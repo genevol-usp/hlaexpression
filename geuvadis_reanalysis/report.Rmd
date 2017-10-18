@@ -191,20 +191,6 @@ read_tsv("./qtls/qtls_with_regulome_score.tsv") %>%
     kable()
 ```
 
-## Entire region
-
-### Class I
-
-```{r}
-include_graphics("./qtls/plots/landscape_class1.png")
-```
-
-### Class II
-
-```{r}
-include_graphics("./qtls/plots/landscape_class2.png")
-```
-
 ## RTC between IMGT and Ref Transcriptome eQTLs
 
 Variants with RTC > 0.9 likely mark the same biological signal.

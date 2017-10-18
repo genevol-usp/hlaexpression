@@ -177,17 +177,6 @@ RegulomeDB score
 | HLA-DRB1   |     1| pri   | rs9271365   | 7     |
 | HLA-DRB1   |     2| pri   | rs182670197 | 7     |
 
-Entire region
--------------
-
-### Class I
-
-![](./qtls/plots/landscape_class1.png)
-
-### Class II
-
-![](./qtls/plots/landscape_class2.png)
-
 RTC between IMGT and Ref Transcriptome eQTLs
 --------------------------------------------
 
