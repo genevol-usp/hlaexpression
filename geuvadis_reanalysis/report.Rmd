@@ -243,7 +243,8 @@ same causal variants.
 Our eQTLs tag eQTLs, cQTLs, aCRD-QTLs and sCRD-QTLs in that study.
 
 ```{r}
-read_tsv("./qtls/qtls_star/imgt/rtc/crd/results.tsv")
+read_tsv("./qtls/qtls_star/imgt/rtc/crd/results.tsv") %>%
+    kable()
 ```
 
 ## Association with GWAS traits
