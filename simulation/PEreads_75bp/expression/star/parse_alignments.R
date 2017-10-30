@@ -11,7 +11,7 @@ gencode_ids <- select(gencode_chr_tx, tx_id, gene_name)
 hla_genes <- paste0("HLA-", c("A", "B", "C", "DPB1", "DQA1", "DQB1", "DRB1"))
 hla_regex <- "IMGT_(A|B|C|DPB1|DQA1|DQB1|DRB1)"  
 
-ids_hla_pri <- readLines("../../../imgt_index/hla_ids_pri.txt")
+ids_hla_pri <- readLines("../../../../imgt_index/hla_ids_pri.txt")
 
 read_ids <- 
     paste0("../../data/read_ids/", sample_id, ".txt") %>%
@@ -54,15 +54,14 @@ aligned_to_diff <-
     summarize(perc = round(mean(gene_read != gene_ref) * 100, 2)) %>%
     ungroup()
 
-diff_refs_df <-
+aligned_summary <-
     inner_join(aligns_df, read_ids) %>%
     filter(!is.na(gene_ref)) %>%
     group_by(gene_read, gene_ref) %>%
     summarize(n = n()) %>%
     group_by(gene_read) %>%
     mutate(perc = round(n/sum(n) * 100, 4)) %>%
-    arrange(gene_read, desc(perc)) %>%
-    filter(gene_read != gene_ref)
+    arrange(gene_read, desc(perc))
 
 false_pos <-
     aligns_df %>%
@@ -73,5 +72,5 @@ false_pos <-
 
 write_tsv(not_aligned, paste0(outdir, "/reads_not_aligned_hla.tsv"))
 write_tsv(aligned_to_diff, paste0(outdir, "/reads_false_neg_hla.tsv"))
-write_tsv(diff_refs_df, paste0(outdir, "/diff_refs_hla.tsv"))
+write_tsv(aligned_summary, paste0(outdir, "/hla_aligned_summary.tsv"))
 write_tsv(false_pos, paste0(outdir, "/reads_false_pos_hla.tsv"))

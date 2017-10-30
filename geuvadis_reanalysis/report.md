@@ -247,6 +247,27 @@ Comparison with previous eQTLs
 | HLA-DQB1 | rs1770     | rs9274660         |  -0.70|       -0.7226485|   23.53|          60.55591|
 | HLA-DPB1 | rs9277538  | NA                |   1.01|               NA|   40.81|                NA|
 
+### RTC with variants in Delaneau et al (2017)
+
+[Delaneau et al. (2017)](https://www.biorxiv.org/content/early/2017/08/03/171694) mapped eQTLs, chromatin QTLs (cQTLs), CRD QTLs (variants associated with activity or structure of cis-regulatory domains (CRDs)). The authors found that most of the QTLs affect both CRD activity and gene expression and therefore likely tag the same causal variants.
+
+Our eQTLs tag eQTLs, cQTLs, aCRD-QTLs and sCRD-QTLs in that study.
+
+    # A tibble: 39 x 8
+        gene    variant  rank    crd_var d_prime   rtc qtl_type
+       <chr>      <chr> <int>      <chr>   <dbl> <dbl>    <chr>
+     1 HLA-A rs16896724     0 rs16896742   0.994 0.986     cQTL
+     2 HLA-A rs16896724     0  rs9260092   0.977 0.922 CRDactiv
+     3 HLA-A  rs2517827     1   rs376253   0.991 0.998     cQTL
+     4 HLA-A  rs2517827     1  rs3129069   0.722 0.947 CRDactiv
+     5 HLA-A  rs2517827     1 rs34922185   0.647 0.917     eQTL
+     6 HLA-A  rs7383537     2  rs1611303   0.646 0.995     cQTL
+     7 HLA-B  rs1265094     0  rs6913301   0.930 0.997     cQTL
+     8 HLA-B  rs1265094     0  rs6913648   0.930 0.997     cQTL
+     9 HLA-B  rs1265094     0  rs2428516   0.869 0.985 CRDactiv
+    10 HLA-B  rs9264803     1  rs2249742   0.957 0.983 CRDactiv
+    # ... with 29 more rows, and 1 more variables: phenotype <chr>
+
 Association with GWAS traits
 ----------------------------
 

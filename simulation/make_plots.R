@@ -1,5 +1,6 @@
 devtools::load_all("/home/vitor/hlaseqlib")
 library(tidyverse)
+#library(GGally)
 
 # Functions
 read_imgt_quants <- function(f) {
@@ -33,14 +34,16 @@ plot_dist <- function(df) {
 	                       breaks = scales::pretty_breaks(n = 3)) +
     	scale_y_continuous(breaks = seq(0, 1.5, 0.5)) +
     	facet_wrap(~locus, scales = "free_x") +
-    	ggsci::scale_color_aaas(labels = c(pri = "Ref chromosomes",
-    	                                   imgt = "Ref chromosomes + HLA diversity")) +
+    	scale_color_manual(
+    	    values = c(imgt = "#8491B4B2", pri = "#DC0000B2"),
+    	    labels = c(pri = "Ref chromosomes",
+    	                              imgt = "Ref chromosomes + HLA diversity")) +
     	theme_bw() +
-    	theme(axis.text = element_text(size = 14),
-    	      axis.title = element_text(size = 18),
-    	      legend.title = element_text(size = 14),
-    	      legend.text = element_text(size = 14),
-    	      strip.text = element_text(size = 16, face = "bold"),
+    	theme(axis.text = element_text(size = 10),
+    	      axis.title = element_text(size = 12),
+    	      legend.title = element_text(size = 12),
+    	      legend.text = element_text(size = 10),
+    	      strip.text = element_text(size = 12, face = "bold"),
     	      legend.position = c(.75, .1)) +
     	guides(color = guide_legend(override.aes = list(size = 4))) +
     	labs(x = "proportion of sites with mismatches to the reference allele", 
@@ -60,6 +63,36 @@ scatter_plot <- function(df, x_var, y_var) {
     	      axis.title = element_text(size = 16),
     	      strip.text = element_text(size = 16))
 }
+
+#scatter_plot_cors <- function(df, x_var, y_var) {
+#    
+#    cor_df <- df %>%
+#        group_by(locus) %>%
+#        do(data.frame(pearson = cor(.[[x_var]], .[[y_var]], method = "pearson"),
+#                      spearman = cor(.[[x_var]], .[[y_var]], method = "spearman"),
+#                      x = min(.[[x_var]]),
+#                      y = max(.[[y_var]]))) %>%
+#        ungroup() %>%
+#        mutate_at(vars(pearson, spearman), ~round(., digits = 3))
+#    
+#    ggplot(df, aes_string(x_var, y_var)) +
+#        geom_abline() +
+#        geom_point() +
+#        geom_text(data = cor_df, aes(x, y, label = paste("r =", pearson)),
+#                  hjust = "inward", vjust = "inward", size = 5) +
+#        facet_wrap(~locus, scales = "free") +
+#        theme_bw() +
+#        theme(axis.text = element_text(size = 12),
+#              axis.title = element_text(size = 16),
+#              strip.text = element_text(size = 16))
+#}
+#
+#plot_lower <- function(data, mapping, ...) {
+#    
+#    ggplot(data = data, mapping = mapping) +
+#        geom_point(size = .6, alpha = .5) +
+#        geom_smooth(method = lm) 
+#}
 
 # Data
 allele_dist <- read_tsv("./PEreads_75bp/data/distances_to_reference.tsv")
@@ -161,11 +194,11 @@ diff_refs_alignment <-
 
 
 # Plots
-png("./plots/kallisto_prop_mapped.png", width = 8, height = 5, units = "in", res = 200)
+png("./plots/kallisto_prop_mapped.png", width = 6, height = 4, units = "in", res = 200)
 plot_dist(counts_kallisto)
 dev.off()
 
-png("./plots/star_prop_mapped.png", width = 8, height = 5, units = "in", res = 200)
+png("./plots/star_prop_mapped.png", width = 6, height = 4, units = "in", res = 200)
 plot_dist(counts_star)
 dev.off()
 
@@ -219,3 +252,25 @@ ggplot(diff_refs_alignment, aes(gene_read, gene_ref)) +
     theme_bw() +
     labs(x = "gene from", y = "gene to", size = "average percentage")
 dev.off()
+
+#png("./plots/hlacorrelations.png", width = 8, height = 8, units = "in", res = 200)
+#pairs_hla_k_imgt <- quant_data %>%
+#    select(subject, locus, tpm.star.imgt) %>%
+#    mutate(locus = sub("HLA-", "", locus)) %>%
+#    spread(locus, tpm.star.imgt) %>%
+#    select(-subject) %>%
+#    ggpairs(lower = list(continuous = plot_lower), upper = list()) + 
+#    theme_bw() +
+#    theme(title = element_text(size = 14))
+
+#pairs_hla_k_pri <- quant_data %>%
+#    select(subject, locus, tpm.star.pri) %>%
+#    mutate(locus = sub("HLA-", "", locus)) %>%
+#    spread(locus, tpm.star.pri) %>%
+#    select(-subject) %>%
+#    ggpairs(lower = list(continuous = plot_lower), upper = list()) + 
+#    theme_bw() +
+#    theme(title = element_text(size = 14))
+
+#print(pairs_hla_k, left = .3, bottom = .3)
+#dev.off()

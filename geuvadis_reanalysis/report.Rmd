@@ -231,6 +231,21 @@ pval_df <-
 kable(pval_df)
 ```
 
+### RTC with variants in Delaneau et al (2017)
+
+[Delaneau et al.
+(2017)](https://www.biorxiv.org/content/early/2017/08/03/171694) mapped eQTLs,
+chromatin QTLs (cQTLs), CRD QTLs (variants associated with activity or
+structure of cis-regulatory domains (CRDs)). The authors found that most of the
+QTLs affect both CRD activity and gene expression and therefore likely tag the
+same causal variants.
+
+Our eQTLs tag eQTLs, cQTLs, aCRD-QTLs and sCRD-QTLs in that study.
+
+```{r}
+read_tsv("./qtls/qtls_star/imgt/rtc/crd/results.tsv")
+```
+
 ## Association with GWAS traits
 
 ```{r}
