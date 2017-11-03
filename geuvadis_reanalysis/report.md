@@ -214,25 +214,36 @@ Comparison with previous eQTLs
 
 | gene     | variant    |  rank| qtl\_previous |  d\_prime|   rtc| study                                                     |
 |:---------|:-----------|-----:|:--------------|---------:|-----:|:----------------------------------------------------------|
+| HLA-A    | rs2517827  |     1| rs34922185    |      0.65|  0.92| HLA-A: Delaneau (2017)                                    |
 | HLA-B    | rs1265094  |     0| rs9404937     |      0.80|  0.99| HLA-C: Nedelec (2016)                                     |
 | HLA-B    | rs1265094  |     0| rs9265628     |      0.92|  0.99| HLA-C: Lappalainen (2013)                                 |
 | HLA-B    | rs9264803  |     1| rs9264942     |      0.97|  1.00| HLA-C: Thomas (2009)                                      |
 | HLA-B    | rs9264803  |     1| rs67384697    |      0.86|  1.00| HLA-C: Kulkarni (2011)                                    |
 | HLA-B    | rs9264803  |     1| rs1050118     |      0.80|  1.00| HLA-B: Nedelec (2016)                                     |
+| HLA-B    | rs9264803  |     1| rs9264666     |      1.00|  0.97| HLA-C: Delaneau (2017)                                    |
 | HLA-C    | rs41561715 |     0| rs9265628     |      0.90|  0.97| HLA-C: Lappalainen (2013)                                 |
+| HLA-C    | rs41561715 |     0| rs9264666     |      1.00|  0.92| HLA-C: Delaneau (2017)                                    |
 | HLA-C    | rs2394941  |     1| rs2853922     |      0.73|  0.96| HLA-B: Battle (2014)                                      |
+| HLA-C    | rs2394941  |     1| rs1131123     |      0.67|  0.93| HLA-C: GTEx                                               |
 | HLA-C    | rs2394941  |     1| rs9266216     |      0.49|  0.93| HLA-B: Lappalainen (2013)                                 |
 | HLA-C    | rs2394941  |     1| rs6931332     |      0.64|  0.93| HLA-C: Battle (2014)                                      |
 | HLA-C    | rs2249741  |     2| rs2395471     |      1.00|  1.00| HLA-C: Vince (2016)                                       |
 | HLA-C    | rs2249741  |     2| rs67384697    |      0.99|  1.00| HLA-C: Kulkarni (2011)                                    |
 | HLA-C    | rs2249741  |     2| rs1050118     |      1.00|  1.00| HLA-B: Nedelec (2016)                                     |
 | HLA-C    | rs2249741  |     2| rs9264942     |      0.93|  1.00| HLA-C: Thomas (2009)                                      |
+| HLA-DPB1 | rs9296068  |     1| rs34885310    |      0.96|  0.98| HLA-DPB1: Delaneau (2017)                                 |
+| HLA-DQA1 | rs9272316  |     0| rs35399335    |      0.96|  0.98| HLA-DRB1: Delaneau (2017)                                 |
 | HLA-DQA1 | rs9272316  |     0| rs28366302    |      0.96|  0.98| HLA-DRB1: Battle (2014)                                   |
 | HLA-DQA1 | rs9272316  |     0| rs35957722    |      0.90|  0.97| HLA-DRB1: Lappalainen (2013)                              |
 | HLA-DQA1 | rs9271375  |     1| rs72844177    |      0.67|  0.98| HLA-DRB1: Nedelec (2016)                                  |
 | HLA-DQB1 | rs1770     |     0| rs9274660     |      1.00|  0.98| HLA-DQA1: Lappalainen (2013)/HLA-DQB1: Lappalainen (2013) |
+| HLA-DQB1 | rs1770     |     0| rs9273376     |      0.98|  0.98| HLA-DQA1: Delaneau (2017)                                 |
 | HLA-DQB1 | rs1770     |     0| rs9273584     |      0.69|  0.96| HLA-DQA1: Nedelec (2016)                                  |
+| HLA-DQB1 | rs1770     |     0| rs17612907    |      0.51|  0.94| HLA-DQB1: GTEx                                            |
+| HLA-DQB1 | rs9272209  |     1| rs5016923     |      0.69|  0.94| HLA-DRB1: GTEx                                            |
+| HLA-DRB1 | rs3104412  |     0| rs9273376     |      0.98|  1.00| HLA-DQA1: Delaneau (2017)                                 |
 | HLA-DRB1 | rs3104412  |     0| rs9274660     |      0.99|  1.00| HLA-DQA1: Lappalainen (2013)/HLA-DQB1: Lappalainen (2013) |
+| HLA-DRB1 | rs3104412  |     0| rs17612907    |      0.57|  0.97| HLA-DQB1: GTEx                                            |
 | HLA-DRB1 | rs3104412  |     0| rs9273584     |      0.61|  0.96| HLA-DQA1: Nedelec (2016)                                  |
 
 ### comparison of slope and p-value with Geuvadis
@@ -251,49 +262,31 @@ Comparison with previous eQTLs
 
 [Delaneau et al. (2017)](https://www.biorxiv.org/content/early/2017/08/03/171694) mapped eQTLs, chromatin QTLs (cQTLs), CRD QTLs (variants associated with activity or structure of cis-regulatory domains (CRDs)). The authors found that most of the QTLs affect both CRD activity and gene expression and therefore likely tag the same causal variants.
 
-Our eQTLs tag eQTLs, cQTLs, aCRD-QTLs and sCRD-QTLs in that study.
+Our eQTLs tag eQTLs, cQTLs, aCRD-QTLs and sCRD-QTLs in that study. Here I show the RTC with cQTLs:
 
 | gene     | variant    |  rank| crd\_var    |  d\_prime|    rtc| qtl\_type | phenotype                                                                                                                 |
 |:---------|:-----------|-----:|:------------|---------:|------:|:----------|:--------------------------------------------------------------------------------------------------------------------------|
 | HLA-A    | rs16896724 |     0| rs16896742  |     0.994|  0.986| cQTL      | H3K27ac\_chr6-65666                                                                                                       |
-| HLA-A    | rs16896724 |     0| rs9260092   |     0.977|  0.922| CRDactiv  | chr6\_internal\_22883                                                                                                     |
 | HLA-A    | rs2517827  |     1| rs376253    |     0.991|  0.998| cQTL      | H3K4me1\_chr6-80475                                                                                                       |
-| HLA-A    | rs2517827  |     1| rs3129069   |     0.722|  0.947| CRDactiv  | chr6\_internal\_22121                                                                                                     |
-| HLA-A    | rs2517827  |     1| rs34922185  |     0.647|  0.917| eQTL      | HLA-A                                                                                                                     |
 | HLA-A    | rs7383537  |     2| rs1611303   |     0.646|  0.995| cQTL      | H3K27ac\_chr6-70343                                                                                                       |
 | HLA-B    | rs1265094  |     0| rs6913301   |     0.930|  0.997| cQTL      | H3K27ac\_chr6-55269/H3K4me1\_chr6-117461/H3K27ac\_chr6-70358/H3K4me1\_chr6-106762/H3K27ac\_chr6-66772/H3K4me3\_chr6-19415 |
 | HLA-B    | rs1265094  |     0| rs6913648   |     0.930|  0.997| cQTL      | H3K27ac\_chr6-55965/H3K4me3\_chr6-21724/H3K4me1\_chr6-84344                                                               |
-| HLA-B    | rs1265094  |     0| rs2428516   |     0.869|  0.985| CRDactiv  | chr6\_internal\_26296                                                                                                     |
-| HLA-B    | rs9264803  |     1| rs2249742   |     0.957|  0.983| CRDactiv  | chr6\_internal\_25274                                                                                                     |
-| HLA-B    | rs9264803  |     1| rs9264666   |     1.000|  0.971| eQTL      | HLA-C                                                                                                                     |
 | HLA-B    | rs9264803  |     1| rs3130439   |     0.844|  0.958| cQTL      | H3K4me1\_chr6-111992                                                                                                      |
 | HLA-C    | rs41561715 |     0| rs17190491  |     0.794|  0.979| cQTL      | H3K4me1\_chr6-106765                                                                                                      |
-| HLA-C    | rs41561715 |     0| rs9264666   |     1.000|  0.922| eQTL      | HLA-C                                                                                                                     |
 | HLA-C    | rs2394941  |     1| rs2524266   |     0.844|  0.952| cQTL      | H3K27ac\_chr6-65669                                                                                                       |
-| HLA-C    | rs2249741  |     2| rs2249742   |     1.000|  0.999| CRDactiv  | chr6\_internal\_25274                                                                                                     |
 | HLA-C    | rs2249741  |     2| rs1131275   |     0.925|  0.996| cQTL      | H3K4me3\_chr6-21989                                                                                                       |
 | HLA-DPB1 | rs9296068  |     1| rs1346932   |     0.963|  0.985| cQTL      | H3K27ac\_chr6-70379                                                                                                       |
 | HLA-DPB1 | rs9296068  |     1| rs2395305   |     0.963|  0.985| cQTL      | H3K27ac\_chr6-70377/H3K4me1\_chr6-97155                                                                                   |
 | HLA-DPB1 | rs9296068  |     1| rs6935846   |     0.963|  0.985| cQTL      | H3K27ac\_chr6-57495                                                                                                       |
-| HLA-DPB1 | rs9296068  |     1| rs6935846   |     0.963|  0.985| CRDactiv  | chr6\_internal\_24851                                                                                                     |
 | HLA-DPB1 | rs9296068  |     1| rs9276993   |     0.963|  0.985| cQTL      | H3K4me1\_chr6-97154                                                                                                       |
-| HLA-DPB1 | rs9296068  |     1| rs34885310  |     0.956|  0.976| eQTL      | HLA-DPB1                                                                                                                  |
 | HLA-DPB1 | rs688209   |     2| rs12529825  |     0.901|  0.920| cQTL      | H3K27ac\_chr6-58356                                                                                                       |
-| HLA-DQA1 | rs9272316  |     0| rs35399335  |     0.956|  0.977| eQTL      | HLA-DRB1                                                                                                                  |
 | HLA-DQA1 | rs9272316  |     0| rs9274853   |     0.957|  0.964| cQTL      | H3K4me1\_chr6-129668                                                                                                      |
 | HLA-DQA1 | rs9271375  |     1| rs9271365   |     0.917|  1.000| cQTL      | H3K4me3\_chr6-19265                                                                                                       |
-| HLA-DQA1 | rs9271375  |     1| rs3104412   |     0.718|  0.999| CRDactiv  | chr6\_internal\_28837                                                                                                     |
 | HLA-DQB1 | rs1770     |     0| rs1130034   |     0.976|  0.983| cQTL      | H3K4me1\_chr6-129671/H3K4me1\_chr6-120422                                                                                 |
-| HLA-DQB1 | rs1770     |     0| rs9273376   |     0.976|  0.977| eQTL      | HLA-DQA1                                                                                                                  |
 | HLA-DQB1 | rs9272209  |     1| rs111234931 |     0.620|  0.985| cQTL      | H3K4me1\_chr6-120431                                                                                                      |
-| HLA-DQB1 | rs9269386  |     2| rs9272214   |     0.468|  0.993| CRDactiv  | chr6\_internal\_29568                                                                                                     |
 | HLA-DQB1 | rs9269386  |     2| rs9271712   |     0.458|  0.989| cQTL      | H3K4me1\_chr6-101862                                                                                                      |
-| HLA-DRB1 | rs3104412  |     0| rs3104412   |     1.000|  1.000| CRDactiv  | chr6\_internal\_28837                                                                                                     |
 | HLA-DRB1 | rs3104412  |     0| rs9271365   |     0.973|  1.000| cQTL      | H3K4me3\_chr6-19265                                                                                                       |
-| HLA-DRB1 | rs3104412  |     0| rs9273376   |     0.978|  0.998| eQTL      | HLA-DQA1                                                                                                                  |
-| HLA-DRB1 | rs9270700  |     1| rs2395517   |     0.967|  0.997| CRDactiv  | chr6\_internal\_27324                                                                                                     |
 | HLA-DRB1 | rs9270700  |     1| rs9271062   |     0.978|  0.997| cQTL      | H3K4me3\_chr6-21255                                                                                                       |
-| HLA-DRB1 | rs9270700  |     1| rs9271687   |     0.898|  0.928| CRDstruc  | chr6\_internal\_27324                                                                                                     |
 
 Association with GWAS traits
 ----------------------------

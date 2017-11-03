@@ -240,7 +240,8 @@ structure of cis-regulatory domains (CRDs)). The authors found that most of the
 QTLs affect both CRD activity and gene expression and therefore likely tag the
 same causal variants.
 
-Our eQTLs tag eQTLs, cQTLs, aCRD-QTLs and sCRD-QTLs in that study.
+Our eQTLs tag eQTLs, cQTLs, aCRD-QTLs and sCRD-QTLs in that study. Here I show 
+the RTC with cQTLs:
 
 ```{r}
 read_tsv("./qtls/qtls_star/imgt/rtc/crd/results.tsv") %>%
