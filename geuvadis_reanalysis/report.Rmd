@@ -191,6 +191,16 @@ read_tsv("./qtls/qtls_with_regulome_score.tsv") %>%
     kable()
 ```
 
+### RTC with regulomeDB eQTLs
+
+If our eQTLs are not eQTLs in regulomeDB, are they tagging the same signal as
+other eQTL in the database?
+
+```{r}
+read_tsv("./qtls/qtls_star/imgt/rtc/regulomeDB/results_affected_genes.tsv") %>%
+    kable(digits = 3)
+```
+
 ## RTC between IMGT and Ref Transcriptome eQTLs
 
 Variants with RTC > 0.9 likely mark the same biological signal.

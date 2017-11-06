@@ -177,6 +177,33 @@ RegulomeDB score
 | HLA-DRB1   |     1| pri   | rs9271365   | 7     |
 | HLA-DRB1   |     2| pri   | rs182670197 | 7     |
 
+### RTC with regulomeDB eQTLs
+
+If our eQTLs are not eQTLs in regulomeDB, are they tagging the same signal as other eQTL in the database?
+
+| gene     | variant    |  rank| rtc\_var  |  d\_prime|    rtc| score | affected\_gene                                                                  |
+|:---------|:-----------|-----:|:----------|---------:|------:|:------|:--------------------------------------------------------------------------------|
+| HLA-A    | rs16896724 |     0| rs2735097 |     0.994|  0.994| 1f    | HLA-A,NA                                                                        |
+| HLA-A    | rs2517827  |     1| rs7451408 |     1.000|  0.998| 1f    | Hs.519979                                                                       |
+| HLA-A    | rs2517827  |     1| rs1317834 |     1.000|  0.998| 1f    | Hs.519979                                                                       |
+| HLA-A    | rs7383537  |     2| rs1737076 |     0.537|  0.994| 1f    | FLJ35429,VARSL                                                                  |
+| HLA-B    | rs1265094  |     0| rs3868542 |     0.806|  0.993| 1f    | CCHCR1                                                                          |
+| HLA-B    | rs1265094  |     0| rs3871248 |     0.806|  0.993| 1f    | CCHCR1                                                                          |
+| HLA-B    | rs9264803  |     1| rs9264942 |     0.966|  0.999| 1f    | HLA-C                                                                           |
+| HLA-C    | rs41561715 |     0| rs5010528 |     1.000|  0.998| 1f    | LOC282956                                                                       |
+| HLA-C    | rs41561715 |     0| rs9461684 |     1.000|  0.998| 1d    | LOC282956                                                                       |
+| HLA-C    | rs41561715 |     0| rs9468919 |     1.000|  0.998| 1f    | LOC282956                                                                       |
+| HLA-C    | rs2394941  |     1| rs2394894 |     1.000|  0.998| 1f    | HCG27,HLA-A,HLA-B,HLA-C,HLA-DQB1,HLA-DRB1                                       |
+| HLA-C    | rs2249741  |     2| rs2249741 |     1.000|  1.000| 1f    | HLA-C                                                                           |
+| HLA-DPB1 | rs688209   |     2| rs658087  |     0.989|  0.964| 1f    | ITPR3                                                                           |
+| HLA-DQA1 | rs9272316  |     0| rs9271488 |     0.965|  0.992| 1f    | HLA-DQA1,HLA-DQB1,HLA-DQA1,HLA-DQA2,HLA-DQB1,HLA-DRA,HLA-DRB1                   |
+| HLA-DQA1 | rs9271375  |     1| rs4321864 |     0.718|  0.994| 1f    | HLA-DQA2,HLA-DQA2                                                               |
+| HLA-DQB1 | rs1770     |     0| rs1770    |     1.000|  1.000| 1f    | Affects chr6:32627821-32627921                                                  |
+| HLA-DQB1 | rs9272209  |     1| rs2187668 |     0.981|  1.000| 1f    | HLA-DQA1,BTN3A2,HLA-A,HLA-DPB1,HLA-DQA1,HLA-DQB1,HLA-DRB1,HLA-DRB5              |
+| HLA-DQB1 | rs9269386  |     2| rs9272218 |     0.480|  0.997| 1f    | HLA-DQA2,HLA-DRB5,HLA-DRB5                                                      |
+| HLA-DRB1 | rs3104412  |     0| rs1063355 |     0.985|  0.998| 1d    | HLA-DQA1,HLA-DQB1,HLA-DRB1,HLA-DQA1,HLA-DQB1,HLA-DRA,HLA-DRB1,HLA-DQA1,HLA-DQB1 |
+| HLA-DRB1 | rs9270700  |     1| rs9271055 |     0.989|  0.997| 1d    | HLA-DQA1,HLA-DQB1,HLA-DRB1,HLA-DRB5,HLA-DQA1,HLA-DQB1,HLA-DRA,HLA-DRB1,HLA-DRB5 |
+
 RTC between IMGT and Ref Transcriptome eQTLs
 --------------------------------------------
 
