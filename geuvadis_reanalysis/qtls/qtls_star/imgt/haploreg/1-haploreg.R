@@ -77,6 +77,11 @@ regDB_hits <-
 	   motifs = Motifs, protein_binding = Protein_Binding, 
 	   qtl = Single_Nucleotides)
 
-
+regDB_hits %>%
+    drop_na(qtl) %>%
+    select(rsid, score, qtl) %>%
+    left_join(qtls, ., by = "rsid") %>%
+    arrange(gene, rank) %>%
+    write_tsv("./regulomeDB_results.tsv")
 
 
