@@ -200,6 +200,8 @@ read_tsv("./qtls/qtls_star/imgt/rtc/pri_eqtls/results.tsv") %>%
 ```{r}
 read_tsv("./qtls/qtls_star/imgt/haploreg/regulomeDB_results.tsv") %>%
     select(gene, rank, rsid, score, qtl) %>%
+    mutate(qtl = gsub("\\|", "_", qtl),
+	   qtl = sub(";NA$", "", qtl)) %>%
     kable()
 ```
 

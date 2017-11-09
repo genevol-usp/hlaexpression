@@ -167,26 +167,26 @@ Comparison with previous eQTLs
 
 ### eQTLs in regulomeDB
 
-| gene     |  rank| rsid       | score | qtl                          |
-|:---------|-----:|:-----------|:------|:-----------------------------|
-| HLA-A    |     0| rs16896724 | 5     | NA                           |
-| HLA-A    |     1| rs2517827  | 7     | NA                           |
-| HLA-A    |     2| rs7383537  | 6     | NA                           |
-| HLA-B    |     0| rs1265094  | 4     | NA                           |
-| HLA-B    |     1| rs9264803  | 6     | NA                           |
-| HLA-C    |     0| rs41561715 | 4     | NA                           |
-| HLA-C    |     1| rs2394941  | 5     | NA                           |
-| HLA-C    |     2| rs2249741  | 1f    | HLA-C|eQTL|Lymphoblastoid;NA |
-| HLA-DPB1 |     0| rs9277538  | 4     | NA                           |
-| HLA-DPB1 |     1| rs9296068  | 6     | HLA-DPB1|eQTL|Monocytes;NA   |
-| HLA-DPB1 |     2| rs688209   | 4     | NA                           |
-| HLA-DQA1 |     0| rs9272316  | 6     | NA                           |
-| HLA-DQA1 |     1| rs9271375  | 7     | NA                           |
-| HLA-DQB1 |     0| rs1770     | 1f    | dsQTL|Lymphoblastoid;NA      |
-| HLA-DQB1 |     1| rs9272209  | 3a    | NA                           |
-| HLA-DQB1 |     2| rs9269386  | 7     | NA                           |
-| HLA-DRB1 |     0| rs3104412  | 6     | NA                           |
-| HLA-DRB1 |     1| rs9270700  | 5     | NA                           |
+| gene     |  rank| rsid       | score | qtl                         |
+|:---------|-----:|:-----------|:------|:----------------------------|
+| HLA-A    |     0| rs16896724 | 5     | NA                          |
+| HLA-A    |     1| rs2517827  | 7     | NA                          |
+| HLA-A    |     2| rs7383537  | 6     | NA                          |
+| HLA-B    |     0| rs1265094  | 4     | NA                          |
+| HLA-B    |     1| rs9264803  | 6     | NA                          |
+| HLA-C    |     0| rs41561715 | 4     | NA                          |
+| HLA-C    |     1| rs2394941  | 5     | NA                          |
+| HLA-C    |     2| rs2249741  | 1f    | HLA-C\_eQTL\_Lymphoblastoid |
+| HLA-DPB1 |     0| rs9277538  | 4     | NA                          |
+| HLA-DPB1 |     1| rs9296068  | 6     | HLA-DPB1\_eQTL\_Monocytes   |
+| HLA-DPB1 |     2| rs688209   | 4     | NA                          |
+| HLA-DQA1 |     0| rs9272316  | 6     | NA                          |
+| HLA-DQA1 |     1| rs9271375  | 7     | NA                          |
+| HLA-DQB1 |     0| rs1770     | 1f    | dsQTL\_Lymphoblastoid       |
+| HLA-DQB1 |     1| rs9272209  | 3a    | NA                          |
+| HLA-DQB1 |     2| rs9269386  | 7     | NA                          |
+| HLA-DRB1 |     0| rs3104412  | 6     | NA                          |
+| HLA-DRB1 |     1| rs9270700  | 5     | NA                          |
 
 ### eQTLs in HaploReg
 
