@@ -184,23 +184,6 @@ include_graphics("./qtls/plots/qtls_landscape_imgt.png")
 include_graphics("./qtls/plots/qtls_landscape_pri.png")
 ```
 
-## RegulomeDB score
-
-```{r}
-read_tsv("./qtls/qtls_with_regulome_score.tsv") %>%
-    kable()
-```
-
-### RTC with regulomeDB eQTLs
-
-If our eQTLs are not eQTLs in regulomeDB, are they tagging the same signal as
-other eQTL in the database?
-
-```{r}
-read_tsv("./qtls/qtls_star/imgt/rtc/regulomeDB/results_affected_genes.tsv") %>%
-    kable(digits = 3)
-```
-
 ## RTC between IMGT and Ref Transcriptome eQTLs
 
 Variants with RTC > 0.9 likely mark the same biological signal.
@@ -212,50 +195,29 @@ read_tsv("./qtls/qtls_star/imgt/rtc/pri_eqtls/results.tsv") %>%
 
 ## Comparison with previous eQTLs
 
+### eQTLs in regulomeDB
+
+```{r}
+read_tsv("./qtls/qtls_star/imgt/haploreg/regulomeDB_results.tsv") %>%
+    select(gene, rank, rsid, score, qtl) %>%
+    kable()
+```
+
+### eQTLs in HaploReg
+
+```{r}
+read_tsv("./qtls/qtls_star/imgt/haploreg/haploreg_results.tsv") %>%
+    select(gene, rank, rsID, study, tissue, pvalue) %>%
+    kable()
+```
+
 ### RTC
 
-```{r}
+coming soon
+
+```{r, eval=FALSE}
 read_tsv("./qtls/qtls_star/imgt/rtc/previous_qtls/results.tsv") %>%
     kable(digits = 2)
-```
-
-### comparison of slope and p-value with Geuvadis
-
-```{r}
-geuvadis_qtls <- "./data/previous_qtls/geuvadis_eqtl_slope_pvals.tsv" %>%
-    read_tsv() %>%
-    select(geuvadis_gene = phenotype, geuvadis_variant = variant,
-	   geuvadis_slope = slope, geuvadis_pvalue = pval)
-    
-star_qtls <- read_tsv("./qtls/plots/eqtl.tsv") %>%
-    select(gene = phen_id, rank, variant = var_id, slope, pvalue = nom_pval) %>%
-    mutate_at(vars(slope, pvalue), function(x) round(x, digits = 2))
-
-pval_df <-
-    star_qtls %>%
-    filter(rank == 0L) %>%
-    left_join(geuvadis_qtls, by = c("gene" = "geuvadis_gene")) %>%
-    select(gene, variant, geuvadis_variant, slope, geuvadis_slope, 
-           pvalue, geuvadis_pvalue)
-
-kable(pval_df)
-```
-
-### RTC with variants in Delaneau et al (2017)
-
-[Delaneau et al.
-(2017)](https://www.biorxiv.org/content/early/2017/08/03/171694) mapped eQTLs,
-chromatin QTLs (cQTLs), CRD QTLs (variants associated with activity or
-structure of cis-regulatory domains (CRDs)). The authors found that most of the
-QTLs affect both CRD activity and gene expression and therefore likely tag the
-same causal variants.
-
-Our eQTLs tag eQTLs, cQTLs, aCRD-QTLs and sCRD-QTLs in that study. Here I show 
-the RTC with cQTLs:
-
-```{r}
-read_tsv("./qtls/qtls_star/imgt/rtc/crd/results.tsv") %>%
-    kable()
 ```
 
 ## Association with GWAS traits

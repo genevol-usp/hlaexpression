@@ -132,92 +132,6 @@ Distribution of eQTLs around the TSS
 
 ![](./qtls/plots/qtls_landscape_pri.png)
 
-RegulomeDB score
-----------------
-
-| gene\_name |  rank| index | var\_id     | score |
-|:-----------|-----:|:------|:------------|:------|
-| HLA-A      |     0| imgt  | rs16896724  | 5     |
-| HLA-A      |     0| pri   | rs28724990  | 6     |
-| HLA-A      |     1| imgt  | rs2517827   | 7     |
-| HLA-A      |     1| pri   | rs2916818   | 5     |
-| HLA-A      |     2| imgt  | rs7383537   | 6     |
-| HLA-A      |     2| pri   | rs2248162   | 4     |
-| HLA-B      |     0| imgt  | rs1265094   | 4     |
-| HLA-B      |     0| pri   | rs1265159   | 4     |
-| HLA-B      |     1| imgt  | rs9264803   | 6     |
-| HLA-B      |     1| pri   | rs2844623   | 6     |
-| HLA-B      |     2| pri   | rs72443738  | 5     |
-| HLA-B      |     3| pri   | rs28380929  | 4     |
-| HLA-C      |     0| imgt  | rs41561715  | 4     |
-| HLA-C      |     0| pri   | rs9468965   | 6     |
-| HLA-C      |     1| imgt  | rs2394941   | 5     |
-| HLA-C      |     1| pri   | rs2074491   | 4     |
-| HLA-C      |     2| imgt  | rs2249741   | 1f    |
-| HLA-C      |     2| pri   | rs2394941   | 5     |
-| HLA-DPB1   |     0| imgt  | rs9277538   | 4     |
-| HLA-DPB1   |     0| pri   | rs9277538   | 4     |
-| HLA-DPB1   |     1| imgt  | rs9296068   | 6     |
-| HLA-DPB1   |     1| pri   | rs9296068   | 6     |
-| HLA-DPB1   |     2| imgt  | rs688209    | 4     |
-| HLA-DQA1   |     0| imgt  | rs9272316   | 6     |
-| HLA-DQA1   |     0| pri   | rs144150162 | NA    |
-| HLA-DQA1   |     1| imgt  | rs9271375   | 7     |
-| HLA-DQA1   |     1| pri   | rs35407265  | 3a    |
-| HLA-DQB1   |     0| imgt  | rs1770      | 1f    |
-| HLA-DQB1   |     0| pri   | rs28746846  | 3a    |
-| HLA-DQB1   |     1| imgt  | rs9272209   | 3a    |
-| HLA-DQB1   |     1| pri   | rs9273595   | 5     |
-| HLA-DQB1   |     2| imgt  | rs9269386   | 7     |
-| HLA-DQB1   |     2| pri   | rs114969562 | 5     |
-| HLA-DQB1   |     3| pri   | rs3134988   | 7     |
-| HLA-DRB1   |     0| imgt  | rs3104412   | 6     |
-| HLA-DRB1   |     0| pri   | rs9269749   | 5     |
-| HLA-DRB1   |     1| imgt  | rs9270700   | 5     |
-| HLA-DRB1   |     1| pri   | rs9271365   | 7     |
-| HLA-DRB1   |     2| pri   | rs182670197 | 7     |
-
-### RTC with regulomeDB eQTLs
-
-If our eQTLs are not eQTLs in regulomeDB, are they tagging the same signal as other eQTL in the database?
-
-| gene     |  rank| variant    | rtc\_var            |  d\_prime|    rtc| score | affected\_gene                                                                  |
-|:---------|-----:|:-----------|:--------------------|---------:|------:|:------|:--------------------------------------------------------------------------------|
-| HLA-A    |     0| rs16896724 | rs2735097           |     0.994|  0.994| 1f    | HLA-A,NA                                                                        |
-| HLA-A    |     0| rs16896724 | rs3903160           |     0.907|  0.940| 1a    | NA                                                                              |
-| HLA-A    |     1| rs2517827  | rs7451408,rs1317834 |     1.000|  0.998| 1f    | Hs.519979                                                                       |
-| HLA-A    |     1| rs2517827  | rs2523759           |     1.000|  0.992| 1f    | HLA-A,NA,HLA-A                                                                  |
-| HLA-A    |     1| rs2517827  | rs2734984,rs2734980 |     1.000|  0.992| 1f    | HLA-A,NA,HLA-A,Hs.519979                                                        |
-| HLA-A    |     1| rs2517827  | rs5013088           |     1.000|  0.992| 1f    | HLA-A,NA,HLA-A,Hs.519979,BTN3A2,HCG4,HLA-A,HLA-G,HLA-H,KIT,NDUFS1,TPD52L2,ZFP57 |
-| HLA-A    |     2| rs7383537  | rs1737076           |     0.537|  0.994| 1f    | FLJ35429,VARSL                                                                  |
-| HLA-A    |     2| rs7383537  | rs5013310           |     0.840|  0.991| 1f    | HLA-A                                                                           |
-| HLA-B    |     0| rs1265094  | rs3868542,rs3871248 |     0.806|  0.993| 1f    | CCHCR1                                                                          |
-| HLA-B    |     0| rs1265094  | rs1265181           |     1.000|  0.981| 1f    | DPCR1,HSS00344394,HCG27,HLA-A,HLA-B,HLA-C,HLA-DQB1,HLA-DRB1,HLA-H               |
-| HLA-B    |     1| rs9264803  | rs9264942           |     0.966|  0.999| 1f    | HLA-C                                                                           |
-| HLA-C    |     0| rs41561715 | rs9461684           |     1.000|  0.998| 1d    | LOC282956                                                                       |
-| HLA-C    |     0| rs41561715 | rs5010528,rs9468919 |     1.000|  0.998| 1f    | LOC282956                                                                       |
-| HLA-C    |     0| rs41561715 | rs2073724           |     0.956|  0.981| 1f    | HLA-C                                                                           |
-| HLA-C    |     1| rs2394941  | rs2394894           |     1.000|  0.998| 1f    | HCG27,HLA-A,HLA-B,HLA-C,HLA-DQB1,HLA-DRB1                                       |
-| HLA-C    |     1| rs2394941  | rs3130944           |     1.000|  0.998| 1f    | HLA-C,HCG27,HLA-A,HLA-B,HLA-C,HLA-DQB1,HLA-DRB1                                 |
-| HLA-C    |     1| rs2394941  | rs2233956           |     0.912|  0.982| 1f    | LY6G6D                                                                          |
-| HLA-C    |     2| rs2249741  | rs2249741           |     1.000|  1.000| 1f    | HLA-C                                                                           |
-| HLA-C    |     2| rs2249741  | rs3931670           |     1.000|  0.980| 1f    | HCG27                                                                           |
-| HLA-DPB1 |     2| rs688209   | rs658087            |     0.989|  0.964| 1f    | ITPR3                                                                           |
-| HLA-DQA1 |     0| rs9272316  | rs9271488           |     0.965|  0.992| 1f    | HLA-DQA1,HLA-DQB1,HLA-DQA1,HLA-DQA2,HLA-DQB1,HLA-DRA,HLA-DRB1                   |
-| HLA-DQA1 |     0| rs9272316  | rs9271589           |     0.964|  0.988| 1b    | HLA-DQA2,HLA-DRB5                                                               |
-| HLA-DQA1 |     1| rs9271375  | rs4321864           |     0.718|  0.994| 1f    | HLA-DQA2,HLA-DQA2                                                               |
-| HLA-DQA1 |     1| rs9271375  | rs9268528           |     0.674|  0.993| 1f    | HLA-DRB1,HLA-DRB5,HLA-DRA,HLA-DQA2,HLA-DQA1                                     |
-| HLA-DQB1 |     0| rs1770     | rs1770              |     1.000|  1.000| 1f    | Affects chr6:32627821-32627921                                                  |
-| HLA-DQB1 |     0| rs1770     | rs2647025           |     1.000|  0.999| 1f    | HLA-DQA1,HLA-DQB1,HLA-DQA1,HLA-DQA2,HLA-DQB1,HLA-DRA                            |
-| HLA-DQB1 |     1| rs9272209  | rs2187668           |     0.981|  1.000| 1f    | HLA-DQA1,BTN3A2,HLA-A,HLA-DPB1,HLA-DQA1,HLA-DQB1,HLA-DRB1,HLA-DRB5              |
-| HLA-DQB1 |     1| rs9272209  | rs2854275           |     0.944|  0.998| 1f    | HLA-DQA1                                                                        |
-| HLA-DQB1 |     2| rs9269386  | rs9272218           |     0.480|  0.997| 1f    | HLA-DQA2,HLA-DRB5,HLA-DRB5                                                      |
-| HLA-DQB1 |     2| rs9269386  | rs3129872           |     0.561|  0.988| 1f    | HLA-DRB5,HLA-DQB1,HLA-DRB5                                                      |
-| HLA-DRB1 |     0| rs3104412  | rs1063355           |     0.985|  0.998| 1d    | HLA-DQA1,HLA-DQB1,HLA-DRB1,HLA-DQA1,HLA-DQB1,HLA-DRA,HLA-DRB1,HLA-DQA1,HLA-DQB1 |
-| HLA-DRB1 |     0| rs3104412  | rs9272449           |     0.925|  0.964| 1f    | Affects chr6:32605021-32605121                                                  |
-| HLA-DRB1 |     1| rs9270700  | rs9271055           |     0.989|  0.997| 1d    | HLA-DQA1,HLA-DQB1,HLA-DRB1,HLA-DRB5,HLA-DQA1,HLA-DQB1,HLA-DRA,HLA-DRB1,HLA-DRB5 |
-| HLA-DRB1 |     1| rs9270700  | rs9276189           |     0.888|  0.917| 1f    | HLA-DQA1                                                                        |
-
 RTC between IMGT and Ref Transcriptome eQTLs
 --------------------------------------------
 
@@ -251,83 +165,253 @@ Variants with RTC &gt; 0.9 likely mark the same biological signal.
 Comparison with previous eQTLs
 ------------------------------
 
+### eQTLs in regulomeDB
+
+| gene     |  rank| rsid       | score | qtl                          |
+|:---------|-----:|:-----------|:------|:-----------------------------|
+| HLA-A    |     0| rs16896724 | 5     | NA                           |
+| HLA-A    |     1| rs2517827  | 7     | NA                           |
+| HLA-A    |     2| rs7383537  | 6     | NA                           |
+| HLA-B    |     0| rs1265094  | 4     | NA                           |
+| HLA-B    |     1| rs9264803  | 6     | NA                           |
+| HLA-C    |     0| rs41561715 | 4     | NA                           |
+| HLA-C    |     1| rs2394941  | 5     | NA                           |
+| HLA-C    |     2| rs2249741  | 1f    | HLA-C|eQTL|Lymphoblastoid;NA |
+| HLA-DPB1 |     0| rs9277538  | 4     | NA                           |
+| HLA-DPB1 |     1| rs9296068  | 6     | HLA-DPB1|eQTL|Monocytes;NA   |
+| HLA-DPB1 |     2| rs688209   | 4     | NA                           |
+| HLA-DQA1 |     0| rs9272316  | 6     | NA                           |
+| HLA-DQA1 |     1| rs9271375  | 7     | NA                           |
+| HLA-DQB1 |     0| rs1770     | 1f    | dsQTL|Lymphoblastoid;NA      |
+| HLA-DQB1 |     1| rs9272209  | 3a    | NA                           |
+| HLA-DQB1 |     2| rs9269386  | 7     | NA                           |
+| HLA-DRB1 |     0| rs3104412  | 6     | NA                           |
+| HLA-DRB1 |     1| rs9270700  | 5     | NA                           |
+
+### eQTLs in HaploReg
+
+| gene     |  rank| rsID       | study           | tissue                                    |      pvalue|
+|:---------|-----:|:-----------|:----------------|:------------------------------------------|-----------:|
+| HLA-A    |     0| rs16896724 | GTEx2015\_v6    | Testis                                    |    6.970055|
+| HLA-A    |     0| rs16896724 | GTEx2015\_v6    | Artery\_Tibial                            |    6.721690|
+| HLA-A    |     0| rs16896724 | GTEx2015\_v6    | Esophagus\_Muscularis                     |    5.074220|
+| HLA-A    |     1| rs2517827  | GTEx2015\_v6    | Artery\_Tibial                            |    7.596338|
+| HLA-A    |     1| rs2517827  | GTEx2015\_v6    | Artery\_Aorta                             |    7.230838|
+| HLA-A    |     1| rs2517827  | GTEx2015\_v6    | Cells\_Transformed\_fibroblasts           |    6.614386|
+| HLA-A    |     1| rs2517827  | GTEx2015\_v6    | Nerve\_Tibial                             |    5.194803|
+| HLA-A    |     2| rs7383537  | NA              | NA                                        |          NA|
+| HLA-B    |     0| rs1265094  | Lappalainen2013 | Lymphoblastoid\_EUR\_exonlevel            |   15.356583|
+| HLA-B    |     1| rs9264803  | NA              | NA                                        |          NA|
+| HLA-C    |     0| rs41561715 | NA              | NA                                        |          NA|
+| HLA-C    |     1| rs2394941  | GTEx2015\_v6    | Whole\_Blood                              |    6.510757|
+| HLA-C    |     2| rs2249741  | GTEx2015\_v6    | Muscle\_Skeletal                          |   23.816378|
+| HLA-C    |     2| rs2249741  | GTEx2015\_v6    | Cells\_Transformed\_fibroblasts           |   22.516603|
+| HLA-C    |     2| rs2249741  | GTEx2015\_v6    | Artery\_Tibial                            |   20.557065|
+| HLA-C    |     2| rs2249741  | GTEx2015\_v6    | Skin\_Sun\_Exposed\_Lower\_leg            |   19.716441|
+| HLA-C    |     2| rs2249741  | GTEx2015\_v6    | Esophagus\_Mucosa                         |   14.186417|
+| HLA-C    |     2| rs2249741  | GTEx2015\_v6    | Adipose\_Subcutaneous                     |   14.126082|
+| HLA-C    |     2| rs2249741  | GTEx2015\_v6    | Esophagus\_Muscularis                     |   12.767794|
+| HLA-C    |     2| rs2249741  | GTEx2015\_v6    | Nerve\_Tibial                             |   12.107584|
+| HLA-C    |     2| rs2249741  | GTEx2015\_v6    | Lung                                      |   11.929606|
+| HLA-C    |     2| rs2249741  | GTEx2015\_v6    | Heart\_Left\_Ventricle                    |   11.508504|
+| HLA-C    |     2| rs2249741  | GTEx2015\_v6    | Thyroid                                   |   10.864279|
+| HLA-C    |     2| rs2249741  | GTEx2015\_v6    | Adipose\_Visceral\_Omentum                |   10.352884|
+| HLA-C    |     2| rs2249741  | GTEx2015\_v6    | Skin\_Not\_Sun\_Exposed\_Suprapubic       |   10.163933|
+| HLA-C    |     2| rs2249741  | GTEx2015\_v6    | Breast\_Mammary\_Tissue                   |    9.649241|
+| HLA-C    |     2| rs2249741  | GTEx2015\_v6    | Artery\_Aorta                             |    9.008754|
+| HLA-C    |     2| rs2249741  | GTEx2015\_v6    | Brain\_Cerebellum                         |    8.752610|
+| HLA-C    |     2| rs2249741  | GTEx2015\_v6    | Whole\_Blood                              |    8.719715|
+| HLA-C    |     2| rs2249741  | GTEx2015\_v6    | Colon\_Transverse                         |    8.463598|
+| HLA-C    |     2| rs2249741  | GTEx2015\_v6    | Stomach                                   |    8.358130|
+| HLA-C    |     2| rs2249741  | GTEx2015\_v6    | Brain\_Hypothalamus                       |    8.044904|
+| HLA-C    |     2| rs2249741  | GTEx2015\_v6    | Liver                                     |    7.497827|
+| HLA-C    |     2| rs2249741  | GTEx2015\_v6    | Testis                                    |    7.097510|
+| HLA-C    |     2| rs2249741  | GTEx2015\_v6    | Pituitary                                 |    6.961919|
+| HLA-C    |     2| rs2249741  | GTEx2015\_v6    | Colon\_Sigmoid                            |    6.703395|
+| HLA-C    |     2| rs2249741  | GTEx2015\_v6    | Pancreas                                  |    6.524238|
+| HLA-C    |     2| rs2249741  | GTEx2015\_v6    | Brain\_Caudate\_basal\_ganglia            |    6.490060|
+| HLA-C    |     2| rs2249741  | GTEx2015\_v6    | Cells\_EBV-transformed\_lymphocytes       |    6.148427|
+| HLA-C    |     2| rs2249741  | GTEx2015\_v6    | Esophagus\_Gastroesophageal\_Junction     |    5.960101|
+| HLA-C    |     2| rs2249741  | GTEx2015\_v6    | Adrenal\_Gland                            |    5.415203|
+| HLA-C    |     2| rs2249741  | GTEx2015\_v6    | Brain\_Cerebellar\_Hemisphere             |    5.338115|
+| HLA-DPB1 |     0| rs9277538  | Westra2013      | Whole\_Blood                              |  197.008179|
+| HLA-DPB1 |     0| rs9277538  | GTEx2015\_v6    | Skin\_Sun\_Exposed\_Lower\_leg            |   60.914401|
+| HLA-DPB1 |     0| rs9277538  | GTEx2015\_v6    | Lung                                      |   60.055495|
+| HLA-DPB1 |     0| rs9277538  | GTEx2015\_v6    | Thyroid                                   |   59.088221|
+| HLA-DPB1 |     0| rs9277538  | GTEx2015\_v6    | Artery\_Tibial                            |   56.734184|
+| HLA-DPB1 |     0| rs9277538  | GTEx2015\_v6    | Nerve\_Tibial                             |   50.606605|
+| HLA-DPB1 |     0| rs9277538  | GTEx2015\_v6    | Muscle\_Skeletal                          |   48.583396|
+| HLA-DPB1 |     0| rs9277538  | GTEx2015\_v6    | Esophagus\_Muscularis                     |   43.947374|
+| HLA-DPB1 |     0| rs9277538  | GTEx2015\_v6    | Whole\_Blood                              |   43.113227|
+| HLA-DPB1 |     0| rs9277538  | GTEx2015\_v6    | Artery\_Aorta                             |   40.465541|
+| HLA-DPB1 |     0| rs9277538  | GTEx2015\_v6    | Adipose\_Subcutaneous                     |   37.181776|
+| HLA-DPB1 |     0| rs9277538  | GTEx2015\_v6    | Skin\_Not\_Sun\_Exposed\_Suprapubic       |   32.334648|
+| HLA-DPB1 |     0| rs9277538  | GTEx2015\_v6    | Brain\_Cerebellum                         |   30.608913|
+| HLA-DPB1 |     0| rs9277538  | GTEx2015\_v6    | Esophagus\_Mucosa                         |   27.653941|
+| HLA-DPB1 |     0| rs9277538  | GTEx2015\_v6    | Breast\_Mammary\_Tissue                   |   26.428902|
+| HLA-DPB1 |     0| rs9277538  | GTEx2015\_v6    | Heart\_Atrial\_Appendage                  |   23.713445|
+| HLA-DPB1 |     0| rs9277538  | GTEx2015\_v6    | Brain\_Cerebellar\_Hemisphere             |   23.584761|
+| HLA-DPB1 |     0| rs9277538  | GTEx2015\_v6    | Colon\_Transverse                         |   23.552799|
+| HLA-DPB1 |     0| rs9277538  | GTEx2015\_v6    | Heart\_Left\_Ventricle                    |   22.574776|
+| HLA-DPB1 |     0| rs9277538  | GTEx2015\_v6    | Esophagus\_Gastroesophageal\_Junction     |   20.831067|
+| HLA-DPB1 |     0| rs9277538  | GTEx2015\_v6    | Testis                                    |   20.614541|
+| HLA-DPB1 |     0| rs9277538  | GTEx2015\_v6    | Artery\_Coronary                          |   20.006289|
+| HLA-DPB1 |     0| rs9277538  | GTEx2015\_v6    | Pancreas                                  |   19.875123|
+| HLA-DPB1 |     0| rs9277538  | GTEx2015\_v6    | Adipose\_Visceral\_Omentum                |   19.161209|
+| HLA-DPB1 |     0| rs9277538  | GTEx2015\_v6    | Stomach                                   |   18.064263|
+| HLA-DPB1 |     0| rs9277538  | GTEx2015\_v6    | Spleen                                    |   17.271497|
+| HLA-DPB1 |     0| rs9277538  | GTEx2015\_v6    | Cells\_Transformed\_fibroblasts           |   15.814070|
+| HLA-DPB1 |     0| rs9277538  | GTEx2015\_v6    | Liver                                     |   11.316593|
+| HLA-DPB1 |     0| rs9277538  | GTEx2015\_v6    | Brain\_Hypothalamus                       |   11.295993|
+| HLA-DPB1 |     0| rs9277538  | GTEx2015\_v6    | Prostate                                  |   11.170276|
+| HLA-DPB1 |     0| rs9277538  | GTEx2015\_v6    | Colon\_Sigmoid                            |   10.902804|
+| HLA-DPB1 |     0| rs9277538  | GTEx2015\_v6    | Cells\_EBV-transformed\_lymphocytes       |   10.395900|
+| HLA-DPB1 |     0| rs9277538  | GTEx2015\_v6    | Brain\_Hippocampus                        |   10.386991|
+| HLA-DPB1 |     0| rs9277538  | GTEx2015\_v6    | Small\_Intestine\_Terminal\_Ileum         |    9.910858|
+| HLA-DPB1 |     0| rs9277538  | GTEx2015\_v6    | Brain\_Cortex                             |    8.792221|
+| HLA-DPB1 |     0| rs9277538  | GTEx2015\_v6    | Brain\_Nucleus\_accumbens\_basal\_ganglia |    8.443727|
+| HLA-DPB1 |     0| rs9277538  | GTEx2015\_v6    | Brain\_Putamen\_basal\_ganglia            |    6.384340|
+| HLA-DPB1 |     1| rs9296068  | Westra2013      | Whole\_Blood                              |  105.585393|
+| HLA-DPB1 |     2| rs688209   | NA              | NA                                        |          NA|
+| HLA-DQA1 |     0| rs9272316  | NA              | NA                                        |          NA|
+| HLA-DQA1 |     1| rs9271375  | GTEx2015\_v6    | Muscle\_Skeletal                          |   22.685239|
+| HLA-DQA1 |     1| rs9271375  | GTEx2015\_v6    | Skin\_Sun\_Exposed\_Lower\_leg            |   21.250407|
+| HLA-DQA1 |     1| rs9271375  | GTEx2015\_v6    | Whole\_Blood                              |   19.123646|
+| HLA-DQA1 |     1| rs9271375  | GTEx2015\_v6    | Adipose\_Subcutaneous                     |   16.239829|
+| HLA-DQA1 |     1| rs9271375  | GTEx2015\_v6    | Thyroid                                   |   13.239817|
+| HLA-DQA1 |     1| rs9271375  | GTEx2015\_v6    | Artery\_Tibial                            |   12.612294|
+| HLA-DQA1 |     1| rs9271375  | GTEx2015\_v6    | Adipose\_Visceral\_Omentum                |   11.676662|
+| HLA-DQA1 |     1| rs9271375  | GTEx2015\_v6    | Esophagus\_Mucosa                         |   11.184226|
+| HLA-DQA1 |     1| rs9271375  | GTEx2015\_v6    | Skin\_Not\_Sun\_Exposed\_Suprapubic       |   11.056696|
+| HLA-DQA1 |     1| rs9271375  | GTEx2015\_v6    | Breast\_Mammary\_Tissue                   |   10.589586|
+| HLA-DQA1 |     1| rs9271375  | GTEx2015\_v6    | Lung                                      |    9.999028|
+| HLA-DQA1 |     1| rs9271375  | GTEx2015\_v6    | Testis                                    |    9.669677|
+| HLA-DQA1 |     1| rs9271375  | GTEx2015\_v6    | Esophagus\_Muscularis                     |    9.531619|
+| HLA-DQA1 |     1| rs9271375  | GTEx2015\_v6    | Stomach                                   |    9.509276|
+| HLA-DQA1 |     1| rs9271375  | GTEx2015\_v6    | Nerve\_Tibial                             |    9.084250|
+| HLA-DQA1 |     1| rs9271375  | GTEx2015\_v6    | Esophagus\_Gastroesophageal\_Junction     |    8.904301|
+| HLA-DQA1 |     1| rs9271375  | GTEx2015\_v6    | Heart\_Atrial\_Appendage                  |    8.895583|
+| HLA-DQA1 |     1| rs9271375  | GTEx2015\_v6    | Artery\_Aorta                             |    8.814401|
+| HLA-DQA1 |     1| rs9271375  | GTEx2015\_v6    | Colon\_Transverse                         |    8.038032|
+| HLA-DQA1 |     1| rs9271375  | GTEx2015\_v6    | Pituitary                                 |    7.233891|
+| HLA-DQA1 |     1| rs9271375  | GTEx2015\_v6    | Colon\_Sigmoid                            |    6.512684|
+| HLA-DQA1 |     1| rs9271375  | GTEx2015\_v6    | Heart\_Left\_Ventricle                    |    6.444339|
+| HLA-DQA1 |     1| rs9271375  | GTEx2015\_v6    | Adrenal\_Gland                            |    5.820496|
+| HLA-DQB1 |     0| rs1770     | Lappalainen2013 | Lymphoblastoid\_EUR\_exonlevel            |   68.288868|
+| HLA-DQB1 |     0| rs1770     | Lappalainen2013 | Lymphoblastoid\_EUR\_genelevel            |   43.432284|
+| HLA-DQB1 |     0| rs1770     | GTEx2015\_v6    | Skin\_Sun\_Exposed\_Lower\_leg            |   34.498779|
+| HLA-DQB1 |     0| rs1770     | GTEx2015\_v6    | Whole\_Blood                              |   31.304094|
+| HLA-DQB1 |     0| rs1770     | GTEx2015\_v6    | Muscle\_Skeletal                          |   28.954606|
+| HLA-DQB1 |     0| rs1770     | GTEx2015\_v6    | Nerve\_Tibial                             |   28.028577|
+| HLA-DQB1 |     0| rs1770     | GTEx2015\_v6    | Adipose\_Subcutaneous                     |   25.596807|
+| HLA-DQB1 |     0| rs1770     | GTEx2015\_v6    | Lung                                      |   25.364010|
+| HLA-DQB1 |     0| rs1770     | GTEx2015\_v6    | Thyroid                                   |   25.003063|
+| HLA-DQB1 |     0| rs1770     | GTEx2015\_v6    | Esophagus\_Mucosa                         |   24.650149|
+| HLA-DQB1 |     0| rs1770     | GTEx2015\_v6    | Skin\_Not\_Sun\_Exposed\_Suprapubic       |   22.520603|
+| HLA-DQB1 |     0| rs1770     | GTEx2015\_v6    | Artery\_Tibial                            |   22.468819|
+| HLA-DQB1 |     0| rs1770     | GTEx2015\_v6    | Heart\_Left\_Ventricle                    |   19.023305|
+| HLA-DQB1 |     0| rs1770     | GTEx2015\_v6    | Stomach                                   |   18.008471|
+| HLA-DQB1 |     0| rs1770     | Lappalainen2013 | Lymphoblastoid\_YRI\_exonlevel            |   16.284500|
+| HLA-DQB1 |     0| rs1770     | GTEx2015\_v6    | Breast\_Mammary\_Tissue                   |   16.187618|
+| HLA-DQB1 |     0| rs1770     | GTEx2015\_v6    | Esophagus\_Muscularis                     |   15.281161|
+| HLA-DQB1 |     0| rs1770     | Lappalainen2013 | Lymphoblastoid\_YRI\_genelevel            |   15.001735|
+| HLA-DQB1 |     0| rs1770     | GTEx2015\_v6    | Adipose\_Visceral\_Omentum                |   14.436470|
+| HLA-DQB1 |     0| rs1770     | GTEx2015\_v6    | Colon\_Transverse                         |   13.656355|
+| HLA-DQB1 |     0| rs1770     | GTEx2015\_v6    | Artery\_Aorta                             |   13.526991|
+| HLA-DQB1 |     0| rs1770     | GTEx2015\_v6    | Heart\_Atrial\_Appendage                  |   12.665867|
+| HLA-DQB1 |     0| rs1770     | GTEx2015\_v6    | Cells\_EBV-transformed\_lymphocytes       |   12.537449|
+| HLA-DQB1 |     0| rs1770     | GTEx2015\_v6    | Pancreas                                  |   11.924593|
+| HLA-DQB1 |     0| rs1770     | GTEx2015\_v6    | Esophagus\_Gastroesophageal\_Junction     |   11.575731|
+| HLA-DQB1 |     0| rs1770     | GTEx2015\_v6    | Liver                                     |   10.861057|
+| HLA-DQB1 |     0| rs1770     | GTEx2015\_v6    | Brain\_Frontal\_Cortex\_BA9               |   10.810076|
+| HLA-DQB1 |     0| rs1770     | GTEx2015\_v6    | Artery\_Coronary                          |   10.801265|
+| HLA-DQB1 |     0| rs1770     | GTEx2015\_v6    | Spleen                                    |    9.632579|
+| HLA-DQB1 |     0| rs1770     | GTEx2015\_v6    | Brain\_Caudate\_basal\_ganglia            |    9.274431|
+| HLA-DQB1 |     0| rs1770     | GTEx2015\_v6    | Colon\_Sigmoid                            |    9.260475|
+| HLA-DQB1 |     0| rs1770     | GTEx2015\_v6    | Brain\_Anterior\_cingulate\_cortex\_BA24  |    9.235356|
+| HLA-DQB1 |     0| rs1770     | GTEx2015\_v6    | Vagina                                    |    9.228642|
+| HLA-DQB1 |     0| rs1770     | GTEx2015\_v6    | Testis                                    |    9.157207|
+| HLA-DQB1 |     0| rs1770     | GTEx2015\_v6    | Small\_Intestine\_Terminal\_Ileum         |    8.479718|
+| HLA-DQB1 |     0| rs1770     | GTEx2015\_v6    | Brain\_Hypothalamus                       |    7.969335|
+| HLA-DQB1 |     0| rs1770     | GTEx2015\_v6    | Brain\_Cerebellar\_Hemisphere             |    7.931159|
+| HLA-DQB1 |     0| rs1770     | GTEx2015\_v6    | Adrenal\_Gland                            |    7.767512|
+| HLA-DQB1 |     0| rs1770     | GTEx2015\_v6    | Uterus                                    |    7.651149|
+| HLA-DQB1 |     0| rs1770     | GTEx2015\_v6    | Pituitary                                 |    7.455304|
+| HLA-DQB1 |     0| rs1770     | GTEx2015\_v6    | Ovary                                     |    7.169072|
+| HLA-DQB1 |     0| rs1770     | GTEx2015\_v6    | Brain\_Putamen\_basal\_ganglia            |    6.676998|
+| HLA-DQB1 |     0| rs1770     | GTEx2015\_v6    | Brain\_Cortex                             |    6.582086|
+| HLA-DQB1 |     0| rs1770     | GTEx2015\_v6    | Brain\_Nucleus\_accumbens\_basal\_ganglia |    6.021652|
+| HLA-DQB1 |     1| rs9272209  | GTEx2015\_v6    | Esophagus\_Mucosa                         |    5.467033|
+| HLA-DQB1 |     1| rs9272209  | GTEx2015\_v6    | Muscle\_Skeletal                          |    5.375633|
+| HLA-DQB1 |     2| rs9269386  | NA              | NA                                        |          NA|
+| HLA-DRB1 |     0| rs3104412  | GTEx2015\_v6    | Muscle\_Skeletal                          |   15.182436|
+| HLA-DRB1 |     0| rs3104412  | GTEx2015\_v6    | Skin\_Sun\_Exposed\_Lower\_leg            |   14.477008|
+| HLA-DRB1 |     0| rs3104412  | GTEx2015\_v6    | Adipose\_Subcutaneous                     |   13.044064|
+| HLA-DRB1 |     0| rs3104412  | GTEx2015\_v6    | Whole\_Blood                              |   12.411939|
+| HLA-DRB1 |     0| rs3104412  | GTEx2015\_v6    | Nerve\_Tibial                             |   10.647275|
+| HLA-DRB1 |     0| rs3104412  | GTEx2015\_v6    | Esophagus\_Mucosa                         |   10.404950|
+| HLA-DRB1 |     0| rs3104412  | GTEx2015\_v6    | Thyroid                                   |    8.838950|
+| HLA-DRB1 |     0| rs3104412  | GTEx2015\_v6    | Skin\_Not\_Sun\_Exposed\_Suprapubic       |    8.485531|
+| HLA-DRB1 |     0| rs3104412  | GTEx2015\_v6    | Lung                                      |    8.090744|
+| HLA-DRB1 |     0| rs3104412  | GTEx2015\_v6    | Adipose\_Visceral\_Omentum                |    7.694177|
+| HLA-DRB1 |     0| rs3104412  | GTEx2015\_v6    | Artery\_Tibial                            |    7.605068|
+| HLA-DRB1 |     0| rs3104412  | GTEx2015\_v6    | Artery\_Coronary                          |    7.140416|
+| HLA-DRB1 |     0| rs3104412  | GTEx2015\_v6    | Artery\_Aorta                             |    6.600229|
+| HLA-DRB1 |     0| rs3104412  | GTEx2015\_v6    | Esophagus\_Gastroesophageal\_Junction     |    6.265296|
+| HLA-DRB1 |     0| rs3104412  | GTEx2015\_v6    | Esophagus\_Muscularis                     |    6.092468|
+| HLA-DRB1 |     0| rs3104412  | GTEx2015\_v6    | Colon\_Transverse                         |    6.006194|
+| HLA-DRB1 |     0| rs3104412  | GTEx2015\_v6    | Testis                                    |    5.830163|
+| HLA-DRB1 |     0| rs3104412  | GTEx2015\_v6    | Breast\_Mammary\_Tissue                   |    5.522108|
+| HLA-DRB1 |     1| rs9270700  | GTEx2015\_v6    | Whole\_Blood                              |   73.379518|
+| HLA-DRB1 |     1| rs9270700  | GTEx2015\_v6    | Adipose\_Subcutaneous                     |   54.972231|
+| HLA-DRB1 |     1| rs9270700  | GTEx2015\_v6    | Muscle\_Skeletal                          |   54.083624|
+| HLA-DRB1 |     1| rs9270700  | GTEx2015\_v6    | Artery\_Tibial                            |   50.214338|
+| HLA-DRB1 |     1| rs9270700  | Lappalainen2013 | Lymphoblastoid\_EUR\_exonlevel            |   49.846491|
+| HLA-DRB1 |     1| rs9270700  | GTEx2015\_v6    | Skin\_Sun\_Exposed\_Lower\_leg            |   49.625861|
+| HLA-DRB1 |     1| rs9270700  | GTEx2015\_v6    | Lung                                      |   47.215927|
+| HLA-DRB1 |     1| rs9270700  | GTEx2015\_v6    | Thyroid                                   |   46.692452|
+| HLA-DRB1 |     1| rs9270700  | GTEx2015\_v6    | Nerve\_Tibial                             |   44.859765|
+| HLA-DRB1 |     1| rs9270700  | GTEx2015\_v6    | Esophagus\_Mucosa                         |   40.132813|
+| HLA-DRB1 |     1| rs9270700  | GTEx2015\_v6    | Artery\_Aorta                             |   30.486852|
+| HLA-DRB1 |     1| rs9270700  | GTEx2015\_v6    | Adipose\_Visceral\_Omentum                |   30.433806|
+| HLA-DRB1 |     1| rs9270700  | GTEx2015\_v6    | Heart\_Left\_Ventricle                    |   28.857675|
+| HLA-DRB1 |     1| rs9270700  | GTEx2015\_v6    | Skin\_Not\_Sun\_Exposed\_Suprapubic       |   27.486600|
+| HLA-DRB1 |     1| rs9270700  | GTEx2015\_v6    | Esophagus\_Muscularis                     |   27.414735|
+| HLA-DRB1 |     1| rs9270700  | GTEx2015\_v6    | Colon\_Transverse                         |   26.540620|
+| HLA-DRB1 |     1| rs9270700  | GTEx2015\_v6    | Testis                                    |   26.201386|
+| HLA-DRB1 |     1| rs9270700  | GTEx2015\_v6    | Breast\_Mammary\_Tissue                   |   25.767346|
+| HLA-DRB1 |     1| rs9270700  | GTEx2015\_v6    | Pancreas                                  |   25.388503|
+| HLA-DRB1 |     1| rs9270700  | GTEx2015\_v6    | Heart\_Atrial\_Appendage                  |   25.256971|
+| HLA-DRB1 |     1| rs9270700  | GTEx2015\_v6    | Stomach                                   |   20.235734|
+| HLA-DRB1 |     1| rs9270700  | GTEx2015\_v6    | Colon\_Sigmoid                            |   20.127755|
+| HLA-DRB1 |     1| rs9270700  | GTEx2015\_v6    | Esophagus\_Gastroesophageal\_Junction     |   18.118585|
+| HLA-DRB1 |     1| rs9270700  | GTEx2015\_v6    | Brain\_Cerebellum                         |   16.138904|
+| HLA-DRB1 |     1| rs9270700  | GTEx2015\_v6    | Cells\_Transformed\_fibroblasts           |   15.946338|
+| HLA-DRB1 |     1| rs9270700  | GTEx2015\_v6    | Brain\_Frontal\_Cortex\_BA9               |   15.801406|
+| HLA-DRB1 |     1| rs9270700  | GTEx2015\_v6    | Cells\_EBV-transformed\_lymphocytes       |   15.729568|
+| HLA-DRB1 |     1| rs9270700  | GTEx2015\_v6    | Artery\_Coronary                          |   15.502442|
+| HLA-DRB1 |     1| rs9270700  | GTEx2015\_v6    | Brain\_Hippocampus                        |   14.784203|
+| HLA-DRB1 |     1| rs9270700  | GTEx2015\_v6    | Brain\_Caudate\_basal\_ganglia            |   14.079291|
+| HLA-DRB1 |     1| rs9270700  | GTEx2015\_v6    | Brain\_Cortex                             |   14.039807|
+| HLA-DRB1 |     1| rs9270700  | GTEx2015\_v6    | Uterus                                    |   13.247042|
+| HLA-DRB1 |     1| rs9270700  | GTEx2015\_v6    | Brain\_Nucleus\_accumbens\_basal\_ganglia |   13.168902|
+| HLA-DRB1 |     1| rs9270700  | GTEx2015\_v6    | Liver                                     |   12.579252|
+| HLA-DRB1 |     1| rs9270700  | GTEx2015\_v6    | Brain\_Anterior\_cingulate\_cortex\_BA24  |   12.303637|
+| HLA-DRB1 |     1| rs9270700  | GTEx2015\_v6    | Brain\_Hypothalamus                       |   12.206855|
+| HLA-DRB1 |     1| rs9270700  | GTEx2015\_v6    | Prostate                                  |   12.187087|
+| HLA-DRB1 |     1| rs9270700  | GTEx2015\_v6    | Brain\_Putamen\_basal\_ganglia            |   11.391908|
+| HLA-DRB1 |     1| rs9270700  | GTEx2015\_v6    | Pituitary                                 |   11.379027|
+| HLA-DRB1 |     1| rs9270700  | Lappalainen2013 | Lymphoblastoid\_YRI\_exonlevel            |   11.298293|
+| HLA-DRB1 |     1| rs9270700  | GTEx2015\_v6    | Brain\_Cerebellar\_Hemisphere             |   11.097188|
+| HLA-DRB1 |     1| rs9270700  | GTEx2015\_v6    | Vagina                                    |   10.523146|
+| HLA-DRB1 |     1| rs9270700  | GTEx2015\_v6    | Small\_Intestine\_Terminal\_Ileum         |    9.759650|
+| HLA-DRB1 |     1| rs9270700  | GTEx2015\_v6    | Ovary                                     |    9.667626|
+| HLA-DRB1 |     1| rs9270700  | GTEx2015\_v6    | Adrenal\_Gland                            |    9.041808|
+| HLA-DRB1 |     1| rs9270700  | GTEx2015\_v6    | Spleen                                    |    8.960945|
+
 ### RTC
 
-| gene     | variant    |  rank| qtl\_previous |  d\_prime|   rtc| study                                                     |
-|:---------|:-----------|-----:|:--------------|---------:|-----:|:----------------------------------------------------------|
-| HLA-A    | rs2517827  |     1| rs34922185    |      0.65|  0.92| HLA-A: Delaneau (2017)                                    |
-| HLA-B    | rs1265094  |     0| rs9404937     |      0.80|  0.99| HLA-C: Nedelec (2016)                                     |
-| HLA-B    | rs1265094  |     0| rs9265628     |      0.92|  0.99| HLA-C: Lappalainen (2013)                                 |
-| HLA-B    | rs9264803  |     1| rs9264942     |      0.97|  1.00| HLA-C: Thomas (2009)                                      |
-| HLA-B    | rs9264803  |     1| rs67384697    |      0.86|  1.00| HLA-C: Kulkarni (2011)                                    |
-| HLA-B    | rs9264803  |     1| rs1050118     |      0.80|  1.00| HLA-B: Nedelec (2016)                                     |
-| HLA-B    | rs9264803  |     1| rs9264666     |      1.00|  0.97| HLA-C: Delaneau (2017)                                    |
-| HLA-C    | rs41561715 |     0| rs9265628     |      0.90|  0.97| HLA-C: Lappalainen (2013)                                 |
-| HLA-C    | rs41561715 |     0| rs9264666     |      1.00|  0.92| HLA-C: Delaneau (2017)                                    |
-| HLA-C    | rs2394941  |     1| rs2853922     |      0.73|  0.96| HLA-B: Battle (2014)                                      |
-| HLA-C    | rs2394941  |     1| rs1131123     |      0.67|  0.93| HLA-C: GTEx                                               |
-| HLA-C    | rs2394941  |     1| rs9266216     |      0.49|  0.93| HLA-B: Lappalainen (2013)                                 |
-| HLA-C    | rs2394941  |     1| rs6931332     |      0.64|  0.93| HLA-C: Battle (2014)                                      |
-| HLA-C    | rs2249741  |     2| rs2395471     |      1.00|  1.00| HLA-C: Vince (2016)                                       |
-| HLA-C    | rs2249741  |     2| rs67384697    |      0.99|  1.00| HLA-C: Kulkarni (2011)                                    |
-| HLA-C    | rs2249741  |     2| rs1050118     |      1.00|  1.00| HLA-B: Nedelec (2016)                                     |
-| HLA-C    | rs2249741  |     2| rs9264942     |      0.93|  1.00| HLA-C: Thomas (2009)                                      |
-| HLA-DPB1 | rs9296068  |     1| rs34885310    |      0.96|  0.98| HLA-DPB1: Delaneau (2017)                                 |
-| HLA-DQA1 | rs9272316  |     0| rs35399335    |      0.96|  0.98| HLA-DRB1: Delaneau (2017)                                 |
-| HLA-DQA1 | rs9272316  |     0| rs28366302    |      0.96|  0.98| HLA-DRB1: Battle (2014)                                   |
-| HLA-DQA1 | rs9272316  |     0| rs35957722    |      0.90|  0.97| HLA-DRB1: Lappalainen (2013)                              |
-| HLA-DQA1 | rs9271375  |     1| rs72844177    |      0.67|  0.98| HLA-DRB1: Nedelec (2016)                                  |
-| HLA-DQB1 | rs1770     |     0| rs9274660     |      1.00|  0.98| HLA-DQA1: Lappalainen (2013)/HLA-DQB1: Lappalainen (2013) |
-| HLA-DQB1 | rs1770     |     0| rs9273376     |      0.98|  0.98| HLA-DQA1: Delaneau (2017)                                 |
-| HLA-DQB1 | rs1770     |     0| rs9273584     |      0.69|  0.96| HLA-DQA1: Nedelec (2016)                                  |
-| HLA-DQB1 | rs1770     |     0| rs17612907    |      0.51|  0.94| HLA-DQB1: GTEx                                            |
-| HLA-DQB1 | rs9272209  |     1| rs5016923     |      0.69|  0.94| HLA-DRB1: GTEx                                            |
-| HLA-DRB1 | rs3104412  |     0| rs9273376     |      0.98|  1.00| HLA-DQA1: Delaneau (2017)                                 |
-| HLA-DRB1 | rs3104412  |     0| rs9274660     |      0.99|  1.00| HLA-DQA1: Lappalainen (2013)/HLA-DQB1: Lappalainen (2013) |
-| HLA-DRB1 | rs3104412  |     0| rs17612907    |      0.57|  0.97| HLA-DQB1: GTEx                                            |
-| HLA-DRB1 | rs3104412  |     0| rs9273584     |      0.61|  0.96| HLA-DQA1: Nedelec (2016)                                  |
-
-### comparison of slope and p-value with Geuvadis
-
-| gene     | variant    | geuvadis\_variant |  slope|  geuvadis\_slope|  pvalue|  geuvadis\_pvalue|
-|:---------|:-----------|:------------------|------:|----------------:|-------:|-----------------:|
-| HLA-A    | rs16896724 | rs2734971         |   0.85|       -0.4516518|   33.06|          19.40016|
-| HLA-C    | rs41561715 | rs9265628         |   1.30|        0.5814953|   35.71|          34.33122|
-| HLA-B    | rs1265094  | rs9266216         |   0.63|       -0.3738578|   17.10|          13.08181|
-| HLA-DRB1 | rs3104412  | rs35957722        |   0.68|       -0.5963285|   21.35|          36.48896|
-| HLA-DQA1 | rs9272316  | rs9274660         |   0.86|       -0.7020240|   41.56|          55.76189|
-| HLA-DQB1 | rs1770     | rs9274660         |  -0.70|       -0.7226485|   23.53|          60.55591|
-| HLA-DPB1 | rs9277538  | NA                |   1.01|               NA|   40.81|                NA|
-
-### RTC with variants in Delaneau et al (2017)
-
-[Delaneau et al. (2017)](https://www.biorxiv.org/content/early/2017/08/03/171694) mapped eQTLs, chromatin QTLs (cQTLs), CRD QTLs (variants associated with activity or structure of cis-regulatory domains (CRDs)). The authors found that most of the QTLs affect both CRD activity and gene expression and therefore likely tag the same causal variants.
-
-Our eQTLs tag eQTLs, cQTLs, aCRD-QTLs and sCRD-QTLs in that study. Here I show the RTC with cQTLs:
-
-| gene     | variant    |  rank| crd\_var    |  d\_prime|    rtc| qtl\_type | phenotype                                                                                                                 |
-|:---------|:-----------|-----:|:------------|---------:|------:|:----------|:--------------------------------------------------------------------------------------------------------------------------|
-| HLA-A    | rs16896724 |     0| rs16896742  |     0.994|  0.986| cQTL      | H3K27ac\_chr6-65666                                                                                                       |
-| HLA-A    | rs2517827  |     1| rs376253    |     0.991|  0.998| cQTL      | H3K4me1\_chr6-80475                                                                                                       |
-| HLA-A    | rs7383537  |     2| rs1611303   |     0.646|  0.995| cQTL      | H3K27ac\_chr6-70343                                                                                                       |
-| HLA-B    | rs1265094  |     0| rs6913301   |     0.930|  0.997| cQTL      | H3K27ac\_chr6-55269/H3K4me1\_chr6-117461/H3K27ac\_chr6-70358/H3K4me1\_chr6-106762/H3K27ac\_chr6-66772/H3K4me3\_chr6-19415 |
-| HLA-B    | rs1265094  |     0| rs6913648   |     0.930|  0.997| cQTL      | H3K27ac\_chr6-55965/H3K4me3\_chr6-21724/H3K4me1\_chr6-84344                                                               |
-| HLA-B    | rs9264803  |     1| rs3130439   |     0.844|  0.958| cQTL      | H3K4me1\_chr6-111992                                                                                                      |
-| HLA-C    | rs41561715 |     0| rs17190491  |     0.794|  0.979| cQTL      | H3K4me1\_chr6-106765                                                                                                      |
-| HLA-C    | rs2394941  |     1| rs2524266   |     0.844|  0.952| cQTL      | H3K27ac\_chr6-65669                                                                                                       |
-| HLA-C    | rs2249741  |     2| rs1131275   |     0.925|  0.996| cQTL      | H3K4me3\_chr6-21989                                                                                                       |
-| HLA-DPB1 | rs9296068  |     1| rs1346932   |     0.963|  0.985| cQTL      | H3K27ac\_chr6-70379                                                                                                       |
-| HLA-DPB1 | rs9296068  |     1| rs2395305   |     0.963|  0.985| cQTL      | H3K27ac\_chr6-70377/H3K4me1\_chr6-97155                                                                                   |
-| HLA-DPB1 | rs9296068  |     1| rs6935846   |     0.963|  0.985| cQTL      | H3K27ac\_chr6-57495                                                                                                       |
-| HLA-DPB1 | rs9296068  |     1| rs9276993   |     0.963|  0.985| cQTL      | H3K4me1\_chr6-97154                                                                                                       |
-| HLA-DPB1 | rs688209   |     2| rs12529825  |     0.901|  0.920| cQTL      | H3K27ac\_chr6-58356                                                                                                       |
-| HLA-DQA1 | rs9272316  |     0| rs9274853   |     0.957|  0.964| cQTL      | H3K4me1\_chr6-129668                                                                                                      |
-| HLA-DQA1 | rs9271375  |     1| rs9271365   |     0.917|  1.000| cQTL      | H3K4me3\_chr6-19265                                                                                                       |
-| HLA-DQB1 | rs1770     |     0| rs1130034   |     0.976|  0.983| cQTL      | H3K4me1\_chr6-129671/H3K4me1\_chr6-120422                                                                                 |
-| HLA-DQB1 | rs9272209  |     1| rs111234931 |     0.620|  0.985| cQTL      | H3K4me1\_chr6-120431                                                                                                      |
-| HLA-DQB1 | rs9269386  |     2| rs9271712   |     0.458|  0.989| cQTL      | H3K4me1\_chr6-101862                                                                                                      |
-| HLA-DRB1 | rs3104412  |     0| rs9271365   |     0.973|  1.000| cQTL      | H3K4me3\_chr6-19265                                                                                                       |
-| HLA-DRB1 | rs9270700  |     1| rs9271062   |     0.978|  0.997| cQTL      | H3K4me3\_chr6-21255                                                                                                       |
+coming soon
 
 Association with GWAS traits
 ----------------------------
