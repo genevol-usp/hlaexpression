@@ -59,6 +59,20 @@ same_gene_df <-
 
 write_tsv(same_gene_df, "./haploreg_results.tsv")
 
+grasp <- 
+    haploreg_query %>%
+    left_join(qtls, by = "rsid") %>%
+    select(gene, rank, rsid, grasp) %>%
+    filter(grasp != ".") %>%
+    separate_rows(grasp, sep = ";") %>%
+    separate(grasp, c("pubmed_id", "phenotype", "pvalue"), sep = ",") %>%
+    mutate(pvalue = -log10(as.numeric(pvalue)),
+	   study = paste0("www.ncbi.nlm.nih.gov/pubmed/", pubmed_id)) %>%
+    select(gene, rank, rsid, phenotype, pvalue, study) %>%
+    arrange(gene, rank, desc(pvalue))
+
+write_tsv(grasp, "./grasp_results.tsv")
+
 # regulomeDB
 regDB <- queryRegulome(query = qtls$rsid, check_bad_snps = TRUE)
 
@@ -78,10 +92,10 @@ regDB_hits <-
 	   qtl = Single_Nucleotides)
 
 regDB_hits %>%
-    drop_na(qtl) %>%
-    select(rsid, score, qtl) %>%
+    group_by(rsid, score) %>%
+    summarize(qtl = paste(unique(qtl), collapse = ";")) %>%
+    ungroup() %>%
     left_join(qtls, ., by = "rsid") %>%
     arrange(gene, rank) %>%
     write_tsv("./regulomeDB_results.tsv")
-
 
