@@ -25,7 +25,7 @@ expression_dt <-
 	  ][, .(gene_tpm = sum(tpm)), by = .(subject, gene_id)]
 
 expressedGenes <- 
-  expression_dt[, .(mean(gene_tpm > 0)), by = .(gene_id)][V1 >= 0.9]
+  expression_dt[, .(mean(gene_tpm >= 1)), by = .(gene_id)][V1 >= 0.9]
 
 expression_dt <- expression_dt[gene_id %in% expressedGenes$gene_id]
 

@@ -38,7 +38,7 @@ gene_set <- rbind(autosomes_set, imgt_set)
 gene_dt <- abundances_dt[gene_set, on = .(target_id), nomatch = 0L
 		       ][, .(gene_fpkm = sum(fpkm)), by = .(subject, gene_id)]
 
-expressed_genes <- gene_dt[, .(mean(gene_fpkm > 0)), by = .(gene_id)][V1 >= 0.9]
+expressed_genes <- gene_dt[, .(mean(gene_fpkm >= 1)), by = .(gene_id)][V1 >= 0.9]
 
 gene_dt <- gene_dt[gene_id %in% expressed_genes$gene_id]
 

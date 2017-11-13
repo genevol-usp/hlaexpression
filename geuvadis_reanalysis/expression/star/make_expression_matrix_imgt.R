@@ -41,7 +41,7 @@ gene_dt <-
     expression_dt[gene_set, on = .(target_id), nomatch = 0L
 		][, .(gene_tpm = sum(tpm)), by = .(subject, gene_id)]
 
-expressedGenes <- gene_dt[, .(mean(gene_tpm > 0)), by = .(gene_id)][V1 >= 0.9]
+expressedGenes <- gene_dt[, .(mean(gene_tpm >= 1)), by = .(gene_id)][V1 >= 0.9]
 
 gene_dt <- gene_dt[gene_id %in% expressedGenes$gene_id]
 
