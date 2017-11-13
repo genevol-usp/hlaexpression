@@ -409,6 +409,33 @@ Comparison with previous eQTLs
 | HLA-DRB1 |     1| rs9270700  | GTEx2015\_v6    | Adrenal\_Gland                            |    9.041808|
 | HLA-DRB1 |     1| rs9270700  | GTEx2015\_v6    | Spleen                                    |    8.960945|
 
+### eQTLs in GRASP (via HaploReg)
+
+| gene     |  rank| rsid      | phenotype                                                                                  |     pvalue| study                                |
+|:---------|-----:|:----------|:-------------------------------------------------------------------------------------------|----------:|:-------------------------------------|
+| HLA-B    |     0| rs1265094 | Gene expression of HCG22 \[probe 1560767\_at\] in lymphoblastoid cell lines                |  16.823909| www.ncbi.nlm.nih.gov/pubmed/17873877 |
+| HLA-B    |     0| rs1265094 | Gene expression of HCG22 in lymphoblastoid cell lines                                      |  15.792999| www.ncbi.nlm.nih.gov/pubmed/17873877 |
+| HLA-B    |     0| rs1265094 | Gene expression of TCF19 \[probe 223274\_at\] in lymphoblastoid cell lines                 |  10.522879| www.ncbi.nlm.nih.gov/pubmed/17873877 |
+| HLA-B    |     0| rs1265094 | Gene expression of HCG27 \[probe 1559050\_at\] in lymphoblastoid cell lines                |  10.161151| www.ncbi.nlm.nih.gov/pubmed/17873877 |
+| HLA-B    |     0| rs1265094 | Gene expression of TCF19 in lymphoblastoid cell lines                                      |   9.591999| www.ncbi.nlm.nih.gov/pubmed/17873877 |
+| HLA-B    |     0| rs1265094 | Gene expression of HCG27 in lymphoblastoid cell lines                                      |   9.241000| www.ncbi.nlm.nih.gov/pubmed/17873877 |
+| HLA-B    |     0| rs1265094 | Gene expression of HLA-C \[probe 216526\_x\_at\] in lymphoblastoid cell lines              |   9.086186| www.ncbi.nlm.nih.gov/pubmed/17873877 |
+| HLA-B    |     0| rs1265094 | Gene expression of CCHCR1 in normal prepouch ileum                                         |   4.823275| www.ncbi.nlm.nih.gov/pubmed/23474282 |
+| HLA-C    |     2| rs2249741 | Gene expression of HLA-C in CEU-CHB-JPT-YRI lymphoblastoid cell lines                      |  17.588901| www.ncbi.nlm.nih.gov/pubmed/17873874 |
+| HLA-C    |     2| rs2249741 | Gene expression of hmm31752 in CEU-CHB-JPT lymphoblastoid cell lines                       |   5.941399| www.ncbi.nlm.nih.gov/pubmed/17873874 |
+| HLA-DPB1 |     0| rs9277538 | Methylation levels at chr6:33151502-33151552 \[hg18 coord probe cg19921353\] in Cerebellum |  10.759451| www.ncbi.nlm.nih.gov/pubmed/20485568 |
+| HLA-DPB1 |     0| rs9277538 | Differential splicing of HLA-DPA1 \[probeset 2950333\] in lymphoblastoid cell lines        |   8.096910| www.ncbi.nlm.nih.gov/pubmed/19052777 |
+| HLA-DPB1 |     1| rs9296068 | Gene expression of HLA-DPB1 in blood                                                       |  39.207608| www.ncbi.nlm.nih.gov/pubmed/21829388 |
+| HLA-DPB1 |     1| rs9296068 | Gene expression of HLA-DPB1 in peripheral blood monocytes                                  |  14.341989| www.ncbi.nlm.nih.gov/pubmed/20502693 |
+| HLA-DPB1 |     1| rs9296068 | Gene expression of HLA-DOA in blood                                                        |   6.619789| www.ncbi.nlm.nih.gov/pubmed/21829388 |
+| HLA-DPB1 |     1| rs9296068 | Gene expression of HLA-DPA1 in blood                                                       |   6.214670| www.ncbi.nlm.nih.gov/pubmed/21829388 |
+| HLA-DPB1 |     1| rs9296068 | Gene expression of PSMB9 in blood                                                          |   3.585027| www.ncbi.nlm.nih.gov/pubmed/21829388 |
+| HLA-DPB1 |     1| rs9296068 | Gene expression of HLA-DOB in blood                                                        |   3.000000| www.ncbi.nlm.nih.gov/pubmed/21829388 |
+| HLA-DPB1 |     2| rs688209  | Gene expression of ITPR3 in peripheral blood monocytes                                     |   8.454693| www.ncbi.nlm.nih.gov/pubmed/20502693 |
+| HLA-DPB1 |     2| rs688209  | Gene expression of DEFB125 in peripheral blood monocytes                                   |   5.892790| www.ncbi.nlm.nih.gov/pubmed/20502693 |
+| HLA-DPB1 |     2| rs688209  | Gene expression of TAC3 in peripheral blood monocytes                                      |   5.754487| www.ncbi.nlm.nih.gov/pubmed/20502693 |
+| HLA-DPB1 |     2| rs688209  | Gene expression of OR3A4 in peripheral blood monocytes                                     |   5.669586| www.ncbi.nlm.nih.gov/pubmed/20502693 |
+
 ### RTC
 
 coming soon

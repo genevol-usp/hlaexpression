@@ -213,6 +213,13 @@ read_tsv("./qtls/qtls_star/imgt/haploreg/haploreg_results.tsv") %>%
     kable()
 ```
 
+### eQTLs in GRASP (via HaploReg)
+
+```{r}
+read_tsv("./qtls/qtls_star/imgt/haploreg/grasp_results.tsv") %>%
+    kable()
+```
+
 ### RTC
 
 coming soon
