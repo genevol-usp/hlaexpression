@@ -5,7 +5,7 @@ fenrich_out <-
     mutate(pos = (X1 + X2)/2) %>%
     select(pos, n = X3)
 
-png("../../../plots/fenrich.png", width = 4, height = 4, units = "in", res = 200)
+png("../../../plots/fdensity.png", width = 4, height = 4, units = "in", res = 200)
 ggplot(fenrich_out, aes(pos, n)) +
     geom_line() +
     labs(x = "Distance to eQTLs", y = "Number of annotations / kb") +

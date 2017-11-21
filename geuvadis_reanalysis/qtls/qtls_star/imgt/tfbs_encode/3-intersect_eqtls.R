@@ -10,7 +10,8 @@ qtls <-
     read_qtltools("../3-conditional_analysis/conditional_60_all.txt.gz") %>%
     inner_join(gencode_hla, by = c("phen_id" = "gene_id")) %>%
     filter(bwd_best == 1) %>%
-    select(gene_name, var_id, rank, var_from)
+    select(gene_name, var_id, rank, var_from) %>%
+    mutate(var_from = var_from - 1L)
 
 tfbs <- read_tsv("./chr6_tfbs_hg38.bed", col_names = FALSE)
 
