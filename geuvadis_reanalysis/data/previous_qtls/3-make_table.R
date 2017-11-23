@@ -123,5 +123,4 @@ qtls_df <- bind_rows(regdb_df, haploreg, battle, barreiro, delaneau) %>%
     summarize(info = paste(info, collapse = ";")) %>%
     ungroup()
 
-write_tsv(qtls_df, "./qtl_catalog.tsv")
-
+write_tsv(qtls_df, "./qtl_catalog.tsv", col_names = FALSE)
