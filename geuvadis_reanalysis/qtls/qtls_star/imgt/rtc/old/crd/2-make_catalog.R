@@ -1,7 +1,7 @@
 devtools::load_all("~/hlaseqlib")
 library(tidyverse)
 
-hla_genes <- paste0("HLA-", c("A", "B", "C", "DPB1", "DQA1", "DQB1", "DRB1"))
+hla_genes <- sort(gencode_hla$gene_name)
 
 gencode_hla_v19 <- "~/gencode_data/gencode.v19.annotation.gtf.gz" %>% 
     get_gencode_coords(feature = "gene") %>%
@@ -18,9 +18,13 @@ gencode_hla_v19 <- "~/gencode_data/gencode.v19.annotation.gtf.gz" %>%
 
 cQTL_bed <-
     read_delim("./LCL_cQTL.txt", col_names = FALSE, delim = " ") %>%
-    filter(X2 == "chr6", X20 < 0.05,
+    filter(X2 == "chr6", 
 	   X10 >= min(gencode_hla_v19$start) - 1e6,
-	   X11 <= max(gencode_hla_v19$end) + 1e6) %>%
+	   X11 <= max(gencode_hla_v19$end) + 1e6,
+	   grepl("^rs", X8)) %>%
+    group_by(X1) %>%
+    filter(X20 == min(X20)) %>%
+    ungroup() %>%
     select(var_id = X8, phen_id = X1) %>%
     mutate(var_func = "cQTL") %>%
     unite(info, c("var_func", "phen_id"), sep = ":")
