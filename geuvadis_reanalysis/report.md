@@ -442,6 +442,30 @@ Here we can see that, when our eQTLs were not previously described in the databa
 
 Most of them are tagging an eQTL from regulomeDB. I believe that's because, for all sources not regulomeDB, I selected only the top variant for each tissue and gene. For regulomeDB that's no possible beucase the p-value is not directly available, so there are more variants per gene, which increases the chance that some of these variants will have high RTC with one of our eQTLs.
 
+| gene     | rsid       |  rank| qtl\_previous |  d\_prime|   rtc| study        | tissue                                                                                                                                    |
+|:---------|:-----------|-----:|:--------------|---------:|-----:|:-------------|:------------------------------------------------------------------------------------------------------------------------------------------|
+| HLA-A    | rs16896724 |     0| rs2735097     |      0.99|  0.99| regulomeDB   | Lymphoblastoid                                                                                                                            |
+| HLA-A    | rs2517827  |     1| rs2523759     |      1.00|  0.99| regulomeDB   | Lymphoblastoid                                                                                                                            |
+| HLA-A    | rs2517827  |     1| rs2734980     |      1.00|  0.99| regulomeDB   | Lymphoblastoid                                                                                                                            |
+| HLA-A    | rs2517827  |     1| rs2734984     |      1.00|  0.99| regulomeDB   | Lymphoblastoid                                                                                                                            |
+| HLA-A    | rs2517827  |     1| rs5013088     |      1.00|  0.99| regulomeDB   | Lymphoblastoid,Monocytes                                                                                                                  |
+| HLA-A    | rs7383537  |     2| rs5013310     |      0.84|  0.99| regulomeDB   | Lymphoblastoid                                                                                                                            |
+| HLA-B    | rs1265094  |     0| rs1265181     |      1.00|  0.98| regulomeDB   | Monocytes                                                                                                                                 |
+| HLA-B    | rs9264803  |     1| rs1050118     |      0.80|  1.00| Nedelec2016  | NonInfected\_Macrophages                                                                                                                  |
+| HLA-C    | rs41561715 |     0| rs2073724     |      0.96|  0.98| regulomeDB   | Monocytes                                                                                                                                 |
+| HLA-C    | rs2394941  |     1| rs2394894     |      1.00|  1.00| regulomeDB   | Monocytes                                                                                                                                 |
+| HLA-C    | rs2249741  |     2| rs2249741     |      1.00|  1.00| regulomeDB   | Lymphoblastoid                                                                                                                            |
+| HLA-DPB1 | rs9277538  |     0| rs9277538     |      1.00|  1.00| Westra2013   | Whole\_Blood                                                                                                                              |
+| HLA-DPB1 | rs9296068  |     1| rs34885310    |      0.96|  0.98| Delaneau2017 | LCL                                                                                                                                       |
+| HLA-DQA1 | rs9272316  |     0| rs9271488     |      0.96|  0.99| regulomeDB   | Lymphoblastoid                                                                                                                            |
+| HLA-DQA1 | rs9271375  |     1| rs9268528     |      0.67|  0.99| regulomeDB   | Lymphoblastoid                                                                                                                            |
+| HLA-DQB1 | rs1770     |     0| rs2647025     |      1.00|  1.00| regulomeDB   | Lymphoblastoid                                                                                                                            |
+| HLA-DQB1 | rs9272209  |     1| rs2187668     |      0.98|  1.00| regulomeDB   | Monocytes                                                                                                                                 |
+| HLA-DQB1 | rs9269386  |     2| rs3129872     |      0.56|  0.99| regulomeDB   | Monocytes                                                                                                                                 |
+| HLA-DRB1 | rs3104412  |     0| rs1063355     |      0.99|  1.00| regulomeDB   | Lymphoblastoid                                                                                                                            |
+| HLA-DRB1 | rs9270700  |     1| rs9270980     |      0.99|  1.00| GTEx2015\_v6 | Adipose\_Subcutaneous,Brain\_Anterior\_cingulate\_cortex\_BA24,Brain\_Cerebellum,Brain\_Frontal\_Cortex\_BA9,Breast\_Mammary\_Tissue,Lung |
+| HLA-DRB1 | rs9270700  |     1| rs9271055     |      0.99|  1.00| regulomeDB   | Lymphoblastoid                                                                                                                            |
+
 Association with GWAS traits
 ----------------------------
 

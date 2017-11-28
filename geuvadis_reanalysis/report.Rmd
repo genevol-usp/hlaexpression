@@ -231,7 +231,7 @@ gene. For regulomeDB that's no possible beucase the p-value is not directly
 available, so there are more variants per gene, which increases the chance that
 some of these variants will have high RTC with one of our eQTLs.
 
-```{r, eval=FALSE}
+```{r}
 read_tsv("./qtls/qtls_star/imgt/rtc/previous_qtls/results.tsv") %>%
     kable(digits = 2)
 ```
