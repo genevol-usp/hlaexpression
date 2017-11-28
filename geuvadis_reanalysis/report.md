@@ -438,7 +438,9 @@ Comparison with previous eQTLs
 
 ### RTC
 
-coming soon
+Here we can see that, when our eQTLs were not previously described in the databases, they tag some eQTL in the database.
+
+Most of them are tagging an eQTL from regulomeDB. I believe that's because, for all sources not regulomeDB, I selected only the top variant for each tissue and gene. For regulomeDB that's no possible beucase the p-value is not directly available, so there are more variants per gene, which increases the chance that some of these variants will have high RTC with one of our eQTLs.
 
 Association with GWAS traits
 ----------------------------
