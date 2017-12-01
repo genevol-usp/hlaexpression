@@ -4,11 +4,9 @@ library(cowplot)
 library(ggpmisc)
 library(ggplot2)
 
-hla_genes <- paste0("HLA-", c("A", "B", "C", "DPB1", "DQA1", "DQB1", "DRB1"))
+hla_genes <- sort(gencode_hla$gene_name)
 
-gencode_hla <- gencode_chr_gene %>%
-    filter(gene_name %in% hla_genes) %>%
-    select(gene_id, gene_name)
+gencode_hla <- select(gencode_hla, gene_id, gene_name)
 
 # genotype PCA 
 make_pca_plot <- function(PC_x, PC_y) {
@@ -231,13 +229,6 @@ ggdraw(grid1) +
 dev.off()
 
 # eQTL landscape around TSS
-start_pos <-
-    "~/gencode_data/gencode.v25.annotation.gtf.gz" %>%
-    get_gencode_coords(feature = "start_codon") %>%
-    filter(gene_name %in% hla_genes) %>%
-    mutate(tss = ifelse(strand == "+", start, end)) %>%
-    select(gene_id, gene_name, tss)
-
 read_conditional <- function(path) {
       read_qtltools(path) %>%
       inner_join(start_pos, by = c("phen_id" = "gene_id")) %>%
@@ -274,8 +265,8 @@ plot_qtls <- function(conditional_df) {
     coord_cartesian(xlim = c(-1e6, +1e6)) +
     scale_color_manual(values = c("0" = "#8491B4B2",
                                   "1" = "#DC0000B2",
-                                  "2" = "#7E6148FF",
-                                  "3" = "#91D1C2B2")) +
+                                  "2" = "#F0E442B2",
+                                  "3" = "black")) +
     scale_x_continuous(labels = scales::comma) +
     theme_minimal() +
     theme(strip.text = element_text(size = 12),
@@ -284,10 +275,22 @@ plot_qtls <- function(conditional_df) {
           legend.title = element_text(size = 12),
           legend.text = element_text(size = 10)) +
     facet_wrap(~phen_id, scales = "free_y", ncol = 1) +
+    geom_blank(data = conditional_df %>% 
+                   group_by(phen_id) %>%
+                   slice(which.max(nom_pval)) %>% 
+                   mutate(max_pval = nom_pval + 2.5),
+               aes(y = max_pval)) +
     labs(x = "distance from TSS", 
          y = expression(paste("-log"[10], italic(Pvalue)))) +
     guides(color = guide_legend(override.aes = list(alpha = 1, size = 3)))
 }
+
+start_pos <-
+    "~/gencode_data/gencode.v25.annotation.gtf.gz" %>%
+    get_gencode_coords(feature = "start_codon") %>%
+    filter(gene_name %in% hla_genes) %>%
+    mutate(tss = ifelse(strand == "+", start, end)) %>%
+    select(gene_id, gene_name, tss)
 
 conditional_star_imgt <-
     "./qtls_star/imgt/3-conditional_analysis/conditional_60_all.txt.gz" %>%
