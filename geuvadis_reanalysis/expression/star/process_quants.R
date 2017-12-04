@@ -70,7 +70,7 @@ if (quant_round == 1L || quant_round == 2L) {
     } else if (quant_round == 2L) {
 
         out_df <- hla_genotype_dt(quants, th = 0) %>%
-	    hla_apply_zigosity_threshold(th = 0.25)
+	    hla_apply_zigosity_threshold(th = 0.2)
     
 	calls <- out_df %>%
 	    filter(locus %in% hla_genes) %>%
