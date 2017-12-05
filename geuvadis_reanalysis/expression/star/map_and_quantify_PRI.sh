@@ -30,7 +30,11 @@ bam=${outPrefix}Aligned.out.bam
 fasta=/home/vitor/gencode_data/gencode.v25.PRI.transcripts.fa
 out=$outQuant/$sample
 
-$salmon quant -t $fasta -l IU -a $bam -o $out -p 4
+if [ -d "$out" ]; then
+    rmdir $out
+fi
+
+$salmon quant -t $fasta -l IU -a $bam -o $out -p 4 --seqBias --gcBias
 
 awk 'NR==1 {print $1"\t"$4"\t"$5}' $out/quant.sf > $out/quant_imgt.sf
 

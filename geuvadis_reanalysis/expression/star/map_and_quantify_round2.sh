@@ -41,6 +41,10 @@ $STAR --runMode alignReads --runThreadN 6 --genomeDir $indexDIR\
 bam=${outPrefix}Aligned.out.bam
 out=$outQuant/$sample
 
+if [ -d "$out" ]; then
+    rmdir $out
+fi
+
 $salmon quant -t $sample_fa -l IU -a $bam -o $out -p 6 --seqBias --gcBias
 
 awk 'NR==1 || $1 ~ /IMGT/ {print $1"\t"$4"\t"$5}' $out/quant.sf >\

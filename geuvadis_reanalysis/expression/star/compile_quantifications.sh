@@ -14,3 +14,4 @@ do
     awk -v SUBJECT="$id" 'NR != 1 {print SUBJECT "\t" $0}' $file >> $out
 done
 
+gzip $out

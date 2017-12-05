@@ -29,6 +29,10 @@ bam=${outPrefix}Aligned.out.bam
 fasta=/home/vitor/hlaexpression/imgt_index/gencode.v25.PRI.IMGT.transcripts.fa
 out=$outQuant/$sample
 
+if [ -d "$out" ]; then
+    rmdir $out
+fi
+
 $salmon quant -t $fasta -l IU -a $bam -o $out -p 6
 
 awk 'NR==1 || $1 ~ /IMGT/ {print $1"\t"$4"\t"$5}' $out/quant.sf >\
