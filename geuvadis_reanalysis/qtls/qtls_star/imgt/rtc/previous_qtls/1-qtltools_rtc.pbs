@@ -4,6 +4,7 @@
 #PBS -l mem=4gb
 #PBS -l walltime=24:00:00
 #PBS -q short
+#PBS -t 1-7
 #PBS -j oe
 #PBS -o /home/vitor/hlaexpression/geuvadis_reanalysis/qtls/qtls_star/imgt/rtc/previous_qtls/log/$PBS_JOBID.log
 
@@ -18,11 +19,14 @@ VCF=../../../../genotypes/eur_maf05.vcf.gz
 COV=../../../../pca_genotypes/covariates_genos.txt
 BED=../../1-phenotypes/phenotypes_eur_60.bed.gz
 HOTSPOTS=../hotspots_hg38_fixed_distances.bed
-CATALOG=./previous_eQTL.tsv
+CATALOG=/home/vitor/hlaexpression/geuvadis_reanalysis/data/previous_qtls/qtl_catalog.tsv
 COND=../../3-conditional_analysis/conditional_60_all.txt.gz
-OUT=./rtc_results.txt
+
+REGION=`awk "NR==$PBS_ARRAYID" ./hla_regions.txt`
+
+OUT=./rtc_results_$REGION.txt
 
 $QTLtools rtc --vcf $VCF --bed $BED --include-samples $SAMPLES\
-    --region 6:28000000-35000000 --D-prime-threshold 0.5\
+    --region $REGION --D-prime-threshold 0.5\
     --cov $COV --hotspot $HOTSPOTS --gwas-cis $CATALOG $COND --normal\
     --conditional --out $OUT
