@@ -22,6 +22,7 @@
 *.xls
 *.yri
 *.gz
+*unmapped*
 imgt_index/star/index*
 geuvadis_reanalysis/expression/kallisto/phase_hla_alleles/PHASE/phase*
 geuvadis_reanalysis/expression/star/phase_hla_alleles/PHASE/phase.out*
