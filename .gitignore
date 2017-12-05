@@ -40,6 +40,7 @@ nci/expression/star/mappings_*
 nci/expression/star/quantifications_*
 nci/expression/star/sample_indices
 nci/expression/star/log
+nci/expression/backup
 simulation/PEreads_75bp/expression/kallisto/quantifications_*
 simulation/PEreads_75bp/expression/star/quantifications_*
 simulation/PEreads_75bp/expression/star/mappings_*
