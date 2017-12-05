@@ -1,7 +1,8 @@
 library(data.table)
 
 pcs_dt <- 
-  fread("./phenotypes_eur_pcs.pca", nrows = 100)[, SampleID := sub("^.+(PC\\d+)$", "\\1", SampleID)]
+    fread("./phenotypes_eur_pcs.pca", nrows = 100
+	)[, SampleID := sub("^.+(PC\\d+)$", "\\1", SampleID)]
 setnames(pcs_dt, "SampleID", "id")
 
 out_basename <- "./covariates/covariates_pheno_"
