@@ -2,6 +2,7 @@
 
 STAR=/home/vitor/STAR
 salmon=/home/vitor/Salmon-0.8.2_linux_x86_64/bin/salmon
+#salmon=/home/vitor/Salmon-latest_linux_x86_64/bin/salmon
 
 sample=$1
 

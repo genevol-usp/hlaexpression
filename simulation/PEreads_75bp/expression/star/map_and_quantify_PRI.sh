@@ -1,7 +1,7 @@
 #!/bin/bash
 
 STAR=/home/vitor/STAR
-salmon=/home/vitor/Salmon-0.8.2_linux_x86_64/bin/salmon
+salmon=/home/vitor/Salmon-latest_linux_x86_64/bin/salmon
 samtools=/home/vitor/samtools-1.3.1/samtools
 
 sample=$1

@@ -1,7 +1,7 @@
 #!/bin/bash
 
 STAR=/home/vitor/STAR
-salmon=/home/vitor/Salmon-0.8.2_linux_x86_64/bin/salmon
+salmon=/home/vitor/Salmon-latest_linux_x86_64/bin/salmon
 samtools=/home/vitor/samtools-1.3.1/samtools
 
 sample=$1
@@ -21,8 +21,10 @@ $STAR --runThreadN 6 --runMode genomeGenerate --genomeDir $indexDIR\
 
 fq1=../../data/fastq/${sample}_1.fastq.gz
 fq2=../../data/fastq/${sample}_2.fastq.gz
-outMap=./mappings_2
-outQuant=./quantifications_2
+#outMap=./mappings_2
+#outQuant=./quantifications_2
+outMap=./mappings_2_biascorrection
+outQuant=./quantifications_2_biascorrection
 outPrefix=$outMap/${sample}_
 
 $STAR --runMode alignReads --runThreadN 6 --genomeDir $indexDIR\
@@ -44,7 +46,7 @@ rm -r $indexDIR ${indexDIR}_Log.out
 bam=${outPrefix}Aligned.out.bam
 out=$outQuant/$sample
 
-$salmon quant -t $sample_fa -l IU -a $bam -o $out -p 6
+$salmon quant -t $sample_fa -l IU -a $bam -o $out -p 6 --seqBias --gcBias
 
 awk 'NR==1 || $1 ~ /IMGT/ {print $1"\t"$4"\t"$5}' $out/quant.sf >\
     $out/quant_imgt.sf
