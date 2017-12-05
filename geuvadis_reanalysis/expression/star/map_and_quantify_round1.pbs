@@ -4,7 +4,7 @@
 #PBS -l mem=8gb
 #PBS -l walltime=24:00:00
 #PBS -q short
-#PBS -t 1-358%20
+#PBS -t 1-358
 #PBS -j oe
 #PBS -o /home/vitor/hlaexpression/geuvadis_reanalysis/expression/star/log/$PBS_NAMEID.log
 

@@ -10,8 +10,10 @@
 
 cd $PBS_O_WORKDIR
 
-mkdir -p ./mappings_2
-mkdir -p ./quantifications_2
+#mkdir -p ./mappings_2
+#mkdir -p ./quantifications_2
+mkdir -p ./mappings_2_biascorrection
+mkdir -p ./quantifications_2_biascorrection
 
 SAMPLE=$(printf "sample_%02d" $PBS_ARRAYID) 
 

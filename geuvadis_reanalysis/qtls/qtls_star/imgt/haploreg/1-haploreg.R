@@ -2,10 +2,9 @@ devtools::load_all("/home/vitor/hlaseqlib")
 library(tidyverse)
 library(haploR)
 		      
-hla_genes <- paste0("HLA-", c("A", "B", "C", "DPB1", "DQA1", "DQB1", "DRB1"))
+hla_genes <- sort(gencode_hla$gene_name)
 
-gencode_hla <- gencode_chr_gene %>%
-    filter(gene_name %in% hla_genes) %>%
+gencode_hla <- gencode_hla %>%
     select(gene_id, gene_name)
 
 qtls <-

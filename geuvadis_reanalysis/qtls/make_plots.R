@@ -2,7 +2,6 @@ devtools::load_all("/home/vitor/hlaseqlib")
 library(tidyverse)
 library(cowplot)
 library(ggpmisc)
-library(ggplot2)
 
 hla_genes <- sort(gencode_hla$gene_name)
 
@@ -229,17 +228,18 @@ ggdraw(grid1) +
 dev.off()
 
 # eQTL landscape around TSS
-read_conditional <- function(path) {
-      read_qtltools(path) %>%
-      inner_join(start_pos, by = c("phen_id" = "gene_id")) %>%
-      mutate(dist_tss = ifelse(strand == "+", var_from - tss, tss - var_from),
-             nom_pval = -log10(bwd_pval)) %>%
-      select(phen_id = gene_name, rank, var_id, var_from, dist_tss, nom_pval, 
-	     slope = bwd_slope, best = bwd_best, signif = bwd_signif) %>%
-      group_by(phen_id, var_id, best) %>%
-      filter(rank == min(rank)) %>%
-      ungroup() %>%
-      mutate(rank = factor(rank))
+read_conditional_hla <- function(path, hla_tss) {
+    read_qtltools(path) %>%
+        filter(phen_id %in% hla_gene_ids) %>%
+        inner_join(hla_tss, by = c("phen_id" = "gene_id")) %>%
+        mutate(dist_tss = ifelse(strand == "+", var_from - tss, tss - var_from),
+               nom_pval = -log10(bwd_pval)) %>%
+        select(phen_id = gene_name, rank, var_id, var_from, dist_tss, nom_pval, 
+               slope = bwd_slope, best = bwd_best, signif = bwd_signif) %>%
+        group_by(phen_id, var_id, best) %>%
+        filter(rank == min(rank)) %>%
+        ungroup() %>%
+        mutate(rank = factor(rank))
 }
 
 plot_qtls <- function(conditional_df) {
@@ -294,7 +294,7 @@ start_pos <-
 
 conditional_star_imgt <-
     "./qtls_star/imgt/3-conditional_analysis/conditional_60_all.txt.gz" %>%
-    read_conditional()
+    read_conditional_hla(start_pos)
 
 conditional_star_imgt %>%
     filter(best == 1L) %>%
@@ -303,7 +303,7 @@ conditional_star_imgt %>%
 
 conditional_star_pri <-
     "./qtls_star/pri/3-conditional_analysis/conditional_60_all.txt.gz" %>%
-    read_conditional()
+    read_conditional_hla(start_pos)
 
 png("./plots/qtls_landscape_imgt.png", height = 10, width = 8, units = "in", res = 300)
 plot_qtls(conditional_star_imgt)
@@ -312,4 +312,3 @@ dev.off()
 png("./plots/qtls_landscape_pri.png", height = 10, width = 8, units = "in", res = 300)
 plot_qtls(conditional_star_pri)
 dev.off()
-

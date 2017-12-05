@@ -1,6 +1,5 @@
 devtools::load_all("/home/vitor/hlaseqlib")
 library(tidyverse)
-#library(GGally)
 
 # Functions
 read_imgt_quants <- function(f) {
@@ -36,18 +35,18 @@ plot_dist <- function(df) {
     	facet_wrap(~locus, scales = "free_x") +
     	scale_color_manual(
     	    values = c(imgt = "#8491B4B2", pri = "#DC0000B2"),
-    	    labels = c(pri = "Ref chromosomes",
-    	                              imgt = "Ref chromosomes + HLA diversity")) +
+    	    labels = c(pri = "Ref transcriptome",
+    	               imgt = "Personalized index")) +
     	theme_bw() +
-    	theme(axis.text = element_text(size = 10),
-    	      axis.title = element_text(size = 12),
+    	theme(axis.text = element_text(size = 8),
+    	      axis.title = element_text(size = 10),
     	      legend.title = element_text(size = 12),
     	      legend.text = element_text(size = 10),
-    	      strip.text = element_text(size = 12, face = "bold"),
-    	      legend.position = c(.75, .1)) +
+    	      strip.text = element_text(size = 10, face = "bold"),
+    	      legend.position = c(.75, .15)) +
     	guides(color = guide_legend(override.aes = list(size = 4))) +
-    	labs(x = "proportion of sites with mismatches to the reference allele", 
-    	     y = "proportion of reads recovered")
+    	labs(x = "sequence divergence to the HLA reference allele", 
+    	     y = "estimated counts / ground truth")
 }
 
 scatter_plot <- function(df, x_var, y_var) {
@@ -64,42 +63,10 @@ scatter_plot <- function(df, x_var, y_var) {
     	      strip.text = element_text(size = 16))
 }
 
-#scatter_plot_cors <- function(df, x_var, y_var) {
-#    
-#    cor_df <- df %>%
-#        group_by(locus) %>%
-#        do(data.frame(pearson = cor(.[[x_var]], .[[y_var]], method = "pearson"),
-#                      spearman = cor(.[[x_var]], .[[y_var]], method = "spearman"),
-#                      x = min(.[[x_var]]),
-#                      y = max(.[[y_var]]))) %>%
-#        ungroup() %>%
-#        mutate_at(vars(pearson, spearman), ~round(., digits = 3))
-#    
-#    ggplot(df, aes_string(x_var, y_var)) +
-#        geom_abline() +
-#        geom_point() +
-#        geom_text(data = cor_df, aes(x, y, label = paste("r =", pearson)),
-#                  hjust = "inward", vjust = "inward", size = 5) +
-#        facet_wrap(~locus, scales = "free") +
-#        theme_bw() +
-#        theme(axis.text = element_text(size = 12),
-#              axis.title = element_text(size = 16),
-#              strip.text = element_text(size = 16))
-#}
-#
-#plot_lower <- function(data, mapping, ...) {
-#    
-#    ggplot(data = data, mapping = mapping) +
-#        geom_point(size = .6, alpha = .5) +
-#        geom_smooth(method = lm) 
-#}
-
 # Data
 allele_dist <- read_tsv("./PEreads_75bp/data/distances_to_reference.tsv")
 
-hla_genes <- paste0("HLA-", c("A", "B", "C", "DPB1", "DQA1", "DQB1", "DRB1"))
-
-gencode_hla <- filter(gencode_chr_gene, gene_name %in% hla_genes)
+hla_genes <- sort(gencode_hla$gene_name)
 
 index <- Biostrings::readDNAStringSet("./PEreads_75bp/data/polyester_index.fa")
 
@@ -180,7 +147,8 @@ counts_star <-
     rename(dist = dist.star.imgt)
 
 diff_refs_alignment <- 
-    file.path("./PEreads_75bp/expression/star/mappings_2", unique(quant_data$subject), "diff_refs_hla.tsv") %>%
+    file.path("./PEreads_75bp/expression/star/mappings_2", 
+              unique(quant_data$subject), "diff_refs_hla.tsv") %>%
     setNames(unique(quant_data$subject)) %>%
     plyr::ldply(read_tsv, .id = "subject") %>%
     select(-n) %>%

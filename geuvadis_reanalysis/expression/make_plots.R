@@ -75,7 +75,7 @@ make_phase_plot <- function(data, locus1, locus2) {
 }
 
 # data
-hla_genes <- paste0("HLA-", c("A", "B", "C", "DPB1", "DQA1", "DQB1", "DRB1")) 
+hla_genes <- sort(gencode_hla$gene_name)
 
 geuvadis_ids <- geuvadis_info %>%
     filter(kgp_phase3 == 1, pop != "YRI") %>%
