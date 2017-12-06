@@ -6,7 +6,7 @@
 #PBS -q short
 #PBS -t 1-358
 #PBS -j oe
-#PBS -o /home/vitor/hlaexpression/geuvadis_reanalysis/expression/star/log/$PBS_JOBID.log
+#PBS -o /home/vitor/hlaexpression/geuvadis_reanalysis/expression/star/imgt/log/$PBS_JOBID.log
 
 cd $PBS_O_WORKDIR
 
@@ -14,6 +14,6 @@ mkdir -p ./log
 mkdir -p ./mappings_1
 mkdir -p ./quantifications_1
 
-SAMPLE=`awk "NR==$PBS_ARRAYID" ../../data/sample_info/samples_phase3_ena_eur.txt`
+SAMPLE=`awk "NR==$PBS_ARRAYID" ../../../data/sample_info/samples_phase3_ena_eur.txt`
 
 ./map_and_quantify_round1.sh $SAMPLE

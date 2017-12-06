@@ -1,6 +1,6 @@
 #!/bin/bash
 
-BED=../../../../expression/star/quantifications_2_expressed50%.bed
+BED=../../../../expression/star/pri/quantifications_expressed50%.bed
 OUT=./phenotypes_eur.bed
 
 cp $BED $OUT
