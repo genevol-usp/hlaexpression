@@ -30,7 +30,7 @@ if (length(missing_files) > 0L) {
 
 goldstd_genos <- mutate(pag, allele = hla_trimnames(allele, 3))
 
-out_df <- hla_genotype_dt(quants, th = 0) %>%
+out_df <- hla_genotype_dt(imgt_quants, th = 0) %>%
     hla_apply_zigosity_threshold(th = 0.2)
 
 calls <- out_df %>%
