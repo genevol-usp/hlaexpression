@@ -45,16 +45,18 @@ genome <-
 
 chr6 <- genome[names(genome) == "chr6 6"][[1]]
 
-samples <- 
-    read_tsv("../../../../data/sample_info/samples_phase3.tsv") %>%
+samples <-
+    "/home/vitor/hlaexpression/geuvadis_reanalysis/data/sample_info/samples_phase3.tsv" %>%
+    read_tsv() %>%
     pull(subject)
 
-ref_alleles <- read_tsv("../../../../../imgt_index/hla_ref_alleles.tsv")
+ref_alleles <- 
+    read_tsv("/home/vitor/hlaexpression/imgt_index/hla_ref_alleles.tsv")
 
-hla_genes <- paste0("HLA-", c("A", "B", "C", "DPB1", "DQA1", "DQB1", "DRB1"))
+hla_genes <- sort(gencode_hla$gene_name)
 
 genos <- 
-    read_tsv("../../quantifications_2/processed_quant.tsv") %>%
+    read_tsv("../../imgt/quantifications_2/processed_imgt_quants.tsv") %>%
     filter(locus %in% hla_genes) %>%
     select(subject, locus, allele) %>%
     mutate(subject = convert_ena_ids(subject),
@@ -99,7 +101,7 @@ pos_df <-
     select(locus, strand, pos)
   
 allele_index <- 
-    readDNAStringSet("../../../../../imgt_index/index_ref_positions.fa")
+    readDNAStringSet("/home/vitor/hlaexpression/imgt_index/index_ref_positions.fa")
 
 allele_seq_df <- 
     tibble(allele = names(allele_index), cds = as.character(allele_index)) %>%
