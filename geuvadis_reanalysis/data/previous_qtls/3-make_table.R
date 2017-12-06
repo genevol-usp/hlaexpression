@@ -33,8 +33,10 @@ gencode_hla_v19 <- "~/gencode_data/gencode.v19.annotation.gtf.gz" %>%
     select(gene_id, gene_name)
 
 rsmerge <- read_tsv("./RsMergeArch.bcp.gz", col_names = FALSE) %>%
-    select(rsHigh = X1, rsCurrent = X7) %>%
-    mutate_at(vars(rsHigh, rsCurrent), function(x) paste0("rs", x))
+    select(rsHigh = X1, build_id = X3, rsCurrent = X7) %>%
+    filter(build_id <= 149) %>%
+    mutate_at(vars(rsHigh, rsCurrent), function(x) paste0("rs", x)) %>%
+    select(rsHigh, rsCurrent)
 
 # regulomeDB
 # cannot read as table bc file is messed up
