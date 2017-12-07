@@ -3,11 +3,7 @@ library(tidyverse)
 
 allele_codes <- read_tsv("./PHASE/codes-phase.inp")
 
-hla_genes <- paste0("HLA-", c("A", "B", "C", "DPB1", "DQA1", "DQB1", "DRB1"))
-
-gencode_hla <- gencode_chr_gene %>%
-    filter(gene_name %in% hla_genes) %>%
-    mutate(locus = sub("^HLA-", "", gene_name))
+gencode_hla <- mutate(gencode_hla, locus = sub("^HLA-", "", gene_name))
 
 PHASE_calls <-
     read_phase("./PHASE/phase.out", loci = gencode_hla$locus) %>%
@@ -45,7 +41,7 @@ write_tsv(concordant_class2, "./data/concordant_haps_classII.tsv")
 write_tsv(concordant_haps, "./data/concordant_haps_classIandII.tsv")
 
 expression_df <-
-    read_tsv("../quantifications_2/processed_quant.tsv") %>%
+    read_tsv("../imgt/quantifications_2/processed_imgt_quants.tsv") %>%
     mutate(subject = convert_ena_ids(subject),
 	   locus = sub("^HLA-", "", locus),
 	   allele = sub("IMGT_", "", allele)) %>%

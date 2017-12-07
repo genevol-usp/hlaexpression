@@ -1,10 +1,10 @@
 devtools::load_all("/home/vitor/hlaseqlib")
 library(tidyverse)
 
-hla_genes <- paste0("HLA-", c("A", "B", "C", "DPB1", "DQA1", "DQB1", "DRB1"))
+hla_genes <- sort(gencode_hla$gene_name)
 
 genotypes <- 
-    "../../quantifications_2/processed_quant.tsv" %>%
+    "../../imgt/quantifications_2/processed_imgt_quants.tsv" %>%
     read_tsv() %>%
     filter(locus %in% hla_genes) %>%
     mutate(subject = convert_ena_ids(subject),
