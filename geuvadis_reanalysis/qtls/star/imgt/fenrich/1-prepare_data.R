@@ -22,9 +22,9 @@ bed_quantified <-
 
 write_tsv(bed_quantified, "./genes_quantified.bed", col_names = FALSE)
 
-read_tsv("../tfbs_encode/tfbs_hg38.bed", col_names = FALSE) %>%
+read_tsv("../fdensity/TF.ENCODE.hg38.bed", col_names = FALSE) %>%
     filter(X1 %in% paste0("chr", 1:22)) %>%
     mutate(X1 = as.integer(sub("^chr", "", X1))) %>%
     arrange(X1, X2) %>%
-    write_tsv("./tfbs_encode_hg38.bed", col_names = FALSE)
+    write_tsv("./tfbs_encode_hg38.beq", col_names = FALSE)
     
