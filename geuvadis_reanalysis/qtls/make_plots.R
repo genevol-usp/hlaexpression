@@ -50,7 +50,7 @@ dev.off()
 pcs <- c(seq(0, 20, 5), seq(30, 100, 10))
 
 egenes_pca_star_imgt <- 
-    sprintf("./qtls_star/imgt/2-permutations/results/permutations_%d.significant.txt", pcs) %>%
+    sprintf("./star/imgt/2-permutations/results/permutations_%d.significant.txt", pcs) %>%
     setNames(pcs) %>%
     parallel::mclapply(function(x) read_delim(x, delim = " ", col_names = FALSE), 
                        mc.cores = length(pcs)) %>%
@@ -58,7 +58,7 @@ egenes_pca_star_imgt <-
     count(f)
 
 egenes_pca_star_pri <- 
-    sprintf("./qtls_star/pri/2-permutations/results/permutations_%d.significant.txt", pcs) %>%
+    sprintf("./star/pri/2-permutations/results/permutations_%d.significant.txt", pcs) %>%
     setNames(pcs) %>%
     parallel::mclapply(function(x) read_delim(x, delim = " ", col_names = FALSE), 
                        mc.cores = length(pcs)) %>%
@@ -95,16 +95,13 @@ haps_expression <-
     "../expression/star/phase_hla_alleles/data/1000G_haps_expression_snps.tsv" %>%
     read_tsv()
 
-hap_hla_genot <-
-    haps_expression %>%
+hap_hla_genot <- haps_expression %>%
     select(subject, locus, hap, hla_allele)
 
-hap_snps <-
-    haps_expression %>%
+hap_snps <- haps_expression %>%
     select(subject, locus, hap, variant_allele)
 
-phen_best <-
-    "./qtls_star/imgt/1-phenotypes/phenotypes_eur_60.bed.gz" %>%
+phen_best <- "./star/imgt/1-phenotypes/phenotypes_eur_60.bed.gz" %>%
     read_tsv() %>%
     inner_join(gencode_hla, by = c("gid" = "gene_id")) %>%
     select(gene_name, HG00096:NA20828) %>%
@@ -112,8 +109,7 @@ phen_best <-
     gather(subject, resid, -gene_name) %>%
     select(subject, locus = gene_name, resid)
 
-qtls_high_low <-
-    left_join(hap_snps, phen_best, by = c("subject", "locus")) %>%
+qtls_high_low <- left_join(hap_snps, phen_best, by = c("subject", "locus")) %>%
     inner_join(select(concordant, -allele)) %>%
     group_by(locus, variant_allele) %>% 
     summarize(eQTL = mean(resid)) %>%
@@ -121,8 +117,7 @@ qtls_high_low <-
     mutate(eQTL = ifelse(eQTL == max(eQTL), "High", "Low")) %>%
     ungroup()
 
-lineage_df <-
-    haps_expression %>%
+lineage_df <- haps_expression %>%
     select(subject, locus, hla_allele, hap, tpm, variant_allele) %>%
     left_join(qtls_high_low, by = c("locus", "variant_allele")) %>%
     left_join(concordant, by = c("subject", "locus", "hap")) %>%
@@ -131,8 +126,7 @@ lineage_df <-
     mutate(hla_allele = hla_trimnames(hla_allele, 1),
            eQTL = factor(eQTL, levels = c("High", "Low")))
 
-lineage_exp <-
-    haps_expression %>%
+lineage_exp <- haps_expression %>%
     mutate(lineage = hla_trimnames(hla_allele, 1)) %>%
     select(subject, locus, lineage, tpm) 
 
@@ -156,9 +150,9 @@ lineage_exp %>%
 
 ## effects
 best_eqtl_locus <-
-    read_tsv("../expression/star/phase_hla_alleles/best_eqtl.tsv") %>%
-    left_join(gencode_hla, by = c("phen_id" = "gene_id")) %>%
-    select(locus = gene_name, variant = var_id)
+    read_tsv("./plots/eqtl.tsv") %>%
+    filter(rank == 0) %>%
+    select(locus = phen_id, variant = var_id)
 
 eqtl_info <- 
     read_tsv("../expression/star/phase_hla_alleles/best_eqtl_snps.vcf", comment = "##") %>%
@@ -230,7 +224,6 @@ dev.off()
 # eQTL landscape around TSS
 read_conditional_hla <- function(path, hla_tss) {
     read_qtltools(path) %>%
-        filter(phen_id %in% hla_gene_ids) %>%
         inner_join(hla_tss, by = c("phen_id" = "gene_id")) %>%
         mutate(dist_tss = ifelse(strand == "+", var_from - tss, tss - var_from),
                nom_pval = -log10(bwd_pval)) %>%
@@ -293,7 +286,7 @@ start_pos <-
     select(gene_id, gene_name, tss)
 
 conditional_star_imgt <-
-    "./qtls_star/imgt/3-conditional_analysis/conditional_60_all.txt.gz" %>%
+    "./star/imgt/3-conditional_analysis/conditional_60_all.txt.gz" %>%
     read_conditional_hla(start_pos)
 
 conditional_star_imgt %>%
