@@ -99,7 +99,7 @@ kallisto_pri_tpm <-
     arrange(subject, locus)
 
 star_imgt <- 
-    read_tsv("./star/quantifications_2/processed_quant.tsv") %>%
+    read_tsv("./star/imgt/quantifications_2/processed_imgt_quants.tsv") %>%
     filter(locus %in% hla_genes) %>%
     inner_join(geuvadis_ids, by = "subject") %>%
     select(subject = name, locus, allele, est_counts, tpm) %>%
@@ -112,41 +112,41 @@ star_imgt_tpm <-
     ungroup()
 
 star_imgt_with_nonclassical <- 
-    read_tsv("./star/quantifications_2/processed_quant.tsv") %>%
+    read_tsv("./star/imgt/quantifications_2/processed_imgt_quants.tsv") %>%
     filter(grepl("HLA", locus)) %>%
     group_by(subject, locus) %>%
     summarize(tpm = sum(tpm)) %>%
     ungroup()
 
 star_pri_tpm <- 
-    read_tsv("./star/quantifications_PRI/processed_quant.tsv") %>%
+    read_tsv("./star/pri/quantifications/processed_imgt_quants.tsv") %>%
     inner_join(geuvadis_ids, by = "subject") %>%
     select(subject = name, locus, tpm)
 
 ## PCA
 kallisto_imgt_pca <-
-    "../qtls/qtls_kallisto/pca/imgt/1-phenotypes/phenotypes_eur_10.bed.gz" %>%
+    "../qtls/kallisto/pca/imgt/1-phenotypes/phenotypes_eur_10.bed.gz" %>%
     read_tsv() %>%
     inner_join(select(gencode_hla, gene_id, gene_name), by = c("gid" = "gene_id")) %>%
     select(locus = gene_name, starts_with("HG"), starts_with("NA")) %>%
     gather(subject, resid, -locus)
 
 kallisto_pri_pca <- 
-    "../qtls/qtls_kallisto/pca/pri/phenotypes/phenotypes_eur_10.bed.gz" %>%
+    "../qtls/kallisto/pca/pri/phenotypes/phenotypes_eur_10.bed.gz" %>%
     read_tsv() %>%
     inner_join(select(gencode_hla, gene_id, gene_name), by = c("gid" = "gene_id")) %>%
     select(locus = gene_name, starts_with("HG"), starts_with("NA")) %>%
     gather(subject, resid, -locus)
 
 star_imgt_pca <-
-    "../qtls/qtls_star/imgt/1-phenotypes/phenotypes_eur_10.bed.gz" %>%
+    "../qtls/star/imgt/1-phenotypes/phenotypes_eur_10.bed.gz" %>%
     read_tsv() %>%
     inner_join(select(gencode_hla, gene_id, gene_name), by = c("gid" = "gene_id")) %>%
     select(locus = gene_name, starts_with("HG"), starts_with("NA")) %>%
     gather(subject, resid, -locus)
 
 star_pri_pca <- 
-    "../qtls/qtls_star/pri/1-phenotypes/phenotypes_eur_10.bed.gz" %>%
+    "../qtls/star/pri/1-phenotypes/phenotypes_eur_10.bed.gz" %>%
     read_tsv() %>%
     inner_join(select(gencode_hla, gene_id, gene_name), by = c("gid" = "gene_id")) %>%
     select(locus = gene_name, starts_with("HG"), starts_with("NA")) %>%
@@ -197,14 +197,18 @@ ase_error <-
     inner_join(ase_df, by = c("subject", "locus"))
 
 hla_and_transAct_genes <- gencode_chr_gene %>%
+    filter(gene_name %in% c(gencode_hla$gene_name, "CIITA"))
+
+classII_and_CIITA <- gencode_chr_gene %>%
     filter(gene_name %in% c("HLA-DRB1", "HLA-DQA1", "HLA-DQB1", "HLA-DPB1", "CIITA"))
 
 class_2_trans_df <- 
-    "../expression/star/quantifications_imgt_expressed90%.csv" %>%
-    read_csv() %>%
-    select(subject, hla_and_transAct_genes$gene_id) %>%  
-    gather(gene, tpm, -subject) %>%
-    left_join(hla_and_transAct_genes, by = c("gene" = "gene_id")) %>%
+    "../expression/star/imgt/quantifications_expressed50%.bed" %>%
+    read_tsv() %>%
+    filter(gid %in% classII_and_CIITA$gene_id) %>%
+    select(gid, starts_with("HG"), starts_with("NA")) %>%
+    gather(subject, tpm, -1) %>%
+    left_join(hla_and_transAct_genes, by = c("gid" = "gene_id")) %>%
     select(subject, locus = gene_name, tpm) %>%
     spread(locus, tpm) %>%
     gather(locus, tpm, -subject, -CIITA) %>%
@@ -214,7 +218,7 @@ class_2_trans_df <-
 pcs <- c(seq(0, 20, 5), seq(30, 100, 10))
 
 pca_star_df <-
-    sprintf("../qtls/qtls_star/imgt/1-phenotypes/phenotypes_eur_%d.bed.gz", pcs) %>%
+    sprintf("../qtls/star/imgt/1-phenotypes/phenotypes_eur_%d.bed.gz", pcs) %>%
     setNames(pcs) %>%
     map_df(. %>% read_tsv(progress = FALSE) %>% select(gid, matches("^HG|^NA")), 
 	   .id = "PC") %>%
@@ -279,7 +283,7 @@ scatter_plot_cors(quant_data, "tpm.star.imgt", "tpm.kallisto.imgt") +
 dev.off()
 
 png("./plots/star_vs_kallisto_PCA.png", width = 10, height = 6, units = "in", res = 200)
-scatter_plot_cors(quant_data, "resid.star.imgt.tpm", "resid.kallisto.imgt.tpm") +
+scatter_plot_cors(quant_data, "pca.star.imgt", "pca.kallisto.imgt") +
     labs(x = "PCA-corrected estimate (STAR-Salmon)", y = "PCA-corrected estimate (kallisto)")
 dev.off()
 
@@ -289,7 +293,7 @@ scatter_plot_cors(quant_data, "tpm.star.imgt", "tpm.star.pri") +
 dev.off()
 
 png("./plots/star_imgt_vs_pri_PCA.png", width = 10, height = 6, units = "in", res = 200)
-scatter_plot_cors(quant_data, "resid.star.imgt.tpm", "resid.star.pri.tpm") +
+scatter_plot_cors(quant_data, "pca.star.imgt", "pca.star.pri") +
     labs(x = "PCA-corrected estimate (HLA personalized index)", 
          y = "PCA-corrected estimate (Ref transcriptome)")
 dev.off()
@@ -300,7 +304,7 @@ scatter_plot_cors(quant_data, "tpm.kallisto.imgt", "tpm.kallisto.pri") +
 dev.off()
 
 png("./plots/kallisto_imgt_vs_pri_PCA.png", width = 10, height = 6, units = "in", res = 200)
-scatter_plot_cors(quant_data, "resid.kallisto.imgt.tpm", "resid.kallisto.pri.tpm") +
+scatter_plot_cors(quant_data, "pca.kallisto.imgt", "pca.kallisto.pri") +
     labs(x = "PCA-corrected estimate (HLA personalized index)", 
          y = "PCA-corrected estimate (Ref transcriptome)")
 dev.off()
