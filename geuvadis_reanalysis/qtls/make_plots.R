@@ -259,7 +259,8 @@ plot_qtls <- function(conditional_df) {
     scale_color_manual(values = c("0" = "#8491B4B2",
                                   "1" = "#DC0000B2",
                                   "2" = "#F0E442B2",
-                                  "3" = "black")) +
+                                  "3" = "black",
+                                  "4" = "#009E73")) +
     scale_x_continuous(labels = scales::comma) +
     theme_minimal() +
     theme(strip.text = element_text(size = 12),
@@ -302,7 +303,7 @@ conditional_star_imgt %>%
     write_tsv("./plots/eqtl.tsv")
 
 conditional_star_pri <-
-    "./qtls_star/pri/3-conditional_analysis/conditional_60_all.txt.gz" %>%
+    "./star/pri/3-conditional_analysis/conditional_60_all.txt.gz" %>%
     read_conditional_hla(start_pos)
 
 png("./plots/qtls_landscape_imgt.png", height = 10, width = 8, units = "in", res = 300)
@@ -332,3 +333,56 @@ dev.off()
 #    filter(bwd_best == 1L) %>%
 #    mutate(i = as.integer(dist > 220000 | dist < -220000)) %>% 
 #    summarise(mean(i))
+
+
+## CRD
+
+gencode_hla_v19 <-
+    "~/gencode_data/gencode.v19.annotation.gtf.gz" %>%
+    get_gencode_coords(feature = "gene") %>%
+    filter(gene_name %in% gencode_hla$gene_name) %>%
+    select(gene_name, start, end, strand)
+
+crd <- 
+    read_delim("../../LCL_ALL.chr6.subset.txt.gz", col_names = FALSE, delim = " ") %>%
+    select(-X2, -X4, -X6, -X8, -X9, -X11) %>%
+    filter(between(X3, min(gencode_hla_v19$start) - 1e6, max(gencode_hla_v19$end) + 1e6),
+           between(X7, min(gencode_hla_v19$start) - 1e6, max(gencode_hla_v19$end) + 1e6)) %>%
+    mutate(x = (X1 + X5)/2L,
+           x2 = (X3 + X7)/2L,
+           y = X5 - X1,
+           r2 = X10^2) %>%
+    select(-X10)
+
+gene_pos <- gencode_hla_v19 %>%
+    mutate(pos = ifelse(strand == "+", start, end),
+           x1 = crd$x[map_dbl(pos, ~which.min(abs(. - crd$x2)))])
+
+png("./plots/crd.png", width = 12, height = 5, units = "in", res = 200)
+ggplot() +
+    geom_point(data = crd, aes(x = x, y = y, alpha = r2), color = "blue") +
+    scale_alpha_continuous(range = c(0, 1)) +
+    scale_x_continuous(breaks = crd$x[seq(1, nrow(crd), 2e4)],
+                       labels = round(crd$x2[seq(1, nrow(crd), 2e4)]/1e6L, digits = 1)) +
+    geom_point(data = filter(gene_pos, strand == "+"), 
+               aes(x = x1, y = -5), shape = ">", size = 5, color = "red") +
+    geom_point(data = filter(gene_pos, strand == "-"), 
+               aes(x = x1, y = -20), shape = "<", size = 5, color = "red") +
+    geom_text(data = filter(gene_pos, strand == "+"), 
+              aes(x = x1, y = -10, label = gene_name),
+              size = 3) +
+    ggrepel::geom_text_repel(data = filter(gene_pos, strand == "-"), 
+                             aes(x = x1, y = -25, label = gene_name),
+                             size = 3) +
+    theme_bw() +
+    theme(plot.background = element_blank(),
+          panel.grid.major = element_blank(),
+          panel.grid.minor = element_blank(),
+          panel.border = element_blank(),
+          axis.title.y = element_blank(),
+          axis.text.y = element_blank(),
+          axis.ticks.y = element_blank(),
+          axis.line.x = element_line(color = "black")) +
+    labs(x = "Genomic position (Mb)") +
+    coord_cartesian(ylim = c(-25, max(crd$y)))
+dev.off()

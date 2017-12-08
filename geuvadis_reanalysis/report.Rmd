@@ -12,6 +12,8 @@ library(knitr)
 library(tidyverse)
 ```
 
+**All analyses were carried out using European individuals only (N = 358)**
+
 # Typing accuracies
 
 \*Concordance: the proportion of the called alleles that are concordant with the
@@ -23,7 +25,7 @@ kallisto_typing <-
     select(locus, kallisto = accuracy)
 
 star_typing <-
-    read_tsv("./expression/star/genotyping_accuracies_2.tsv") %>%
+    read_tsv("./expression/star/imgt/genotyping_accuracies_2.tsv") %>%
     select(locus, star = accuracy)
 
 left_join(star_typing, kallisto_typing, by = "locus") %>%
@@ -156,8 +158,6 @@ include_graphics("./expression/plots/dqa_vs_drb.png")
 
 # eQTLs
 
-**All analyses were carried out using European individuals only**
-
 ## PCA of genotypes
 
 ```{r}
@@ -180,8 +180,23 @@ include_graphics("./qtls/plots/qtls_landscape_imgt.png")
 
 ### Reference transcriptome
 
-```{r}
+```{r eval=FALSE}
 include_graphics("./qtls/plots/qtls_landscape_pri.png")
+```
+
+### Spread of rank 0 eQTLs around the gene starts
+
+```{r}
+include_graphics("./qtls/plots/qtls_density_geneStart.png")
+```
+
+### Location of HLA genes and CRDs
+
+*CRDs are defined in http://dx.doi.org/10.1101/171694* 
+*Coordinates are in hg19*
+
+```{r}
+include_graphics("./qtls/plots/crd.png")
 ```
 
 ## RTC between IMGT and Ref Transcriptome eQTLs
@@ -189,7 +204,7 @@ include_graphics("./qtls/plots/qtls_landscape_pri.png")
 Variants with RTC > 0.9 likely mark the same biological signal.
 
 ```{r}
-read_tsv("./qtls/qtls_star/imgt/rtc/pri_eqtls/results.tsv") %>%
+read_tsv("./qtls/star/imgt/rtc/pri_eqtls/results.tsv") %>%
     kable(digits = 2)
 ```
 
@@ -198,7 +213,7 @@ read_tsv("./qtls/qtls_star/imgt/rtc/pri_eqtls/results.tsv") %>%
 ### eQTLs in regulomeDB
 
 ```{r}
-read_tsv("./qtls/qtls_star/imgt/haploreg/regulomeDB_results.tsv") %>%
+read_tsv("./qtls/star/imgt/haploreg/regulomeDB_results.tsv") %>%
     select(gene, rank, rsid, score, qtl) %>%
     mutate(qtl = gsub("\\|", "_", qtl),
 	   qtl = sub(";NA$", "", qtl)) %>%
@@ -208,15 +223,15 @@ read_tsv("./qtls/qtls_star/imgt/haploreg/regulomeDB_results.tsv") %>%
 ### eQTLs in HaploReg
 
 ```{r}
-read_tsv("./qtls/qtls_star/imgt/haploreg/haploreg_results.tsv") %>%
-    select(gene, rank, rsID, study, tissue, pvalue) %>%
+read_tsv("./qtls/star/imgt/haploreg/haploreg_results.tsv") %>%
+    select(gene, rank, rsid, study, tissue, pvalue) %>%
     kable()
 ```
 
 ### eQTLs in GRASP (via HaploReg)
 
 ```{r}
-read_tsv("./qtls/qtls_star/imgt/haploreg/grasp_results.tsv") %>%
+read_tsv("./qtls/star/imgt/haploreg/grasp_results.tsv") %>%
     kable()
 ```
 
@@ -232,27 +247,27 @@ available, so there are more variants per gene, which increases the chance that
 some of these variants will have high RTC with one of our eQTLs.
 
 ```{r}
-read_tsv("./qtls/qtls_star/imgt/rtc/previous_qtls/results.tsv") %>%
+read_tsv("./qtls/star/imgt/rtc/previous_qtls/results.tsv") %>%
     kable(digits = 2)
 ```
 
 ## Association with GWAS traits
 
 ```{r}
-read_tsv("./qtls/qtls_star/imgt/rtc/gwas/results.tsv") %>%
-    select(gene, rank, variant, gwas_variant, rtc, trait, studies = link) %>%
-    group_by(gene, rank, variant, gwas_variant, rtc) %>%
+read_tsv("./qtls/star/imgt/rtc/gwas/results.tsv") %>%
+    select(gene, rank, variant, gwas_var, rtc, trait, studies = link) %>%
+    group_by(gene, rank, variant, gwas_var, rtc) %>%
     summarize(trait = paste(trait, collapse = "/"), 
               studies = paste(studies, collapse = " ")) %>%
     kable(digits = 2)
 ```
 
+
+```{r, eval=FALSE}
 # Trans-eQTLs
 
-- Approximate pass as described on QTLtools website
-
-```{r}
-read_tsv("./qtls/qtls_star/imgt/trans/trans_results.tsv") %>%
+#- Approximate pass as described on QTLtools website
+read_tsv("./qtls/star/imgt/trans/trans_results.tsv") %>%
     kable(digits = 2)
 ```
 
