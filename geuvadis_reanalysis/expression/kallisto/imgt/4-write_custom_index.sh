@@ -1,6 +1,6 @@
 #!/bin/bash
 
-write_custom_index=../../../imgt_index/write_genotyped_alleles.R
+write_custom_index=/home/vitor/hlaexpression/imgt_index/write_genotyped_alleles.R
 
 outdir=./sample_indices
 
