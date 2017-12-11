@@ -1,8 +1,6 @@
 devtools::load_all("~/hlaseqlib")
 library(tidyverse)
 
-hla_genes <- sort(gencode_hla$gene_name) 
-
 make_genot_calls_df <- function(typings_df) {
     
     typings_df %>%
@@ -11,6 +9,8 @@ make_genot_calls_df <- function(typings_df) {
 	       allele = hla_trimnames(gsub("IMGT_", "", allele), 3)) %>%
 	arrange(subject, locus, allele)
 }
+
+hla_genes <- gencode_hla$gene_name 
 
 samples <- geuvadis_info %>% 
     filter(kgp_phase3 == 1L & pop != "YRI") %>%
