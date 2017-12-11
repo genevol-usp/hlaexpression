@@ -1,9 +1,9 @@
-devtools::load_all("~/hlaseqlib")
+devtools::load_all("/home/vitor/hlaseqlib")
 library(tidyverse)
 
-hla_genes <- gencode_hla$gene_name 
+hla_genes <- gencode_hla$gene_name
 
-samples <- geuvadis_info %>% 
+samples <- geuvadis_info %>%
     filter(kgp_phase3 == 1L & pop != "YRI") %>%
     pull(ena_id)
 
@@ -16,12 +16,11 @@ if (length(missing_files) > 0L) {
 }
 
 out_df <- imgt_quants %>%
-    left_join(gencode_pri_tx, by = c("Name" = "tx_id")) %>%
-    select(subject, tx_id = Name, locus = gene_name, 
-	   est_counts = NumReads, tpm = TPM) %>%
+    left_join(gencode_pri_tx, by = c("target_id" = "tx_id")) %>%
+    select(tx_id = target_id, locus = gene_name, est_counts, tpm) %>%
     filter(locus %in% hla_genes) %>%
     group_by(subject, locus) %>%
     summarize_at(vars(est_counts, tpm), sum) %>%
     ungroup()
 
-write_tsv(out_df, "./quantifications/processed_imgt_quants.tsv")
+write_tsv(out_df, "./quantifications/processed_imgt_quant.tsv") 
