@@ -16,7 +16,7 @@ samples <- geuvadis_info %>%
     filter(kgp_phase3 == 1L & pop != "YRI") %>%
     pull(ena_id)
 
-imgt_quants <- read_tsv("./quantifications_1/imgt_quants.tsv") %>%
+imgt_quants <- read_tsv("./quantifications_2/imgt_quants.tsv") %>%
     mutate(locus = imgt_to_gname(Name),
 	   gene_id = gname_to_gid(locus)) %>%
     select(subject, locus, gene_id, allele = Name,
