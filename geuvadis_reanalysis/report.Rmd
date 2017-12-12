@@ -178,7 +178,7 @@ include_graphics("./qtls/plots/qtls_density_geneStart.png")
 include_graphics("./qtls/plots/crd.png")
 ```
 
-## Intersect with Gencode Elements
+## Intersect with Encode Elements
 
 ```{r}
 "./qtls/star/imgt/encode_TF_Seq_DNase/hla.qtl.functional.elements.tsv" %>%

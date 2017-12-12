@@ -127,8 +127,8 @@ Location of HLA genes and CRDs
 
 <img src="./qtls/plots/crd.png" width="2400" />
 
-Intersect with Gencode Elements
--------------------------------
+Intersect with Encode Elements
+------------------------------
 
 | locus    |  rank| rsid        |       pos| tf                                        | dhs | chrom\_state | histone\_marks                                                            |
 |:---------|-----:|:------------|---------:|:------------------------------------------|:----|:-------------|:--------------------------------------------------------------------------|
