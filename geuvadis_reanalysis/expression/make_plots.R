@@ -35,43 +35,31 @@ scatter_plot_cors <- function(df, x_var, y_var) {
               strip.text = element_text(size = 16))
 }
 
-make_data <- function(df_allele, df_gene, locus1, locus2) {
+make_data <- function(locus1, locus2, df) {
   
-    cis <- select(df_allele, subject, locus1, locus2)
+    cis <- select(df, subject, locus1, locus2) %>%
+        drop_na() %>%
+        rename(gene1 = !!locus1, gene2 = !!locus2)
 
     trans <- cis %>% 
 	    group_by(subject) %>%
-	    mutate_at(vars(!!locus2), rev) %>%
+	    mutate_at(vars(gene2), rev) %>%
 	    ungroup()
 
-    gene <- select(df_gene, subject, locus1, locus2) %>%
-        drop_na()
+    gene <- cis %>%
+        group_by(subject) %>%
+        summarize_at(vars(gene1, gene2), sum) %>%
+        ungroup()
 
-    bind_rows(list(Overall = gene, Cis = cis, Trans = trans), .id = "level") %>%
-	    mutate(level = factor(level, levels = c("Overall", "Cis", "Trans")))
-}
-
-make_phase_plot <- function(data, locus1, locus2) {
-
-    cor_df <- data %>%
-        group_by(level) %>%
-        do(data.frame(r = cor(.[[locus1]], .[[locus2]]),
-                      x = min(.[[locus1]]),
-                      y = max(.[[locus2]]))) %>%
-        ungroup() %>%
-        mutate(r = round(r, digits = 3))
-    
-    ggplot(data, aes_string(locus1, locus2)) +
-	geom_point(size = .8) +
-	geom_smooth(method = lm, se = FALSE) + 
-    geom_text(data = cor_df, aes(x, y, label = paste("r =", r)),
-              hjust = "inward", vjust = "inward", size = 5) +
-	facet_wrap(~level, nrow = 1, scales = "free") +
-	theme_bw() +
-	theme(axis.text = element_text(size = 12),
-	      axis.title = element_text(size = 16),
-	      strip.text = element_text(size = 16)) + 
-	labs(x = paste0("HLA-", locus1), y = paste0("HLA-", locus2))
+    bind_rows(list("Gene-level" = gene, 
+                   "Within haplotypes" = cis, 
+                   "Between haplotypes" = trans), .id = "level") %>%
+	    mutate(pair = paste(locus1, "vs", locus2),
+	        level = factor(level, levels = c("Gene-level", 
+	                                            "Within haplotypes", 
+	                                            "Between haplotypes"))) %>%
+        select(pair, everything())
+        
 }
 
 # data
@@ -83,7 +71,7 @@ geuvadis_ids <- geuvadis_info %>%
 
 ## TPM
 kallisto_imgt_tpm <- 
-    read_tsv("./kallisto/quantifications_2/processed_quant.tsv") %>%
+    read_tsv("./kallisto/imgt/quantifications_2/processed_imgt_quants.tsv") %>%
     filter(locus %in% hla_genes) %>%
     inner_join(geuvadis_ids, by = "subject") %>%
     select(subject = name, locus, allele, est_counts, tpm) %>%
@@ -93,7 +81,7 @@ kallisto_imgt_tpm <-
     ungroup()
 
 kallisto_pri_tpm <- 
-    read_tsv("./kallisto/quantifications_PRI/processed_quant.tsv") %>%
+    read_tsv("./kallisto/pri/quantifications/processed_imgt_quants.tsv") %>%
     inner_join(geuvadis_ids, by = "subject") %>%
     select(subject = name, locus, tpm) %>%
     arrange(subject, locus)
@@ -168,8 +156,7 @@ quant_data <-
     left_join(star_pri_pca, by = c("subject", "locus")) %>%
     rename(pca.star.pri = resid)
 
-star_tpm_df <- 
-    quant_data %>%
+star_tpm_df <- quant_data %>%
     select(subject, locus, tpm.star.imgt, tpm.star.pri) %>%
     gather(index, tpm, 3:4) %>%
     mutate(index = sub("^tpm\\.star\\.", "", index)) %>%
@@ -177,15 +164,13 @@ star_tpm_df <-
 
 pag3f <- mutate(pag, allele = hla_trimnames(allele, 3))
 
-ase_df <- 
-    star_imgt %>%
+ase_df <- star_imgt %>%
     group_by(subject, locus) %>%
     filter(n_distinct(allele) == 2) %>%
     summarize(ase = calc_ase(est_counts)) %>%
     ungroup()
   
-ase_error <- 
-    star_imgt %>%
+ase_error <- star_imgt %>%
     select(subject, locus, allele) %>%
     mutate(locus = sub("^HLA-", "", locus),
            allele = hla_trimnames(allele)) %>%
@@ -230,8 +215,7 @@ pca_star_hla <-
     mutate(gene_name = sub("^HLA-", "", gene_name)) %>%
     spread(gene_name, value) 
 
-cors_pca_star <- 
-    pca_star_hla %>%
+cors_pca_star <- pca_star_hla %>%
     group_by(PC) %>%
     summarize(AxB = cor(A, B), 
               AxC = cor(A, C), 
@@ -254,7 +238,7 @@ concordant_haps_II <-
     read_tsv("./star/phase_hla_alleles/data/concordant_haps_classII.tsv") %>%
     select(subject, hap)
 
-tpm_by_allele_wide_I <- 
+tpm_by_allele_I <- 
     read_tsv("./star/phase_hla_alleles/data/1000G_haps_expression_snps.tsv") %>%
     select(subject, locus, hap, tpm) %>%
     filter(locus %in% c("A", "B", "C")) %>%
@@ -262,7 +246,7 @@ tpm_by_allele_wide_I <-
     inner_join(concordant_haps_I, by = c("subject", "hap")) %>%
     arrange(subject, hap)
 
-tpm_by_allele_wide_II <- 
+tpm_by_allele_II <- 
     read_tsv("./star/phase_hla_alleles/data/1000G_haps_expression_snps.tsv") %>%
     select(subject, locus, hap, tpm) %>%
     filter(!locus %in% c("A", "B", "C")) %>%
@@ -270,11 +254,8 @@ tpm_by_allele_wide_II <-
     inner_join(concordant_haps_II, by = c("subject", "hap")) %>%
     arrange(subject, hap)
 
-tpm_by_gene_wide <- 
-    full_join(tpm_by_allele_wide_I, tpm_by_allele_wide_II, by = c("subject", "hap")) %>%
-    group_by(subject) %>%
-    summarize_at(vars(A:DRB1), sum) %>%
-    ungroup()
+tpm_by_allele <- 
+    full_join(tpm_by_allele_I, tpm_by_allele_II, by = c("subject", "hap"))
 
 # plots
 png("./plots/star_vs_kallisto_TPM.png", width = 10, height = 6, units = "in", res = 200)
@@ -320,15 +301,26 @@ ggplot(star_tpm_df, aes(tpm, fill = index)) +
 dev.off()
 
 png("./plots/ase.png", width = 8, height = 5, units = "in", res = 200)
-ggplot(ase_error, aes(factor(error), ase)) +
-    ggbeeswarm::geom_quasirandom(varwidth = TRUE, size = .75, alpha = 1/2) +
-    scale_y_continuous(limits = c(0, 0.5)) +
-    facet_wrap(~locus) + 
-    labs(x = "number of wrong calls in genotype") +
+ggplot(ase_df, aes(locus, ase)) +
+    ggbeeswarm::geom_quasirandom(varwidth = TRUE, size = 1, alpha = 1/2) +
+    coord_cartesian(ylim = c(0, 0.5)) +
+    labs(x = "") +
     theme_bw() +
     theme(axis.text.x = element_text(size = 12),
-	  axis.title = element_text(size = 16),
-	  strip.text = element_text(size = 16))
+          axis.title = element_text(size = 16),
+          strip.text = element_text(size = 16))
+dev.off()
+
+png("./plots/ase_genot_errors.png", width = 8, height = 5, units = "in", res = 200)
+ggplot(ase_error, aes(locus, ase, color = factor(error))) +
+    ggbeeswarm::geom_quasirandom(varwidth = TRUE, size = 1, alpha = 1/2) +
+    coord_cartesian(ylim = c(0, 0.5)) +
+    ggthemes::scale_color_colorblind() +
+    labs(x = "", color = "genotyping errors") +
+    theme_bw() +
+    theme(axis.text.x = element_text(size = 12),
+          axis.title = element_text(size = 16),
+          strip.text = element_text(size = 16))
 dev.off()
 
 png("./plots/ase_histogram.png", width = 8, height = 4, units = "in", res = 200)
@@ -366,7 +358,7 @@ cor_df <- class_2_trans_df %>%
     mutate(r = round(r, digits = 3))
 
 ggplot(class_2_trans_df, aes(tpm, CIITA)) +
-    geom_point(size = .8) +
+    geom_point(size = 1) +
     geom_smooth(method = lm, se = FALSE) +
     scale_x_continuous(breaks = scales::pretty_breaks(2)) +
     geom_text(data = cor_df, aes(x, y, label = paste("r =", r)),
@@ -376,33 +368,39 @@ ggplot(class_2_trans_df, aes(tpm, CIITA)) +
           axis.text.y = element_text(size = 14),
           axis.title = element_text(size = 16),
           strip.text = element_text(size = 16)) + 
-    facet_wrap(~locus, nrow = 1) +
+    facet_wrap(~locus, nrow = 1, scales = "free") +
     labs(x = NULL)
 dev.off()
 
-png("./plots/a_vs_b.png", height = 3.5, width = 10, units = "in", res = 200)
-a_b <- make_data(tpm_by_allele_wide_I, tpm_by_gene_wide, "A", "B")
-make_phase_plot(a_b, "A", "B")
-dev.off()
+png("./plots/within_vs_between_haps.png", height = 8, width = 8, units = "in", res = 200)
+phase_data <- 
+    tribble(
+        ~locus1, ~locus2,
+        "A"    , "B",
+        "A"    , "C",
+        "B"    , "C",
+        "DQA1" , "DQB1",
+        "DQA1" , "DRB1") %>%
+    pmap_df(make_data, tpm_by_allele)
 
-png("./plots/a_vs_c.png", height = 3.5, width = 10, units = "in", res = 200)
-a_c <- make_data(tpm_by_allele_wide_I, tpm_by_gene_wide, "A", "C")
-make_phase_plot(a_c, "A", "C")
-dev.off()
-
-png("./plots/b_vs_c.png", height = 3.5, width = 10, units = "in", res = 200)
-b_c <- make_data(tpm_by_allele_wide_I, tpm_by_gene_wide, "B", "C")
-make_phase_plot(b_c, "B", "C")
-dev.off()
-
-png("./plots/dqa_vs_dqb.png", height = 3.5, width = 10, units = "in", res = 200)
-dqa_dqb <- make_data(tpm_by_allele_wide_II, tpm_by_gene_wide, "DQA1", "DQB1")
-make_phase_plot(dqa_dqb, "DQA1", "DQB1")
-dev.off()
-
-png("./plots/dqa_vs_drb.png", height = 3.5, width = 10, units = "in", res = 200)
-dqa_drb <- make_data(tpm_by_allele_wide_II, tpm_by_gene_wide, "DQA1", "DRB1")
-make_phase_plot(dqa_drb, "DQA1", "DRB1")
+phase_cor_df <- phase_data %>%
+    group_by(pair, level) %>%
+    summarize(r = cor(gene1, gene2),
+              x = min(gene1),
+              y = max(gene2)) %>%
+    ungroup() %>%
+    mutate(r = round(r, digits = 2))
+    
+ggplot(phase_data, aes(gene1, gene2)) +
+    geom_point(size = 1) +
+    geom_smooth(method = lm, se = FALSE) + 
+    geom_text(data = phase_cor_df, aes(x, y, label = paste("r =", r)),
+              hjust = "inward", vjust = "inward", size = 4) +
+    facet_wrap(pair~level, ncol = 3, scales = "free") +
+    theme_bw() +
+    theme(axis.text = element_text(size = 10),
+          axis.title = element_blank(),
+          strip.text = element_text(size = 10))
 dev.off()
 
 png("./plots/correlation_decrease.png", width = 10, height = 5, units = "in", res = 200)
