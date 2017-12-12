@@ -43,9 +43,8 @@ include_graphics("./expression/plots/expression_boxplot.png")
 
 ### TPM
 
-```{r, out.width='.49\\linewidth', fig.show='hold',fig.align='center'}
+```{r, out.width='.4\\linewidth', fig.show='hold', fig.align='center'}
 include_graphics("./expression/plots/star_vs_kallisto_TPM.png")
-
 include_graphics("./expression/plots/star_vs_kallisto_PCA.png")
 ```
 
