@@ -97,7 +97,7 @@ include_graphics("./expression/plots/tpm_distributions.png")
 data.
 
 ```{r}
-include_graphics("./expression/plots/ase.png")
+include_graphics("./expression/plots/ase_genot_errors.png")
 ```
 
 ### ASE distribution
@@ -220,7 +220,7 @@ gene. For regulomeDB that's no possible beucase the p-value is not directly
 available, so there are more variants per gene, which increases the chance that
 some of these variants will have high RTC with one of our eQTLs.
 
-```{r, eval=FALSE}
+```{r, eval}
 read_tsv("./qtls/star/imgt/rtc/previous_qtls/results.tsv") %>%
     kable(digits = 2)
 ```
