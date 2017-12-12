@@ -19,7 +19,7 @@ Typing accuracies
 Expression estimates
 ====================
 
-<img src="./expression/plots/expression_boxplot.png" width="1600" />
+<img src="./expression/plots/expression_boxplot.png" width="\textwidth" />
 
 kallisto vs STAR-Salmon
 -----------------------

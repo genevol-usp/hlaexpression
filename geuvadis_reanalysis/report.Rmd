@@ -41,7 +41,7 @@ left_join(star_typing, kallisto_typing, by = "locus") %>%
 
 # Expression estimates
 
-```{r}
+```{r, out.width='\\textwidth'}
 include_graphics("./expression/plots/expression_boxplot.png")
 ```
 
