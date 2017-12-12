@@ -118,11 +118,38 @@ Distribution of eQTLs around the TSS
 
 <img src="./qtls/plots/qtls_density_geneStart.png" width="1500" />
 
-### Location of HLA genes and CRDs
+Location of HLA genes and CRDs
+------------------------------
 
-*CRDs are defined in <http://dx.doi.org/10.1101/171694*> *Coordinates are in hg19\*
+\*CRDs are defined in <http://dx.doi.org/10.1101/171694*>
+
+*Coordinates are in hg19*
 
 <img src="./qtls/plots/crd.png" width="2400" />
+
+Intersect with Gencode Elements
+-------------------------------
+
+| locus    |  rank| rsid        |       pos| tf                                        | dhs | chrom\_state | histone\_marks                                                            |
+|:---------|-----:|:------------|---------:|:------------------------------------------|:----|:-------------|:--------------------------------------------------------------------------|
+| HLA-A    |     0| rs3823342   |  29945290| POL2-4/POL2                               | NA  | TSS          | H3k27ac/H3k9ac/H3k4me2/H3k4me3/H3k79me2/H4k20me1/H3k36me3                 |
+| HLA-A    |     1| rs1655924   |  29937342| NA                                        | NA  | R            | NA                                                                        |
+| HLA-B    |     0| rs1265094   |  31139116| NA                                        | NA  | R            | NA                                                                        |
+| HLA-B    |     1| rs9264803   |  31302674| NA                                        | NA  | R            | NA                                                                        |
+| HLA-B    |     2| rs2308655   |  31354526| POL2-4                                    | DHS | TSS          | H4k20me1/H3k36me3/H3k4me2/H3k79me2/H3k4me3/H3k9ac/H3k27ac/H3k4me1/H3k9me3 |
+| HLA-C    |     0| rs146911342 |  31270002| POL2-4                                    | NA  | TSS          | H4k20me1/H3k36me3/H3k4me3/H3k4me2/H3k79me2/H3k4me1/H3k9ac                 |
+| HLA-C    |     1| rs3134776   |  31233037| NA                                        | NA  | R            | NA                                                                        |
+| HLA-C    |     2| rs9266301   |  31361729| NA                                        | NA  | R            | NA                                                                        |
+| HLA-DPB1 |     0| rs9277449   |  33084838| NA                                        | NA  | T            | H3k36me3                                                                  |
+| HLA-DPB1 |     1| rs9296068   |  33020918| NA                                        | NA  | R            | H3k4me1/H2az                                                              |
+| HLA-DPB1 |     2| rs688209    |  33732599| NA                                        | NA  | R            | NA                                                                        |
+| HLA-DQA1 |     0| rs75170544  |  32545508| NA                                        | NA  | R            | NA                                                                        |
+| HLA-DQA1 |     1| rs9271375   |  32619290| NA                                        | NA  | R            | H3k9me3                                                                   |
+| HLA-DQB1 |     0| rs1770      |  32660056| POL2-4/CHD2/TBP/TAF1/EBF1/ELF1/TCF12/POL2 | DHS | E            | H3k4me1/H3k27ac/H3k4me2/H3k36me3/H3k79me2                                 |
+| HLA-DQB1 |     1| rs9272209   |  32634200| RUNX3/NFIC/FOXM1                          | NA  | E            | H3k27ac/H3k4me2/H3k9ac/H3k4me1/H3k4me3                                    |
+| HLA-DRB1 |     0| rs9270698   |  32599520| NA                                        | NA  | R            | NA                                                                        |
+| HLA-DRB1 |     1| rs1048372   |  32642659| POL2-4                                    | NA  | TSS          | H3k4me2/H3k4me3/H3k79me2/H3k36me3                                         |
+| HLA-DRB1 |     2| rs11752186  |  32600895| NA                                        | NA  | NA           | NA                                                                        |
 
 RTC between IMGT and Ref Transcriptome eQTLs
 --------------------------------------------

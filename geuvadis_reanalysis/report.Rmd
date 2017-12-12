@@ -168,13 +168,22 @@ include_graphics("./qtls/plots/qtls_landscape_pri.png")
 include_graphics("./qtls/plots/qtls_density_geneStart.png")
 ```
 
-### Location of HLA genes and CRDs
+## Location of HLA genes and CRDs
 
 *CRDs are defined in http://dx.doi.org/10.1101/171694* 
+
 *Coordinates are in hg19*
 
 ```{r}
 include_graphics("./qtls/plots/crd.png")
+```
+
+## Intersect with Gencode Elements
+
+```{r}
+"./qtls/star/imgt/encode_TF_Seq_DNase/hla.qtl.functional.elements.tsv" %>%
+    read_tsv()%>%
+    kable(digits = 2)
 ```
 
 ## RTC between IMGT and Ref Transcriptome eQTLs
