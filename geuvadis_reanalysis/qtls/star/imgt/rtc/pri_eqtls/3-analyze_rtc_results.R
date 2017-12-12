@@ -1,11 +1,7 @@
 devtools::load_all("/home/vitor/hlaseqlib")
 library(tidyverse)
 
-hla_genes <- paste0("HLA-", c("A", "B", "C", "DPB1", "DQA1", "DQB1", "DRB1"))
-
-gencode_hla <- gencode_chr_gene %>%
-    filter(gene_name %in% hla_genes) %>%
-    select(gene_id, gene_name)
+gencode_hla <- select(gencode_hla, gene_id, gene_name)
 
 qtls <-
     read_qtltools("../../3-conditional_analysis/conditional_60_all.txt.gz") %>%
@@ -30,7 +26,7 @@ qtls_rtc_pri <-
     left_join(pri_eqtls, by = c("qtl_pri" =  "variant"), 
 	      suffix = c("_imgt", "_pri")) %>%
     drop_na() %>%
-    filter(rtc > 0.9) %>%
+    filter(rtc > 0.95) %>%
     select(gene_imgt, variant_imgt = variant, rank_imgt,
 	   gene_pri, variant_pri = qtl_pri, rank_pri, d_prime, rtc) %>%
     mutate(rtc = round(rtc, 3)) %>%
