@@ -10,8 +10,8 @@ Typing accuracies
 
 | locus |   star|  kallisto|
 |:------|------:|---------:|
-| A     |  96.24|     97.06|
-| B     |  98.04|     97.55|
+| A     |  97.71|     97.06|
+| B     |  98.20|     97.55|
 | C     |  97.06|     95.92|
 | DQB1  |  98.37|     98.53|
 | DRB1  |  99.51|     99.51|
@@ -26,14 +26,10 @@ kallisto vs STAR-Salmon
 
 ### TPM
 
-![](./expression/plots/star_vs_kallisto_TPM.png)
+<img src="./expression/plots/star_vs_kallisto_TPM.png" width=".49\linewidth" style="display: block; margin: auto;" /><img src="./expression/plots/star_vs_kallisto_PCA.png" width=".49\linewidth" style="display: block; margin: auto;" />
 
-### PCA-corrected
-
-![](./expression/plots/star_vs_kallisto_PCA.png)
-
-HLA diversity vs reference chromosomes only
--------------------------------------------
+HLA diversity vs reference transcriptome
+----------------------------------------
 
 ### TPM
 
@@ -88,25 +84,7 @@ Correlation of expression
 
 ### Between pairs of HLA genes on the same vs on different haplotypes
 
-#### HLA-A vs HLA-B
-
-![](./expression/plots/a_vs_b.png)
-
-#### HLA-A vs HLA-C
-
-![](./expression/plots/a_vs_c.png)
-
-#### HLA-B vs HLA-C
-
-![](./expression/plots/b_vs_c.png)
-
-#### HLA-DQA1 vs HLA-DQB1
-
-![](./expression/plots/dqa_vs_dqb.png)
-
-#### HLA-DQA1 vs HLA-DRB1
-
-![](./expression/plots/dqa_vs_drb.png)
+![](./expression/plots/within_vs_between_haps.png)
 
 eQTLs
 =====
@@ -143,17 +121,12 @@ Distribution of eQTLs around the TSS
 RTC between IMGT and Ref Transcriptome eQTLs
 --------------------------------------------
 
-Variants with RTC &gt; 0.9 likely mark the same biological signal.
+Variants with RTC &gt; 0.95 likely mark the same biological signal.
 
 | gene\_imgt | variant\_imgt |  rank\_imgt| gene\_pri | variant\_pri |  rank\_pri|  d\_prime|   rtc|
 |:-----------|:--------------|-----------:|:----------|:-------------|----------:|---------:|-----:|
-| HLA-A      | rs3823342     |           0| HLA-A     | rs200093949  |          0|      0.99|  0.92|
-| HLA-A      | rs1655924     |           1| HLA-A     | rs2523764    |          1|      0.68|  0.93|
 | HLA-B      | rs1265094     |           0| HLA-B     | rs3130949    |          0|      0.93|  0.98|
-| HLA-B      | rs1265094     |           0| HLA-C     | rs146911342  |          0|      0.91|  0.91|
 | HLA-B      | rs9264803     |           1| HLA-B     | rs2844623    |          2|      0.95|  0.97|
-| HLA-B      | rs2308655     |           2| HLA-B     | rs3130949    |          0|      0.47|  0.90|
-| HLA-B      | rs2308655     |           2| HLA-C     | rs9264185    |          2|      0.48|  0.91|
 | HLA-C      | rs146911342   |           0| HLA-C     | rs146911342  |          0|      1.00|  1.00|
 | HLA-C      | rs146911342   |           0| HLA-B     | rs67565791   |          4|      0.90|  0.98|
 | HLA-C      | rs3134776     |           1| HLA-B     | rs3130949    |          0|      1.00|  0.99|
@@ -165,7 +138,6 @@ Variants with RTC &gt; 0.9 likely mark the same biological signal.
 | HLA-DQA1   | rs75170544    |           0| HLA-DQA1  | rs28724008   |          0|      0.58|  0.97|
 | HLA-DQA1   | rs9271375     |           1| HLA-DRB1  | rs9271365    |          1|      0.92|  1.00|
 | HLA-DQB1   | rs1770        |           0| HLA-DQB1  | rs3830059    |          0|      0.95|  0.99|
-| HLA-DQB1   | rs9272209     |           1| HLA-DRB1  | rs9269749    |          0|      0.89|  0.91|
 | HLA-DQB1   | rs9272209     |           1| HLA-DQB1  | rs9273595    |          1|      0.92|  0.96|
 | HLA-DQB1   | rs9272209     |           1| HLA-DQB1  | rs114969562  |          2|      0.76|  0.98|
 | HLA-DRB1   | rs1048372     |           1| HLA-DRB1  | rs9271365    |          1|      0.92|  0.98|
@@ -420,26 +392,6 @@ Here we can see that, when our eQTLs were not previously described in the databa
 
 Most of them are tagging an eQTL from regulomeDB. I believe that's because, for all sources not regulomeDB, I selected only the top variant for each tissue and gene. For regulomeDB that's no possible beucase the p-value is not directly available, so there are more variants per gene, which increases the chance that some of these variants will have high RTC with one of our eQTLs.
 
-| gene     | rsid        |  rank| qtl\_previous |  d\_prime|   rtc| study        | tissue                                                                                                                                                                                                                              |
-|:---------|:------------|-----:|:--------------|---------:|-----:|:-------------|:------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| HLA-A    | rs3823342   |     0| rs41560714    |      1.00|  1.00| GTEx2015\_v6 | Heart\_Left\_Ventricle                                                                                                                                                                                                              |
-| HLA-A    | rs1655924   |     1| rs2734971     |      0.86|  1.00| regulomeDB   | Lymphoblastoid                                                                                                                                                                                                                      |
-| HLA-B    | rs1265094   |     0| rs1265181     |      1.00|  0.98| regulomeDB   | Monocytes                                                                                                                                                                                                                           |
-| HLA-B    | rs9264803   |     1| rs1050118     |      0.80|  1.00| Nedelec2016  | NonInfected\_Macrophages                                                                                                                                                                                                            |
-| HLA-B    | rs2308655   |     2| rs1051488     |      1.00|  1.00| GTEx2015\_v6 | Uterus                                                                                                                                                                                                                              |
-| HLA-C    | rs146911342 |     0| rs2073724     |      0.96|  0.98| regulomeDB   | Monocytes                                                                                                                                                                                                                           |
-| HLA-C    | rs3134776   |     1| rs3130944     |      1.00|  1.00| regulomeDB   | Liver,Monocytes                                                                                                                                                                                                                     |
-| HLA-C    | rs9266301   |     2| rs887466      |      0.78|  0.96| regulomeDB   | Monocytes                                                                                                                                                                                                                           |
-| HLA-DPB1 | rs9277449   |     0| rs9277538     |      0.99|  1.00| Westra2013   | Whole\_Blood                                                                                                                                                                                                                        |
-| HLA-DPB1 | rs9296068   |     1| rs34885310    |      0.96|  0.98| Delaneau2017 | LCL                                                                                                                                                                                                                                 |
-| HLA-DQA1 | rs75170544  |     0| rs9271488     |      0.71|  0.99| regulomeDB   | Lymphoblastoid                                                                                                                                                                                                                      |
-| HLA-DQA1 | rs9271375   |     1| rs9268528     |      0.67|  1.00| regulomeDB   | Lymphoblastoid                                                                                                                                                                                                                      |
-| HLA-DQB1 | rs1770      |     0| rs2647025     |      1.00|  1.00| regulomeDB   | Lymphoblastoid                                                                                                                                                                                                                      |
-| HLA-DQB1 | rs9272209   |     1| rs2187668     |      0.98|  1.00| regulomeDB   | Monocytes                                                                                                                                                                                                                           |
-| HLA-DRB1 | rs9270698   |     0| rs9281938     |      0.99|  1.00| GTEx2015\_v6 | Artery\_Tibial,Brain\_Caudate\_basal\_ganglia,Brain\_Cerebellar\_Hemisphere,Brain\_Hippocampus,Brain\_Hypothalamus,Brain\_Nucleus\_accumbens\_basal\_ganglia,Cells\_EBV-transformed\_lymphocytes,Testis,Thyroid,Uterus,Whole\_Blood |
-| HLA-DRB1 | rs1048372   |     1| rs9271348     |      0.90|  1.00| regulomeDB   | Lymphoblastoid                                                                                                                                                                                                                      |
-| HLA-DRB1 | rs11752186  |     2| rs1063355     |      1.00|  0.98| regulomeDB   | Lymphoblastoid                                                                                                                                                                                                                      |
-
 Association with GWAS traits
 ----------------------------
 
@@ -583,22 +535,22 @@ HLA lineages
 
 | locus |   df|        F| p.value  |
 |:------|----:|--------:|:---------|
-| A     |   14|    7.419| 1.32e-14 |
-| B     |   25|    5.477| 1.30e-15 |
-| C     |   13|   20.075| 1.89e-40 |
-| DPB1  |   21|   11.652| 1.30e-33 |
-| DQA1  |    5|  122.492| 2.04e-93 |
-| DQB1  |    4|   34.750| 1.60e-26 |
-| DRB1  |   12|   32.178| 3.97e-59 |
+| A     |   14|    9.863| 2.54e-20 |
+| B     |   25|    5.356| 3.70e-15 |
+| C     |   13|   47.939| 8.12e-88 |
+| DPB1  |   21|    7.435| 4.19e-20 |
+| DQA1  |    5|  111.888| 3.86e-87 |
+| DQB1  |    4|   47.712| 1.49e-35 |
+| DRB1  |   12|   27.568| 2.17e-51 |
 
 #### Welch ANOVA
 
 | locus |  num.df|  denom.df|        F| p.value  |
 |:------|-------:|---------:|--------:|:---------|
-| A     |      14|    93.626|  140.526| 2.39e-56 |
-| B     |      23|    62.722|    7.087| 3.31e-10 |
-| C     |      12|    97.000|   16.474| 1.69e-18 |
-| DPB1  |      18|    35.792|    9.226| 1.25e-08 |
-| DQA1  |       4|   212.836|  116.767| 1.56e-52 |
-| DQB1  |       4|   253.425|   36.697| 3.40e-24 |
-| DRB1  |      12|    99.910|   53.483| 5.50e-38 |
+| A     |      14|    42.907|    8.736| 1.65e-08 |
+| B     |      23|    59.266|    5.617| 4.30e-08 |
+| C     |      12|    99.654|   45.631| 4.91e-35 |
+| DPB1  |      18|    35.692|    5.243| 1.28e-05 |
+| DQA1  |       4|   215.500|  107.458| 3.44e-50 |
+| DQB1  |       4|   257.271|   54.278| 3.92e-33 |
+| DRB1  |      12|    99.855|   39.211| 2.21e-32 |

@@ -21,7 +21,7 @@ Gourraud et al (2014) typings
 
 ```{r}
 kallisto_typing <-
-    read_tsv("./expression/kallisto/genotyping_accuracies_2.tsv") %>%
+    read_tsv("./expression/kallisto/imgt/genotyping_accuracies_2.tsv") %>%
     select(locus, kallisto = accuracy)
 
 star_typing <-
@@ -43,17 +43,13 @@ include_graphics("./expression/plots/expression_boxplot.png")
 
 ### TPM
 
-```{r}
+```{r, out.width='.49\\linewidth', fig.show='hold',fig.align='center'}
 include_graphics("./expression/plots/star_vs_kallisto_TPM.png")
-```
 
-### PCA-corrected
-
-```{r}
 include_graphics("./expression/plots/star_vs_kallisto_PCA.png")
 ```
 
-## HLA diversity vs reference chromosomes only
+## HLA diversity vs reference transcriptome
 
 ### TPM
 
@@ -126,34 +122,8 @@ include_graphics("./expression/plots/trans_activ_corrs.png")
 
 ### Between pairs of HLA genes on the same vs on different haplotypes
 
-#### HLA-A vs HLA-B
-
 ```{r}
-include_graphics("./expression/plots/a_vs_b.png")
-```
-
-#### HLA-A vs HLA-C
-
-```{r}
-include_graphics("./expression/plots/a_vs_c.png")
-```
-
-#### HLA-B vs HLA-C
-
-```{r}
-include_graphics("./expression/plots/b_vs_c.png")
-```
-
-#### HLA-DQA1 vs HLA-DQB1
-
-```{r}
-include_graphics("./expression/plots/dqa_vs_dqb.png")
-```
-
-#### HLA-DQA1 vs HLA-DRB1
-
-```{r}
-include_graphics("./expression/plots/dqa_vs_drb.png")
+include_graphics("./expression/plots/within_vs_between_haps.png")
 ```
 
 # eQTLs
@@ -201,7 +171,7 @@ include_graphics("./qtls/plots/crd.png")
 
 ## RTC between IMGT and Ref Transcriptome eQTLs
 
-Variants with RTC > 0.9 likely mark the same biological signal.
+Variants with RTC > 0.95 likely mark the same biological signal.
 
 ```{r}
 read_tsv("./qtls/star/imgt/rtc/pri_eqtls/results.tsv") %>%
@@ -246,7 +216,7 @@ gene. For regulomeDB that's no possible beucase the p-value is not directly
 available, so there are more variants per gene, which increases the chance that
 some of these variants will have high RTC with one of our eQTLs.
 
-```{r}
+```{r, eval=FALSE}
 read_tsv("./qtls/star/imgt/rtc/previous_qtls/results.tsv") %>%
     kable(digits = 2)
 ```
