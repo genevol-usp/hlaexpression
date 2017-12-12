@@ -24,7 +24,13 @@ Expression estimates
 kallisto vs STAR-Salmon
 -----------------------
 
-<img src="report_files/figure-markdown_github/unnamed-chunk-3-1.png" width="\textwidth" />
+### TPM
+
+<img src="./expression/plots/star_vs_kallisto_TPM.png" width="2000" />
+
+### PCA
+
+<img src="./expression/plots/star_vs_kallisto_PCA.png" width="2000" />
 
 HLA diversity vs reference transcriptome
 ----------------------------------------
