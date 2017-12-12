@@ -65,6 +65,10 @@ ASE
 
 ### ASE by number of genotyping errors
 
+<img src="./expression/plots/ase.png" width="1600" />
+
+#### Genotyping errors impacting ASE:
+
 \*Each point represents a heterozygous genotype in the intersect with Gourraud data.
 
 <img src="./expression/plots/ase_genot_errors.png" width="1600" />
