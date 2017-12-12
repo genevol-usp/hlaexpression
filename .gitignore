@@ -40,6 +40,8 @@ geuvadis_reanalysis/qtls/qtls_star/imgt/rtc/geuvadis_eqtls/unmapped_to_hg38
 geuvadis_reanalysis/expression/star/log/
 geuvadis_reanalysis/qtls/qtls_star/imgt/3-conditional_analysis/log/
 geuvadis_reanalysis/qtls/qtls_star/pri/3-conditional_analysis/log/
+star/imgt/3-conditional_analysis/log/
+star/pri/3-conditional_analysis/log/
 nci/expression/star/mappings_*
 nci/expression/star/quantifications_*
 nci/expression/star/sample_indices

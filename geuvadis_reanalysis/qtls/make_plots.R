@@ -81,6 +81,169 @@ ggplot(egenes_df, aes(f, n, color = index, group = index)) +
     labs(x = "Number of PCs", y = "Number of eGenes")
 dev.off()
 
+# eQTL landscape around TSS
+read_conditional_hla <- function(path, hla_tss) {
+    read_qtltools(path) %>%
+        inner_join(hla_tss, by = c("phen_id" = "gene_id")) %>%
+        mutate(dist_tss = ifelse(strand == "+", var_from - tss, tss - var_from),
+               nom_pval = -log10(bwd_pval)) %>%
+        select(phen_id = gene_name, rank, var_id, var_from, dist_tss, nom_pval, 
+               slope = bwd_slope, best = bwd_best, signif = bwd_signif) %>%
+        group_by(phen_id, var_id, best) %>%
+        filter(rank == min(rank)) %>%
+        ungroup() %>%
+        mutate(rank = factor(rank))
+}
+
+plot_qtls <- function(conditional_df) {
+
+  ggplot(conditional_df) +
+    geom_vline(xintercept = 0, color = "grey25", size = 2) + 
+    geom_point(data = filter(conditional_df, signif == 0), 
+	       aes(dist_tss, nom_pval),
+	       color = "grey", alpha = .1, show.legend = FALSE) +
+    geom_point(data = filter(conditional_df, signif == 1L), 
+	       aes(dist_tss, nom_pval, color = rank), 
+	       alpha = .5) +
+    geom_hline(data = conditional_df %>% 
+		 group_by(phen_id) %>% 
+		 filter(signif == 0) %>% 
+		 summarise(thres = max(nom_pval)),
+	       aes(yintercept = thres), color = "black") +
+    geom_point(data = filter(conditional_df, best == 1L), 
+               aes(dist_tss, nom_pval, color = rank), size = 2.5) +
+    geom_point(data = filter(conditional_df, best == 1L), 
+               aes(dist_tss, nom_pval), 
+               shape = 1, size = 2.5, color = "black", stroke = 1) +
+    coord_cartesian(xlim = c(-1e6, +1e6)) +
+    scale_color_manual(values = c("0" = "#8491B4B2",
+                                  "1" = "#DC0000B2",
+                                  "2" = "#F0E442B2",
+                                  "3" = "black",
+                                  "4" = "#009E73")) +
+    scale_x_continuous(labels = scales::comma) +
+    theme_minimal() +
+    theme(strip.text = element_text(size = 12),
+          axis.title = element_text(size = 12),
+          axis.text = element_text(size = 10),
+          legend.title = element_text(size = 12),
+          legend.text = element_text(size = 10)) +
+    facet_wrap(~phen_id, scales = "free_y", ncol = 1) +
+    geom_blank(data = conditional_df %>% 
+                   group_by(phen_id) %>%
+                   slice(which.max(nom_pval)) %>% 
+                   mutate(max_pval = nom_pval + 2.5),
+               aes(y = max_pval)) +
+    labs(x = "distance from TSS", 
+         y = expression(paste("-log"[10], italic(Pvalue)))) +
+    guides(color = guide_legend(override.aes = list(alpha = 1, size = 3)))
+}
+
+read_conditional_rank0 <- function(path) {
+    read_qtltools(path) %>%
+        filter(rank == 0L, bwd_signif == 1L) %>%
+        mutate(dist_start = ifelse(strand == "+", var_from - phen_from, phen_to - var_from)) %>%
+        select(phen_id, var_id, dist, dist_start, bwd_best)
+}
+
+start_pos <- "~/gencode_data/gencode.v25.annotation.gtf.gz" %>%
+    get_gencode_coords(feature = "start_codon") %>%
+    filter(gene_name %in% hla_genes) %>%
+    mutate(tss = ifelse(strand == "+", start, end)) %>%
+    select(gene_id, gene_name, tss)
+
+conditional_star_imgt <-
+    "./star/imgt/3-conditional_analysis/conditional_60_all.txt.gz" %>%
+    read_conditional_hla(start_pos)
+
+conditional_star_imgt %>%
+    filter(best == 1L) %>%
+    select(phen_id, rank, var_id, var_from, dist_tss, slope, nom_pval) %>%
+    write_tsv("./plots/eqtl.tsv")
+
+conditional_star_pri <-
+    "./star/pri/3-conditional_analysis/conditional_60_all.txt.gz" %>%
+    read_conditional_hla(start_pos)
+
+png("./plots/qtls_landscape_imgt.png", height = 10, width = 8, units = "in", res = 300)
+plot_qtls(conditional_star_imgt)
+dev.off()
+
+png("./plots/qtls_landscape_pri.png", height = 10, width = 8, units = "in", res = 300)
+plot_qtls(conditional_star_pri)
+dev.off()
+
+all_rank0 <- "./star/imgt/3-conditional_analysis/conditional_60_all.txt.gz" %>%
+    read_conditional_rank0() %>%
+    mutate(genome_context = ifelse(phen_id %in% gencode_hla$gene_id, "HLA", "genomewide"))
+
+png("./plots/qtls_density_geneStart.png", height = 3, width = 5, units = "in", res = 300)
+ggplot(all_rank0) +
+    coord_cartesian(xlim = c(-1e6, 1e6)) +
+    geom_density(aes(x = dist_start, fill = genome_context), alpha = 1/2) +
+    scale_fill_manual(values = c("genomewide" = "#8491B4B2", "HLA" = "#DC0000B2")) +
+    theme_bw() +
+    labs(x = "Gene start", fill = "Genome context")
+dev.off()
+
+# proportion of lead eQTLs further than 220kb
+#all_rank0 %>% 
+#    filter(bwd_best == 1L) %>%
+#    mutate(i = as.integer(dist > 220000 | dist < -220000)) %>% 
+#    summarise(mean(i))
+
+
+## CRD
+gencode_hla_v19 <- "~/gencode_data/gencode.v19.annotation.gtf.gz" %>%
+    get_gencode_coords(feature = "gene") %>%
+    filter(gene_name %in% gencode_hla$gene_name) %>%
+    select(gene_name, start, end, strand)
+
+crd <- "../../LCL_ALL.chr6.subset.txt.gz" %>%
+    read_delim(col_names = FALSE, delim = " ") %>%
+    select(-X2, -X4, -X6, -X8, -X9, -X11) %>%
+    filter(between(X3, min(gencode_hla_v19$start) - 1e6, max(gencode_hla_v19$end) + 1e6),
+           between(X7, min(gencode_hla_v19$start) - 1e6, max(gencode_hla_v19$end) + 1e6)) %>%
+    mutate(x = (X1 + X5)/2L,
+           x2 = (X3 + X7)/2L,
+           y = X5 - X1,
+           r2 = X10^2) %>%
+    select(-X10)
+
+gene_pos <- gencode_hla_v19 %>%
+    mutate(pos = ifelse(strand == "+", start, end),
+           x1 = crd$x[map_dbl(pos, ~which.min(abs(. - crd$x2)))])
+
+png("./plots/crd.png", width = 12, height = 5, units = "in", res = 200)
+ggplot() +
+    geom_point(data = crd, aes(x = x, y = y, alpha = r2), color = "blue") +
+    scale_alpha_continuous(range = c(0, 1)) +
+    scale_x_continuous(breaks = crd$x[seq(1, nrow(crd), 2e4)],
+                       labels = round(crd$x2[seq(1, nrow(crd), 2e4)]/1e6L, digits = 1)) +
+    geom_point(data = filter(gene_pos, strand == "+"), 
+               aes(x = x1, y = -5), shape = ">", size = 5, color = "red") +
+    geom_point(data = filter(gene_pos, strand == "-"), 
+               aes(x = x1, y = -20), shape = "<", size = 5, color = "red") +
+    geom_text(data = filter(gene_pos, strand == "+"), 
+              aes(x = x1, y = -10, label = gene_name),
+              size = 3) +
+    ggrepel::geom_text_repel(data = filter(gene_pos, strand == "-"), 
+                             aes(x = x1, y = -25, label = gene_name),
+                             size = 3) +
+    theme_bw() +
+    theme(plot.background = element_blank(),
+          panel.grid.major = element_blank(),
+          panel.grid.minor = element_blank(),
+          panel.border = element_blank(),
+          axis.title.y = element_blank(),
+          axis.text.y = element_blank(),
+          axis.ticks.y = element_blank(),
+          axis.line.x = element_line(color = "black")) +
+    labs(x = "Genomic position (Mb)") +
+    coord_cartesian(ylim = c(-25, max(crd$y)))
+dev.off()
+
+
 # Lineage and effects plot
 ## lineages
 concordant <- 
@@ -221,168 +384,3 @@ ggdraw(grid1) +
     draw_label("PCA-corrected expression", .985, 0.5, size = 16, angle = 90)
 dev.off()
 
-# eQTL landscape around TSS
-read_conditional_hla <- function(path, hla_tss) {
-    read_qtltools(path) %>%
-        inner_join(hla_tss, by = c("phen_id" = "gene_id")) %>%
-        mutate(dist_tss = ifelse(strand == "+", var_from - tss, tss - var_from),
-               nom_pval = -log10(bwd_pval)) %>%
-        select(phen_id = gene_name, rank, var_id, var_from, dist_tss, nom_pval, 
-               slope = bwd_slope, best = bwd_best, signif = bwd_signif) %>%
-        group_by(phen_id, var_id, best) %>%
-        filter(rank == min(rank)) %>%
-        ungroup() %>%
-        mutate(rank = factor(rank))
-}
-
-plot_qtls <- function(conditional_df) {
-
-  ggplot(conditional_df) +
-    geom_vline(xintercept = 0, color = "grey25", size = 2) + 
-    geom_point(data = filter(conditional_df, signif == 0), 
-	       aes(dist_tss, nom_pval),
-	       color = "grey", alpha = .1, show.legend = FALSE) +
-    geom_point(data = filter(conditional_df, signif == 1L), 
-	       aes(dist_tss, nom_pval, color = rank), 
-	       alpha = .5) +
-    geom_hline(data = conditional_df %>% 
-		 group_by(phen_id) %>% 
-		 filter(signif == 0) %>% 
-		 summarise(thres = max(nom_pval)),
-	       aes(yintercept = thres), color = "black") +
-    geom_point(data = filter(conditional_df, best == 1L), 
-               aes(dist_tss, nom_pval, color = rank), size = 2.5) +
-    geom_point(data = filter(conditional_df, best == 1L), 
-               aes(dist_tss, nom_pval), 
-               shape = 1, size = 2.5, color = "black", stroke = 1) +
-    coord_cartesian(xlim = c(-1e6, +1e6)) +
-    scale_color_manual(values = c("0" = "#8491B4B2",
-                                  "1" = "#DC0000B2",
-                                  "2" = "#F0E442B2",
-                                  "3" = "black",
-                                  "4" = "#009E73")) +
-    scale_x_continuous(labels = scales::comma) +
-    theme_minimal() +
-    theme(strip.text = element_text(size = 12),
-          axis.title = element_text(size = 12),
-          axis.text = element_text(size = 10),
-          legend.title = element_text(size = 12),
-          legend.text = element_text(size = 10)) +
-    facet_wrap(~phen_id, scales = "free_y", ncol = 1) +
-    geom_blank(data = conditional_df %>% 
-                   group_by(phen_id) %>%
-                   slice(which.max(nom_pval)) %>% 
-                   mutate(max_pval = nom_pval + 2.5),
-               aes(y = max_pval)) +
-    labs(x = "distance from TSS", 
-         y = expression(paste("-log"[10], italic(Pvalue)))) +
-    guides(color = guide_legend(override.aes = list(alpha = 1, size = 3)))
-}
-
-read_conditional_rank0 <- function(path) {
-    read_qtltools(path) %>%
-        filter(rank == 0L, bwd_signif == 1L) %>%
-        mutate(dist_start = ifelse(strand == "+", var_from - phen_from, phen_to - var_from)) %>%
-        select(phen_id, var_id, dist, dist_start, bwd_best)
-}
-
-start_pos <-
-    "~/gencode_data/gencode.v25.annotation.gtf.gz" %>%
-    get_gencode_coords(feature = "start_codon") %>%
-    filter(gene_name %in% hla_genes) %>%
-    mutate(tss = ifelse(strand == "+", start, end)) %>%
-    select(gene_id, gene_name, tss)
-
-conditional_star_imgt <-
-    "./star/imgt/3-conditional_analysis/conditional_60_all.txt.gz" %>%
-    read_conditional_hla(start_pos)
-
-conditional_star_imgt %>%
-    filter(best == 1L) %>%
-    select(phen_id, rank, var_id, var_from, dist_tss, slope, nom_pval) %>%
-    write_tsv("./plots/eqtl.tsv")
-
-conditional_star_pri <-
-    "./star/pri/3-conditional_analysis/conditional_60_all.txt.gz" %>%
-    read_conditional_hla(start_pos)
-
-png("./plots/qtls_landscape_imgt.png", height = 10, width = 8, units = "in", res = 300)
-plot_qtls(conditional_star_imgt)
-dev.off()
-
-png("./plots/qtls_landscape_pri.png", height = 10, width = 8, units = "in", res = 300)
-plot_qtls(conditional_star_pri)
-dev.off()
-
-all_rank0 <- 
-    "./star/imgt/3-conditional_analysis/conditional_60_all.txt.gz" %>%
-    read_conditional_rank0() %>%
-    mutate(genome_context = ifelse(phen_id %in% gencode_hla$gene_id, "HLA", "genomewide"))
-
-png("./plots/qtls_density_geneStart.png", height = 3, width = 5, units = "in", res = 300)
-ggplot(all_rank0) +
-    coord_cartesian(xlim = c(-1e6, 1e6)) +
-    geom_density(aes(x = dist_start, fill = genome_context), alpha = 1/2) +
-    scale_fill_manual(values = c("genomewide" = "#8491B4B2", "HLA" = "#DC0000B2")) +
-    theme_bw() +
-    labs(x = "Gene start", fill = "Genome context")
-dev.off()
-
-# proportion of lead eQTLs further than 220kb
-#all_rank0 %>% 
-#    filter(bwd_best == 1L) %>%
-#    mutate(i = as.integer(dist > 220000 | dist < -220000)) %>% 
-#    summarise(mean(i))
-
-
-## CRD
-
-gencode_hla_v19 <-
-    "~/gencode_data/gencode.v19.annotation.gtf.gz" %>%
-    get_gencode_coords(feature = "gene") %>%
-    filter(gene_name %in% gencode_hla$gene_name) %>%
-    select(gene_name, start, end, strand)
-
-crd <- 
-    read_delim("../../LCL_ALL.chr6.subset.txt.gz", col_names = FALSE, delim = " ") %>%
-    select(-X2, -X4, -X6, -X8, -X9, -X11) %>%
-    filter(between(X3, min(gencode_hla_v19$start) - 1e6, max(gencode_hla_v19$end) + 1e6),
-           between(X7, min(gencode_hla_v19$start) - 1e6, max(gencode_hla_v19$end) + 1e6)) %>%
-    mutate(x = (X1 + X5)/2L,
-           x2 = (X3 + X7)/2L,
-           y = X5 - X1,
-           r2 = X10^2) %>%
-    select(-X10)
-
-gene_pos <- gencode_hla_v19 %>%
-    mutate(pos = ifelse(strand == "+", start, end),
-           x1 = crd$x[map_dbl(pos, ~which.min(abs(. - crd$x2)))])
-
-png("./plots/crd.png", width = 12, height = 5, units = "in", res = 200)
-ggplot() +
-    geom_point(data = crd, aes(x = x, y = y, alpha = r2), color = "blue") +
-    scale_alpha_continuous(range = c(0, 1)) +
-    scale_x_continuous(breaks = crd$x[seq(1, nrow(crd), 2e4)],
-                       labels = round(crd$x2[seq(1, nrow(crd), 2e4)]/1e6L, digits = 1)) +
-    geom_point(data = filter(gene_pos, strand == "+"), 
-               aes(x = x1, y = -5), shape = ">", size = 5, color = "red") +
-    geom_point(data = filter(gene_pos, strand == "-"), 
-               aes(x = x1, y = -20), shape = "<", size = 5, color = "red") +
-    geom_text(data = filter(gene_pos, strand == "+"), 
-              aes(x = x1, y = -10, label = gene_name),
-              size = 3) +
-    ggrepel::geom_text_repel(data = filter(gene_pos, strand == "-"), 
-                             aes(x = x1, y = -25, label = gene_name),
-                             size = 3) +
-    theme_bw() +
-    theme(plot.background = element_blank(),
-          panel.grid.major = element_blank(),
-          panel.grid.minor = element_blank(),
-          panel.border = element_blank(),
-          axis.title.y = element_blank(),
-          axis.text.y = element_blank(),
-          axis.ticks.y = element_blank(),
-          axis.line.x = element_line(color = "black")) +
-    labs(x = "Genomic position (Mb)") +
-    coord_cartesian(ylim = c(-25, max(crd$y)))
-dev.off()
