@@ -63,11 +63,9 @@ Distribution of TPM values
 ASE
 ---
 
-### ASE by number of genotyping errors
-
 <img src="./expression/plots/ase.png" width="1600" />
 
-#### Genotyping errors impacting ASE:
+### Genotyping errors impacting ASE:
 
 \*Each point represents a heterozygous genotype in the intersect with Gourraud data.
 

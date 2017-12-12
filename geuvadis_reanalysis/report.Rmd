@@ -91,13 +91,11 @@ include_graphics("./expression/plots/tpm_distributions.png")
 
 ## ASE 
 
-### ASE by number of genotyping errors
-
 ```{r}
 include_graphics("./expression/plots/ase.png")
 ```
 
-#### Genotyping errors impacting ASE:
+### Genotyping errors impacting ASE:
 
 \*Each point represents a heterozygous genotype in the intersect with Gourraud
 data.
