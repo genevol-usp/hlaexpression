@@ -41,8 +41,7 @@ include_graphics("./expression/plots/expression_boxplot.png")
 
 ## kallisto vs STAR-Salmon
 
-![](./expression/plots/star_vs_kallisto_TPM.png){ width=30% }
-![](./expression/plots/star_vs_kallisto_PCA.png){ width=30% }
+![](./expression/plots/star_vs_kallisto_TPM.png){ width=30% } ![](./expression/plots/star_vs_kallisto_PCA.png){ width=30% }
 
 ## HLA diversity vs reference transcriptome
 
