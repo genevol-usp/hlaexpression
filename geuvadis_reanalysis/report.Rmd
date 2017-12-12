@@ -10,6 +10,12 @@ knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE, comment = 
 ```{r pkgs, echo = FALSE}
 library(knitr)
 library(tidyverse)
+
+comb2pngs <- function(imgs, bottom_text = NULL){
+  img1 <- grid::rasterGrob(as.raster(png::readPNG(imgs[1])), interpolate = FALSE)
+  img2 <- grid::rasterGrob(as.raster(png::readPNG(imgs[2])), interpolate = FALSE)
+  gridExtra::grid.arrange(img1, img2, ncol = 2, bottom = bottom_text)
+}
 ```
 
 **All analyses were carried out using European individuals only (N = 358)**
@@ -41,8 +47,9 @@ include_graphics("./expression/plots/expression_boxplot.png")
 
 ## kallisto vs STAR-Salmon
 
-![](./expression/plots/star_vs_kallisto_TPM.png){ width=10% } 
-![](./expression/plots/star_vs_kallisto_PCA.png){ width=10% }
+```{r}
+comb2pngs(c("./expression/plots/star_vs_kallisto_TPM.png", "./expression/plots/star_vs_kallisto_PCA.png"))
+```
 
 ## HLA diversity vs reference transcriptome
 

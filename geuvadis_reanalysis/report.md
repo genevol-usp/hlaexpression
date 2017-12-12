@@ -19,12 +19,12 @@ Typing accuracies
 Expression estimates
 ====================
 
-![](./expression/plots/expression_boxplot.png)
+<img src="./expression/plots/expression_boxplot.png" width="1600" />
 
 kallisto vs STAR-Salmon
 -----------------------
 
-<img src="./expression/plots/star_vs_kallisto_TPM.png" style="width:10.0%" /> <img src="./expression/plots/star_vs_kallisto_PCA.png" style="width:10.0%" />
+![](report_files/figure-markdown_github/unnamed-chunk-3-1.png)
 
 HLA diversity vs reference transcriptome
 ----------------------------------------
@@ -33,26 +33,26 @@ HLA diversity vs reference transcriptome
 
 #### STAR
 
-![](./expression/plots/star_imgt_vs_pri_TPM.png)
+<img src="./expression/plots/star_imgt_vs_pri_TPM.png" width="2000" />
 
 #### kallisto
 
-![](./expression/plots/kallisto_imgt_vs_pri_TPM.png)
+<img src="./expression/plots/kallisto_imgt_vs_pri_TPM.png" width="2000" />
 
 ### PCA-corrected
 
 #### STAR
 
-![](./expression/plots/star_imgt_vs_pri_PCA.png)
+<img src="./expression/plots/star_imgt_vs_pri_PCA.png" width="2000" />
 
 #### kallisto
 
-![](./expression/plots/kallisto_imgt_vs_pri_PCA.png)
+<img src="./expression/plots/kallisto_imgt_vs_pri_PCA.png" width="2000" />
 
 Distribution of TPM values
 --------------------------
 
-![](./expression/plots/tpm_distributions.png)
+<img src="./expression/plots/tpm_distributions.png" width="2000" />
 
 ASE
 ---
@@ -61,28 +61,28 @@ ASE
 
 \*Each point represents a heterozygous genotype in the intersect with Gourraud data.
 
-![](./expression/plots/ase.png)
+<img src="./expression/plots/ase.png" width="1600" />
 
 ### ASE distribution
 
-![](./expression/plots/ase_histogram.png)
+<img src="./expression/plots/ase_histogram.png" width="1600" />
 
 Correlation of expression
 -------------------------
 
-![](./expression/plots/correlation_decrease.png)
+<img src="./expression/plots/correlation_decrease.png" width="2000" />
 
 ### Among the HLA genes
 
-![](./expression/plots/hlacorrelations.png)
+<img src="./expression/plots/hlacorrelations.png" width="1200" />
 
 ### Between Class II genes and CIITA
 
-![](./expression/plots/trans_activ_corrs.png)
+<img src="./expression/plots/trans_activ_corrs.png" width="2000" />
 
 ### Between pairs of HLA genes on the same vs on different haplotypes
 
-![](./expression/plots/within_vs_between_haps.png)
+<img src="./expression/plots/within_vs_between_haps.png" width="1600" />
 
 eQTLs
 =====
@@ -90,31 +90,31 @@ eQTLs
 PCA of genotypes
 ----------------
 
-![](./qtls/plots/genotype_pca.png)
+<img src="./qtls/plots/genotype_pca.png" width="3000" />
 
 Number of eGenes according to index
 -----------------------------------
 
-![](./qtls/plots/n_of_egenes.png)
+<img src="./qtls/plots/n_of_egenes.png" width="1800" />
 
 Distribution of eQTLs around the TSS
 ------------------------------------
 
 ### IMGT index
 
-![](./qtls/plots/qtls_landscape_imgt.png)
+<img src="./qtls/plots/qtls_landscape_imgt.png" width="2400" />
 
 ### Reference transcriptome
 
 ### Spread of rank 0 eQTLs around the gene starts
 
-![](./qtls/plots/qtls_density_geneStart.png)
+<img src="./qtls/plots/qtls_density_geneStart.png" width="1500" />
 
 ### Location of HLA genes and CRDs
 
 *CRDs are defined in <http://dx.doi.org/10.1101/171694*> *Coordinates are in hg19\*
 
-![](./qtls/plots/crd.png)
+<img src="./qtls/plots/crd.png" width="2400" />
 
 RTC between IMGT and Ref Transcriptome eQTLs
 --------------------------------------------
@@ -525,7 +525,7 @@ Association with GWAS traits
 HLA lineages
 ------------
 
-![](./qtls/plots/lineage_and_effects.png)
+<img src="./qtls/plots/lineage_and_effects.png" width="3600" />
 
 ### F-test: is there a difference between lineages?
 
