@@ -24,7 +24,7 @@ Expression estimates
 kallisto vs STAR-Salmon
 -----------------------
 
-<img src="./expression/plots/star_vs_kallisto_TPM.png" style="width:30.0%" /> <img src="./expression/plots/star_vs_kallisto_PCA.png" style="width:30.0%" />
+<img src="./expression/plots/star_vs_kallisto_TPM.png" style="width:10.0%" /> <img src="./expression/plots/star_vs_kallisto_PCA.png" style="width:10.0%" />
 
 HLA diversity vs reference transcriptome
 ----------------------------------------
