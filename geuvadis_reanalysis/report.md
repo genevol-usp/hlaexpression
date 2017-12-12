@@ -26,7 +26,7 @@ kallisto vs STAR-Salmon
 
 ### TPM
 
-<img src="./expression/plots/star_vs_kallisto_TPM.png" width=".4\linewidth" style="display: block; margin: auto;" /><img src="./expression/plots/star_vs_kallisto_PCA.png" width=".4\linewidth" style="display: block; margin: auto;" />
+<img src="./expression/plots/star_vs_kallisto_TPM.png" style="width:40.0%" /> <img src="./expression/plots/star_vs_kallisto_PCA.png" style="width:40.0%" />
 
 HLA diversity vs reference transcriptome
 ----------------------------------------
