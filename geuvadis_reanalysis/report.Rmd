@@ -41,13 +41,13 @@ left_join(star_typing, kallisto_typing, by = "locus") %>%
 
 # Expression estimates
 
-```{r, out.width='\\textwidth'}
+```{r}
 include_graphics("./expression/plots/expression_boxplot.png")
 ```
 
 ## kallisto vs STAR-Salmon
 
-```{r}
+```{r, out.width='\\textwidth'}
 comb2pngs(c("./expression/plots/star_vs_kallisto_TPM.png", "./expression/plots/star_vs_kallisto_PCA.png"))
 ```
 

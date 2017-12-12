@@ -19,12 +19,12 @@ Typing accuracies
 Expression estimates
 ====================
 
-<img src="./expression/plots/expression_boxplot.png" width="\textwidth" />
+<img src="./expression/plots/expression_boxplot.png" width="1600" />
 
 kallisto vs STAR-Salmon
 -----------------------
 
-![](report_files/figure-markdown_github/unnamed-chunk-3-1.png)
+<img src="report_files/figure-markdown_github/unnamed-chunk-3-1.png" width="\textwidth" />
 
 HLA diversity vs reference transcriptome
 ----------------------------------------
