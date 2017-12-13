@@ -5,7 +5,7 @@
 #PBS -l walltime=36:00:00
 #PBS -q long
 #PBS -j oe
-#PBS -o /home/vitor/hlaexpression/geuvadis_reanalysis/qtls/qtls_star/imgt/trans/log/$PBS_JOBID.log
+#PBS -o /home/vitor/hlaexpression/geuvadis_reanalysis/qtls/star/imgt/trans/log/$PBS_JOBID.log
 
 cd $PBS_O_WORKDIR
 
