@@ -1,10 +1,10 @@
 #!/bin/bash
 
 #PBS -l nodes=1:ppn=1
-#PBS -l mem=2gb
+#PBS -l mem=4gb
 #PBS -l walltime=24:00:00
 #PBS -q short
-#PBS -t 1-115
+#PBS -t 1-1000
 #PBS -j oe
 #PBS /home/vitor/hlaexpression/geuvadis_reanalysis/qtls/star/imgt/caveman/log/$PBS_JOBID.log
 
@@ -16,5 +16,5 @@ caveman=/home/vitor/CaVEMaN
 BED=./phenotypes_corrected.bed
 VCF=/home/vitor/hlaexpression/geuvadis_reanalysis/qtls/genotypes/eur_maf05.vcf.gz
 
-$caveman --bed $BED --vcf $VCF --genes 96 --job-number $PBS_ARRAYID \
-    --out results$PBS_ARRAYID
+$caveman --bed $BED --vcf $VCF --genes 6 --job-number $PBS_ARRAYID \
+    --out results$PBS_ARRAYID --verbose
