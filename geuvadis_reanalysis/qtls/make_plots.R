@@ -87,8 +87,9 @@ read_conditional_hla <- function(path, hla_tss) {
         inner_join(hla_tss, by = c("phen_id" = "gene_id")) %>%
         mutate(dist_tss = ifelse(strand == "+", var_from - tss, tss - var_from),
                nom_pval = -log10(bwd_pval)) %>%
-        select(phen_id = gene_name, rank, var_id, var_from, dist_tss, nom_pval, 
-               slope = bwd_slope, best = bwd_best, signif = bwd_signif) %>%
+        select(phen_id = gene_name, rank, var_id, var_from, dist, dist_tss, 
+	       nom_pval, slope = bwd_slope, best = bwd_best, 
+	       signif = bwd_signif) %>%
         group_by(phen_id, var_id, best) %>%
         filter(rank == min(rank)) %>%
         ungroup() %>%
@@ -139,13 +140,6 @@ plot_qtls <- function(conditional_df) {
     guides(color = guide_legend(override.aes = list(alpha = 1, size = 3)))
 }
 
-read_conditional_rank0 <- function(path) {
-    read_qtltools(path) %>%
-        filter(rank == 0L, bwd_signif == 1L) %>%
-        mutate(dist_start = ifelse(strand == "+", var_from - phen_from, phen_to - var_from)) %>%
-        select(phen_id, var_id, dist, dist_start, bwd_best)
-}
-
 start_pos <- "~/gencode_data/gencode.v25.annotation.gtf.gz" %>%
     get_gencode_coords(feature = "start_codon") %>%
     filter(gene_name %in% hla_genes) %>%
@@ -156,9 +150,15 @@ conditional_star_imgt <-
     "./star/imgt/3-conditional_analysis/conditional_60_all.txt.gz" %>%
     read_conditional_hla(start_pos)
 
+#"./star/imgt/3-conditional_analysis/conditional_60_all.txt.gz" %>%
+#    read_qtltools() %>%
+#    filter(phen_id == gencode_hla$gene_id[gencode_hla$gene_name == "HLA-C"],
+#	   rank == 0) %>%
+#    filter(bwd_pval == min(bwd_pval))
+
 conditional_star_imgt %>%
     filter(best == 1L) %>%
-    select(phen_id, rank, var_id, var_from, dist_tss, slope, nom_pval) %>%
+    select(phen_id, rank, var_id, var_from, dist, dist_tss, slope, nom_pval) %>%
     write_tsv("./plots/eqtl.tsv")
 
 conditional_star_pri <-
@@ -173,24 +173,26 @@ png("./plots/qtls_landscape_pri.png", height = 10, width = 8, units = "in", res 
 plot_qtls(conditional_star_pri)
 dev.off()
 
-all_rank0 <- "./star/imgt/3-conditional_analysis/conditional_60_all.txt.gz" %>%
-    read_conditional_rank0() %>%
-    mutate(genome_context = ifelse(phen_id %in% gencode_hla$gene_id, "HLA", "genomewide"))
+all_rank0 <- 
+    "./star/imgt/3-conditional_analysis/conditional_60_all.txt.gz" %>%
+    read_qtltools() %>%
+    filter(bwd_signif == 1L) %>%
+    mutate(genome_context = ifelse(phen_id %in% gencode_hla$gene_id, "HLA", "genomewide")) %>%
+    select(genome_context, dist, bwd_best)
 
 png("./plots/qtls_density_geneStart.png", height = 3, width = 5, units = "in", res = 300)
 ggplot(all_rank0) +
     coord_cartesian(xlim = c(-1e6, 1e6)) +
-    geom_density(aes(x = dist_start, fill = genome_context), alpha = 1/2) +
+    geom_density(aes(x = dist, fill = genome_context), alpha = 1/2) +
     scale_fill_manual(values = c("genomewide" = "#8491B4B2", "HLA" = "#DC0000B2")) +
     theme_bw() +
     labs(x = "Gene start", fill = "Genome context")
 dev.off()
 
-# proportion of lead eQTLs further than 220kb
-#all_rank0 %>% 
-#    filter(bwd_best == 1L) %>%
-#    mutate(i = as.integer(dist > 220000 | dist < -220000)) %>% 
-#    summarise(mean(i))
+# proportion of lead eQTLs further than the HLA-B lead eQTL
+all_rank0 %>% 
+    filter(bwd_best == 1L) %>%
+    summarize(mean(abs(dist) >= 214757))
 
 
 ## CRD
