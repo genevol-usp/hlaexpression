@@ -108,11 +108,7 @@ Number of eGenes according to index
 Distribution of eQTLs around the TSS
 ------------------------------------
 
-### IMGT index
-
-<img src="./qtls/plots/qtls_landscape_imgt.png" width="2400" />
-
-### Reference transcriptome
+<img src="./qtls/plots/qtls_landscape.png" width="3600" />
 
 ### Spread of rank 0 eQTLs around the gene starts
 

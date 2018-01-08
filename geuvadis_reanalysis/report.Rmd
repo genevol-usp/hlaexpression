@@ -150,17 +150,11 @@ include_graphics("./qtls/plots/n_of_egenes.png")
 
 ## Distribution of eQTLs around the TSS
 
-### IMGT index
 
 ```{r}
-include_graphics("./qtls/plots/qtls_landscape_imgt.png")
+include_graphics("./qtls/plots/qtls_landscape.png")
 ```
 
-### Reference transcriptome
-
-```{r eval=FALSE}
-include_graphics("./qtls/plots/qtls_landscape_pri.png")
-```
 
 ### Spread of rank 0 eQTLs around the gene starts
 
