@@ -115,22 +115,22 @@ Investigating bias
 
 <img src="./investigate_bias/plots/expression_by_refallele.png" width="2000" />
 
-| index             | gene     |  expression~distance|  distance~genotype|  expression~distance|genotype|
-|:------------------|:---------|--------------------:|------------------:|-----------------------------:|
-| HLA\_personalized | HLA-A    |                 0.41|               0.75|                         -0.09|
-| Reference         | HLA-A    |                 0.32|              -0.11|                          0.32|
-| HLA\_personalized | HLA-B    |                 0.21|               0.37|                          0.05|
-| Reference         | HLA-B    |                -0.03|               0.03|                         -0.05|
-| HLA\_personalized | HLA-C    |                 0.15|               0.34|                         -0.09|
-| Reference         | HLA-C    |                 0.14|               0.34|                         -0.11|
-| HLA\_personalized | HLA-DPB1 |                 0.62|               0.94|                          0.14|
-| Reference         | HLA-DPB1 |                 0.59|               0.94|                          0.08|
-| HLA\_personalized | HLA-DQA1 |                 0.59|               0.66|                          0.32|
-| Reference         | HLA-DQA1 |                -0.57|               0.62|                         -0.34|
-| HLA\_personalized | HLA-DQB1 |                -0.39|               0.65|                         -0.02|
-| Reference         | HLA-DQB1 |                -0.46|               0.37|                         -0.40|
-| HLA\_personalized | HLA-DRB1 |                 0.58|               0.76|                          0.22|
-| Reference         | HLA-DRB1 |                 0.26|               0.30|                          0.09|
+| index             | gene     |  expression~divergence|  divergence~genotype|  expression~divergence\_genotype|
+|:------------------|:---------|----------------------:|--------------------:|--------------------------------:|
+| HLA\_personalized | HLA-A    |                   0.41|                 0.75|                            -0.09|
+| Reference         | HLA-A    |                   0.32|                -0.11|                             0.32|
+| HLA\_personalized | HLA-B    |                   0.21|                 0.37|                             0.05|
+| Reference         | HLA-B    |                  -0.03|                 0.03|                            -0.05|
+| HLA\_personalized | HLA-C    |                   0.15|                 0.34|                            -0.09|
+| Reference         | HLA-C    |                   0.14|                 0.34|                            -0.11|
+| HLA\_personalized | HLA-DPB1 |                   0.62|                 0.94|                             0.14|
+| Reference         | HLA-DPB1 |                   0.59|                 0.94|                             0.08|
+| HLA\_personalized | HLA-DQA1 |                   0.59|                 0.66|                             0.32|
+| Reference         | HLA-DQA1 |                  -0.57|                 0.62|                            -0.34|
+| HLA\_personalized | HLA-DQB1 |                  -0.39|                 0.65|                            -0.02|
+| Reference         | HLA-DQB1 |                  -0.46|                 0.37|                            -0.40|
+| HLA\_personalized | HLA-DRB1 |                   0.58|                 0.76|                             0.22|
+| Reference         | HLA-DRB1 |                   0.26|                 0.30|                             0.09|
 
 ### Spread of rank 0 eQTLs around the gene starts
 

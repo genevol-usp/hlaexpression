@@ -68,9 +68,9 @@ cor_df <-
 			  partial_r = ppcor::pcor(.)$estimate["resid", "dist"])) %>%
     bind_rows(.id = "id") %>%
     separate(id, c("index", "gene"), sep = "\\.") %>%
-    rename("expression~distance" = r, 
-	   "distance~genotype" = r2,
-	   "expression~distance|genotype" = partial_r)
+    rename("expression~divergence" = r, 
+	   "divergence~genotype" = r2,
+	   "expression~divergence_genotype" = partial_r)
 
 write_tsv(df, "./integrated_data.tsv")
 write_tsv(cor_df, "./correlations.tsv")
