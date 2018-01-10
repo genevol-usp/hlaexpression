@@ -6,7 +6,7 @@
 #PBS -q short
 #PBS -t 1-1000
 #PBS -j oe
-#PBS /home/vitor/hlaexpression/geuvadis_reanalysis/qtls/star/imgt/caveman/log/$PBS_JOBID.log
+#PBS /home/vitor/hlaexpression/geuvadis_reanalysis/qtls/star/pri/caveman/log/$PBS_JOBID.log
 
 cd $PBS_O_WORKDIR
 

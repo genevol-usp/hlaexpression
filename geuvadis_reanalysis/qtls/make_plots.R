@@ -99,7 +99,7 @@ read_conditional_hla <- function(path, hla_tss) {
 plot_qtls <- function(conditional_df) {
 
   ggplot(conditional_df) +
-    geom_vline(xintercept = 0, color = "grey25", size = 2) + 
+    geom_vline(xintercept = 0, color = "grey45", size = 2) + 
     geom_point(data = filter(conditional_df, signif == 0), 
 	       aes(dist_tss, nom_pval),
 	       color = "grey", alpha = .1, show.legend = FALSE) +
@@ -116,6 +116,8 @@ plot_qtls <- function(conditional_df) {
     geom_point(data = filter(conditional_df, best == 1L), 
                aes(dist_tss, nom_pval), 
                shape = 1, size = 2.5, color = "black", stroke = 1) +
+    ggrepel::geom_text_repel(data = filter(conditional_df, best == 1L),
+                             aes(dist_tss, nom_pval, label = Probability)) +
     coord_cartesian(xlim = c(-1e6, +1e6)) +
     scale_color_manual(values = c("0" = "#8491B4B2",
                                   "1" = "#DC0000B2",
@@ -129,7 +131,7 @@ plot_qtls <- function(conditional_df) {
           axis.text = element_text(size = 10),
           legend.title = element_text(size = 12),
           legend.text = element_text(size = 10)) +
-    facet_wrap(~phen_id, scales = "free_y", ncol = 1) +
+    facet_grid(phen_id~index, scales = "free_y") +
     geom_blank(data = conditional_df %>% 
                    group_by(phen_id) %>%
                    slice(which.max(nom_pval)) %>% 
@@ -145,6 +147,10 @@ start_pos <- "~/gencode_data/gencode.v25.annotation.gtf.gz" %>%
     filter(gene_name %in% hla_genes) %>%
     mutate(tss = ifelse(strand == "+", start, end)) %>%
     select(gene_id, gene_name, tss)
+
+caveman_scores <- read_tsv("./star/imgt/caveman/results.hla") %>%
+    select(index, gene_name, rank, var_id, Probability) %>%
+    mutate(rank = as.character(rank), Probability = round(Probability, digits = 2))
 
 conditional_star_imgt <-
     "./star/imgt/3-conditional_analysis/conditional_60_all.txt.gz" %>%
@@ -172,6 +178,19 @@ dev.off()
 png("./plots/qtls_landscape_pri.png", height = 10, width = 8, units = "in", res = 300)
 plot_qtls(conditional_star_pri)
 dev.off()
+
+conditional_df <- 
+    list("HLA_personalized" = conditional_star_imgt,
+         "Reference" = conditional_star_pri) %>%
+    bind_rows(.id = "index") %>%
+    left_join(caveman_scores, 
+              by = c("index", "phen_id" = "gene_name", "rank", "var_id")) %>%
+    mutate(rank = factor(rank))
+
+png("./plots/qtls_landscape.png", height = 10, width = 12, units = "in", res = 300)
+plot_qtls(conditional_df)
+dev.off()
+
 
 all_rank0 <- 
     "./star/imgt/3-conditional_analysis/conditional_60_all.txt.gz" %>%
@@ -255,6 +274,10 @@ concordant <-
         read_tsv("../expression/star/phase_hla_alleles/data/concordant_haps_classII.tsv") %>%
             gather(locus, allele, DPB1:DRB1)) %>%
     arrange(subject, locus, hap)
+
+dist_to_ref <- "../../simulation/PEreads_75bp/data/distances_to_reference.tsv" %>%
+    read_tsv() %>%
+    select(-locus)
     
 haps_expression <-
     "../expression/star/phase_hla_alleles/data/1000G_haps_expression_snps.tsv" %>%
@@ -288,8 +311,9 @@ lineage_df <- haps_expression %>%
     left_join(concordant, by = c("subject", "locus", "hap")) %>%
     mutate(eQTL = ifelse(is.na(allele), NA_character_, eQTL)) %>%
     select(subject, locus, hla_allele, eQTL, tpm) %>%
+    left_join(dist_to_ref, by = c("hla_allele" = "allele")) %>%
     mutate(hla_allele = hla_trimnames(hla_allele, 1),
-           eQTL = factor(eQTL, levels = c("High", "Low")))
+           eQTL = factor(eQTL, levels = c("Low", "High")))
 
 lineage_exp <- haps_expression %>%
     mutate(lineage = hla_trimnames(hla_allele, 1)) %>%
@@ -319,8 +343,8 @@ best_eqtl_locus <-
     filter(rank == 0) %>%
     select(locus = phen_id, variant = var_id)
 
-eqtl_info <- 
-    read_tsv("../expression/star/phase_hla_alleles/best_eqtl_snps.vcf", comment = "##") %>%
+eqtl_info <- "../expression/star/phase_hla_alleles/best_eqtl_snps.vcf" %>%
+    read_tsv(comment = "##") %>%
     select(-`#CHROM`, -POS, -QUAL, -FILTER, -INFO, -FORMAT) %>%
     gather(subject, genotype, -(ID:ALT)) %>%
     inner_join(best_eqtl_locus, by = c("ID" = "variant")) %>%
@@ -386,3 +410,17 @@ ggdraw(grid1) +
     draw_label("PCA-corrected expression", .985, 0.5, size = 16, angle = 90)
 dev.off()
 
+
+# mapping bias
+
+#png("./plots/regulation_by_divergence.png", width = 10, height = 5, units = "in", res = 200)
+#lineage_df %>%
+#    filter(!is.na(eQTL)) %>%
+#    ggplot() +
+#    geom_boxplot(aes(eQTL, dist, color = eQTL), fill = NA) +
+#    scale_color_manual(values = c("Low" = "#8491B4", "High" = "#DC0000")) +
+#    facet_wrap(~locus) +
+#    theme_bw() +
+#    labs(x = "", y = "divergence to reference (%)")
+#dev.off()
+#

@@ -4,14 +4,11 @@
 #PBS -l mem=4gb
 #PBS -l walltime=24:00:00
 #PBS -q short
-#PBS -t 1-1000
+#PBS -t 1001-1839
 #PBS -j oe
-#PBS /home/vitor/hlaexpression/geuvadis_reanalysis/qtls/star/imgt/caveman/log/$PBS_JOBID.log
+#PBS /home/vitor/hlaexpression/geuvadis_reanalysis/qtls/star/pri/caveman/log/$PBS_JOBID.log
 
 cd $PBS_O_WORKDIR
-
-mkdir -p ./log
-mkdir -p ./results
 
 caveman=/home/vitor/CaVEMaN
 BED=./phenotypes_corrected.bed

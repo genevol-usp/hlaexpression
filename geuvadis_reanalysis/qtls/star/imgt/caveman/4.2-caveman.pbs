@@ -10,11 +10,9 @@
 
 cd $PBS_O_WORKDIR
 
-mkdir -p ./log
-
 caveman=/home/vitor/CaVEMaN
 BED=./phenotypes_corrected.bed
 VCF=/home/vitor/hlaexpression/geuvadis_reanalysis/qtls/genotypes/eur_maf05.vcf.gz
 
 $caveman --bed $BED --vcf $VCF --genes 6 --job-number $PBS_ARRAYID \
-    --out results$PBS_ARRAYID --verbose
+    --out results/results$PBS_ARRAYID --verbose
