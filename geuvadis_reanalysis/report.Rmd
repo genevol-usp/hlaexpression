@@ -150,9 +150,19 @@ include_graphics("./qtls/plots/n_of_egenes.png")
 
 ## Distribution of eQTLs around the TSS
 
-
 ```{r}
 include_graphics("./qtls/plots/qtls_landscape.png")
+```
+
+## Investigating bias
+
+```{r}
+include_graphics("./investigate_bias/plots/expression_by_refallele.png")
+```
+
+```{r}
+read_tsv("./investigate_bias/correlations.tsv") %>%
+    kable(digits = 2)
 ```
 
 
