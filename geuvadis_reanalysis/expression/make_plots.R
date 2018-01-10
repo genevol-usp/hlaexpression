@@ -311,11 +311,11 @@ ggplot(ase_df, aes(locus, ase)) +
           strip.text = element_text(size = 16))
 dev.off()
 
-png("./plots/ase_genot_errors.png", width = 8, height = 5, units = "in", res = 200)
+png("./plots/ase_genot_errors.png", width = 8, height = 4, units = "in", res = 200)
 ggplot(ase_error, aes(locus, ase, color = factor(error))) +
-    ggbeeswarm::geom_quasirandom(varwidth = TRUE, size = 1, alpha = 1/2) +
+    ggbeeswarm::geom_quasirandom(varwidth = TRUE, size = 1.5, alpha = 1/2) +
     coord_cartesian(ylim = c(0, 0.5)) +
-    ggthemes::scale_color_colorblind() +
+    scale_color_manual(values = c("0" = "grey", "1" = "blue", "2" = "red")) +
     labs(x = "", color = "genotyping errors") +
     theme_bw() +
     theme(axis.text.x = element_text(size = 12),
