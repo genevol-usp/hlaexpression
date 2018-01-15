@@ -160,6 +160,20 @@ diff_refs_alignment <-
     filter(perc > 0) %>%
     mutate_at(vars(gene_read, gene_ref), factor)
 
+diff_refs_alignment_pri <- 
+    file.path("./PEreads_75bp/expression/star/mappings_PRI", 
+              unique(quant_data$subject), "diff_refs_hla.tsv") %>%
+    setNames(unique(quant_data$subject)) %>%
+    plyr::ldply(read_tsv, .id = "subject") %>%
+    select(-n) %>%
+    complete(subject, gene_read, gene_ref, fill = list(perc = 0)) %>%
+    filter(gene_read != gene_ref) %>%
+    group_by(gene_read, gene_ref) %>%
+    summarize(perc = mean(perc)) %>%
+    ungroup() %>%
+    filter(perc > 0) %>%
+    mutate_at(vars(gene_read, gene_ref), factor)
+
 
 # Plots
 png("./plots/kallisto_prop_mapped.png", width = 6, height = 4, units = "in", res = 200)
@@ -216,6 +230,13 @@ dev.off()
 
 png("./plots/diff_refs_alignments.png", width = 10, height = 6, units = "in", res = 200)
 ggplot(diff_refs_alignment, aes(gene_read, gene_ref)) +
+    geom_point(aes(size = perc)) +
+    theme_bw() +
+    labs(x = "gene from", y = "gene to", size = "average percentage")
+dev.off()
+
+png("./plots/diff_refs_alignments_pri.png", width = 10, height = 6, units = "in", res = 200)
+ggplot(diff_refs_alignment_pri, aes(gene_read, gene_ref)) +
     geom_point(aes(size = perc)) +
     theme_bw() +
     labs(x = "gene from", y = "gene to", size = "average percentage")
