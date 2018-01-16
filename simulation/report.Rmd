@@ -90,30 +90,16 @@ kable(digits = 2)
 
 ## Percentage of aligned reads which map to a different gene:
 
-### HLA-suplemented Index
 
 ```{r}
-include_graphics("./plots/reads_lost_imgt.png")
+include_graphics("./plots/reads_lost.png")
 ```
 
-### Reference transcriptome Index
-
-```{r}
-include_graphics("./plots/reads_lost_pri.png")
-```
 
 # Percentage of aligned reads gained by each HLA gene from other gene
 
-### HLA-suplemented Index
-
 ```{r}
-include_graphics("./plots/reads_gained_imgt.png")
-```
-
-### Reference transcriptome Index
-
-```{r}
-include_graphics("./plots/reads_gained_pri.png")
+include_graphics("./plots/reads_gained.png")
 ```
 
 

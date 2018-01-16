@@ -71,24 +71,12 @@ Percentage of simulated reads not aligned:
 Percentage of aligned reads which map to a different gene:
 ----------------------------------------------------------
 
-### HLA-suplemented Index
-
-<img src="./plots/reads_lost_imgt.png" width="2000" />
-
-### Reference transcriptome Index
-
-<img src="./plots/reads_lost_pri.png" width="2000" />
+<img src="./plots/reads_lost.png" width="2400" />
 
 Percentage of aligned reads gained by each HLA gene from other gene
 ===================================================================
 
-### HLA-suplemented Index
-
-<img src="./plots/reads_gained_imgt.png" width="2000" />
-
-### Reference transcriptome Index
-
-<img src="./plots/reads_gained_pri.png" width="2000" />
+<img src="./plots/reads_gained.png" width="2400" />
 
 Comparisons between indices and aligners
 ========================================
