@@ -26,7 +26,7 @@ Index nomenclature:
 ## Genotyping
 
 ```{r}
-read_tsv("./expression/kallisto/genotyping_accuracies_1.tsv") %>%
+read_tsv("./PEreads_75bp/expression/kallisto/genotyping_accuracies_1.tsv") %>%
   filter(th == .05) %>%
   mutate(accuracy = accuracy * 100) %>%
   select(locus, `accuracy (%)` = accuracy) %>%
@@ -44,7 +44,7 @@ include_graphics('./plots/kallisto_prop_mapped.png')
 ## Genotyping
 
 ```{r}
-read_tsv("./expression/star/genotyping_accuracies_1.tsv") %>%
+read_tsv("./PEreads_75bp/expression/star/genotyping_accuracies_1.tsv") %>%
   filter(th == .05) %>%
   mutate(accuracy = accuracy * 100) %>%
   select(locus, `accuracy (%)` = accuracy) %>%
@@ -59,37 +59,63 @@ include_graphics("./plots/star_prop_mapped.png")
 
 # Quality assessment 
 
-Percentage of simulated reads not aligned:
+## Percentage of simulated reads not aligned:
 
 ```{r}
-read_tsv("./expression/reads_not_aligned_hla.tsv") %>% kable(digits = 2)
+
+sample_ids <- sprintf("sample_%02d", 1:50)
+
+reads_not_aligned_imgt <- 
+    file.path("./PEreads_75bp/expression/star/mappings_2",
+	      sample_ids, "reads_not_aligned_hla.tsv") %>%
+    setNames(sample_ids) %>%
+    map_df(read_tsv, .id = "subject") %>%
+    group_by(gene_from) %>%
+    summarize(perc = mean(perc)) %>%
+    ungroup()
+
+reads_not_aligned_pri <- 
+    file.path("./PEreads_75bp/expression/star/mappings_PRI",
+	      sample_ids, "reads_not_aligned_hla.tsv") %>%
+    setNames(sample_ids) %>%
+    map_df(read_tsv, .id = "subject") %>%
+    group_by(gene_from) %>%
+    summarize(perc = mean(perc)) %>%
+    ungroup()
+
+left_join(reads_not_aligned_imgt, reads_not_aligned_pri, by = "gene_from",
+	  suffix = c(".imgt", ".pri")) %>% 
+kable(digits = 2)
 ```
 
-Percentage of simulated reads from each HLA gene that aligned to a different
-reference:
+## Percentage of aligned reads which map to a different gene:
+
+### HLA-suplemented Index
 
 ```{r}
-read_tsv("./expression/reads_false_neg_hla.tsv") %>% kable(digits = 2)
+include_graphics("./plots/reads_lost_imgt.png")
 ```
 
-The plot below shows where the reads simulated from a HLA gene (x-axis) are
-mapped when they aligned to a different reference.
-
-The dot diameters represent the average percentage of mappings across all 
-individuals.
-
+### Reference transcriptome Index
 
 ```{r}
-include_graphics("./plots/diff_refs_alignments.png")
+include_graphics("./plots/reads_lost_pri.png")
 ```
 
+# Percentage of aligned reads gained by each HLA gene from other gene
 
-Percentage of simulated reads gained by each HLA gene (reads simulated from
-other references)
+### HLA-suplemented Index
 
 ```{r}
-read_tsv("./expression/reads_false_pos_hla.tsv") %>% kable(digits = 2)
+include_graphics("./plots/reads_gained_imgt.png")
 ```
+
+### Reference transcriptome Index
+
+```{r}
+include_graphics("./plots/reads_gained_pri.png")
+```
+
 
 # Comparisons between indices and aligners
 

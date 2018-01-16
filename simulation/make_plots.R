@@ -70,8 +70,7 @@ hla_genes <- sort(gencode_hla$gene_name)
 
 index <- Biostrings::readDNAStringSet("./PEreads_75bp/data/polyester_index.fa")
 
-ground_truth <- 
-    read_tsv("./PEreads_75bp/data/phenotypes.tsv") %>%
+ground_truth <- read_tsv("./PEreads_75bp/data/phenotypes.tsv") %>%
     mutate(target_id = names(index)) %>%
     filter(grepl("IMGT_(A|B|C|DPB1|DQA1|DQB1|DRB1)", target_id)) %>%
     gather(subject, true_counts, -target_id) %>%
@@ -126,8 +125,7 @@ quant_data <-
     left_join(star_pri_10pc, by = c("subject", "locus")) %>%
     rename(resid.star.pri = resid)
 
-counts_kallisto <-
-    quant_data %>%
+counts_kallisto <- quant_data %>%
     select(subject, locus, dist.kallisto.imgt, starts_with("est_counts.kallisto")) %>%
     gather(index, counts, -(1:3)) %>%
     left_join(ground_truth, by = c("subject", "locus")) %>%
@@ -136,8 +134,7 @@ counts_kallisto <-
            prop_mapped = counts/true_counts) %>%
     rename(dist = dist.kallisto.imgt)
 
-counts_star <-
-    quant_data %>%
+counts_star <- quant_data %>%
     select(subject, locus, dist.star.imgt, starts_with("est_counts.star")) %>%
     gather(index, counts, -(1:3)) %>%
     left_join(ground_truth, by = c("subject", "locus")) %>%
@@ -146,34 +143,51 @@ counts_star <-
            prop_mapped = counts/true_counts) %>%
     rename(dist = dist.star.imgt)
 
-diff_refs_alignment <- 
+sample_ids <- sprintf("sample_%02d", 1:50)
+
+reads_lost_imgt_df <- 
     file.path("./PEreads_75bp/expression/star/mappings_2", 
-              unique(quant_data$subject), "diff_refs_hla.tsv") %>%
-    setNames(unique(quant_data$subject)) %>%
-    plyr::ldply(read_tsv, .id = "subject") %>%
-    select(-n) %>%
-    complete(subject, gene_read, gene_ref, fill = list(perc = 0)) %>%
-    filter(gene_read != gene_ref) %>%
-    group_by(gene_read, gene_ref) %>%
+              sample_ids, "reads_lost_to_other_genes_hla.tsv") %>%
+    setNames(sample_ids) %>%
+    map_df(read_tsv, .id = "subject") %>%
+    complete(gene_from, gene_to, fill = list(perc = 0)) %>%
+    filter(gene_from != gene_to) %>%
+    group_by(gene_from, gene_to) %>%
     summarize(perc = mean(perc)) %>%
-    ungroup() %>%
-    filter(perc > 0) %>%
-    mutate_at(vars(gene_read, gene_ref), factor)
+    ungroup()
 
-diff_refs_alignment_pri <- 
+reads_gained_imgt_df <- 
+    file.path("./PEreads_75bp/expression/star/mappings_2", 
+              sample_ids, "reads_gained_from_other_genes_hla.tsv") %>%
+    setNames(sample_ids) %>%
+    map_df(read_tsv, .id = "subject") %>%
+    complete(gene_to, gene_from, fill = list(perc = 0)) %>%
+    filter(gene_from != gene_to) %>%
+    group_by(gene_to, gene_from) %>%
+    summarize(perc = mean(perc)) %>%
+    ungroup()
+
+reads_lost_pri_df <- 
     file.path("./PEreads_75bp/expression/star/mappings_PRI", 
-              unique(quant_data$subject), "diff_refs_hla.tsv") %>%
-    setNames(unique(quant_data$subject)) %>%
-    plyr::ldply(read_tsv, .id = "subject") %>%
-    select(-n) %>%
-    complete(subject, gene_read, gene_ref, fill = list(perc = 0)) %>%
-    filter(gene_read != gene_ref) %>%
-    group_by(gene_read, gene_ref) %>%
+              sample_ids, "reads_lost_to_other_genes_hla.tsv") %>%
+    setNames(sample_ids) %>%
+    map_df(read_tsv, .id = "subject") %>%
+    complete(gene_from, gene_to, fill = list(perc = 0)) %>%
+    filter(gene_from != gene_to) %>%
+    group_by(gene_from, gene_to) %>%
     summarize(perc = mean(perc)) %>%
-    ungroup() %>%
-    filter(perc > 0) %>%
-    mutate_at(vars(gene_read, gene_ref), factor)
+    ungroup()
 
+reads_gained_pri_df <- 
+    file.path("./PEreads_75bp/expression/star/mappings_PRI", 
+              sample_ids, "reads_gained_from_other_genes_hla.tsv") %>%
+    setNames(sample_ids) %>%
+    map_df(read_tsv, .id = "subject") %>%
+    complete(gene_to, gene_from, fill = list(perc = 0)) %>%
+    filter(gene_from != gene_to) %>%
+    group_by(gene_to, gene_from) %>%
+    summarize(perc = mean(perc)) %>%
+    ungroup()
 
 # Plots
 png("./plots/kallisto_prop_mapped.png", width = 6, height = 4, units = "in", res = 200)
@@ -228,38 +242,31 @@ scatter_plot(quant_data, "resid.star.imgt", "resid.star.pri") +
          y = "PCA-corrected TPM (STAR REF chromosomes)")
 dev.off()
 
-png("./plots/diff_refs_alignments.png", width = 10, height = 6, units = "in", res = 200)
-ggplot(diff_refs_alignment, aes(gene_read, gene_ref)) +
+png("./plots/reads_lost_imgt.png", width = 10, height = 6, units = "in", res = 200)
+ggplot(reads_lost_imgt_df, aes(gene_from, gene_to)) +
     geom_point(aes(size = perc)) +
     theme_bw() +
     labs(x = "gene from", y = "gene to", size = "average percentage")
 dev.off()
 
-png("./plots/diff_refs_alignments_pri.png", width = 10, height = 6, units = "in", res = 200)
-ggplot(diff_refs_alignment_pri, aes(gene_read, gene_ref)) +
+png("./plots/reads_gained_imgt.png", width = 10, height = 6, units = "in", res = 200)
+ggplot(reads_gained_imgt_df, aes(gene_to, gene_from)) +
+    geom_point(aes(size = perc)) +
+    theme_bw() +
+    labs(x = "gene to", y = "gene from", size = "average percentage")
+dev.off()
+
+png("./plots/reads_lost_pri.png", width = 10, height = 6, units = "in", res = 200)
+ggplot(reads_lost_pri_df, aes(gene_from, gene_to)) +
     geom_point(aes(size = perc)) +
     theme_bw() +
     labs(x = "gene from", y = "gene to", size = "average percentage")
 dev.off()
 
-#png("./plots/hlacorrelations.png", width = 8, height = 8, units = "in", res = 200)
-#pairs_hla_k_imgt <- quant_data %>%
-#    select(subject, locus, tpm.star.imgt) %>%
-#    mutate(locus = sub("HLA-", "", locus)) %>%
-#    spread(locus, tpm.star.imgt) %>%
-#    select(-subject) %>%
-#    ggpairs(lower = list(continuous = plot_lower), upper = list()) + 
-#    theme_bw() +
-#    theme(title = element_text(size = 14))
+png("./plots/reads_gained_pri.png", width = 10, height = 6, units = "in", res = 200)
+ggplot(reads_gained_pri_df, aes(gene_to, gene_from)) +
+    geom_point(aes(size = perc)) +
+    theme_bw() +
+    labs(x = "gene to", y = "gene from", size = "average percentage")
+dev.off()
 
-#pairs_hla_k_pri <- quant_data %>%
-#    select(subject, locus, tpm.star.pri) %>%
-#    mutate(locus = sub("HLA-", "", locus)) %>%
-#    spread(locus, tpm.star.pri) %>%
-#    select(-subject) %>%
-#    ggpairs(lower = list(continuous = plot_lower), upper = list()) + 
-#    theme_bw() +
-#    theme(title = element_text(size = 14))
-
-#print(pairs_hla_k, left = .3, bottom = .3)
-#dev.off()
