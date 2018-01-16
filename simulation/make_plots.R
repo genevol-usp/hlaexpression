@@ -154,7 +154,9 @@ reads_lost_imgt_df <-
     filter(gene_from != gene_to) %>%
     group_by(gene_from, gene_to) %>%
     summarize(perc = mean(perc)) %>%
-    ungroup()
+    ungroup() %>%
+    filter(perc > 0) %>%
+    mutate_at(vars(gene_from, gene_to), factor)
 
 reads_gained_imgt_df <- 
     file.path("./PEreads_75bp/expression/star/mappings_2", 
@@ -165,7 +167,9 @@ reads_gained_imgt_df <-
     filter(gene_from != gene_to) %>%
     group_by(gene_to, gene_from) %>%
     summarize(perc = mean(perc)) %>%
-    ungroup()
+    ungroup() %>%
+    filter(perc > 0) %>%
+    mutate_at(vars(gene_to, gene_from), factor)
 
 reads_lost_pri_df <- 
     file.path("./PEreads_75bp/expression/star/mappings_PRI", 
@@ -176,7 +180,9 @@ reads_lost_pri_df <-
     filter(gene_from != gene_to) %>%
     group_by(gene_from, gene_to) %>%
     summarize(perc = mean(perc)) %>%
-    ungroup()
+    ungroup() %>%
+    filter(perc > 0) %>%
+    mutate_at(vars(gene_from, gene_to), factor)
 
 reads_gained_pri_df <- 
     file.path("./PEreads_75bp/expression/star/mappings_PRI", 
@@ -187,7 +193,9 @@ reads_gained_pri_df <-
     filter(gene_from != gene_to) %>%
     group_by(gene_to, gene_from) %>%
     summarize(perc = mean(perc)) %>%
-    ungroup()
+    ungroup() %>%
+    filter(perc > 0) %>%
+    mutate_at(vars(gene_to, gene_from), factor)
 
 # Plots
 png("./plots/kallisto_prop_mapped.png", width = 6, height = 4, units = "in", res = 200)
