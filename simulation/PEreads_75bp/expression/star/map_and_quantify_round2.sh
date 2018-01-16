@@ -21,10 +21,10 @@ $STAR --runThreadN 6 --runMode genomeGenerate --genomeDir $indexDIR\
 
 fq1=../../data/fastq/${sample}_1.fastq.gz
 fq2=../../data/fastq/${sample}_2.fastq.gz
-#outMap=./mappings_2
-#outQuant=./quantifications_2
-outMap=./mappings_2_biascorrection
-outQuant=./quantifications_2_biascorrection
+outMap=./mappings_2
+outQuant=./quantifications_2
+#outMap=./mappings_2_biascorrection
+#outQuant=./quantifications_2_biascorrection
 outPrefix=$outMap/${sample}_
 
 $STAR --runMode alignReads --runThreadN 6 --genomeDir $indexDIR\
