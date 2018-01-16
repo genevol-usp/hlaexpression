@@ -155,7 +155,24 @@ reads_lost_imgt_df <-
     group_by(gene_from, gene_to) %>%
     summarize(perc = mean(perc)) %>%
     ungroup() %>%
-    filter(perc > 0) %>%
+    filter(perc > 0)
+
+reads_lost_pri_df <- 
+    file.path("./PEreads_75bp/expression/star/mappings_PRI", 
+              sample_ids, "reads_lost_to_other_genes_hla.tsv") %>%
+    setNames(sample_ids) %>%
+    map_df(read_tsv, .id = "subject") %>%
+    complete(gene_from, gene_to, fill = list(perc = 0)) %>%
+    filter(gene_from != gene_to) %>%
+    group_by(gene_from, gene_to) %>%
+    summarize(perc = mean(perc)) %>%
+    ungroup() %>%
+    filter(perc > 0)
+
+reads_lost_df <- 
+    list("HLA-personalized" = reads_lost_imgt_df, 
+         "Reference transcriptome" = reads_lost_pri_df) %>%
+    bind_rows(.id = "index") %>%
     mutate_at(vars(gene_from, gene_to), factor)
 
 reads_gained_imgt_df <- 
@@ -168,21 +185,7 @@ reads_gained_imgt_df <-
     group_by(gene_to, gene_from) %>%
     summarize(perc = mean(perc)) %>%
     ungroup() %>%
-    filter(perc > 0) %>%
-    mutate_at(vars(gene_to, gene_from), factor)
-
-reads_lost_pri_df <- 
-    file.path("./PEreads_75bp/expression/star/mappings_PRI", 
-              sample_ids, "reads_lost_to_other_genes_hla.tsv") %>%
-    setNames(sample_ids) %>%
-    map_df(read_tsv, .id = "subject") %>%
-    complete(gene_from, gene_to, fill = list(perc = 0)) %>%
-    filter(gene_from != gene_to) %>%
-    group_by(gene_from, gene_to) %>%
-    summarize(perc = mean(perc)) %>%
-    ungroup() %>%
-    filter(perc > 0) %>%
-    mutate_at(vars(gene_from, gene_to), factor)
+    filter(perc > 0)
 
 reads_gained_pri_df <- 
     file.path("./PEreads_75bp/expression/star/mappings_PRI", 
@@ -194,7 +197,12 @@ reads_gained_pri_df <-
     group_by(gene_to, gene_from) %>%
     summarize(perc = mean(perc)) %>%
     ungroup() %>%
-    filter(perc > 0) %>%
+    filter(perc > 0) 
+
+reads_gained_df <- 
+    list("HLA-personalized" = reads_gained_imgt_df, 
+         "Reference transcriptome" = reads_gained_pri_df) %>%
+    bind_rows(.id = "index") %>%
     mutate_at(vars(gene_to, gene_from), factor)
 
 # Plots
@@ -250,31 +258,20 @@ scatter_plot(quant_data, "resid.star.imgt", "resid.star.pri") +
          y = "PCA-corrected TPM (STAR REF chromosomes)")
 dev.off()
 
-png("./plots/reads_lost_imgt.png", width = 10, height = 6, units = "in", res = 200)
-ggplot(reads_lost_imgt_df, aes(gene_from, gene_to)) +
+png("./plots/reads_lost.png", width = 12, height = 6, units = "in", res = 200)
+ggplot(reads_lost_df, aes(gene_from, gene_to)) +
     geom_point(aes(size = perc)) +
+    facet_wrap(~index) +
     theme_bw() +
+    theme(legend.position = "top") +
     labs(x = "gene from", y = "gene to", size = "average percentage")
 dev.off()
 
-png("./plots/reads_gained_imgt.png", width = 10, height = 6, units = "in", res = 200)
-ggplot(reads_gained_imgt_df, aes(gene_to, gene_from)) +
+png("./plots/reads_gained.png", width = 12, height = 6, units = "in", res = 200)
+ggplot(reads_gained_df, aes(gene_to, gene_from)) +
     geom_point(aes(size = perc)) +
+    facet_wrap(~index) +
     theme_bw() +
+    theme(legend.position = "top") +
     labs(x = "gene to", y = "gene from", size = "average percentage")
 dev.off()
-
-png("./plots/reads_lost_pri.png", width = 10, height = 6, units = "in", res = 200)
-ggplot(reads_lost_pri_df, aes(gene_from, gene_to)) +
-    geom_point(aes(size = perc)) +
-    theme_bw() +
-    labs(x = "gene from", y = "gene to", size = "average percentage")
-dev.off()
-
-png("./plots/reads_gained_pri.png", width = 10, height = 6, units = "in", res = 200)
-ggplot(reads_gained_pri_df, aes(gene_to, gene_from)) +
-    geom_point(aes(size = perc)) +
-    theme_bw() +
-    labs(x = "gene to", y = "gene from", size = "average percentage")
-dev.off()
-
