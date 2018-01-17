@@ -37,13 +37,22 @@ aligns_df <-
 			      tr_to_gname(read))) %>%
     distinct(name, reference, .keep_all = TRUE)
 
-reads_not_aligned <- aligns_df %>%
+read_summary <- aligns_df %>%
     filter(gene_from %in% hla_genes) %>%
+    group_by(name) %>%
+    summarize(gene_from = unique(gene_from),
+	      not_aligned = as.integer(all(is.na(gene_to))),
+	      maps_to_original = as.integer(any(!is.na(gene_to) & gene_to == gene_from)),
+	      n_genes_to = n_distinct(gene_to),
+	      n_refs_to = n_distinct(reference)) %>%
     group_by(gene_from) %>%
-    summarize(perc = round(mean(is.na(reference)) * 100, 2)) %>%
+    summarize(perc_not_aligned = mean(not_aligned) * 100,
+	      perc_not_aligned_to_original = mean(not_aligned == 0 & maps_to_original == 0) * 100,
+	      perc_aligned_to_original_multimap = mean(not_aligned == 0 & maps_to_original == 1 & n_genes_to > 1) * 100,
+	      perc_aligned_to_original_uniquely = mean(not_aligned == 0 & maps_to_original == 1 & n_genes_to == 1) * 100) %>%
     ungroup()
 
-reads_lost_to_other_genes <- aligns_df %>%
+alignments_to_diff_gene <- aligns_df %>%
     filter(gene_from %in% hla_genes, !is.na(gene_to)) %>%
     count(gene_from, gene_to) %>% 
     group_by(gene_from) %>% 
@@ -51,7 +60,7 @@ reads_lost_to_other_genes <- aligns_df %>%
     filter(gene_from != gene_to) %>%
     select(gene_from, gene_to, perc)
     
-reads_gained_from_other_genes <- aligns_df %>%
+alignments_from_diff_gene <- aligns_df %>%
     filter(gene_to %in% hla_genes, !is.na(gene_to)) %>%
     count(gene_from, gene_to) %>%
     group_by(gene_to) %>%
@@ -59,11 +68,11 @@ reads_gained_from_other_genes <- aligns_df %>%
     filter(gene_from != gene_to) %>%
     select(gene_to, gene_from, perc)
 
-write_tsv(reads_not_aligned, 
-	  file.path(mapdir, sample_id, "reads_not_aligned_hla.tsv"))
+write_tsv(read_summary, 
+	  file.path(mapdir, sample_id, "read_summary_hla.tsv"))
 
-write_tsv(reads_lost_to_other_genes, 
-	  file.path(mapdir, sample_id, "reads_lost_to_other_genes_hla.tsv"))
+write_tsv(alignments_to_diff_gene, 
+	  file.path(mapdir, sample_id, "alignments_to_diff_gene_hla.tsv"))
 
-write_tsv(reads_gained_from_other_genes, 
-	  file.path(mapdir, sample_id, "reads_gained_from_other_genes_hla.tsv"))
+write_tsv(alignments_from_diff_gene, 
+	  file.path(mapdir, sample_id, "alignments_from_diff_gene_hla.tsv"))
