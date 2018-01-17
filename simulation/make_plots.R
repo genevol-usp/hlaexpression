@@ -145,9 +145,9 @@ counts_star <- quant_data %>%
 
 sample_ids <- sprintf("sample_%02d", 1:50)
 
-reads_lost_imgt_df <- 
+alignments_to_diff_gene_imgt <- 
     file.path("./PEreads_75bp/expression/star/mappings_2", 
-              sample_ids, "reads_lost_to_other_genes_hla.tsv") %>%
+              sample_ids, "alignments_to_diff_gene_hla.tsv") %>%
     setNames(sample_ids) %>%
     map_df(read_tsv, .id = "subject") %>%
     complete(gene_from, gene_to, fill = list(perc = 0)) %>%
@@ -157,9 +157,9 @@ reads_lost_imgt_df <-
     ungroup() %>%
     filter(perc > 0)
 
-reads_lost_pri_df <- 
+alignments_to_diff_gene_pri <- 
     file.path("./PEreads_75bp/expression/star/mappings_PRI", 
-              sample_ids, "reads_lost_to_other_genes_hla.tsv") %>%
+              sample_ids, "alignments_to_diff_gene_hla.tsv") %>%
     setNames(sample_ids) %>%
     map_df(read_tsv, .id = "subject") %>%
     complete(gene_from, gene_to, fill = list(perc = 0)) %>%
@@ -169,15 +169,15 @@ reads_lost_pri_df <-
     ungroup() %>%
     filter(perc > 0)
 
-reads_lost_df <- 
-    list("HLA-personalized" = reads_lost_imgt_df, 
-         "Reference transcriptome" = reads_lost_pri_df) %>%
+alignments_to_diff_gene_df <- 
+    list("HLA-personalized" = alignments_to_diff_gene_imgt, 
+         "Reference transcriptome" = alignments_to_diff_gene_pri) %>%
     bind_rows(.id = "index") %>%
     mutate_at(vars(gene_from, gene_to), factor)
 
-reads_gained_imgt_df <- 
+alignments_from_diff_gene_imgt <- 
     file.path("./PEreads_75bp/expression/star/mappings_2", 
-              sample_ids, "reads_gained_from_other_genes_hla.tsv") %>%
+              sample_ids, "alignments_from_diff_gene_hla.tsv") %>%
     setNames(sample_ids) %>%
     map_df(read_tsv, .id = "subject") %>%
     complete(gene_to, gene_from, fill = list(perc = 0)) %>%
@@ -187,9 +187,9 @@ reads_gained_imgt_df <-
     ungroup() %>%
     filter(perc > 0)
 
-reads_gained_pri_df <- 
+alignments_from_diff_gene_pri <- 
     file.path("./PEreads_75bp/expression/star/mappings_PRI", 
-              sample_ids, "reads_gained_from_other_genes_hla.tsv") %>%
+              sample_ids, "alignments_to_diff_gene_hla.tsv") %>%
     setNames(sample_ids) %>%
     map_df(read_tsv, .id = "subject") %>%
     complete(gene_to, gene_from, fill = list(perc = 0)) %>%
@@ -199,9 +199,9 @@ reads_gained_pri_df <-
     ungroup() %>%
     filter(perc > 0) 
 
-reads_gained_df <- 
-    list("HLA-personalized" = reads_gained_imgt_df, 
-         "Reference transcriptome" = reads_gained_pri_df) %>%
+alignments_from_diff_gene_df <- 
+    list("HLA-personalized" = alignments_from_diff_gene_imgt, 
+         "Reference transcriptome" = alignments_from_diff_gene_pri) %>%
     bind_rows(.id = "index") %>%
     mutate_at(vars(gene_to, gene_from), factor)
 
@@ -258,8 +258,8 @@ scatter_plot(quant_data, "resid.star.imgt", "resid.star.pri") +
          y = "PCA-corrected TPM (STAR REF chromosomes)")
 dev.off()
 
-png("./plots/reads_lost.png", width = 12, height = 6, units = "in", res = 200)
-ggplot(reads_lost_df, aes(gene_from, gene_to)) +
+png("./plots/alignments_to_diff_gene.png", width = 12, height = 6, units = "in", res = 200)
+ggplot(alignments_to_diff_gene_df, aes(gene_from, gene_to)) +
     geom_point(aes(size = perc)) +
     facet_wrap(~index) +
     theme_bw() +
@@ -267,8 +267,8 @@ ggplot(reads_lost_df, aes(gene_from, gene_to)) +
     labs(x = "gene from", y = "gene to", size = "average percentage")
 dev.off()
 
-png("./plots/reads_gained.png", width = 12, height = 6, units = "in", res = 200)
-ggplot(reads_gained_df, aes(gene_to, gene_from)) +
+png("./plots/alignments_from_diff_gene.png", width = 12, height = 6, units = "in", res = 200)
+ggplot(alignments_from_diff_gene_df, aes(gene_to, gene_from)) +
     geom_point(aes(size = perc)) +
     facet_wrap(~index) +
     theme_bw() +

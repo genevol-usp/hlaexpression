@@ -59,47 +59,57 @@ include_graphics("./plots/star_prop_mapped.png")
 
 # Quality assessment 
 
-## Percentage of simulated reads not aligned:
+## Percentage of simulated reads not aligned, aligned exclusively to a different reference, or aligned to original reference but as a multimap
+
+Here we can see that, for some genes, there is a high percentage of reads which
+are not aligned, or aligned to a gene different from the one the read was
+simulated from.
 
 ```{r}
-
 sample_ids <- sprintf("sample_%02d", 1:50)
 
-reads_not_aligned_imgt <- 
+read_summary_imgt <- 
     file.path("./PEreads_75bp/expression/star/mappings_2",
-	      sample_ids, "reads_not_aligned_hla.tsv") %>%
+	      sample_ids, "read_summary_hla.tsv") %>%
     setNames(sample_ids) %>%
     map_df(read_tsv, .id = "subject") %>%
     group_by(gene_from) %>%
-    summarize(perc = mean(perc)) %>%
+    summarize_at(vars(perc_not_aligned:perc_aligned_to_original_uniquely), mean) %>%
     ungroup()
 
-reads_not_aligned_pri <- 
+read_summary_pri <- 
     file.path("./PEreads_75bp/expression/star/mappings_PRI",
-	      sample_ids, "reads_not_aligned_hla.tsv") %>%
+	      sample_ids, "read_summary_hla.tsv") %>%
     setNames(sample_ids) %>%
     map_df(read_tsv, .id = "subject") %>%
     group_by(gene_from) %>%
-    summarize(perc = mean(perc)) %>%
+    summarize_at(vars(perc_not_aligned:perc_aligned_to_original_uniquely), mean) %>%
     ungroup()
 
-left_join(reads_not_aligned_imgt, reads_not_aligned_pri, by = "gene_from",
-	  suffix = c(".imgt", ".pri")) %>% 
+list("HLA-personalized" = read_summary_imgt, 
+     "Reference" = read_summary_pri) %>%
+bind_rows(.id = "index") %>%
+arrange(gene_from, index) %>%
 kable(digits = 2)
 ```
 
 ## Percentage of aligned reads which map to a different gene:
 
+To further understand the read "loss" or "gain" we examined, for each HLA gene,
+the percentage of alignments stratified by mapped or source gene, respectively.
+
+So, the size of each point in the plot represents the percentage of alignments
+involving that gene pair.
 
 ```{r}
-include_graphics("./plots/reads_lost.png")
+include_graphics("./plots/alignments_to_diff_gene.png")
 ```
 
 
 ## Percentage of aligned reads gained by each HLA gene from other gene
 
 ```{r}
-include_graphics("./plots/reads_gained.png")
+include_graphics("./plots/alignments_from_diff_gene.png")
 ```
 
 
