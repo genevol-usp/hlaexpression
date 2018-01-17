@@ -203,6 +203,7 @@ alignments_from_diff_gene_df <-
     list("HLA-personalized" = alignments_from_diff_gene_imgt, 
          "Reference transcriptome" = alignments_from_diff_gene_pri) %>%
     bind_rows(.id = "index") %>%
+    filter(gene_to %in% gencode_hla$gene_name) %>%
     mutate_at(vars(gene_to, gene_from), factor)
 
 # Plots
