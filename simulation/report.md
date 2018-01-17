@@ -77,17 +77,15 @@ Here we can see that, for some genes, there is a high percentage of reads which 
 | HLA-personalized | HLA-DRB1   |                0.00|                              0.01|                                   0.43|                                  99.56|
 | Reference        | HLA-DRB1   |               12.06|                             22.01|                                   4.04|                                  61.89|
 
-Percentage of aligned reads which map to a different gene:
-----------------------------------------------------------
-
 To further understand the read "loss" or "gain" we examined, for each HLA gene, the percentage of alignments stratified by mapped or source gene, respectively.
 
-So, the size of each point in the plot represents the percentage of alignments involving that gene pair.
+So, the size of each point in the plots below represents the percentage of alignments involving that gene pair.
+
+### Percentage of aligments involving reads simulated from HLA in x axis but mapping to other gene
 
 <img src="./plots/alignments_to_diff_gene.png" width="2400" />
 
-Percentage of aligned reads gained by each HLA gene from other gene
--------------------------------------------------------------------
+### Percentage of alignments involving reads not simulated from HLA in x axis but still mapping to them
 
 <img src="./plots/alignments_from_diff_gene.png" width="2400" />
 

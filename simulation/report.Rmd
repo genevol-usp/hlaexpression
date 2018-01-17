@@ -93,20 +93,20 @@ arrange(gene_from, index) %>%
 kable(digits = 2)
 ```
 
-## Percentage of aligned reads which map to a different gene:
-
 To further understand the read "loss" or "gain" we examined, for each HLA gene,
 the percentage of alignments stratified by mapped or source gene, respectively.
 
-So, the size of each point in the plot represents the percentage of alignments
-involving that gene pair.
+So, the size of each point in the plots below represents the percentage of
+alignments involving that gene pair.
+
+
+### Percentage of aligments involving reads simulated from HLA in x axis but mapping to other gene
 
 ```{r}
 include_graphics("./plots/alignments_to_diff_gene.png")
 ```
 
-
-## Percentage of aligned reads gained by each HLA gene from other gene
+### Percentage of alignments involving reads not simulated from HLA in x axis but still mapping to them
 
 ```{r}
 include_graphics("./plots/alignments_from_diff_gene.png")
