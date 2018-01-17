@@ -96,7 +96,7 @@ include_graphics("./plots/reads_lost.png")
 ```
 
 
-# Percentage of aligned reads gained by each HLA gene from other gene
+## Percentage of aligned reads gained by each HLA gene from other gene
 
 ```{r}
 include_graphics("./plots/reads_gained.png")

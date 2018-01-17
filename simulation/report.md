@@ -74,7 +74,7 @@ Percentage of aligned reads which map to a different gene:
 <img src="./plots/reads_lost.png" width="2400" />
 
 Percentage of aligned reads gained by each HLA gene from other gene
-===================================================================
+-------------------------------------------------------------------
 
 <img src="./plots/reads_gained.png" width="2400" />
 
