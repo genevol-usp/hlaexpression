@@ -184,11 +184,22 @@ include_graphics("./qtls/plots/crd.png")
 
 ## Intersect with Encode Elements
 
+### HLA-personalized index
+
 ```{r}
 "./qtls/star/imgt/encode_TF_Seq_DNase/hla.qtl.functional.elements.tsv" %>%
     read_tsv()%>%
     kable(digits = 2)
 ```
+
+### Reference transcriptome index
+
+```{r}
+"./qtls/star/pri/encode_TF_Seq_DNase/hla.qtl.functional.elements.tsv" %>%
+    read_tsv() %>%
+    kable(digits = 2)
+```
+
 
 ## RTC between IMGT and Ref Transcriptome eQTLs
 
