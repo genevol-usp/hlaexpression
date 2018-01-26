@@ -1,0 +1,16 @@
+#!/bin/bash
+
+#PBS -l nodes=1:ppn=1
+#PBS -l mem=6gb
+#PBS -l walltime=24:00:00
+#PBS -q short
+#PBS -j oe
+#PBS -o /home/vitor/hlaexpression/simulation/PEreads_75bp/isoforms/expression/kallisto/log/$PBS_JOBIB.log
+
+cd $PBS_O_WORKDIR
+
+mkdir -p ./quantifications_2
+
+SAMPLE=ERR188021
+
+./quantify_round2.sh $SAMPLE

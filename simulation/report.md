@@ -135,3 +135,22 @@ STAR-Salmon; HLA-diversity vs Reference chromosomes only
 ### PCA-corrected expression
 
 <img src="./plots/star_imgt_vs_PRI_10pc.png" width="2000" />
+
+Isoforms
+========
+
+The simulation above is idealized in the sense that reads are generated from the coding sequences and mapped back to them. However, for many HLA genes, real mRNA transcription occurs through different isoforms, containing UTRs and maybe retained introns.
+
+In order to evaluate the performance of the HLA-supplemented index to map the isoforms, we simulated reads from the hypothetical individual homozygote for the reference HLA allele at the 7 HLA loci. Ground thruth isoform counts were based on the estimated counts for the individual NA20508 quantified with the reference transcriptome index.
+
+We see a reduction in expression in TPM estimates for HLA-DQ genes.
+
+| gene\_name |  true\_tpm|  est\_tpm\_star|  est\_tpm\_kallisto|  proportion\_true\_est\_star|  proportion\_true\_est\_kallisto|
+|:-----------|----------:|---------------:|-------------------:|----------------------------:|--------------------------------:|
+| HLA-A      |   1334.531|        1293.041|            1520.350|                        0.969|                            1.139|
+| HLA-B      |   2452.563|        2446.633|            2856.170|                        0.998|                            1.165|
+| HLA-C      |    991.078|         985.729|            1151.060|                        0.995|                            1.161|
+| HLA-DPB1   |    372.474|         333.780|             467.855|                        0.896|                            1.256|
+| HLA-DQA1   |    530.725|         405.789|             467.260|                        0.765|                            0.880|
+| HLA-DQB1   |    644.926|         300.759|             409.844|                        0.466|                            0.635|
+| HLA-DRB1   |   1060.860|        1100.010|            1445.520|                        1.037|                            1.363|

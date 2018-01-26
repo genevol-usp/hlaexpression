@@ -170,3 +170,24 @@ include_graphics("./plots/star_imgt_vs_PRI_TPM.png")
 ```{r}
 include_graphics("./plots/star_imgt_vs_PRI_10pc.png")
 ```
+
+# Isoforms
+
+The simulation above is idealized in the sense that reads are generated from the
+coding sequences and mapped back to them. However, for many HLA genes, real mRNA
+transcription occurs through different isoforms, containing UTRs and maybe
+retained introns.
+
+In order to evaluate the performance of the HLA-supplemented index to map the
+isoforms, we simulated reads from the hypothetical individual homozygote for the
+reference HLA allele at the 7 HLA loci. Ground thruth isoform counts were based
+on the estimated counts for the individual NA20508 quantified with the reference
+transcriptome index.
+
+We see a reduction in expression in TPM estimates for HLA-DQ genes.
+
+```{r}
+x <- read_tsv("./PEreads_75bp/isoforms/results.tsv")
+
+kable(x, digits = 3)
+```
