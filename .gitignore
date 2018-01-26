@@ -41,6 +41,9 @@ nci/expression/star/mappings_*
 nci/expression/star/quantifications_*
 nci/expression/star/sample_indices
 nci/expression/backup
+PEreads_150pb/
+isoforms/PEreads_75bp/isoforms/expression/kallisto/quantifications_*
+isoforms/PEreads_75bp/isoforms/expression/star/quantifications_*
 simulation/PEreads_75bp/expression/kallisto/quantifications_*
 simulation/PEreads_75bp/expression/star/quantifications_*
 simulation/PEreads_75bp/expression/star/mappings_*
