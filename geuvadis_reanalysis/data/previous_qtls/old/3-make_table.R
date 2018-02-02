@@ -27,10 +27,7 @@ hla_genes <- sort(gencode_hla$gene_name)
 
 mhc_rsids <- readLines("./mhc_rsids_vcf.txt")
 
-gencode_hla_v19 <- "~/gencode_data/gencode.v19.annotation.gtf.gz" %>%
-    get_gencode_coords(feature = "gene") %>% 
-    filter(gene_name %in% hla_genes) %>%
-    select(gene_id, gene_name)
+gencode_hla_v19 <- select(gencode_hla_v19, gene_id, gene_name)
 
 rsmerge <- read_tsv("./RsMergeArch.bcp.gz", col_names = FALSE) %>%
     select(rsHigh = X1, build_id = X3, rsCurrent = X7) %>%
@@ -108,7 +105,7 @@ barreiro <- readxl::read_excel("./barreiro_eqtls.xlsx", 1, skip = 2) %>%
 #	   info = paste(c("Vince (2016):", "Thomas (2009):", "Kulkarni (2011):"), 
 #			"HLA-C"))
 
-delaneau <- read_delim("./LCL_eQTL.txt", col_names = FALSE, delim = " ") %>%
+delaneau <- read_delim("./delaneau_LCL_eqtls.txt", col_names = FALSE, delim = " ") %>%
     inner_join(gencode_hla_v19, by = c("X1" = "gene_id")) %>%
     filter(X20 <= 0.05) %>%
     mutate(pval = -log10(X20),

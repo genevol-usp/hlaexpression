@@ -19,3 +19,6 @@ wget http://archive.broadinstitute.org/mammals/haploreg/data/eqtls_v4.1.tsv.gz
 #rs ID history table
 wget ftp://ftp.ncbi.nlm.nih.gov/snp/organisms/human_9606/database/data/organism_data/RsMergeArch.bcp.gz
 
+#GTEX
+# need to download manually on the website:
+#https://www.gtexportal.org/home/eqtls/byGene?geneId=HLA-A&tissueName=All
