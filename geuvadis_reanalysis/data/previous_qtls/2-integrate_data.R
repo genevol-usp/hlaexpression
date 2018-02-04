@@ -70,7 +70,7 @@ integrated_data <-
     list(geuvadis_gene = geuvadis_gene,
 	 geuvadis_exon = geuvadis_exon,
 	 gtex_v7 = gtex_gene,
-	 delaneau = delaneau,
+	 delaneau2018 = delaneau2018,
 	 thomas2009 = thomas2009,
 	 kulkarni2011 = kulkarni2011,
 	 vince2017 = vince2017) %>%
@@ -102,3 +102,14 @@ eqtl_catalog <- integrated_data %>%
     ungroup()
 
 write_tsv(eqtl_catalog, "./qtl_catalog.tsv", col_names = FALSE)
+
+top_eqtl_catalog <- integrated_data %>%
+    group_by(gene_name, rsid, study) %>%
+    filter(min_rank == 1L | is.na(min_rank)) %>%
+    ungroup() %>%
+    unite(info, c("study", "gene_name", "pval"), sep = "|") %>%
+    group_by(rsid) %>%
+    summarise(info = paste(info, collapse = ";")) %>%
+    ungroup()
+
+write_tsv(top_eqtl_catalog, "./top_qtl_catalog.tsv", col_names = FALSE)
