@@ -6,7 +6,7 @@ samtools=/home/vitor/samtools-1.3.1/samtools
 
 sample=$1
 indexDIR=./sample_indices/$sample
-fasta=/home/vitor/hlaexpression/imgt_index/gencode.v25.PRI.transcripts.noIMGT.fa
+fasta=/home/vitor/hlaexpression/imgt_index_utr/gencode.v25.PRI.transcripts.noIMGT.fa
 sample_hla=./sample_indices/hla_$sample.fa
 sample_fa=./sample_indices/index_$sample.fa
 

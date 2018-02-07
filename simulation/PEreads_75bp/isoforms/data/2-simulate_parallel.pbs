@@ -13,13 +13,12 @@ cd $PBS_O_WORKDIR
 
 mkdir -p ./log
 mkdir -p ./fastq
-mkdir -p ./fasta
 
-Rscript polyester.R 1 
+#Rscript polyester.R 1 
 
 for i in {1..2}
 do
-    cat ./fasta/sample_01_$i.fasta |\
+    cat ./fasta_1/sample_01_$i.fasta |\
 	awk -v mate=$i 'BEGIN {RS = ">" ; FS = "\n"} NR > 1 {
 	    print\
 	    "@"gensub(/;/, " ", 1, gensub(/\//, "_", 1, $1))"/"mate"\n"\
@@ -29,4 +28,4 @@ do
 	}' | gzip -c > ./fastq/${SAMPLE}_$i.fastq.gz
 done
 
-rm -r ./fasta
+rm -r ./fasta_1

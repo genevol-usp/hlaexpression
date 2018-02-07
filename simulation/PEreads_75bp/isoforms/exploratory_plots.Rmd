@@ -1,0 +1,52 @@
+---
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE, comment = '')
+```
+
+```{r pkgs}
+devtools::load_all("~/hlaseqlib/")
+library(tidyverse)
+```
+
+```{r data}
+gencode_hla_tx <- gencode_pri_tx %>%
+    filter(gene_name %in% gencode_hla$gene_name) %>%
+    pull(tx_id)
+
+index <- "~/gencode_data/gencode.v25.PRI.transcripts.fa" %>%
+    Biostrings::readDNAStringSet() %>%
+    .[gencode_hla_tx]
+
+true <- read_tsv("./data/phenotypes_counts_tpm.tsv")
+
+read_not <- read_tsv("./expression/star/reads_not_aligned.tsv")
+read_not_utr <- read_tsv("./expression/star_utr_index/reads_not_aligned.tsv")
+
+read_info <- read_tsv("./data/hla_read_cov.tsv") %>%
+    left_join(read_not, by = c("gene_name", "tx_id", "pos")) %>%
+    rename(generated = n.x, not_aligned_cds = n.y) %>%
+    mutate(not_aligned_cds = ifelse(is.na(not_aligned_cds), 0L, not_aligned_cds)) %>%
+    left_join(read_not_utr, by = c("gene_name", "tx_id", "pos")) %>%
+    rename(not_aligned_cds_utr = n) %>%
+    mutate(not_aligned_cds_utr = ifelse(is.na(not_aligned_cds_utr), 0L, not_aligned_cds_utr)) %>%
+    gather(read, n, generated, not_aligned_cds, not_aligned_cds_utr) %>%
+    unite(id, gene_name, tx_id, sep = "_")
+
+read_info %>% filter(grepl("HLA-DQA1", id)) %>% distinct(id)
+```
+
+
+```{r plot, height = 16}
+read_info %>%
+    filter(id == 'HLA-C_ENST00000376228.9') %>%
+    ggplot() +
+    geom_line(aes(pos, n, color = read), size = 2, alpha = .5) +
+    scale_color_manual(values = c("generated" = "black", 
+                                  "not_aligned" = "red",
+                                  "not_aligned_utrindex" = "green")) +
+    facet_wrap(~id, ncol = 1, scales = "free") +
+    theme_bw()
+```

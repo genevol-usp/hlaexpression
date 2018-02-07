@@ -19,15 +19,15 @@ est_star <-
     filter(gene_name %in% gencode_hla$gene_name) %>%
     select(gene_name, est_tpm_star = TPM)
 
-est_kallisto <-
-    read_tsv("./expression/kallisto/quantifications_2/imgt_quants.tsv") %>%
-    mutate(gene_name = imgt_to_gname(target_id)) %>%
+est_star_utr_index <-
+    read_tsv("./expression/star_utr_index/quantifications_2/imgt_quants.tsv") %>%
+    mutate(gene_name = imgt_to_gname(Name)) %>%
     filter(gene_name %in% gencode_hla$gene_name) %>%
-    select(gene_name, est_tpm_kallisto = tpm)
+    select(gene_name, est_tpm_star_utr_index = TPM)
 
 out <- left_join(phenotypes_by_gene, est_star, by = "gene_name") %>%
-    left_join(est_kallisto, by = "gene_name") %>%
+    left_join(est_star_utr_index, by = "gene_name") %>%
     mutate(proportion_true_est_star = est_tpm_star/true_tpm,
-	   proportion_true_est_kallisto = est_tpm_kallisto/true_tpm)
+	   proportion_true_est_star_utr_index = est_tpm_star_utr_index/true_tpm)
 
 write_tsv(out, "./results.tsv")
