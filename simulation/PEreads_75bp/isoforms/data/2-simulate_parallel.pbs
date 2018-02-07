@@ -7,7 +7,7 @@
 #PBS -j oe
 #PBS -o /home/vitor/hlaexpression/simulation/PEreads_75bp/isoforms/data/log/$PBS_JOBID.log
 
-SAMPLE=ERR188021
+SAMPLE=sample_01
 
 cd $PBS_O_WORKDIR
 
