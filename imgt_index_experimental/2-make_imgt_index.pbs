@@ -14,4 +14,4 @@ mkdir -p ./log
 
 LOCUS=`awk "FNR==$PBS_ARRAYID" ./imgt_loci.txt`
 
-Rscript v2_make_imgt_index.R $LOCUS
+Rscript make_imgt_index.R $LOCUS

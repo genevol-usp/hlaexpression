@@ -118,7 +118,7 @@ if (!file.exists(gen_file)) {
 	select(allele, utr5, cds, utr3) %>%
 	mutate_at(vars(utr5, cds, utr3), hla_format_sequence) %>%
 	mutate(utr5 = substring(utr5, nchar(utr5)-74L, nchar(utr5)),
-	       utr3 = substring(utr3, 1, 75)) %>%
+	       utr3 = substring(utr3, 1, 150)) %>%
 	unite(transcript, utr5, cds, utr3, sep = "") %>%
 	mutate(allele3f = hla_trimnames(allele, 3)) %>%
 	distinct(allele3f, transcript, .keep_all = TRUE) %>%
