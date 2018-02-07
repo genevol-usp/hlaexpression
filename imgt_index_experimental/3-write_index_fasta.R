@@ -12,5 +12,5 @@ index <- index_df %>%
   map_chr("transcript") %>%
   DNAStringSet()
 
-writeXStringSet(index, "./imgt_index_test.fa")
+writeXStringSet(index, "./imgt_index.fa")
 unlink(index_files)
