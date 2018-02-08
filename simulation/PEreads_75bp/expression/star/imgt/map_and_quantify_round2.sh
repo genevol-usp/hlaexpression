@@ -19,8 +19,8 @@ $STAR --runThreadN 6 --runMode genomeGenerate --genomeDir $indexDIR\
     --genomeChrBinNbits 11 --genomeSAindexNbases 13\
     --outFileNamePrefix ${indexDIR}_
 
-fq1=../../data/fastq/${sample}_1.fastq.gz
-fq2=../../data/fastq/${sample}_2.fastq.gz
+fq1=../../../data/fastq/${sample}_1.fastq.gz
+fq2=../../../data/fastq/${sample}_2.fastq.gz
 outMap=./mappings_2
 outQuant=./quantifications_2
 outPrefix=$outMap/${sample}_

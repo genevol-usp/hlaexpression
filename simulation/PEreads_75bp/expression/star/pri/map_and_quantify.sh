@@ -7,8 +7,8 @@ samtools=/home/vitor/samtools-1.3.1/samtools
 sample=$1
 
 indexDIR=/home/vitor/hlaexpression/imgt_index/star/indexPRI
-fq1=../../data/fastq/${sample}_1.fastq.gz
-fq2=../../data/fastq/${sample}_2.fastq.gz
+fq1=../../../data/fastq/${sample}_1.fastq.gz
+fq2=../../../data/fastq/${sample}_2.fastq.gz
 outMap=./mappings
 outPrefix=$outMap/${sample}_
 outQuant=./quantifications
