@@ -45,8 +45,12 @@ PEreads_150pb/
 isoforms/PEreads_75bp/isoforms/expression/kallisto/quantifications_*
 isoforms/PEreads_75bp/isoforms/expression/star/quantifications_*
 simulation/PEreads_75bp/expression/kallisto/quantifications_*
-simulation/PEreads_75bp/expression/star/quantifications_*
-simulation/PEreads_75bp/expression/star/mappings_*
+simulation/PEreads_75bp/expression/star/imgt/quantifications_*
+simulation/PEreads_75bp/expression/star/imgt/mappings_*
 simulation/PEreads_75bp/expression/star/sample_indices
+simulation/PEreads_75bp/expression/star/pri/quantifications*
+simulation/PEreads_75bp/expression/star/pri/mappings*
+simulation/PEreads_75bp/expression/star/genome/quantifications*
+simulation/PEreads_75bp/expression/star/genome/mappings*
 simulation/PEreads_75bp/expression/salmon/index*
 simulation/PEreads_75bp/expression/salmon/quantifications_*

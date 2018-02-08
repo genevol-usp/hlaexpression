@@ -6,7 +6,7 @@ samtools=/home/vitor/samtools-1.3.1/samtools
 
 sample=$1
 indexDIR=./sample_indices/$sample
-fasta=../../../../imgt_index/gencode.v25.PRI.transcripts.noIMGT.fa
+fasta=/home/vitor/hlaexpression/imgt_index/gencode.v25.PRI.transcripts.noIMGT.fa
 sample_hla=./sample_indices/hla_$sample.fa
 sample_fa=./sample_indices/index_$sample.fa
 
@@ -23,8 +23,6 @@ fq1=../../data/fastq/${sample}_1.fastq.gz
 fq2=../../data/fastq/${sample}_2.fastq.gz
 outMap=./mappings_2
 outQuant=./quantifications_2
-#outMap=./mappings_2_biascorrection
-#outQuant=./quantifications_2_biascorrection
 outPrefix=$outMap/${sample}_
 
 $STAR --runMode alignReads --runThreadN 6 --genomeDir $indexDIR\
@@ -41,17 +39,14 @@ $STAR --runMode alignReads --runThreadN 6 --genomeDir $indexDIR\
     --outSAMtype BAM Unsorted\
     --outFileNamePrefix $outPrefix
 
-rm -r $indexDIR ${indexDIR}_Log.out
-
 bam=${outPrefix}Aligned.out.bam
 out=$outQuant/$sample
 
+if [ -d "$out" ]; then
+    rmdir $out
+fi
+
 $salmon quant -t $sample_fa -l IU -a $bam -o $out -p 6 --seqBias --gcBias
-
-awk 'NR==1 || $1 ~ /IMGT/ {print $1"\t"$4"\t"$5}' $out/quant.sf >\
-    $out/quant_imgt.sf
-
-rm $sample_fa $sample_hla
 
 header=${outPrefix}header.sam
 sampledir=$outMap/$sample
@@ -62,10 +57,9 @@ mkdir -p $sampledir
 $samtools view -H $bam > $header
 
 $samtools view -f 0x2 -F 0x100 $bam |\
-    grep -F -f ../../data/ids_to_filter.txt - |\
+    grep -F -f ../../../data/ids_to_filter.txt - |\
     cat $header - |\
-    $samtools view -Sb - > $imgtbam
+    $samtools view -Sb - |\
+    $samtools sort - > $imgtbam
 
-Rscript ./parse_alignments.R $sample $imgtbam $sampledir
-
-rm ${outPrefix}Aligned* ${outPrefix}Log* ${outPrefix}SJ* $header 
+rm ${outPrefix}Aligned* ${outPrefix}Log* ${outPrefix}SJ* $header

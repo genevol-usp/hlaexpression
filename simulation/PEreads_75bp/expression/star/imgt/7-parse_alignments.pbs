@@ -6,11 +6,10 @@
 #PBS -q short
 #PBS -t 1-50
 #PBS -j oe
-#PBS -o /home/vitor/hlaexpression/simulation/PEreads_75bp/expression/star/log/$PBS_JOBID.log
+#PBS -o /home/vitor/hlaexpression/simulation/PEreads_75bp/expression/star/imgt/log/$PBS_JOBID.log
 
 cd $PBS_O_WORKDIR
 
 SAMPLE=$(printf "sample_%02d" $PBS_ARRAYID) 
 
 Rscript parse_alignments.R $SAMPLE mappings_2 
-Rscript parse_alignments.R $SAMPLE mappings_PRI 

@@ -5,7 +5,7 @@ salmon=/home/vitor/Salmon-latest_linux_x86_64/bin/salmon
 
 sample=$1
 
-indexDIR=../../../../imgt_index/star/index
+indexDIR=/home/vitor/hlaexpression/imgt_index/star/index
 fq1=../../data/fastq/${sample}_1.fastq.gz
 fq2=../../data/fastq/${sample}_2.fastq.gz
 outMap=./mappings_1
@@ -26,12 +26,13 @@ $STAR --runMode alignReads --runThreadN 6 --genomeDir $indexDIR\
   --outFileNamePrefix $outPrefix
 
 bam=${outPrefix}Aligned.out.bam
-fasta=../../../../imgt_index/gencode.v25.PRI.IMGT.transcripts.fa
+fasta=/home/vitor/hlaexpression/imgt_index/gencode.v25.PRI.IMGT.transcripts.fa
 out=$outQuant/$sample
+
+if [ -d "$out" ]; then
+    rmdir $out
+fi
 
 $salmon quant -t $fasta -l IU -a $bam -o $out -p 6
 
 rm $outPrefix*
-
-awk 'NR==1 || $1 ~ /IMGT/ {print $1"\t"$4"\t"$5}' $out/quant.sf >\
-    $out/quant_imgt.sf

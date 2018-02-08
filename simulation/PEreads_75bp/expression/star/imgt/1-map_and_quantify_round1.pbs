@@ -1,0 +1,19 @@
+#!/bin/bash
+
+#PBS -l nodes=1:ppn=6
+#PBS -l mem=8gb
+#PBS -l walltime=24:00:00
+#PBS -q short
+#PBS -t 1-50
+#PBS -j oe
+#PBS -o /home/vitor/hlaexpression/simulation/PEreads_75bp/expression/star/imgt/log/$PBS_JOBID.log
+
+cd $PBS_O_WORKDIR
+
+mkdir -p ./log
+mkdir -p ./mappings_1
+mkdir -p ./quantifications_1
+
+SAMPLE=$(printf "sample_%02d" $PBS_ARRAYID)
+
+./map_and_quantify_round1.sh $SAMPLE
