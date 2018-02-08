@@ -6,28 +6,37 @@ gencode_hla_tx <- filter(gencode_pri_tx, gene_name %in% gencode_hla$gene_name) %
 
 phenotypes <- read_tsv("./data/phenotypes_counts_tpm.tsv") %>%
     inner_join(gencode_hla_tx, by = c("Name" = "tx_id")) %>%
-    select(gene_name, tx_id = Name, TrueTPM)
+    select(gene = gene_name, tx_id = Name, TrueTPM)
 
 phenotypes_by_gene <- phenotypes %>%
-    group_by(gene_name) %>%
-    summarise(true_tpm = sum(TrueTPM)) %>%
+    group_by(gene) %>%
+    summarise(`tpm (true)` = sum(TrueTPM)) %>%
     ungroup()
 
-est_star <- 
+est_cds_index <- 
     read_tsv("./expression/star/quantifications_2/imgt_quants.tsv") %>%
     mutate(gene_name = imgt_to_gname(Name)) %>%
     filter(gene_name %in% gencode_hla$gene_name) %>%
-    select(gene_name, est_tpm_star = TPM)
+    select(gene = gene_name, `tpm (cds)` = TPM)
 
-est_star_utr_index <-
+est_cds_utr_index <-
     read_tsv("./expression/star_utr_index/quantifications_2/imgt_quants.tsv") %>%
     mutate(gene_name = imgt_to_gname(Name)) %>%
     filter(gene_name %in% gencode_hla$gene_name) %>%
-    select(gene_name, est_tpm_star_utr_index = TPM)
+    select(gene = gene_name, `tpm (cds+utr)` = TPM)
 
-out <- left_join(phenotypes_by_gene, est_star, by = "gene_name") %>%
-    left_join(est_star_utr_index, by = "gene_name") %>%
-    mutate(proportion_true_est_star = est_tpm_star/true_tpm,
-	   proportion_true_est_star_utr_index = est_tpm_star_utr_index/true_tpm)
+est_trimmed_index <-
+    read_tsv("./expression/star_trimmed_index/quantifications_2/imgt_quants.tsv") %>%
+    mutate(gene_name = imgt_to_gname(Name)) %>%
+    filter(gene_name %in% gencode_hla$gene_name) %>%
+    select(gene = gene_name, `tpm (trimmed)` = TPM)
+
+out <- 
+    left_join(phenotypes_by_gene, est_cds_index, by = "gene") %>%
+    left_join(est_cds_utr_index, by = "gene") %>%
+    left_join(est_trimmed_index, by = "gene") %>%
+    mutate(`estimated/true (cds)` = `tpm (cds)`/`tpm (true)`,
+	   `estimated/true (cds+utr)` = `tpm (cds+utr)`/`tpm (true)`,
+	   `estimated/true (trimmed)` = `tpm (trimmed)`/`tpm (true)`)
 
 write_tsv(out, "./results.tsv")

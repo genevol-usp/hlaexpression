@@ -44,7 +44,7 @@ include_graphics('./plots/kallisto_prop_mapped.png')
 ## Genotyping
 
 ```{r}
-read_tsv("./PEreads_75bp/expression/star/genotyping_accuracies_1.tsv") %>%
+read_tsv("./PEreads_75bp/expression/star/imgt/genotyping_accuracies_1.tsv") %>%
   filter(th == .05) %>%
   mutate(accuracy = accuracy * 100) %>%
   select(locus, `accuracy (%)` = accuracy) %>%
@@ -117,74 +117,42 @@ include_graphics("./plots/alignments_from_diff_gene.png")
 
 ## kallisto vs STAR-Salmon; HLA-diversity index
 
-### TPM
-
 ```{r}
 include_graphics("./plots/kallisto_vs_star_TPM.png")
 ```
 
-### PCA-corrected expression
-
-```{r} 
-include_graphics("./plots/kallisto_vs_star_10pc.png")
-```
-
 ## kallisto vs STAR-Salmon; Reference chromosomes only
-
-### TPM
 
 ```{r}
 include_graphics("./plots/kallisto_vs_star_PRI_TPM.png")
 ```
 
-### PCA-corrected expression
-
-```{r} 
-include_graphics("./plots/kallisto_vs_star_PRI_10pc.png")
-```
-
 ## kallisto; HLA-diversity vs Reference chromosomes only
-
-### TPM
 
 ```{r}
 include_graphics("./plots/kallisto_imgt_vs_PRI_TPM.png")
 ```
 
-### PCA-corrected expression
-
-```{r}
-include_graphics("./plots/kallisto_imgt_vs_PRI_10pc.png")
-```
-
 ## STAR-Salmon; HLA-diversity vs Reference chromosomes only
-
-### TPM 
 
 ```{r}
 include_graphics("./plots/star_imgt_vs_PRI_TPM.png")
 ```
 
-### PCA-corrected expression
-
-```{r}
-include_graphics("./plots/star_imgt_vs_PRI_10pc.png")
-```
-
 # Isoforms
 
 The simulation above is idealized in the sense that reads are generated from the
-coding sequences and mapped back to them. However, for many HLA genes, real mRNA
-transcription occurs through different isoforms, containing UTRs and maybe
-retained introns.
+coding sequences and mapped back to them. However, real transcription occurs via
+mRNA transcripts, containing UTRs and different combinations of exons.
 
 In order to evaluate the performance of the HLA-supplemented index to map the
 isoforms, we simulated reads from the hypothetical individual homozygote for the
-reference HLA allele at the 7 HLA loci. Ground thruth isoform counts were based
+reference HLA allele at the 7 HLA loci. Ground truth isoform counts were based
 on the estimated counts for the individual NA20508 quantified with the reference
-transcriptome index.
+transcriptome index (protein coding transcripts only).
 
-We see a reduction in expression in TPM estimates for HLA-DQ genes.
+We see a reduction in expression in the TPM estimate for HLA-DQA1. Including the
+UTRs or trimming the index to 750bp do not solve the problem.
 
 ```{r}
 x <- read_tsv("./PEreads_75bp/isoforms/results.tsv")
