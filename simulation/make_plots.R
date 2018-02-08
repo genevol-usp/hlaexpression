@@ -94,15 +94,6 @@ quant_data <-
     left_join(star_quant_pri, by = c("subject", "locus")) %>%
     rename(est_counts.star.pri = est_counts, tpm.star.pri = tpm)
 
-counts_kallisto <- quant_data %>%
-    select(subject, locus, dist.kallisto.imgt, starts_with("est_counts.kallisto")) %>%
-    gather(index, counts, -(1:3)) %>%
-    left_join(ground_truth, by = c("subject", "locus")) %>%
-    mutate(index = sub("est_counts.kallisto.", "", index),
-           index = factor(index, levels = c("imgt", "pri")),
-           prop_mapped = counts/true_counts) %>%
-    rename(dist = dist.kallisto.imgt)
-
 counts_star <- quant_data %>%
     select(subject, locus, dist.star.imgt, starts_with("est_counts.star")) %>%
     gather(index, counts, -(1:3)) %>%
@@ -176,10 +167,6 @@ alignments_from_diff_gene_df <-
     mutate_at(vars(gene_to, gene_from), factor)
 
 # Plots
-png("./plots/kallisto_prop_mapped.png", width = 6, height = 4, units = "in", res = 200)
-plot_dist(counts_kallisto)
-dev.off()
-
 png("./plots/star_prop_mapped.png", width = 6, height = 4, units = "in", res = 200)
 plot_dist(counts_star)
 dev.off()

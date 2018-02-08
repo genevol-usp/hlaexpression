@@ -21,27 +21,7 @@ Index nomenclature:
 - imgt: "pri" index supplemented with IMGT references
 
 
-# kallisto
-
-## Genotyping
-
-```{r}
-read_tsv("./PEreads_75bp/expression/kallisto/genotyping_accuracies_1.tsv") %>%
-  filter(th == .05) %>%
-  mutate(accuracy = accuracy * 100) %>%
-  select(locus, `accuracy (%)` = accuracy) %>%
-  kable(digits = 2)
-```
-
-## Expression
-
-```{r}
-include_graphics('./plots/kallisto_prop_mapped.png')
-```
-
-# STAR + Salmon
-
-## Genotyping
+# Genotyping
 
 ```{r}
 read_tsv("./PEreads_75bp/expression/star/imgt/genotyping_accuracies_1.tsv") %>%
@@ -51,7 +31,7 @@ read_tsv("./PEreads_75bp/expression/star/imgt/genotyping_accuracies_1.tsv") %>%
   kable()
 ```
 
-## Expression
+# Expression
 
 ```{r}
 include_graphics("./plots/star_prop_mapped.png")
@@ -69,7 +49,7 @@ simulated from.
 sample_ids <- sprintf("sample_%02d", 1:50)
 
 read_summary_imgt <- 
-    file.path("./PEreads_75bp/expression/star/mappings_2",
+    file.path("./PEreads_75bp/expression/star/imgt/mappings_2",
 	      sample_ids, "read_summary_hla.tsv") %>%
     setNames(sample_ids) %>%
     map_df(read_tsv, .id = "subject") %>%
@@ -78,7 +58,7 @@ read_summary_imgt <-
     ungroup()
 
 read_summary_pri <- 
-    file.path("./PEreads_75bp/expression/star/mappings_PRI",
+    file.path("./PEreads_75bp/expression/star/pri/mappings",
 	      sample_ids, "read_summary_hla.tsv") %>%
     setNames(sample_ids) %>%
     map_df(read_tsv, .id = "subject") %>%
