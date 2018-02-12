@@ -5,11 +5,11 @@
 #PBS -l walltime=12:00:00
 #PBS -q short
 #PBS -j oe
-#PBS -o /home/vitor/hlaexpression/imgt_index/star/indexGenome.out
+#PBS -o /home/vitor/hlaexpression/index_genome/index.log
 
 STAR=/home/vitor/STAR
 
-indexDIR=./indexGENOME
+indexDIR=./index
 genome=/home/vitor/gencode_data/GRCh38.primary_assembly.genome.fa
 gtf=/home/vitor/gencode_data/gencode.v25.primary_assembly.annotation.gtf
 overhang=75

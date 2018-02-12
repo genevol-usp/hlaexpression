@@ -5,11 +5,11 @@
 #PBS -l walltime=12:00:00
 #PBS -q short
 #PBS -j oe
-#PBS -o /home/vitor/hlaexpression/simulation/expression/star/indexPRI.out
+#PBS -o /home/vitor/hlaexpression/index_transcriptome/star/index.log
 
 STAR=/home/vitor/STAR
 
-indexDIR=./indexPRI
+indexDIR=./index
 fasta=/home/vitor/gencode_data/gencode.v25.PRI.transcripts.fa
 
 cd $PBS_O_WORKDIR
