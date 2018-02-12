@@ -12,7 +12,7 @@ sample_dt <-
 	      ][, code := sprintf("sample_%02d", 1:50)]
 
 abundance_files <- 
-    file.path("../../../geuvadis_reanalysis/expression/star/quantifications_2", 
+    file.path("../../../geuvadis_reanalysis/expression/star/supplemented/quantifications_2", 
 	      sample_dt$subject, "quant.sf")
 names(abundance_files) <- sample_dt$subject
 
@@ -21,7 +21,7 @@ abundances <-
 		     mc.cores = 25)
 
 abundances_imgt <- 
-    fread("../../../geuvadis_reanalysis/expression/star/quantifications_2/processed_quant.tsv"
+    fread("../../../geuvadis_reanalysis/expression/star/supplemented/quantifications_2/processed_imgt_quants.tsv"
 	)[sample_dt, on = .(subject)
 	][, .(subject = code, locus, Name = allele, NumReads = est_counts)]
 
@@ -44,7 +44,7 @@ abundances_dt <-
     rbind(abundances_non_imgt, abundances_imgt
 	)[, .(NumReads = sum(NumReads)), by = .(subject, Name)]
 
-index <- readDNAStringSet("../../../imgt_index/gencode.v25.PRI.IMGT.transcripts.fa")
+index <- readDNAStringSet("../../../imgt_index_v2/gencode.v25.PRI.IMGT.transcripts.fa")
 index <- index[width(index) >= 75]
 
 abundances_wide <- dcast(abundances_dt, Name ~ subject, value.var = "NumReads")

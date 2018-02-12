@@ -82,9 +82,9 @@ dev.off()
 # eQTL landscape around TSS
 read_conditional_hla <- function(path) {
     read_qtltools(path) %>%
-        inner_join(select(gencode_hla, gene_id, gene_name, tss), 
+        inner_join(select(gencode_hla, gene_id, gene_name), 
 		   by = c("phen_id" = "gene_id")) %>%
-        mutate(dist_tss = ifelse(strand == "+", var_from - tss, tss - var_from),
+        mutate(dist_tss = ifelse(strand == "+", var_from - start, end - var_from),
                pval = -log10(bwd_pval)) %>%
         select(gene = gene_name, rank, var_id, var_from, dist, dist_tss, 
 	       pval, slope = bwd_slope, best = bwd_best, signif = bwd_signif) %>%

@@ -11,12 +11,20 @@ read_gencode <- function(gtf) {
 gencode25 <- read_gencode("~/gencode_data/gencode.v25.annotation.gtf.gz") %>%
     filter(chr == "chr6", strand %in% c("+", "-"), feature != "transcript")
 
+hla_tss <- "~/gencode_data/gencode.v25.annotation.gtf.gz" %>%
+    get_gencode_coords(feature = "start_codon") %>%
+    filter(gene_name %in% gencode_hla$gene_name) %>%
+    mutate(tss = ifelse(strand == "+", start, end)) %>%
+    select(gene_id, gene_name, tss)
+
 qtls <- "../3-conditional_analysis/conditional_60_all.txt.gz" %>%
     read_qtltools() %>%
-    inner_join(gencode_hla, by = c("phen_id" = "gene_id")) %>%
     filter(bwd_best == 1L) %>%
-    select(gene_name, rank, var_id, var_chr, var_from) %>%
-    mutate(var_chr = paste0("chr", var_chr))
+    inner_join(hla_tss, by = c("phen_id" = "gene_id")) %>%
+    mutate(dist_tss = ifelse(strand == "+", var_from - tss, tss - var_from),
+	   var_chr = paste0("chr", var_chr)) %>%
+    select(gene_name, rank, var_id, var_chr, var_from, dist_tss) %>%
+    arrange(gene_name, rank)
 
 x <- 
     full_join(qtls, gencode25, by = c("var_chr" = "chr")) %>%
@@ -42,6 +50,4 @@ x <-
     ungroup() %>% 
     arrange(gene_name, rank, ori)
 
-x %>% 
-    print(n = Inf)
-
+x %>% print(n = Inf)

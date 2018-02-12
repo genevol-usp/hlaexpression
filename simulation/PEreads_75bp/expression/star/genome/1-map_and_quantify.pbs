@@ -4,7 +4,7 @@
 #PBS -l mem=36gb
 #PBS -l walltime=24:00:00
 #PBS -q short
-#PBS -t 1
+#PBS -t 1-50%6
 #PBS -j oe
 #PBS -o /home/vitor/hlaexpression/simulation/PEreads_75bp/expression/star/genome/log/$PBS_JOBID.log
 

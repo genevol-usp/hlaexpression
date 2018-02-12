@@ -2,7 +2,7 @@
 
 quantDir=./quantifications
 hlaIDs=/home/vitor/hlaexpression/imgt_index/hla_ids_pri.txt
-samples=$(printf "sample_%02d" $PBS_ARRAYID)
+samples=(sample_{01..50})
 OUTimgt=$quantDir/imgt_quants.tsv
 
 awk 'NR == 1 {print "subject\t" $0}' $quantDir/${samples[0]}/quant.sf > $OUTimgt

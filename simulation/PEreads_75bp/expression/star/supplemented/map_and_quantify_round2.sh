@@ -6,7 +6,7 @@ samtools=/home/vitor/samtools-1.3.1/samtools
 
 sample=$1
 indexDIR=./sample_indices/$sample
-fasta=/home/vitor/hlaexpression/imgt_index/gencode.v25.PRI.transcripts.noIMGT.fa
+fasta=/home/vitor/hlaexpression/imgt_index_v2/gencode.v25.PRI.transcripts.noIMGT.fa
 sample_hla=./sample_indices/hla_$sample.fa
 sample_fa=./sample_indices/index_$sample.fa
 
@@ -40,14 +40,6 @@ $STAR --runMode alignReads --runThreadN 6 --genomeDir $indexDIR\
     --outFileNamePrefix $outPrefix
 
 bam=${outPrefix}Aligned.out.bam
-out=$outQuant/$sample
-
-if [ -d "$out" ]; then
-    rmdir $out
-fi
-
-$salmon quant -t $sample_fa -l IU -a $bam -o $out -p 6 --seqBias --gcBias
-
 header=${outPrefix}header.sam
 sampledir=$outMap/$sample
 imgtbam=$sampledir/imgt.bam
@@ -62,4 +54,12 @@ $samtools view -f 0x2 -F 0x100 $bam |\
     $samtools view -Sb - |\
     $samtools sort - > $imgtbam
 
-rm ${outPrefix}Aligned* ${outPrefix}Log* ${outPrefix}SJ* $header
+out=$outQuant/$sample
+
+if [ -d "$out" ]; then
+    rm -r $out
+fi
+
+$salmon quant -t $sample_fa -l IU -a $bam -o $out -p 6 --seqBias --gcBias
+
+rm ${outPrefix}*

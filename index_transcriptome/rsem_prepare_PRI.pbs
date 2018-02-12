@@ -5,7 +5,7 @@
 #PBS -l walltime=01:00:00
 #PBS -q short
 #PBS -j oe
-#PBS -o home/vitor/gencode_data/rsem_pri_index.out
+#PBS -o home/vitor/hlaexpression/index_transcriptome/rsem.log
 
 rsem=/home/vitor/RSEM
 

@@ -38,16 +38,16 @@ expression_df <- list(imgt = phen_best_imgt, ref = phen_best_pri) %>%
 
 eqtl_df <- read_tsv("./best_eqtl.tsv") %>%
     left_join(gencode_hla, by = c("phen_id" = "gene_id")) %>%
-    select(index, gene_name, variant = var_id)
+    select(index, gene_name, rsid = var_id, slope = bwd_slope)
 
 eqtl_info <- read_tsv("./best_eqtl_snps.vcf", comment = "##") %>%
     select(-`#CHROM`, -POS, -REF, -ALT, -QUAL, -FILTER, -INFO, -FORMAT) %>%
     gather(subject, genotype, -ID) %>%
-    inner_join(eqtl_df, by = c("ID" = "variant")) %>%
-    select(index, subject, gene_name, rsid = ID, genotype) %>%
+    inner_join(eqtl_df, by = c("ID" = "rsid")) %>%
+    select(index, subject, gene_name, rsid = ID, genotype, slope) %>%
     separate(genotype, c("1", "2"), sep = "\\|") %>%
     gather(hap, allele, `1`:`2`) %>%
-    group_by(index, subject, gene_name, rsid) %>%
+    group_by(index, subject, gene_name, rsid, slope) %>%
     summarize(genotype = paste(sort(allele), collapse = "/"),
 	      dosage = sum(as.integer(allele))) %>%
     ungroup()
@@ -57,8 +57,7 @@ df <-
     left_join(hla_dist, by = c("subject", "gene_name")) %>%
     mutate(index = recode(index, "imgt" = "HLA_personalized", "ref" = "Reference"))
 
-
-cor_list <- select(df, index, gene_name, dosage, resid, dist) %>%
+cor_list <- select(df, index, gene_name, resid, dist, dosage) %>%
     split(list(.$index, .$gene_name)) %>%
     map(~select(., -index, -gene_name))
 

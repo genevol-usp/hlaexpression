@@ -6,7 +6,7 @@
 #PBS -q short
 #PBS -t 1-50
 #PBS -j oe
-#PBS -o /home/vitor/hlaexpression/simulation/PEreads_75bp/expression/star/pri/log/$PBS_NAMEID.log
+#PBS -o /home/vitor/hlaexpression/simulation/PEreads_75bp/expression/star/transcriptome/log/$PBS_NAMEID.log
 
 cd $PBS_O_WORKDIR
 

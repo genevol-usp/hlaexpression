@@ -6,7 +6,7 @@ samtools=/home/vitor/samtools-1.3.1/samtools
 
 sample=$1
 
-indexDIR=/home/vitor/hlaexpression/imgt_index/star/indexPRI
+indexDIR=/home/vitor/hlaexpression/index_transcriptome/star/index
 fq1=../../../data/fastq/${sample}_1.fastq.gz
 fq2=../../../data/fastq/${sample}_2.fastq.gz
 outMap=./mappings
@@ -28,18 +28,11 @@ $STAR --runMode alignReads --runThreadN 4 --genomeDir $indexDIR\
   --outFileNamePrefix $outPrefix
 
 bam=${outPrefix}Aligned.out.bam
-fasta=/home/vitor/gencode_data/gencode.v25.PRI.transcripts.fa
-out=$outQuant/$sample
-
-if [ -d "$out" ]; then
-    rmdir $out
-fi
-
-$salmon quant -t $fasta -l IU -a $bam -o $out -p 4 --seqBias --gcBias
-
 header=${outPrefix}header.sam
 sampledir=$outMap/$sample
 imgtbam=$sampledir/imgt.bam
+
+mkdir -p $sampledir
 
 $samtools view -H $bam > $header
 
@@ -48,4 +41,13 @@ $samtools view -f 0x2 -F 0x100 $bam |\
     cat $header - |\
     $samtools view -Sb - > $imgtbam
 
-rm ${outPrefix}Aligned* ${outPrefix}Log* ${outPrefix}SJ* ${outPrefix}header.sam
+if [ -d "$out" ]; then
+    rm -r $out
+fi
+
+fasta=/home/vitor/gencode_data/gencode.v25.PRI.transcripts.fa
+out=$outQuant/$sample
+
+$salmon quant -t $fasta -l IU -a $bam -o $out -p 4 --seqBias --gcBias
+
+rm ${outPrefix}* 

@@ -9,9 +9,9 @@ bam <- file.path(mapdir, sample_id, "imgt.bam")
 hla_genes <- gencode_hla$gene_name
 hla_regex <- "IMGT_(A|B|C|DPB1|DQA1|DQB1|DRB1)"  
 
-ids_hla_pri <- readLines("../../../../imgt_index/hla_ids_pri.txt")
+ids_hla_pri <- readLines("../../../../../imgt_index/hla_ids_pri.txt")
 
-read_ids <- paste0("../../data/read_ids/", sample_id, ".txt") %>%
+read_ids <- paste0("../../../data/read_ids/", sample_id, ".txt") %>%
     readLines() %>%
     .[grepl(hla_regex, .)] %>%
     sub("^@", "", .) %>%

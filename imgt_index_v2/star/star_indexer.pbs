@@ -5,7 +5,7 @@
 #PBS -l walltime=12:00:00
 #PBS -q short
 #PBS -j oe
-#PBS -o /home/vitor/hlaexpression/imgt_index_v2/star/indexIMGT.out
+#PBS -o /home/vitor/hlaexpression/imgt_index_v2/star/index.log
 
 STAR=/home/vitor/STAR
 

@@ -1,15 +1,6 @@
 devtools::load_all("~/hlaseqlib")
 library(tidyverse)
 
-make_genot_calls_df <- function(typings_df) {
-    
-    typings_df %>%
-        mutate(subject = convert_ena_ids(as.character(subject)),
-	       locus = sub("^HLA-", "", locus),
-	       allele = hla_trimnames(gsub("IMGT_", "", allele), 3)) %>%
-	arrange(subject, locus, allele)
-}
-
 hla_genes <- gencode_hla$gene_name 
 
 samples <- sprintf("sample_%02d", 1:50)
@@ -39,7 +30,8 @@ typings <-
 calls <- typings %>%
     filter(locus %in% hla_genes) %>%
     select(th, subject, locus, allele) %>%
-    make_genot_calls_df() 
+    mutate(allele = hla_trimnames(gsub("IMGT_", "", allele), 3)) %>%
+    arrange(subject, locus, allele)
 
 accuracies <- calls %>%
     split(.$th) %>%

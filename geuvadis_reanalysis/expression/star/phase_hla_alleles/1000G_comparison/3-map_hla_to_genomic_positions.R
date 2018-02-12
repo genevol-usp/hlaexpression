@@ -7,8 +7,7 @@ map_to_genome <- function(locus, strand, annot_start, annot_end, ref_allele, chr
     locus <- sub("HLA-", "", locus) 
     if (locus == "DRB1") locus <- "DRB"
    
-    ref_seq <- 
-	paste0("/home/vitor/IMGTHLA/alignments/", locus, "_nuc.txt") %>%
+    ref_seq <- paste0("/home/vitor/IMGTHLA/alignments/", locus, "_nuc.txt") %>%
 	hla_read_alignment(omit = "N", rm_incomplete = TRUE, by_exon = TRUE) %>%
 	separate(allele, c("allele", "exon"), sep = "_") %>%
 	filter(allele == ref_allele) %>%
@@ -21,8 +20,7 @@ map_to_genome <- function(locus, strand, annot_start, annot_end, ref_allele, chr
 	ungroup() %>%
 	select(allele, cds)
 
-    x_seqs <- 
-	ref_seq %>%
+    x_seqs <- ref_seq %>%
 	split(.$allele) %>%
 	map_chr("cds") %>%
 	DNAStringSet()
@@ -39,31 +37,27 @@ map_to_genome <- function(locus, strand, annot_start, annot_end, ref_allele, chr
 	pull(coords)
 }
 
-genome <- 
-    "/home/vitor/gencode_data/GRCh38.primary_assembly.genome.fa.gz" %>%
+genome <- "/home/vitor/gencode_data/GRCh38.primary_assembly.genome.fa.gz" %>%
     readDNAStringSet()
 
 chr6 <- genome[names(genome) == "chr6 6"][[1]]
 
-samples <-
-    "/home/vitor/hlaexpression/geuvadis_reanalysis/data/sample_info/samples_phase3.tsv" %>%
-    read_tsv() %>%
-    pull(subject)
+samples <- pull(geuvadis_info, name)
 
-ref_alleles <- 
-    read_tsv("/home/vitor/hlaexpression/imgt_index/hla_ref_alleles.tsv")
+ref_alleles <- read_tsv("./hla_ref_alleles.tsv")
 
-hla_genes <- sort(gencode_hla$gene_name)
+hla_genes <- gencode_hla$gene_name
 
 genos <- 
-    read_tsv("../../imgt/quantifications_2/processed_imgt_quants.tsv") %>%
+    "../../../star/supplemented/quantifications_2/processed_imgt_quants.tsv" %>%
+    read_tsv() %>%
     filter(locus %in% hla_genes) %>%
     select(subject, locus, allele) %>%
     mutate(subject = convert_ena_ids(subject),
 	   allele = sub("^([^=]+).*$", "\\1", allele))
 
-vcf <-
-    read_tsv("./hla_snps.vcf", comment = "##", progress = FALSE) %>%
+vcf <- "./hla_snps.vcf" %>% 
+    read_tsv(comment = "##", progress = FALSE) %>%
     filter(nchar(REF) == 1, grepl("^[ACGT](,[ACGT])*$", ALT)) %>% 
     select(-1, -3, -6, -7, -8, -9) %>%
     gather(subject, genotype, HG00096:NA21144) %>%

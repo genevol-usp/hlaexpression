@@ -13,7 +13,7 @@ previous_eqtls <-
     "/home/vitor/hlaexpression/geuvadis_reanalysis/data/previous_qtls/qtl_catalog.tsv" %>%
     read_tsv(col_names = c("rsid", "info")) %>%
     separate_rows(info, sep = ";") %>%
-    separate(info, c("study", "tissue", "gene", "pvalue"), sep = "\\|")
+    separate(info, c("study", "gene", "pvalue"), sep = "\\|")
     
 rtc <- 
     list.files(".", pattern = "^rtc_results") %>%
@@ -25,11 +25,9 @@ rtc <-
 rtc_df <- 
     left_join(qtls, rtc, by = c("gene", "rsid" =  "qtl_var")) %>%
     left_join(previous_eqtls, by = c("gene", "qtl_previous" =  "rsid")) %>%
-    filter(rtc > 0.95, !is.na(study)) %>%
+    filter(rtc > 0.95) %>%
     group_by(gene, rsid) %>%
     filter(rtc == max(rtc)) %>%
-    group_by(gene, rsid, rank, qtl_previous, d_prime, rtc, study) %>%
-    summarize(tissue = paste(tissue, collapse = ",")) %>%
     ungroup() %>%
     arrange(gene, rank, desc(rtc)) %>%
     mutate(rtc = round(rtc, 3))

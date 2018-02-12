@@ -8,7 +8,7 @@ eqtl_imgt <-
     group_by(phen_id) %>%
     slice(which.min(bwd_pval)) %>%
     ungroup() %>%
-    select(phen_id, var_id, var_chr, var_from, var_to) 
+    select(phen_id, var_id, bwd_slope) 
 
 eqtl_pri <- 
     "../qtls/star/pri/3-conditional_analysis/conditional_60_all.txt.gz" %>%
@@ -17,7 +17,7 @@ eqtl_pri <-
     group_by(phen_id) %>%
     slice(which.min(bwd_pval)) %>%
     ungroup() %>%
-    select(phen_id, var_id, var_chr, var_from, var_to) 
+    select(phen_id, var_id, bwd_slope) 
 
 eqtl_df <- list(imgt = eqtl_imgt, ref = eqtl_pri) %>%
     bind_rows(.id = "index")

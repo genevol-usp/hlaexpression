@@ -5,7 +5,7 @@ processed_quants <- commandArgs(TRUE)[1]
 outdir <- commandArgs(TRUE)[2]
 
 index <- 
-    readDNAStringSet("/home/vitor/hlaexpression/imgt_index_experimental/imgt_index.fa")
+    readDNAStringSet("/home/vitor/hlaexpression/imgt_index_utr/imgt_index.fa")
 
 genos <- read_tsv(processed_quants) %>%
     select(subject, locus, allele, est_counts) %>%

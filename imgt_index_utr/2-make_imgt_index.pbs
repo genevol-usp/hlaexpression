@@ -6,7 +6,7 @@
 #PBS -q short
 #PBS -t 1-34
 #PBS -j oe
-#PBS -o /home/vitor/hlaexpression/imgt_index_experimental/log/$PBS_JOBID.log
+#PBS -o /home/vitor/hlaexpression/imgt_index_utr/log/$PBS_JOBID.log
 
 cd $PBS_O_WORKDIR
 

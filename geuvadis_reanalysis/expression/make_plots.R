@@ -373,6 +373,30 @@ ggplot(class_2_trans_df, aes(tpm, CIITA)) +
 dev.off()
 
 png("./plots/within_vs_between_haps.png", height = 8, width = 8, units = "in", res = 200)
+
+plotphase <- function(phase_df) {
+    
+    phase_cor_df <- phase_df %>%
+        group_by(pair, level) %>%
+        summarize(r = cor(gene1, gene2),
+                  x = min(gene1),
+                  y = max(gene2)) %>%
+        ungroup() %>%
+        mutate(r = round(r, digits = 2))
+    
+    ggplot(phase_df, aes(gene1, gene2)) +
+        geom_point(size = 1) +
+        geom_smooth(method = lm, se = FALSE) + 
+        geom_text(data = phase_cor_df,
+                  aes(x, y, label = paste("r =", r)),
+                  hjust = "inward", vjust = "inward", size = 4) +
+        facet_grid(pair~level, scales = "free") +
+        theme_bw() +
+        theme(axis.text = element_text(size = 10),
+              axis.title = element_blank(),
+              strip.text = element_text(size = 10))
+}
+
 phase_data <- 
     tribble(
         ~locus1, ~locus2,
@@ -383,25 +407,19 @@ phase_data <-
         "DQA1" , "DRB1") %>%
     pmap_df(make_data, tpm_by_allele)
 
-phase_cor_df <- phase_data %>%
-    group_by(pair, level) %>%
-    summarize(r = cor(gene1, gene2),
-              x = min(gene1),
-              y = max(gene2)) %>%
-    ungroup() %>%
-    mutate(r = round(r, digits = 2))
-    
-ggplot(phase_data, aes(gene1, gene2)) +
-    geom_point(size = 1) +
-    geom_smooth(method = lm, se = FALSE) + 
-    geom_text(data = phase_cor_df, aes(x, y, label = paste("r =", r)),
-              hjust = "inward", vjust = "inward", size = 4) +
-    facet_wrap(pair~level, ncol = 3, scales = "free") +
-    theme_bw() +
-    theme(axis.text = element_text(size = 10),
-          axis.title = element_blank(),
-          strip.text = element_text(size = 10))
+phase_list <- filter(phase_data, level != "Gene-level") %>%
+    split(.$pair)
+
+p1 <- plotphase(phase_list[[1]])
+p2 <- plotphase(phase_list[[2]]) + theme(strip.text.x = element_blank())    
+p3 <- plotphase(phase_list[[3]]) + theme(strip.text.x = element_blank())   
+p4 <- plotphase(phase_list[[4]]) + theme(strip.text.x = element_blank())   
+p5 <- plotphase(phase_list[[5]]) + theme(strip.text.x = element_blank())
+
+plot_grid(p1, p2, p3, p4, p5, ncol = 1, rel_heights = c(1, .9, .9, .9, .9))
+
 dev.off()
+
 
 png("./plots/correlation_decrease.png", width = 10, height = 5, units = "in", res = 200)
 ggplot(cors_pca_star, aes(PC, correlation)) +
