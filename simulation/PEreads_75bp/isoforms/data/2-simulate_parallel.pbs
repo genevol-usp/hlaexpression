@@ -14,7 +14,7 @@ cd $PBS_O_WORKDIR
 mkdir -p ./log
 mkdir -p ./fastq
 
-#Rscript polyester.R 1 
+Rscript polyester.R 1 
 
 for i in {1..2}
 do

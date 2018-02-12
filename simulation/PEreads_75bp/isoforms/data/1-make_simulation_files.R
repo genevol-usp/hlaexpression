@@ -18,7 +18,7 @@ annot <-
     select(gene_name, transcript_id, transcript_type)
 
 abundances <- 
-    "../../../../geuvadis_reanalysis/expression/star/pri/quantifications/ERR188021/quant.sf" %>%
+    "../../../../geuvadis_reanalysis/expression/star/transcriptome/quantifications/ERR188021/quant.sf" %>%
     read_tsv()
 
 transcripts_to_rm <- abundances %>%
