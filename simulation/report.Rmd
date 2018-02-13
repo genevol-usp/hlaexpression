@@ -14,6 +14,9 @@ library(knitr)
 
 # Genotyping
 
+
+- Threshold of least expressed/most expressed = 0.05
+
 ```{r}
 read_tsv("./PEreads_75bp/expression/star/supplemented/genotyping_accuracies_1.tsv") %>%
   filter(th == .05) %>%
@@ -21,6 +24,12 @@ read_tsv("./PEreads_75bp/expression/star/supplemented/genotyping_accuracies_1.ts
   select(locus, `accuracy (%)` = accuracy) %>%
   kable()
 ```
+
+There are 7 mistypings for HLA-DPB1. In all of them, the true allele was
+DPB1\*04:01:01, but a DPB1\*126:01:01 was called instead. These 2 alleles are
+different only at position 619 of the CDS (end of exon 3). We need to
+investigate this issue.
+
 
 # Expression
 

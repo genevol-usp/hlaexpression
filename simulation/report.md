@@ -4,6 +4,8 @@ Report
 Genotyping
 ==========
 
+-   Threshold of least expressed/most expressed = 0.05
+
 | locus    |  accuracy (%)|
 |:---------|-------------:|
 | HLA-A    |           100|
@@ -13,6 +15,8 @@ Genotyping
 | HLA-DQA1 |           100|
 | HLA-DQB1 |           100|
 | HLA-DRB1 |           100|
+
+There are 7 mistypings for HLA-DPB1. In all of them, the true allele was DPB1\*04:01:01, but a DPB1\*126:01:01 was called instead. These 2 alleles are different only at position 619 of the CDS (end of exon 3). We need to investigate this issue.
 
 Expression
 ==========
