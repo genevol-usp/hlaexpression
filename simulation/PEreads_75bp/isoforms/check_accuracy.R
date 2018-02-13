@@ -1,5 +1,5 @@
-library(tidyverse)
 devtools::load_all("~/hlaseqlib")
+library(tidyverse)
 
 gencode_hla_tx <- filter(gencode_pri_tx, gene_name %in% gencode_hla$gene_name) %>%
     select(tx_id, gene_name)
