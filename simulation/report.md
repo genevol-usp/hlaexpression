@@ -48,22 +48,36 @@ Quality assessment
 Percentage of simulated reads not aligned, aligned exclusively to a different reference, or aligned to original reference but as a multimap
 -------------------------------------------------------------------------------------------------------------------------------------------
 
-| index             | gene\_from |  perc\_not\_aligned|  perc\_not\_aligned\_to\_original|  perc\_aligned\_to\_original\_multimap|  perc\_aligned\_to\_original\_uniquely|
-|:------------------|:-----------|-------------------:|---------------------------------:|--------------------------------------:|--------------------------------------:|
-| HLA-personalized  | HLA-A      |                0.00|                              0.01|                                   1.21|                                  98.78|
-| Ref transcriptome | HLA-A      |                4.67|                              4.76|                                   9.99|                                  80.58|
-| HLA-personalized  | HLA-B      |                0.00|                              0.00|                                   0.36|                                  99.64|
-| Ref transcriptome | HLA-B      |                9.18|                             12.56|                                   4.04|                                  74.22|
-| HLA-personalized  | HLA-C      |                0.00|                              0.00|                                   0.01|                                  99.99|
-| Ref transcriptome | HLA-C      |                4.15|                             14.02|                                   2.84|                                  79.00|
-| HLA-personalized  | HLA-DPB1   |                0.00|                              0.00|                                   0.00|                                 100.00|
-| Ref transcriptome | HLA-DPB1   |                2.19|                              0.01|                                   0.00|                                  97.81|
-| HLA-personalized  | HLA-DQA1   |                0.00|                              0.00|                                   0.58|                                  99.41|
-| Ref transcriptome | HLA-DQA1   |               17.90|                             12.56|                                   9.75|                                  59.79|
-| HLA-personalized  | HLA-DQB1   |                0.00|                              0.00|                                   0.01|                                  99.98|
-| Ref transcriptome | HLA-DQB1   |               18.02|                              9.24|                                   2.34|                                  70.40|
-| HLA-personalized  | HLA-DRB1   |                0.00|                              0.01|                                   0.45|                                  99.54|
-| Ref transcriptome | HLA-DRB1   |               12.04|                             22.07|                                   4.05|                                  61.84|
+| gene\_from | reads (%)                           |  HLA-personalized|  Ref transcriptome|
+|:-----------|:------------------------------------|-----------------:|------------------:|
+| HLA-A      | mapped to original gene as multimap |              1.21|               9.99|
+| HLA-A      | uniquely mapping                    |             98.78|              80.58|
+| HLA-A      | unmapped                            |              0.00|               4.67|
+| HLA-A      | mapped but not to original gene     |              0.01|               4.76|
+| HLA-B      | mapped to original gene as multimap |              0.36|               4.04|
+| HLA-B      | uniquely mapping                    |             99.64|              74.22|
+| HLA-B      | unmapped                            |              0.00|               9.18|
+| HLA-B      | mapped but not to original gene     |              0.00|              12.56|
+| HLA-C      | mapped to original gene as multimap |              0.01|               2.84|
+| HLA-C      | uniquely mapping                    |             99.99|              79.00|
+| HLA-C      | unmapped                            |              0.00|               4.15|
+| HLA-C      | mapped but not to original gene     |              0.00|              14.02|
+| HLA-DPB1   | mapped to original gene as multimap |              0.00|               0.00|
+| HLA-DPB1   | uniquely mapping                    |            100.00|              97.81|
+| HLA-DPB1   | unmapped                            |              0.00|               2.19|
+| HLA-DPB1   | mapped but not to original gene     |              0.00|               0.01|
+| HLA-DQA1   | mapped to original gene as multimap |              0.58|               9.75|
+| HLA-DQA1   | uniquely mapping                    |             99.41|              59.79|
+| HLA-DQA1   | unmapped                            |              0.00|              17.90|
+| HLA-DQA1   | mapped but not to original gene     |              0.00|              12.56|
+| HLA-DQB1   | mapped to original gene as multimap |              0.01|               2.34|
+| HLA-DQB1   | uniquely mapping                    |             99.98|              70.40|
+| HLA-DQB1   | unmapped                            |              0.00|              18.02|
+| HLA-DQB1   | mapped but not to original gene     |              0.00|               9.24|
+| HLA-DRB1   | mapped to original gene as multimap |              0.45|               4.05|
+| HLA-DRB1   | uniquely mapping                    |             99.54|              61.84|
+| HLA-DRB1   | unmapped                            |              0.00|              12.04|
+| HLA-DRB1   | mapped but not to original gene     |              0.01|              22.07|
 
 To further understand the read "loss" or "gain" we examined, for each HLA gene, the percentage of alignments stratified by mapped or source gene, respectively.
 

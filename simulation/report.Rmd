@@ -88,6 +88,14 @@ list("HLA-personalized" = read_summary_imgt,
      "Ref transcriptome" = read_summary_pri) %>%
 bind_rows(.id = "index") %>%
 arrange(gene_from, index) %>%
+gather(category, value, -(1:2)) %>%
+spread(index, value) %>%
+mutate(category = recode(category, 
+			 perc_aligned_to_original_multimap = "mapped to original gene as multimap",
+			 perc_aligned_to_original_uniquely = "uniquely mapping",
+			 perc_not_aligned = "unmapped",
+			 perc_not_aligned_to_original =  "mapped but not to original gene")) %>%
+rename(`reads (%)` = category) %>%
 kable(digits = 2)
 ```
 
