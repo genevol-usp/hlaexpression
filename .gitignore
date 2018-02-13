@@ -69,9 +69,9 @@ simulation/PEreads_75bp/expression/salmon/quantifications*
 simulation/PEreads_75bp/isoforms/expression/star/mappings*
 simulation/PEreads_75bp/isoforms/expression/star/quantifications*
 simulation/PEreads_75bp/isoforms/expression/star/sample_indices
-simulation/PEreads_75bp/isoforms/expression/star_utr_index/mappings*
-simulation/PEreads_75bp/isoforms/expression/star_utr_index/quantifications*
-simulation/PEreads_75bp/isoforms/expression/star_utr_index/sample_indices
-simulation/PEreads_75bp/isoforms/expression/star_trimmed_index/mappings*
-simulation/PEreads_75bp/isoforms/expression/star_trimmed_index/quantifications*
-simulation/PEreads_75bp/isoforms/expression/star_trimmed_index/sample_indices/
+simulation/PEreads_75bp/isoforms/expression/old/star_utr_index/mappings*
+simulation/PEreads_75bp/isoforms/expression/old/star_utr_index/quantifications*
+simulation/PEreads_75bp/isoforms/expression/old/star_utr_index/sample_indices
+simulation/PEreads_75bp/isoforms/expression/old/star_trimmed_index/mappings*
+simulation/PEreads_75bp/isoforms/expression/old/star_trimmed_index/quantifications*
+simulation/PEreads_75bp/isoforms/expression/old/star_trimmed_index/sample_indices/
