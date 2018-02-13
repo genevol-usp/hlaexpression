@@ -19,24 +19,28 @@ est_cds_index <-
     filter(gene_name %in% gencode_hla$gene_name) %>%
     select(gene = gene_name, `tpm (cds)` = TPM)
 
-est_cds_utr_index <-
-    read_tsv("./expression/star_utr_index/quantifications_2/imgt_quants.tsv") %>%
-    mutate(gene_name = imgt_to_gname(Name)) %>%
-    filter(gene_name %in% gencode_hla$gene_name) %>%
-    select(gene = gene_name, `tpm (cds+utr)` = TPM)
-
-est_trimmed_index <-
-    read_tsv("./expression/star_trimmed_index/quantifications_2/imgt_quants.tsv") %>%
-    mutate(gene_name = imgt_to_gname(Name)) %>%
-    filter(gene_name %in% gencode_hla$gene_name) %>%
-    select(gene = gene_name, `tpm (trimmed)` = TPM)
+#est_cds_utr_index <-
+#    read_tsv("./expression/star_utr_index/quantifications_2/imgt_quants.tsv") %>%
+#    mutate(gene_name = imgt_to_gname(Name)) %>%
+#    filter(gene_name %in% gencode_hla$gene_name) %>%
+#    select(gene = gene_name, `tpm (cds+utr)` = TPM)
+#
+#est_trimmed_index <-
+#    read_tsv("./expression/star_trimmed_index/quantifications_2/imgt_quants.tsv") %>%
+#    mutate(gene_name = imgt_to_gname(Name)) %>%
+#    filter(gene_name %in% gencode_hla$gene_name) %>%
+#    select(gene = gene_name, `tpm (trimmed)` = TPM)
+#
+#out <- 
+#    left_join(phenotypes_by_gene, est_cds_index, by = "gene") %>%
+#    left_join(est_cds_utr_index, by = "gene") %>%
+#    left_join(est_trimmed_index, by = "gene") %>%
+#    mutate(`estimated/true (cds)` = `tpm (cds)`/`tpm (true)`,
+#	   `estimated/true (cds+utr)` = `tpm (cds+utr)`/`tpm (true)`,
+#	   `estimated/true (trimmed)` = `tpm (trimmed)`/`tpm (true)`)
 
 out <- 
     left_join(phenotypes_by_gene, est_cds_index, by = "gene") %>%
-    left_join(est_cds_utr_index, by = "gene") %>%
-    left_join(est_trimmed_index, by = "gene") %>%
-    mutate(`estimated/true (cds)` = `tpm (cds)`/`tpm (true)`,
-	   `estimated/true (cds+utr)` = `tpm (cds+utr)`/`tpm (true)`,
-	   `estimated/true (trimmed)` = `tpm (trimmed)`/`tpm (true)`)
+    mutate(`estimated/true (cds)` = `tpm (cds)`/`tpm (true)`)
 
 write_tsv(out, "./results.tsv")
