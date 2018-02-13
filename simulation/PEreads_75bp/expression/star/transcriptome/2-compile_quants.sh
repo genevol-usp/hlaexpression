@@ -1,7 +1,7 @@
 #!/bin/bash
 
 quantDir=./quantifications
-hlaIDs=/home/vitor/hlaexpression/imgt_index/hla_ids_pri.txt
+hlaIDs=/home/vitor/hlaexpression/index_transcriptome/hla_ids_pri.txt
 samples=(sample_{01..50})
 OUTimgt=$quantDir/imgt_quants.tsv
 

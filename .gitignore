@@ -64,6 +64,8 @@ simulation/PEreads_75bp/expression/star/genome_to_supplemented/mappings
 simulation/PEreads_75bp/expression/star/genome_to_supplemented/quantifications
 simulation/PEreads_75bp/expression/star/genome_to_transcriptome/mappings
 simulation/PEreads_75bp/expression/star/genome_to_transcriptome/quantifications
+simulation/PEreads_75bp/expression/star/genome_to_supplemented/mappings*
+simulation/PEreads_75bp/expression/star/genome_to_supplemented/quantifications*
 simulation/PEreads_75bp/expression/salmon/index*
 simulation/PEreads_75bp/expression/salmon/quantifications*
 simulation/PEreads_75bp/isoforms/expression/star/mappings*

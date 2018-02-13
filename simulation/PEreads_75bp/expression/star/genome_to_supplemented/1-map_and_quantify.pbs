@@ -11,8 +11,8 @@
 cd $PBS_O_WORKDIR
 
 mkdir -p ./log
-mkdir -p ./mappings
-mkdir -p ./quantifications
+mkdir -p ./mappings_1
+mkdir -p ./quantifications_1
 
 SAMPLE=$(printf "sample_%02d" $PBS_ARRAYID)
 
