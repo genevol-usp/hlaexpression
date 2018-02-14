@@ -3,14 +3,14 @@ library(Biostrings)
 
 index_files <- list.files(".", pattern = "index_.+\\.tsv$") 
 
-index_df <- index_files %>%
-    map_df(read_tsv) %>%
-    mutate(allele = paste0("IMGT_", allele))
+index_df <- map_df(index_files, read_tsv)
 
 index <- index_df %>%
-  split(.$allele) %>%
-  map_chr("transcript") %>%
-  DNAStringSet()
+    unite(id, c("allele", "exon"), sep = "_") %>% 
+    filter(!is.na(cds)) %>%
+    split(.$id) %>%
+    map_chr("cds") %>%
+    DNAStringSet()
 
 writeXStringSet(index, "./index_ref_positions.fa")
 unlink(index_files)

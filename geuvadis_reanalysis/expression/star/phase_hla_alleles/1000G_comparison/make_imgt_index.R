@@ -11,53 +11,46 @@ if (grepl("DRB\\d+", locus)) {
 
 nuc_file <- paste0("~/IMGTHLA/alignments/", locus_nuc, "_nuc.txt")
 
-hla_df <- hla_read_alignment(nuc_file) %>%
+hla_df <- hla_read_alignment(nuc_file, by_exon = TRUE) %>%
    mutate(gene = sub("^([^*]+).+$", "\\1", allele)) %>%
    filter(gene == locus) %>%
-   select(-gene)
+   select(-gene) %>%
+   separate(allele, c("allele", "exon"), sep = "_") %>%
+   group_by(allele) %>%
+   summarise(cds = paste(cds, collapse = "|")) %>%
+   ungroup()
 
-if (all(grepl("\\*", hla_df$cds))) {
-    stop(paste("no complete sequence for locus", locus))
-}
+distmatrix <- make_dist_matrix(hla_df)
 
-if (nrow(hla_df) == 1L || all(!grepl("\\*", hla_df$cds))) {
-    
-    final_df <- hla_df
+closest_allele_df <- make_closest_allele_df(distmatrix)
 
-} else {
+closest_allele_df$id <- closest_allele_df %>% group_indices(inc_allele)
 
-    distmatrix <- make_dist_matrix(hla_df)
+closest_allele_df_step2 <-
+    bind_rows(select(closest_allele_df, id, allele = inc_allele),
+	      select(closest_allele_df, id, allele = closest)) %>%
+    distinct() %>%
+    left_join(hla_df, by = "allele") %>%
+    split(.$id) %>%
+    map(make_dist_matrix) %>%
+    map(make_closest_allele_df) %>%
+    bind_rows()
 
-    closest_allele_df <- make_closest_allele_df(distmatrix)
+closest_within_type <- find_closest_within_type(closest_allele_df_step2)
 
-    closest_allele_df$id <- closest_allele_df %>% group_indices(inc_allele)
+inferred_df <- closest_within_type %>%
+    left_join(hla_df, by = c("inc_allele" = "allele")) %>%
+    left_join(hla_df, by = c("closest" = "allele")) %>%
+    mutate(cds = map2_chr(cds.x, cds.y, hla_attribute_seq)) %>%
+    select(allele = inc_allele, cds)
 
-    closest_allele_df_step2 <-
-	bind_rows(select(closest_allele_df, id, allele = inc_allele),
-		  select(closest_allele_df, id, allele = closest)) %>%
-	distinct() %>%
-	left_join(hla_df, by = "allele") %>%
-	split(.$id) %>%
-	map(make_dist_matrix) %>%
-	map(make_closest_allele_df) %>%
-	bind_rows()
+final_df <- hla_df %>%
+    filter(!grepl("\\*", cds)) %>%
+    bind_rows(inferred_df) %>%
+    arrange(allele)
 
-    closest_within_type <- closest_allele_df_step2 %>%
-	find_closest_within_type()
-
-    inferred_df <- closest_within_type %>%
-	left_join(hla_df, by = c("inc_allele" = "allele")) %>%
-	left_join(hla_df, by = c("closest" = "allele")) %>%
-	mutate(cds = purrr::map2_chr(cds.x, cds.y, hla_attribute_seq)) %>%
-	select(allele = inc_allele, cds)
-
-    final_df <- hla_df %>%
-	filter(!grepl("\\*", cds)) %>%
-	bind_rows(inferred_df) %>%
-	arrange(allele)
-}
-
-ref_seq <- read_tsv("./hla_ref_alleles.tsv") %>%
+ref_seq <- read_tsv("./cds_ref_positions.tsv") %>%
+    distinct(locus, allele) %>%
     rename(gene = locus) %>%
     filter(gene == paste0("HLA-", locus)) %>%
     left_join(final_df, by = "allele") %>%
@@ -72,14 +65,17 @@ final_df$cds <- str_split(final_df$cds, "", simplify = TRUE) %>%
     apply(1, . %>% paste(collapse = ""))
 
 out_df <- final_df %>%
-    rename(transcript = cds) %>%
     mutate(allele3f = hla_trimnames(allele, 3)) %>%
-    distinct(allele3f, transcript, .keep_all = TRUE) %>%
+    distinct(allele3f, cds, .keep_all = TRUE) %>%
     group_by(allele3f) %>%
     mutate(n = n()) %>%
     ungroup() %>%
     mutate(allele = ifelse(n > 1L, allele, allele3f)) %>%
-    select(allele, transcript) %>%
-    arrange(allele)
+    mutate(cds = strsplit(cds, "\\|")) %>%
+    unnest() %>%
+    group_by(allele) %>%
+    mutate(exon = seq_len(n())) %>%
+    filter(cds != "") %>%
+    select(allele, exon, cds)
 
 write_tsv(out_df, paste0("./index_", locus, ".tsv"))
