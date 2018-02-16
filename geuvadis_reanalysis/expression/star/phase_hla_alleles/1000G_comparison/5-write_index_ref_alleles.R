@@ -8,6 +8,7 @@ index_df <- map_df(index_files, read_tsv)
 index <- index_df %>%
     unite(id, c("allele", "exon"), sep = "_") %>% 
     filter(!is.na(cds)) %>%
+    mutate(cds = gsub("\\*", "N", cds)) %>%
     split(.$id) %>%
     map_chr("cds") %>%
     DNAStringSet()
