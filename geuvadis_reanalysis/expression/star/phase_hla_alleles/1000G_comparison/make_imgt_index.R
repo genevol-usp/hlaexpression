@@ -12,59 +12,30 @@ if (grepl("DRB\\d+", locus)) {
 nuc_file <- paste0("~/IMGTHLA/alignments/", locus_nuc, "_nuc.txt")
 
 hla_df <- hla_read_alignment(nuc_file, by_exon = TRUE) %>%
-   mutate(gene = sub("^([^*]+).+$", "\\1", allele)) %>%
-   filter(gene == locus) %>%
-   select(-gene) %>%
-   separate(allele, c("allele", "exon"), sep = "_") %>%
-   group_by(allele) %>%
-   summarise(cds = paste(cds, collapse = "|")) %>%
-   ungroup()
-
-distmatrix <- make_dist_matrix(hla_df)
-
-closest_allele_df <- make_closest_allele_df(distmatrix)
-
-closest_allele_df$id <- closest_allele_df %>% group_indices(inc_allele)
-
-closest_allele_df_step2 <-
-    bind_rows(select(closest_allele_df, id, allele = inc_allele),
-	      select(closest_allele_df, id, allele = closest)) %>%
-    distinct() %>%
-    left_join(hla_df, by = "allele") %>%
-    split(.$id) %>%
-    map(make_dist_matrix) %>%
-    map(make_closest_allele_df) %>%
-    bind_rows()
-
-closest_within_type <- find_closest_within_type(closest_allele_df_step2)
-
-inferred_df <- closest_within_type %>%
-    left_join(hla_df, by = c("inc_allele" = "allele")) %>%
-    left_join(hla_df, by = c("closest" = "allele")) %>%
-    mutate(cds = map2_chr(cds.x, cds.y, hla_attribute_seq)) %>%
-    select(allele = inc_allele, cds)
-
-final_df <- hla_df %>%
-    filter(!grepl("\\*", cds)) %>%
-    bind_rows(inferred_df) %>%
-    arrange(allele)
+    mutate(gene = sub("^([^*]+).+$", "\\1", allele)) %>%
+    filter(gene == locus) %>%
+    select(-gene) %>%
+    separate(allele, c("allele", "exon"), sep = "_") %>%
+    group_by(allele) %>%
+    summarise(cds = paste(cds, collapse = "|")) %>%
+    ungroup()
 
 ref_seq <- read_tsv("./cds_ref_positions.tsv") %>%
     distinct(locus, allele) %>%
     rename(gene = locus) %>%
     filter(gene == paste0("HLA-", locus)) %>%
-    left_join(final_df, by = "allele") %>%
+    left_join(hla_df, by = "allele") %>%
     pull(cds) %>%
     strsplit("") %>%
     unlist() 
 
 ref_pos <- which(! ref_seq == ".")
 
-final_df$cds <- str_split(final_df$cds, "", simplify = TRUE) %>%
+hla_df$cds <- str_split(hla_df$cds, "", simplify = TRUE) %>%
     .[, ref_pos] %>%
     apply(1, . %>% paste(collapse = ""))
 
-out_df <- final_df %>%
+out_df <- hla_df %>%
     mutate(allele3f = hla_trimnames(allele, 3)) %>%
     distinct(allele3f, cds, .keep_all = TRUE) %>%
     group_by(allele3f) %>%
