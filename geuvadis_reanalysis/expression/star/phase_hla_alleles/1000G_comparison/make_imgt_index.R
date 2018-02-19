@@ -11,10 +11,14 @@ if (grepl("DRB\\d+", locus)) {
 
 nuc_file <- paste0("~/IMGTHLA/alignments/", locus_nuc, "_nuc.txt")
 
-hla_df <- hla_read_alignment(nuc_file) %>%
+hla_df <- hla_read_alignment(nuc_file, by_exon = TRUE) %>%
     mutate(gene = sub("^([^*]+).+$", "\\1", allele)) %>%
     filter(gene == locus) %>%
-    select(-gene)
+    select(-gene) %>%
+    separate(allele, c("allele", "exon"), sep = "_") %>%
+    group_by(allele) %>%
+    summarise(cds = paste(cds, collapse = "|")) %>%
+    ungroup()
 
 ref_seq <- read_tsv("./cds_ref_positions.tsv") %>%
     distinct(locus, allele) %>%
@@ -38,6 +42,11 @@ out_df <- hla_df %>%
     mutate(n = n()) %>%
     ungroup() %>%
     mutate(allele = ifelse(n > 1L, allele, allele3f)) %>%
-    select(allele, cds)
+    mutate(cds = strsplit(cds, "\\|")) %>%
+    unnest() %>%
+    group_by(allele) %>%
+    mutate(exon = seq_len(n())) %>%
+    filter(cds != "") %>%
+    select(allele, exon, cds)
 
 write_tsv(out_df, paste0("./index_", locus, ".tsv"))

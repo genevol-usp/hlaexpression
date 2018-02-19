@@ -2,7 +2,7 @@ devtools::load_all("/home/vitor/hlaseqlib")
 library(tidyverse)
 
 eqtl <- 
-    "../../../qtls/star/imgt/3-conditional_analysis/conditional_60_all.txt.gz" %>%
+    "../../../qtls/star/supplemented/3-conditional_analysis/conditional_60_all.txt.gz" %>%
     read_qtltools() %>%
     filter(phen_id %in% gencode_hla$gene_id, rank == 0L, bwd_best == 1L) %>%
     select(phen_id, var_id, var_chr, var_from, var_to) 
