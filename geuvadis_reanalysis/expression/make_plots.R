@@ -122,7 +122,7 @@ dev.off()
 
 ## STAR: supplemented vs reference transcriptome (PCA)
 star_pri_pca <- 
-    "../qtls/star/supplemented/1-phenotypes/phenotypes_eur_10.bed.gz" %>%
+    "../qtls/star/transcriptome/1-phenotypes/phenotypes_eur_10.bed.gz" %>%
     read_tsv() %>%
     inner_join(select(gencode_hla, gene_id, gene_name), by = c("gid" = "gene_id")) %>%
     select(locus = gene_name, starts_with("HG"), starts_with("NA")) %>%
@@ -150,7 +150,7 @@ png("./plots/tpm_distributions.png", height = 6, width = 10, units = "in", res =
 ggplot(tpm_distribution_df, aes(tpm, fill = index)) +
     geom_density(alpha = 1/2) +
     scale_x_continuous(breaks = function(x) scales::pretty_breaks(3)(x)) +
-    scale_color_manual(values = c(imgt = "#8491B4B2", ref = "#DC0000B2"),
+    scale_fill_manual(values = c(imgt = "#8491B4B2", ref = "#DC0000B2"),
 		       labels = c(imgt = "HLA-supplemented", ref = "Ref transcriptome")) +
     theme_bw() +
     theme(axis.text.x = element_text(angle = 45, margin = margin(t = 10))) +
@@ -225,9 +225,8 @@ dev.off()
 
 
 # Correlations
-png("./plots/hlacorrelations.png", width = 6, height = 6, units = "in", res = 200)
-star_imgt_tpm %>%
-    select(-est_counts) %>%
+png("./plots/hlacorrelations.png", width = 4, height = 4, units = "in", res = 200)
+star_imgt %>%
     mutate(locus = sub("HLA-", "", locus)) %>%
     spread(locus, tpm) %>%
     select(-subject) %>% ggcorr(label = TRUE)
@@ -358,7 +357,7 @@ plotphase <- function(phase_df) {
         mutate(r = round(r, digits = 2))
     
     ggplot(phase_df, aes(gene1, gene2)) +
-        geom_point(size = 1) +
+        geom_point(size = .7) +
         geom_smooth(method = lm, se = FALSE) + 
         scale_x_continuous(breaks = scales::pretty_breaks(2)) +
         scale_y_continuous(breaks = scales::pretty_breaks(2)) +
@@ -393,7 +392,7 @@ phase_list <- filter(phase_data, level != "Gene-level") %>%
     split(.$pair)
 
 
-png("./plots/within_vs_between_haps.png", height = 8, width = 6, units = "in", res = 200)
+png("./plots/within_vs_between_haps.png", height = 6, width = 4, units = "in", res = 200)
 p1 <- plotphase(phase_list[[1]])
 p2 <- plotphase(phase_list[[2]]) + theme(strip.text.x = element_blank())    
 p3 <- plotphase(phase_list[[3]]) + theme(strip.text.x = element_blank())   
