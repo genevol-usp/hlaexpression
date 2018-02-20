@@ -15,18 +15,20 @@ plot_dist <- function(df) {
     	facet_wrap(~locus, scales = "free_x") +
     	scale_color_manual(
     	    values = c(hla = "#8491B4B2", 
-    	               transcriptome = "#DC0000B2",
-    	               genome_to_transc = "#7E6148FF", 
-    	               genome = "#91D1C2B2"),
+    	               transcriptome = "goldenrod4",
+    	               genome_to_transc = "#DC0000B2",
+    	               genome = "#91D1C2B2",
+    	               genome_star_uniqReads = "#7E6148FF"),
     	    labels = c(hla = "HLA-personalized",
-    	               transcriptome = "Ref transcriptome",
-    	               genome_to_transc = "Ref transcriptome v2",
-    	               genome = "Ref genome")) +
+    	               transcriptome = "Ref transcriptome v1",
+    	               genome_to_transc = "Ref transcriptome",
+    	               genome = "Ref genome",
+    	               genome_star_uniqReads = "Ref genome; STAR uniquely mapped")) +
     	theme_bw() +
     	theme(axis.text = element_text(size = 8),
     	      axis.title = element_text(size = 10),
-    	      legend.title = element_text(size = 12),
-    	      legend.text = element_text(size = 10),
+    	      legend.title = element_text(size = 10),
+    	      legend.text = element_text(size = 8),
     	      strip.text = element_text(size = 10, face = "bold"),
     	      legend.position = c(.75, .15)) +
     	guides(color = guide_legend(override.aes = list(size = 4))) +
@@ -87,13 +89,21 @@ star_transcriptome <-
     read_tsv()
 
 star_genome <-
-    "./PEreads_75bp/expression/star/genome/quantifications/compiled_hla_quants.tsv" %>%
+    "./PEreads_75bp/expression/star/genome_qtltools_noOptions/quantifications/compiled_gw_quants.tsv" %>%
     read_tsv() %>%
-    rename(locus = gene)
+    inner_join(gencode_hla, c("gene" = "gene_id")) %>%
+    gather(subject, est_counts, sample_01:sample_50) %>%
+    select(subject, locus = gene_name, est_counts)
 
 star_genome_to_transcriptome <-
     "./PEreads_75bp/expression/star/genome_to_transcriptome/quantifications/processed_imgt_quants.tsv" %>% 
     read_tsv()
+
+star_genome_uniqReads <-
+    "./PEreads_75bp/expression/star/genome_star_uniqReads/quantifications/compiled_gw_quants.tsv" %>%
+    read_tsv(col_names = FALSE) %>%
+    inner_join(gencode_hla, c("X2" = "gene_id")) %>%
+    select(subject = X1, locus = gene_name, est_counts = X3)
 
 quant_data <-
     left_join(star_supplemented, kallisto_supplemented, 
@@ -106,14 +116,18 @@ quant_data <-
     rename(est_counts.star.genome_to_transc = est_counts,
            tpm.star.genome_to_transc = tpm) %>%
     left_join(star_genome, by = c("subject", "locus")) %>%
-    rename(est_counts.star.genome = est_counts)
+    rename(est_counts.star.genome = est_counts) %>%
+    left_join(star_genome_uniqReads, by = c("subject", "locus")) %>%
+    rename(est_counts.star.genome_star_uniqReads = est_counts)
 
 counts_star <- quant_data %>%
     select(subject, locus, dist, starts_with("est_counts.star")) %>%
     gather(index, counts, -(1:3)) %>%
     left_join(ground_truth, by = c("subject", "locus")) %>%
     mutate(index = sub("est_counts.star.", "", index),
-           index = factor(index, levels = c("hla", "transcriptome", "genome_to_transc", "genome")),
+           index = factor(index, 
+                          levels = c("hla", "transcriptome", "genome_to_transc", 
+                                     "genome", "genome_star_uniqReads")),
            prop_mapped = counts/true_counts)
 
 sample_ids <- sprintf("sample_%02d", 1:50)
@@ -181,7 +195,9 @@ alignments_from_diff_gene_df <-
 
 # Plots
 png("./plots/star_prop_mapped.png", width = 6, height = 4, units = "in", res = 200)
-plot_dist(counts_star)
+counts_star %>%
+    filter(index %in% c("hla", "genome_to_transc", "genome_star_uniqReads")) %>%
+    plot_dist()
 dev.off()
 
 png("./plots/kallisto_vs_star.png", width = 10, height = 6, units = "in", res = 200)

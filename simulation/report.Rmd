@@ -35,20 +35,17 @@ investigate this issue.
 
 ## Pipelines:
 
-- Ref Genome: primary assembly of reference genome GRCh38; mapped with STAR, quantified with QTLtools quan
-- Ref transcriptome: transcripts from Ref Genome; mapped with STAR, quantified with Salmon
-- Ref transcriptome v2: reads mapped to Ref Genome with STAR, which creates alignments to transcripts given Gencode annotations; quantified with Salmon
 - HLA-personalized: Ref transcriptome where HLA transcripts were replace by IMGT CDS sequences; mapped with STAR, quantified with Salmon
+- Ref transcriptome: reads mapped to Ref Genome with STAR, which creates alignments to transcripts given Gencode annotations; quantified with Salmon
+- Ref Genome: primary assembly of reference genome GRCh38; mapped with STAR --quantMode GeneCounts
 
 
 ```{r}
 include_graphics("./plots/star_prop_mapped.png")
 ```
 
-**Note 1**
-To check: there is something strange about the genomic mappings above.
 
-**Note 2**
+**Note**
 I also tried an alternative to replace the inefficient and time-consuming 1st
 round of the HLA-personalized pipeline. It consists in:
 

@@ -24,16 +24,13 @@ Expression
 Pipelines:
 ----------
 
--   Ref Genome: primary assembly of reference genome GRCh38; mapped with STAR, quantified with QTLtools quan
--   Ref transcriptome: transcripts from Ref Genome; mapped with STAR, quantified with Salmon
--   Ref transcriptome v2: reads mapped to Ref Genome with STAR, which creates alignments to transcripts given Gencode annotations; quantified with Salmon
 -   HLA-personalized: Ref transcriptome where HLA transcripts were replace by IMGT CDS sequences; mapped with STAR, quantified with Salmon
+-   Ref transcriptome: reads mapped to Ref Genome with STAR, which creates alignments to transcripts given Gencode annotations; quantified with Salmon
+-   Ref Genome: primary assembly of reference genome GRCh38; mapped with STAR --quantMode GeneCounts
 
 <img src="./plots/star_prop_mapped.png" width="1200" />
 
-**Note 1** To check: there is something strange about the genomic mappings above.
-
-**Note 2** I also tried an alternative to replace the inefficient and time-consuming 1st round of the HLA-personalized pipeline. It consists in:
+**Note** I also tried an alternative to replace the inefficient and time-consuming 1st round of the HLA-personalized pipeline. It consists in:
 
 1.  Map to the genome, and filter the reads mapping to HLA-A, -C, -B, -DRB1, -DQA1, -DQB1 and -DPB1, or unmapped.
 2.  Map these reads to the IMGT portion only.
