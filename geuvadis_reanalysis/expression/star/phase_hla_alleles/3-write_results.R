@@ -27,10 +27,11 @@ haps_exp_df <- kgp_calls %>%
     separate_rows(allele, sep = "/") %>%
     left_join(expression_df, by = c("subject", "locus", "allele")) %>%
     left_join(expression_df, by = c("subject", "locus", "allele" = "allele_3F")) %>%
-    mutate(tpm = ifelse(is.na(tpm.x), tpm.y, tpm.x)) %>%
-    distinct(subject, locus, hap, allele.y, tpm) %>%
+    mutate(allele = ifelse(is.na(allele.y), allele, allele.y),
+	   tpm = ifelse(is.na(tpm.x), tpm.y, tpm.x)) %>%
+    distinct(subject, locus, hap, allele, tpm) %>%
     group_by(subject, locus, hap) %>%
-    summarise(allele = paste(allele.y, collapse = "/"),
+    summarise(allele = paste(allele, collapse = "/"),
 	      tpm = paste(tpm, collapse = "/")) %>%
     ungroup() %>%
     rename(hla_allele = allele)
