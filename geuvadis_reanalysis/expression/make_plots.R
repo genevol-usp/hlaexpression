@@ -225,7 +225,7 @@ dev.off()
 
 
 # Correlations
-png("./plots/hlacorrelations.png", width = 4, height = 4, units = "in", res = 200)
+png("./plots/hlacorrelations.png", width = 3, height = 3, units = "in", res = 200)
 star_imgt %>%
     mutate(locus = sub("HLA-", "", locus)) %>%
     spread(locus, tpm) %>%
