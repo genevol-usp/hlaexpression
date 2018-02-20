@@ -21,11 +21,11 @@ Gourraud et al (2014) typings
 
 ```{r}
 kallisto_typing <-
-    read_tsv("./expression/kallisto/imgt/genotyping_accuracies_2.tsv") %>%
+    read_tsv("./expression/kallisto/supplemented/genotyping_accuracies_2.tsv") %>%
     select(locus, kallisto = accuracy)
 
 star_typing <-
-    read_tsv("./expression/star/imgt/genotyping_accuracies_2.tsv") %>%
+    read_tsv("./expression/star/supplemented/genotyping_accuracies_2.tsv") %>%
     select(locus, star = accuracy)
 
 left_join(star_typing, kallisto_typing, by = "locus") %>%
@@ -39,7 +39,7 @@ left_join(star_typing, kallisto_typing, by = "locus") %>%
 include_graphics("./expression/plots/expression_boxplot.png")
 ```
 
-## kallisto vs STAR-Salmon
+## STAR-Salmon vs kallisto
 
 ### TPM
 
@@ -57,30 +57,14 @@ include_graphics("./expression/plots/star_vs_kallisto_PCA.png")
 
 ### TPM
 
-#### STAR
-
 ```{r}
 include_graphics("./expression/plots/star_imgt_vs_pri_TPM.png")
 ```
 
-#### kallisto
-
-```{r}
-include_graphics("./expression/plots/kallisto_imgt_vs_pri_TPM.png")
-```
-
 ### PCA-corrected
-
-#### STAR
 
 ```{r}
 include_graphics("./expression/plots/star_imgt_vs_pri_PCA.png")
-```
-
-#### kallisto
-
-```{r}
-include_graphics("./expression/plots/kallisto_imgt_vs_pri_PCA.png")
 ```
 
 ## Distribution of TPM values
@@ -187,7 +171,7 @@ include_graphics("./qtls/plots/crd.png")
 ### HLA-personalized index
 
 ```{r}
-"./qtls/star/imgt/encode_TF_Seq_DNase/hla.qtl.functional.elements.tsv" %>%
+"./qtls/star/supplemented/encode_TF_Seq_DNase/hla.qtl.functional.elements.tsv" %>%
     read_tsv()%>%
     kable(digits = 2)
 ```
@@ -195,7 +179,7 @@ include_graphics("./qtls/plots/crd.png")
 ### Reference transcriptome index
 
 ```{r}
-"./qtls/star/pri/encode_TF_Seq_DNase/hla.qtl.functional.elements.tsv" %>%
+"./qtls/star/transcriptome/encode_TF_Seq_DNase/hla.qtl.functional.elements.tsv" %>%
     read_tsv() %>%
     kable(digits = 2)
 ```
@@ -206,71 +190,27 @@ include_graphics("./qtls/plots/crd.png")
 Variants with RTC > 0.95 likely mark the same biological signal.
 
 ```{r}
-read_tsv("./qtls/star/imgt/rtc/pri_eqtls/results.tsv") %>%
+read_tsv("./qtls/star/supplemented/rtc/pri_eqtls/results.tsv") %>%
     kable(digits = 2)
 ```
 
-## Comparison with previous eQTLs
-
-### eQTLs in regulomeDB
-
-```{r}
-read_tsv("./qtls/star/imgt/haploreg/regulomeDB_results.tsv") %>%
-    select(gene, rank, rsid, score, qtl) %>%
-    mutate(qtl = gsub("\\|", "_", qtl),
-	   qtl = sub(";NA$", "", qtl)) %>%
-    kable()
-```
-
-### eQTLs in HaploReg
-
-```{r}
-read_tsv("./qtls/star/imgt/haploreg/haploreg_results.tsv") %>%
-    select(gene, rank, rsid, study, tissue, pvalue) %>%
-    kable()
-```
-
-### eQTLs in GRASP (via HaploReg)
-
-```{r}
-read_tsv("./qtls/star/imgt/haploreg/grasp_results.tsv") %>%
-    kable()
-```
-
-### RTC
-
-Here we can see that, when our eQTLs were not previously described in the 
-databases, they tag some eQTL in the database.
-
-Most of them are tagging an eQTL from regulomeDB. I believe that's because, for
-all sources not regulomeDB, I selected only the top variant for each tissue and 
-gene. For regulomeDB that's no possible beucase the p-value is not directly 
-available, so there are more variants per gene, which increases the chance that
-some of these variants will have high RTC with one of our eQTLs.
+## RTC with previous eQTLs
 
 ```{r, eval}
-read_tsv("./qtls/star/imgt/rtc/previous_qtls/results.tsv") %>%
+read_tsv("./qtls/star/supplemented/rtc/previous_qtls/results.tsv") %>%
     kable(digits = 2)
 ```
 
 ## Association with GWAS traits
 
 ```{r}
-read_tsv("./qtls/star/imgt/rtc/gwas/results.tsv") %>%
-    select(gene, rank, variant, gwas_var, rtc, trait, studies = link) %>%
-    group_by(gene, rank, variant, gwas_var, rtc) %>%
-    summarize(trait = paste(trait, collapse = "/"), 
-              studies = paste(studies, collapse = " ")) %>%
-    kable(digits = 2)
-```
-
-
-```{r, eval=FALSE}
-# Trans-eQTLs
-
-#- Approximate pass as described on QTLtools website
-read_tsv("./qtls/star/imgt/trans/trans_results.tsv") %>%
-    kable(digits = 2)
+read_tsv("./qtls/star/supplemented/rtc/gwas/results.tsv") %>%
+    mutate(info = ifelse(is.na(gwas_var), NA, paste0(trait, " (", gwas_var, ")"))) %>%
+    group_by(gene, variant, rank) %>%
+    summarise(info = paste(info, collapse = "; ")) %>%
+    ungroup() %>%
+    arrange(gene, rank) %>%
+    kable()
 ```
 
 ## HLA lineages
