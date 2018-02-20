@@ -229,7 +229,8 @@ png("./plots/hlacorrelations.png", width = 3, height = 3, units = "in", res = 20
 star_imgt %>%
     mutate(locus = sub("HLA-", "", locus)) %>%
     spread(locus, tpm) %>%
-    select(-subject) %>% ggcorr(label = TRUE)
+    select(-subject) %>% ggcorr(label = TRUE, label_size = 3, legend.size = 8,
+				size = 3)
 dev.off()
 
 
