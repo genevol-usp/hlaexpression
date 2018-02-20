@@ -70,15 +70,13 @@ Correlation of expression
 
 ### Among the HLA genes
 
-<img src="./expression/plots/hlacorrelations.png" width="600" />
+\*CRDs are defined in <http://dx.doi.org/10.1101/171694*>
+
+<img src="./expression/plots/correlations.png" width="3000" />
 
 ### Between Class II genes and CIITA
 
 <img src="./expression/plots/trans_activ_corrs.png" width="2000" />
-
-### Between pairs of HLA genes on the same vs on different haplotypes
-
-<img src="./expression/plots/within_vs_between_haps.png" width="800" />
 
 eQTLs
 =====
@@ -97,6 +95,11 @@ Distribution of eQTLs around the TSS
 ------------------------------------
 
 <img src="./qtls/plots/qtls_landscape.png" width="3600" />
+
+Spread of rank 0 eQTLs around the TSS
+-------------------------------------
+
+<img src="./qtls/plots/qtls_density_geneStart.png" width="1500" />
 
 Investigating bias
 ------------------
@@ -119,19 +122,6 @@ Investigating bias
 | Reference         | HLA-DQB1 |                  -0.46|                 0.37|                            -0.40|
 | HLA\_personalized | HLA-DRB1 |                   0.58|                 0.41|                             0.45|
 | Reference         | HLA-DRB1 |                   0.26|                 0.30|                             0.09|
-
-### Spread of rank 0 eQTLs around the gene starts
-
-<img src="./qtls/plots/qtls_density_geneStart.png" width="1500" />
-
-Location of HLA genes and CRDs
-------------------------------
-
-\*CRDs are defined in <http://dx.doi.org/10.1101/171694*>
-
-*Coordinates are in hg19*
-
-<img src="./qtls/plots/crd.png" width="2400" />
 
 Intersect with Encode Elements
 ------------------------------

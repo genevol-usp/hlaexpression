@@ -102,8 +102,10 @@ include_graphics("./expression/plots/correlation_decrease.png")
 
 ### Among the HLA genes
 
+*CRDs are defined in http://dx.doi.org/10.1101/171694* 
+
 ```{r}
-include_graphics("./expression/plots/hlacorrelations.png")
+include_graphics("./expression/plots/correlations.png")
 ```
 
 ### Between Class II genes and CIITA
@@ -112,11 +114,6 @@ include_graphics("./expression/plots/hlacorrelations.png")
 include_graphics("./expression/plots/trans_activ_corrs.png")
 ```
 
-### Between pairs of HLA genes on the same vs on different haplotypes
-
-```{r}
-include_graphics("./expression/plots/within_vs_between_haps.png")
-```
 
 # eQTLs
 
@@ -138,6 +135,12 @@ include_graphics("./qtls/plots/n_of_egenes.png")
 include_graphics("./qtls/plots/qtls_landscape.png")
 ```
 
+## Spread of rank 0 eQTLs around the TSS
+
+```{r}
+include_graphics("./qtls/plots/qtls_density_geneStart.png")
+```
+
 ## Investigating bias
 
 ```{r}
@@ -149,22 +152,6 @@ read_tsv("./investigate_bias/correlations.tsv") %>%
     kable(digits = 2)
 ```
 
-
-### Spread of rank 0 eQTLs around the gene starts
-
-```{r}
-include_graphics("./qtls/plots/qtls_density_geneStart.png")
-```
-
-## Location of HLA genes and CRDs
-
-*CRDs are defined in http://dx.doi.org/10.1101/171694* 
-
-*Coordinates are in hg19*
-
-```{r}
-include_graphics("./qtls/plots/crd.png")
-```
 
 ## Intersect with Encode Elements
 
