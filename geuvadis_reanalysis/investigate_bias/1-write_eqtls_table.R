@@ -2,7 +2,7 @@ devtools::load_all("/home/vitor/hlaseqlib")
 library(tidyverse)
 
 eqtl_imgt <- 
-    "../qtls/star/imgt/3-conditional_analysis/conditional_60_all.txt.gz" %>%
+    "../qtls/star/supplemented/3-conditional_analysis/conditional_60_all.txt.gz" %>%
     read_qtltools() %>%
     filter(phen_id %in% gencode_hla$gene_id, bwd_best == 1L) %>%
     group_by(phen_id) %>%
@@ -11,7 +11,7 @@ eqtl_imgt <-
     select(phen_id, var_id, bwd_slope) 
 
 eqtl_pri <- 
-    "../qtls/star/pri/3-conditional_analysis/conditional_60_all.txt.gz" %>%
+    "../qtls/star/transcriptome/3-conditional_analysis/conditional_60_all.txt.gz" %>%
     read_qtltools() %>%
     filter(phen_id %in% gencode_hla$gene_id, bwd_best == 1L) %>%
     group_by(phen_id) %>%

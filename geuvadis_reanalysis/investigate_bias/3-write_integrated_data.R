@@ -7,7 +7,7 @@ dist_to_ref <-
     select(-locus)
 
 hla_dist <- 
-    "../expression/star/imgt/quantifications_2/processed_imgt_quants.tsv" %>%
+    "../expression/star/supplemented/quantifications_2/processed_imgt_quants.tsv" %>%
     read_tsv() %>%
     filter(locus %in% gencode_hla$gene_name) %>%
     left_join(select(geuvadis_info, name, ena_id), by = c("subject" = "ena_id")) %>%
@@ -19,14 +19,14 @@ hla_dist <-
     summarize(dist = mean(dist)) %>%
     ungroup()
 
-phen_best_imgt <- "../qtls/star/imgt/1-phenotypes/phenotypes_eur_60.bed.gz" %>%
+phen_best_imgt <- "../qtls/star/supplemented/1-phenotypes/phenotypes_eur_60.bed.gz" %>%
     read_tsv() %>% 
     inner_join(gencode_hla, by = c("gid" = "gene_id")) %>%
     select(gene_name, HG00096:NA20828) %>%
     gather(subject, resid, -gene_name) %>%
     select(subject, gene_name, resid)
 
-phen_best_pri <- "../qtls/star/pri/1-phenotypes/phenotypes_eur_60.bed.gz" %>%
+phen_best_pri <- "../qtls/star/transcriptome/1-phenotypes/phenotypes_eur_60.bed.gz" %>%
     read_tsv() %>% 
     inner_join(gencode_hla, by = c("gid" = "gene_id")) %>%
     select(gene_name, HG00096:NA20828) %>%
