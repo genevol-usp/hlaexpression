@@ -9,12 +9,12 @@ hla_genes <- gencode_hla$gene_name
 make_pca_plot <- function(PC_x, PC_y) {
     
     ggplot(pcs, aes_string(PC_x, PC_y)) +
-        geom_point(aes(color = pop)) +
-	scale_color_manual(values = c("CEU" = "#8491B4B2",
-				      "FIN" = "#DC0000B2",
-				      "GBR" = "#7E6148FF",
-				      "TSI" = "#91D1C2B2")) +
-        theme_bw()
+    geom_point(aes(color = pop)) +
+	scale_color_manual(values = c("CEU" = "#8491B4", "FIN" = "#DC0000B2",
+	                              "GBR" = "#7E6148FF", "TSI" = "#91D1C2")) +
+    guides(color = guide_legend(override.aes = list(size = 2))) +
+    theme(legend.text = element_text(size = 12)) +
+    labs(color = "Population")
 }
 
 geuvadis_pops <- select(geuvadis_info, subject = name, pop)
@@ -65,7 +65,7 @@ egenes_df <-
     mutate(f = as.integer(as.character(f))) %>%
     arrange(f, index)
 
-png("./plots/n_of_egenes.png", width = 6, height = 4, units = "in", res = 300)
+png("./plots/n_of_egenes.png", width = 6, height = 3, units = "in", res = 300)
 ggplot(egenes_df, aes(f, n, color = index, group = index)) + 
     geom_point(size = 2.5) + 
     geom_line() +
@@ -242,7 +242,7 @@ all_rank0 <-
     mutate(genome_context = ifelse(phen_id %in% gencode_hla$gene_id, "HLA", "genomewide")) %>%
     select(genome_context, dist, bwd_best)
 
-png("./plots/qtls_density_geneStart.png", height = 3, width = 5, units = "in", res = 300)
+png("./plots/qtls_density_geneStart.png", height = 2, width = 5, units = "in", res = 300)
 ggplot(all_rank0) +
     coord_cartesian(xlim = c(-1e6, 1e6)) +
     geom_density(aes(x = dist, fill = genome_context), alpha = 1/2) +
