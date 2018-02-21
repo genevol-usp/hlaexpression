@@ -94,6 +94,8 @@ Number of eGenes according to index
 Distribution of eQTLs around the TSS
 ------------------------------------
 
+Numbers in parentheses are the CaVEMaN probabilities of being causal.
+
 <img src="./qtls/plots/qtls_landscape.png" width="3600" />
 
 Spread of rank 0 eQTLs around the TSS

@@ -131,6 +131,8 @@ include_graphics("./qtls/plots/n_of_egenes.png")
 
 ## Distribution of eQTLs around the TSS
 
+Numbers in parentheses are the CaVEMaN probabilities of being causal.
+
 ```{r}
 include_graphics("./qtls/plots/qtls_landscape.png")
 ```
