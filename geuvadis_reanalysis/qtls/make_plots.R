@@ -111,22 +111,22 @@ plot_qtls <- function(conditional_df) {
         geom_point(data = filter(conditional_df, best == 1L), 
                    aes(dist_tss, pval), 
                    shape = 1, size = 2.5, color = "black", stroke = 1) +
-        ggrepel::geom_label_repel(data = filter(conditional_df, best == 1L),
-                                  aes(dist_tss, pval, label = var_id, fill = rank),
-                                  fontface = 'bold', size = 3.5,  
-                                  show.legend = FALSE) +
+        ggrepel::geom_label_repel(data = filter(conditional_df, best == 1L) %>%
+                                      mutate(lab = paste0(var_id, " (", Probability, ")")),
+                                  aes(dist_tss, pval, label = lab, fill = rank),
+                                  fontface = "bold", size = 3, show.legend = FALSE) +
         coord_cartesian(xlim = c(-1e6, +1e6)) +
         scale_color_manual(values = c("0" = "#8491B4B2",
                                       "1" = "#DC0000B2",
                                       "2" = "gold3",
-                                      "3" = "black",
+                                      "3" = "#7E6148FF",
                                       "4" = "#009E73")) +
         scale_fill_manual(values = c("0" = "#8491B4B2",
-				     "1" = "#DC0000B2",
-				     "2" = "gold3",
-				     "3" = "black",
-				     "4" = "#009E73")) +
-        scale_x_continuous(labels = scales::comma) +
+                                     "1" = "#DC0000B2",
+                                     "2" = "gold3",
+                                     "3" = "#7E6148FF",
+                                     "4" = "#009E73")) +
+        scale_x_continuous(labels = function(x) x/1e6L) +
         theme_minimal() +
         theme(strip.text = element_text(size = 12),
               axis.title = element_text(size = 12),
@@ -139,7 +139,7 @@ plot_qtls <- function(conditional_df) {
                        slice(which.max(pval)) %>% 
                        mutate(max_pval = pval + 2.5),
                    aes(y = max_pval)) +
-        labs(x = "distance from TSS", 
+        labs(x = "distance from TSS (Mb)", 
              y = expression(paste("-log"[10], italic(Pvalue)))) +
         guides(color = guide_legend(override.aes = list(alpha = 1, size = 3)))
 }
@@ -150,30 +150,37 @@ plot_qtls_indices <- function(conditional_df) {
   ggplot(conditional_df) +
     geom_vline(xintercept = 0, color = "grey45", size = 2) + 
     geom_point(data = filter(conditional_df, signif == 0), 
-	       aes(dist_tss, pval),
-	       color = "grey", alpha = .1, show.legend = FALSE) +
+               aes(dist_tss, pval),
+               color = "grey", alpha = .1, show.legend = FALSE) +
     geom_point(data = filter(conditional_df, signif == 1L), 
-	       aes(dist_tss, pval, color = rank), 
-	       alpha = .5) +
+               aes(dist_tss, pval, color = rank), 
+               alpha = .5) +
     geom_hline(data = conditional_df %>% 
-		 group_by(gene) %>% 
-		 filter(signif == 0) %>% 
-		 summarise(thres = max(pval)),
-	       aes(yintercept = thres), color = "black") +
+                   group_by(gene) %>% 
+                   filter(signif == 0) %>% 
+                   summarise(thres = max(pval)),
+               aes(yintercept = thres), color = "black") +
     geom_point(data = filter(conditional_df, best == 1L), 
                aes(dist_tss, pval, color = rank), size = 2.5) +
     geom_point(data = filter(conditional_df, best == 1L), 
                aes(dist_tss, pval), 
                shape = 1, size = 2.5, color = "black", stroke = 1) +
-    ggrepel::geom_text_repel(data = filter(conditional_df, best == 1L),
-                             aes(dist_tss, pval, label = Probability)) +
+    ggrepel::geom_label_repel(data = filter(conditional_df, best == 1L) %>%
+                                  mutate(lab = paste0(var_id, " (", Probability, ")")),
+                              aes(dist_tss, pval, label = lab, fill = rank),
+                              fontface = "bold", size = 3, show.legend = FALSE) +
     coord_cartesian(xlim = c(-1e6, +1e6)) +
     scale_color_manual(values = c("0" = "#8491B4B2",
                                   "1" = "#DC0000B2",
                                   "2" = "#F0E442B2",
-                                  "3" = "black",
+                                  "3" = "#7E6148B2",
                                   "4" = "#009E73")) +
-    scale_x_continuous(labels = scales::comma) +
+    scale_fill_manual(values = c("0" = "#8491B4B2",
+                                 "1" = "#DC0000B2",
+                                 "2" = "#F0E442B2",
+                                 "3" = "#7E6148B2",
+                                 "4" = "#009E73")) +
+    scale_x_continuous(labels = function(x) x/1e6L) +
     theme_minimal() +
     theme(strip.text = element_text(size = 12),
           axis.title = element_text(size = 12),
@@ -186,7 +193,7 @@ plot_qtls_indices <- function(conditional_df) {
                    slice(which.max(pval)) %>% 
                    mutate(max_pval = pval + 2.5),
                aes(y = max_pval)) +
-    labs(x = "distance from TSS", 
+    labs(x = "distance from TSS (Mb)", 
          y = expression(paste("-log"[10], italic(Pvalue)))) +
     guides(color = guide_legend(override.aes = list(alpha = 1, size = 3)))
 }
@@ -199,28 +206,28 @@ conditional_star_imgt <-
     "./star/supplemented/3-conditional_analysis/conditional_60_all.txt.gz" %>%
     read_conditional_hla()
 
-#"./star/imgt/3-conditional_analysis/conditional_60_all.txt.gz" %>%
-#    read_qtltools() %>%
-#    filter(phen_id == gencode_hla$gene_id[gencode_hla$gene_name == "HLA-C"],
-#	   rank == 0) %>%
-#    filter(bwd_pval == min(bwd_pval))
-
 conditional_star_imgt %>%
     filter(best == 1L) %>%
     select(gene, rank, var_id, var_from, dist, dist_tss, slope, pval) %>%
     write_tsv("./plots/eqtl.tsv")
 
+#conditional_star_imgt_v2 <-
+#    "./star/supplemented_fix_genos/3-conditional_analysis/conditional_60_all.txt.gz" %>%
+#    read_conditional_hla()
+
+#"./star/supplemented/3-conditional_analysis/conditional_60_all.txt.gz" %>%
+#    read_qtltools() %>%
+#    filter(phen_id == gencode_hla$gene_id[gencode_hla$gene_name == "HLA-C"],
+#	   rank == 0) %>%
+#    filter(bwd_pval == min(bwd_pval))
+
+#conditional_star_imgt_v2 %>%
+#    filter(best == 1L) %>%
+#    select(gene, rank, var_id, var_from, dist, dist_tss, slope, pval)
+
 conditional_star_pri <-
     "./star/transcriptome/3-conditional_analysis/conditional_60_all.txt.gz" %>%
     read_conditional_hla()
-
-png("./plots/qtls_landscape_imgt.png", height = 10, width = 8, units = "in", res = 300)
-plot_qtls(conditional_star_imgt)
-dev.off()
-
-png("./plots/qtls_landscape_pri.png", height = 10, width = 8, units = "in", res = 300)
-plot_qtls(conditional_star_pri)
-dev.off()
 
 conditional_df <- 
     list("HLA_personalized" = conditional_star_imgt,
@@ -229,6 +236,18 @@ conditional_df <-
     left_join(caveman_scores, 
               by = c("index", "gene" = "gene_name", "rank", "var_id")) %>%
     mutate(rank = factor(rank))
+
+png("./plots/qtls_landscape_imgt.png", height = 10, width = 8, units = "in", res = 300)
+conditional_df %>%
+    filter(index == "HLA_personalized") %>%
+    plot_qtls()
+dev.off()
+
+png("./plots/qtls_landscape_pri.png", height = 10, width = 10, units = "in", res = 300)
+conditional_df %>%
+    filter(index == "Reference") %>%
+    plot_qtls()
+dev.off()
 
 png("./plots/qtls_landscape.png", height = 10, width = 12, units = "in", res = 300)
 plot_qtls_indices(conditional_df)

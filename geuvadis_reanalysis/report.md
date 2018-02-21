@@ -106,6 +106,8 @@ Investigating bias
 
 <img src="./investigate_bias/plots/expression_by_refallele.png" width="2000" />
 
+The last column is the partial correlation cor(expression ~ divergence | controlling for genotype). The idea here is that once we control for the genotype effect, the divergence of the HLA allele from the reference would not explain much of the variation in expression.
+
 | index             | gene     |  expression~divergence|  divergence~genotype|  expression~divergence\_genotype|
 |:------------------|:---------|----------------------:|--------------------:|--------------------------------:|
 | HLA\_personalized | HLA-A    |                   0.41|                 0.75|                            -0.09|

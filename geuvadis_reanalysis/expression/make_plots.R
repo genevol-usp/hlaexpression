@@ -191,7 +191,7 @@ ase_error <- df_for_ase %>%
     mutate(locus = paste0("HLA-", locus)) %>%
     inner_join(ase_df, by = c("subject", "locus"))
 
-png("./plots/ase.png", width = 8, height = 5, units = "in", res = 200)
+png("./plots/ase.png", width = 8, height = 4, units = "in", res = 200)
 ggplot(ase_df, aes(locus, ase)) +
     ggbeeswarm::geom_quasirandom(varwidth = TRUE, size = 1, alpha = 1/2) +
     coord_cartesian(ylim = c(0, 0.5)) +

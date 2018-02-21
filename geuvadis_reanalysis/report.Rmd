@@ -147,6 +147,12 @@ include_graphics("./qtls/plots/qtls_density_geneStart.png")
 include_graphics("./investigate_bias/plots/expression_by_refallele.png")
 ```
 
+
+The last column is the partial correlation cor(expression ~ divergence | controlling for genotype).
+The idea here is that once we control for the genotype effect, the divergence of
+the HLA allele from the reference would not explain much of the variation in 
+expression.
+
 ```{r}
 read_tsv("./investigate_bias/correlations.tsv") %>%
     kable(digits = 2)
