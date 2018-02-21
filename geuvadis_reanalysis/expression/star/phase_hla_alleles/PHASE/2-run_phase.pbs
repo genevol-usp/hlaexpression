@@ -5,7 +5,7 @@
 #PBS -l walltime=24:00:00
 #PBS -q short
 #PBS -j oe
-#PBS -o /home/vitor/hlaexpression/geuvadis_reanalysis/expression/star/phase_hla_alleles/PHASE/log.txt
+#PBS -o /home/vitor/hlaexpression/geuvadis_reanalysis/expression/star/phase_hla_alleles/PHASE/phase.log
 
 PHASE=/home/vitor/phase/src/phase.2.1.1.source/PHASE
 
