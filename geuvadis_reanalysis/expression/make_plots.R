@@ -364,9 +364,13 @@ p4 <- plotphase(phase_list[[4]]) + theme(strip.text.x = element_blank())
 p5 <- plotphase(phase_list[[5]]) + theme(strip.text.x = element_blank())
 
 within_vs_between <- 
-    plot_grid(p1, p2, p3, p4, p5, ncol = 1, rel_heights = c(1, .9, .9, .9, .9))
+    plot_grid(p1, p2, p3, p4, p5, ncol = 1, 
+              rel_heights = c(1, .9, .9, .9, .9),
+              labels = "C")
 
-plot_AB <- plot_grid(crd_plot, global_cors, ncol = 1, rel_heights = c(.55, .45))
+plot_AB <- plot_grid(crd_plot, global_cors, ncol = 1, 
+                     rel_heights = c(.55, .45),
+                     labels = c("A", "B"))
 
 png("./plots/correlations.png", width = 10, height = 6.5, units = "in", res = 300)
 plot_grid(plot_AB, within_vs_between, ncol = 2, rel_widths = c(.55, .45))
