@@ -1,64 +1,65 @@
-library(data.table)
 library(Biostrings)
+library(tidyverse)
 devtools::load_all("/home/vitor/hlaseqlib")
   
-setDT(geuvadis_info)
-
 set.seed(2)
-sample_dt <- 
-  geuvadis_info[kgp_phase3 == 1 & pop != "YRI", .(sample_id = name, subject = ena_id)
-	      ][sample_id %in% sample(sample_id, 50)
-	      ][order(sample_id)
-	      ][, code := sprintf("sample_%02d", 1:50)]
-
-abundance_files <- 
-    file.path("../../../geuvadis_reanalysis/expression/star/supplemented/quantifications_2", 
-	      sample_dt$subject, "quant.sf")
-names(abundance_files) <- sample_dt$subject
+sample_df <- geuvadis_info %>%
+    filter(kgp_phase3 == 1L, pop != "YRI") %>%
+    select(sample_id = name, subject = ena_id) %>%
+    filter(sample_id %in% sample(sample_id, 50)) %>%
+    arrange(sample_id) %>%
+    mutate(code = sprintf("sample_%02d", 1:50)) %>%
+    select(subject, code)
 
 abundances <- 
-  parallel::mclapply(abundance_files, function(i) fread(i, select = c(1, 4, 5)),
-		     mc.cores = 25)
+    file.path("~/hlaexpression/geuvadis_reanalysis/expression/star/supplemented/quantifications_2",
+	      sample_df$subject, "quant.sf") %>%
+    setNames(sample_df$subject) %>%
+    map_df(read_tsv, .id = "subject") %>%
+    left_join(sample_df, by = "subject") %>%
+    select(subject = code, Name, Length, EffectiveLength, TPM, NumReads)
 
-abundances_imgt <- 
-    fread("../../../geuvadis_reanalysis/expression/star/supplemented/quantifications_2/processed_imgt_quants.tsv"
-	)[sample_dt, on = .(subject)
-	][, .(subject = code, locus, Name = allele, NumReads = est_counts)]
+genos <- abundances %>%
+    filter(grepl("IMGT", Name)) %>%
+    mutate(locus = imgt_to_gname(Name)) %>%
+    filter(locus %in% gencode_hla$gene_name) %>%
+    select(subject, locus, allele = Name) %>%
+    mutate(allele = sub("IMGT_", "", allele),
+	   allele = hla_trimnames(allele, 3)) %>%
+    group_by(subject, locus) %>%
+    mutate(n = ifelse(n() == 1L, "1_1", "1")) %>%
+    ungroup() %>%
+    separate_rows(n, sep = "_") %>%
+    select(subject, locus, allele) %>%
+    arrange(subject, locus, allele)
 
-genos <- 
-    abundances_imgt[locus %in% paste0("HLA-", c("A", "B", "C", "DPB1", "DQA1", "DQB1", "DRB1"))
-		  ][, .(subject, locus, allele = Name)]
-genos[, allele := hla_trimnames(gsub("IMGT_", "", sub("^([^/]+).*$", "\\1", allele)), 3)] 
-
-fwrite(genos, "./genos.tsv", sep = "\t", quote = FALSE)
-
-abundances_imgt[, locus := NULL]
-
-abundances_non_imgt <- 
-  rbindlist(abundances, idcol = "subject"
-	  )[sample_dt, on = "subject"
-	  ][, .(subject = code, Name, NumReads)
-	  ][!grepl("^IMGT", Name)]
-
-abundances_dt <-
-    rbind(abundances_non_imgt, abundances_imgt
-	)[, .(NumReads = sum(NumReads)), by = .(subject, Name)]
+write_tsv(genos, "./genos.tsv")
 
 index <- readDNAStringSet("../../../imgt_index_v2/gencode.v25.PRI.IMGT.transcripts.fa")
 index <- index[width(index) >= 75]
 
-abundances_wide <- dcast(abundances_dt, Name ~ subject, value.var = "NumReads")
-setkey(abundances_wide, Name)
+tx <- intersect(names(index), unique(abundances$Name))
 
-tx <- intersect(names(index), abundances_wide$Name)
+abundances_df_intersect <- abundances %>%
+    filter(Name %in% tx) %>%
+    group_by(subject) %>%
+    mutate(TrueCounts = as.integer(round(NumReads/sum(NumReads) * 3e7)),
+	   TrueTPM = counts_to_tpm(TrueCounts, EffectiveLength)) %>%
+    ungroup()
 
-index <- index[tx]
-abundances_wide <- abundances_wide[tx]
+phenotypes_tpm_counts <- abundances_df_intersect %>%
+    select(subject, Name, TrueCounts, TrueTPM)
 
-samples <- sample_dt$code
+write_tsv(phenotypes_tpm_counts, "./phenotypes_counts_tpm.tsv")
 
-abundances_wide[, (samples) := lapply(.SD, function(x) ifelse(is.na(x), 0, x)), .SDcols = samples]
-abundances_wide[, (samples) := lapply(.SD, function(x) round(x/sum(x) * 3e7)), .SDcols = samples]
+phenotypes <- phenotypes_tpm_counts %>%
+    select(-TrueTPM) %>%
+    spread(subject, TrueCounts) %>%
+    mutate_at(vars(sample_01:sample_50), ~ifelse(is.na(.), 0L, .))
 
-writeXStringSet(index, "./polyester_index.fa")
-fwrite(abundances_wide[, -1], "./phenotypes.tsv", sep = "\t", quote = FALSE)
+index <- index[phenotypes$Name]
+writeXStringSet(index, "./index_simulation.fa")
+
+phenotypes %>%
+    select(-Name) %>%
+    write_tsv("./phenotypes.tsv")

@@ -5,10 +5,8 @@ library(tidyverse)
 imgt <- readDNAStringSet("./imgt_index.fa") 
 
 gencode <- 
-  readDNAStringSet("/home/vitor/gencode_data/gencode.v25.PRI.transcripts.fa")
+  readDNAStringSet("../index_transcriptome/gencode.v25.PRI.uniqTranscripts.fa")
   
-names(gencode) <- sub("^([^|]+).*$", "\\1", names(gencode))  
-
 loci_in_index <- unique(imgt_to_gname(names(imgt)))
 
 gencode_pri_imgt <- gencode_pri_tx %>%
