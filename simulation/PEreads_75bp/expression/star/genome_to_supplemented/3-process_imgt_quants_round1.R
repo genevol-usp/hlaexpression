@@ -3,8 +3,7 @@ library(tidyverse)
 
 hla_genes <- gencode_hla$gene_name 
 
-#samples <- sprintf("sample_%02d", 1:50)
-samples <- "sample_01"
+samples <- sprintf("sample_%02d", 1:50)
 
 imgt_quants <- read_tsv("./quantifications_1/imgt_quants.tsv") %>%
     mutate(locus = imgt_to_gname(Name),
