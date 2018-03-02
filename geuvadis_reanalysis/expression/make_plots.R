@@ -121,6 +121,52 @@ scatter_plot_cors(star_imgt_vs_pri_df, "tpm.imgt", "tpm.ref") +
 dev.off()
 
 
+####
+ref_dist <- 
+    "~/hlaexpression/simulation/PEreads_75bp/data/distances_to_reference.tsv" %>%
+    read_tsv()
+
+star_imgt <- 
+    read_tsv("./star/supplemented/quantifications_2/processed_imgt_quants.tsv") %>%
+    filter(locus %in% hla_genes) %>%
+    mutate(allele = gsub("IMGT_", "", allele)) %>%
+    left_join(ref_dist, by = c("locus", "allele")) %>%
+    group_by(subject, locus) %>%
+    summarize(tpm = sum(tpm), dist = mean(dist)) %>%
+    ungroup()
+
+star_pri <- 
+    read_tsv("./star/transcriptome/quantifications/processed_imgt_quants.tsv") %>%
+    select(subject, locus, tpm)
+
+star_imgt_vs_pri_df <- 
+    left_join(star_imgt, star_pri, by = c("subject", "locus"), 
+              suffix = c(".imgt", ".ref"))
+
+cor_df <- star_imgt_vs_pri_df %>%
+    group_by(locus) %>%
+    do(data.frame(r = cor(.$tpm.imgt, .$tpm.ref),
+                  x = min(.$tpm.imgt),
+                  y = max(.$tpm.ref))) %>%
+    ungroup() %>%
+    mutate(r = round(r, digits = 3))
+
+png("./plots/star_imgt_vs_pri_TPM_divergence.png", height = 6, width = 10, units = "in", res = 200)
+ggplot(star_imgt_vs_pri_df, aes(tpm.imgt, tpm.ref, color = dist)) +
+    geom_abline() +
+    geom_point(size = .8) +
+    scale_color_gradient(low = "white", high = "darkred") +
+    facet_wrap(~locus, scales = "free") +
+    theme_dark() +
+    theme(axis.text = element_text(size = 12),
+          axis.title = element_text(size = 16),
+          strip.text = element_text(size = 16)) +
+    labs(x = "TPM (HLA personalized index)", y = "TPM (Ref transcriptome)")
+dev.off()
+
+####
+
+
 ## STAR: supplemented vs reference transcriptome (PCA)
 star_pri_pca <- 
     "../qtls/star/transcriptome/1-phenotypes/phenotypes_eur_10.bed.gz" %>%
