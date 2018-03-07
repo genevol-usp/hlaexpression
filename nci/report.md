@@ -32,33 +32,35 @@ We first quantfied our ability to correctly genotype individuals based on the RN
 Expression boxplot
 ------------------
 
-![](./plots/expression_boxplot.png)
+<img src="./plots/expression_boxplot.png" width="1600" />
 
 Correlation between qPCR and RNAseq expression estimates
 --------------------------------------------------------
 
 We then compared the expression level estimates between RNAseq and qPCR. There is no correlation for HLA-B, some for HLA-A, and the highest is seen for HLA-C.
 
-![](./plots/seq_vs_pcr.png)
+<img src="./plots/seq_vs_pcr.png" width="3600" />
 
 HLA-C expression: RNA vs Antibody
 ---------------------------------
 
 Both qPCR and RNAseq strategies have similarly low correlations with the antibody-base expression estimates.
 
-![](./plots/ab_vs_rna.png)
+<img src="./plots/ab_vs_rna.png" width="3000" />
 
 RNAseq: expression estimates per lineage
 ----------------------------------------
 
 Our approach also allows assigning expression level estimates to allelic lineages. We compare the lineage-level expression for RNAseq (first set of panels) and qPCR (second set of panels, using imputed expression by regression analysis as done in the NCI group papers).
 
+The plots don't show the whole data, but only the overlap between the two datasets (although the totality of data was used to estimate/impute expression on both datasets).
+
 RNAseq
 ------
 
-![](./plots/rnaseq_lineages.png)
+<img src="./plots/rnaseq_lineages.png" width="3600" />
 
 qPCR
 ----
 
-![](./plots/nci_lineages.png)
+<img src="./plots/nci_lineages.png" width="3600" />

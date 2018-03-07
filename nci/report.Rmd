@@ -81,6 +81,10 @@ lineages. We compare the lineage-level expression for RNAseq (first set of
 panels) and qPCR (second set of panels, using imputed expression by regression
 analysis as done in the NCI group papers).
 
+The plots don't show the whole data, but only the overlap between the two 
+datasets (although the totality of data was used to estimate/impute expression 
+on both datasets).
+
 ## RNAseq
 
 ```{r}
