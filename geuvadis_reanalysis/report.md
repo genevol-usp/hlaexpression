@@ -11,7 +11,7 @@ Typing accuracies
 | locus |   star|  kallisto|
 |:------|------:|---------:|
 | A     |  97.22|     97.06|
-| B     |  98.04|     97.71|
+| B     |  98.37|     98.04|
 | C     |  97.22|     95.92|
 | DQB1  |  98.37|     98.53|
 | DRB1  |  99.51|     99.51|
@@ -70,9 +70,13 @@ Correlation of expression
 
 ### Among the HLA genes
 
+<img src="./expression/plots/correlations.png" width="3000" />
+
+### CRDs
+
 \*CRDs are defined in <http://dx.doi.org/10.1101/171694*>
 
-<img src="./expression/plots/correlations.png" width="3000" />
+<img src="./expression/plots/crd.png" width="1800" />
 
 ### Between Class II genes and CIITA
 

@@ -102,11 +102,19 @@ include_graphics("./expression/plots/correlation_decrease.png")
 
 ### Among the HLA genes
 
-*CRDs are defined in http://dx.doi.org/10.1101/171694* 
-
 ```{r}
 include_graphics("./expression/plots/correlations.png")
 ```
+
+
+### CRDs
+
+*CRDs are defined in http://dx.doi.org/10.1101/171694* 
+
+```{r}
+include_graphics("./expression/plots/crd.png")
+```
+
 
 ### Between Class II genes and CIITA
 

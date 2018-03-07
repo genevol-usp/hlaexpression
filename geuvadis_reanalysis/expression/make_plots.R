@@ -32,7 +32,6 @@ dev.off()
 
 
 # Scatterplots of pipeline comparisons
-
 scatter_plot_cors <- function(df, x_var, y_var) {
     
     cor_df <- df %>%
@@ -121,7 +120,7 @@ scatter_plot_cors(star_imgt_vs_pri_df, "tpm.imgt", "tpm.ref") +
 dev.off()
 
 
-####
+#### experimental
 ref_dist <- 
     "~/hlaexpression/simulation/PEreads_75bp/data/distances_to_reference.tsv" %>%
     read_tsv()
@@ -187,7 +186,6 @@ dev.off()
 
 
 # TPM distributions
-
 tpm_distribution_df <- star_imgt_vs_pri_df %>%
     gather(index, tpm, 3:4) %>%
     mutate(index = sub("^tpm\\.", "", index)) %>%
@@ -206,7 +204,7 @@ dev.off()
 
 
 # ASE
-calc_ase <- function(counts) min(counts)/sum(counts)
+calc_ase <- function(tpm) min(tpm)/sum(tpm)
 
 pag3f <- mutate(pag, allele = hla_trimnames(allele, 3))
 
@@ -218,17 +216,17 @@ df_for_ase <-
     filter(n_distinct(allele) == 2) %>%
     ungroup() %>%
     left_join(geuvadis_ids, by = "subject") %>%
-    select(subject = name, locus, allele, est_counts) %>%
+    select(subject = name, locus, allele, tpm) %>%
     mutate(allele = gsub("IMGT_", "", allele),
 	   allele = hla_trimnames(allele))
 
 ase_df <- df_for_ase %>% 
     group_by(subject, locus) %>%
-    summarize(ase = calc_ase(est_counts)) %>%
+    summarize(ase = calc_ase(tpm)) %>%
     ungroup() 
   
 ase_error <- df_for_ase %>%
-    select(-est_counts) %>%
+    select(subject, locus, allele) %>%
     mutate(locus = sub("^HLA-", "", locus)) %>%
     calc_genotyping_accuracy(pag3f, by_locus = FALSE) %>%
     group_by(subject, locus) %>%
@@ -297,7 +295,8 @@ gene_pos <- gencode_hla_v19 %>%
            pos = ifelse(strand == "+", start, end),
            closest = crd$index[map_dbl(pos, ~which.min(abs(. - crd$pos_label)))])
 
-crd_plot <- ggplot() +
+png("./plots/crd.png", width = 6, height = 4, units = "in", res = 300)
+ggplot() +
     geom_point(data = crd, 
                aes(x = index, y = y, alpha = r2), 
                color = "blue", size = .5) +
@@ -327,59 +326,31 @@ crd_plot <- ggplot() +
           legend.position = c(.95, .8)) +
     labs(x = "Genomic position (Mb)", alpha = expression(~r^2)) +
     guides(alpha = guide_legend(override.aes = list(size = 2.5)))
- 
+dev.off()
 
 ## Global correlations
 global_cors <- star_imgt %>%
     mutate(locus = sub("HLA-", "", locus)) %>%
     spread(locus, tpm) %>%
-    select(-subject) %>% ggcorr(label = TRUE)
+    select(-subject) %>% 
+    ggcorr(label = TRUE, label_round = 2) +
+    theme(legend.position = "none") +
+    labs(title = "Gene-level")
 
 ## Within vs between haplotypes
 
-make_data <- function(locus1, locus2, df) {
+calc_trans_cors <- function(locus1, locus2, df) {
     
-    cis <- select(df, subject, locus1, locus2) %>%
-        drop_na() %>%
-        rename(gene1 = !!locus1, gene2 = !!locus2)
-    
-    trans <- cis %>% 
+    m_sub <- df %>% 
+        select(subject, locus1, locus2) %>%
         group_by(subject) %>%
-        mutate_at(vars(gene2), rev) %>%
-        ungroup()
-    
-    bind_rows(list("Within haplotypes" = cis, 
-                   "Between haplotypes" = trans), .id = "level") %>%
-        mutate(pair = paste(locus1, "vs", locus2),
-               level = factor(level, levels = c("Within haplotypes", "Between haplotypes"))) %>%
-        select(pair, everything())
-}
-
-plotphase <- function(phase_df) {
-    
-    phase_cor_df <- phase_df %>%
-        group_by(pair, level) %>%
-        summarize(r = cor(gene1, gene2),
-                  x = min(gene1),
-                  y = max(gene2)) %>%
+        mutate_at(vars(locus2), rev) %>%
         ungroup() %>%
-        mutate(r = round(r, digits = 2))
+        select(-subject) %>%
+        cor(use = "pairwise.complete.obs")
     
-    ggplot(phase_df, aes(gene1, gene2)) +
-        geom_point(size = .7) +
-        geom_smooth(method = lm, se = FALSE) + 
-        scale_x_continuous(breaks = scales::pretty_breaks(2)) +
-        scale_y_continuous(breaks = scales::pretty_breaks(2)) +
-        geom_text(data = phase_cor_df,
-                  aes(x, y, label = paste("r =", r)),
-                  hjust = "inward", vjust = "inward", size = 4) +
-        facet_grid(pair~level, scales = "free") +
-        theme_bw() +
-        theme(axis.text = element_text(size = 10),
-              axis.title = element_blank(),
-              strip.text = element_text(size = 8))
+    m[c(locus1, locus2), c(locus1, locus2)] <<- m_sub 
 }
-
 
 haps_data <- 
     read_tsv("./star/phase_hla_alleles/data/1000G_haps_expression_rsid.tsv") %>%
@@ -389,41 +360,39 @@ haps_data <-
     select(subject, hap, locus, tpm) %>% 
     spread(locus, tpm)
 
+cis_cors <- haps_data %>% 
+    select(-subject, -hap) %>%
+    ggcorr(label = TRUE, label_round = 2) +
+    theme(legend.position = "none") +
+    labs(title = "Within haplotypes")
+
+m <- 
+    matrix(NA, nrow = 7, ncol = 7, 
+           dimnames = list(sort(sub("HLA-", "", hla_genes)), 
+                           sort(sub("HLA-", "", hla_genes))))
+
 phase_data <- 
-    tribble(
-        ~locus1, ~locus2,
-        "A"    , "B",
-        "A"    , "C",
-        "B"    , "C",
-        "DQA1" , "DQB1",
-        "DQA1" , "DRB1") %>%
-    pmap_df(make_data, haps_data)
+    tibble(locus1 = hla_genes, locus2 = hla_genes) %>% 
+    mutate_all(~sub("HLA-", "", .)) %>% 
+    expand(locus1, locus2) %>% 
+    filter(locus1 != locus2) %>%
+    pmap(calc_trans_cors, haps_data) 
 
-phase_list <- filter(phase_data, level != "Gene-level") %>%
-    split(.$pair)
+trans_cors <- 
+    ggcorr(data = NULL, cor_matrix = m, label = TRUE, label_round = 2, name = "r") +
+    theme(legend.title = element_text(size = 14)) +
+    labs(title = "Between haplotypes")
 
+legend <- get_legend(trans_cors)
 
-p1 <- plotphase(phase_list[[1]])
-p2 <- plotphase(phase_list[[2]]) + theme(strip.text.x = element_blank())    
-p3 <- plotphase(phase_list[[3]]) + theme(strip.text.x = element_blank())   
-p4 <- plotphase(phase_list[[4]]) + theme(strip.text.x = element_blank())   
-p5 <- plotphase(phase_list[[5]]) + theme(strip.text.x = element_blank())
+trans_cors <- trans_cors + theme(legend.position = "none")
 
-within_vs_between <- 
-    plot_grid(p1, p2, p3, p4, p5, ncol = 1, 
-              rel_heights = c(1, .9, .9, .9, .9),
-              labels = "C")
-
-plot_AB <- plot_grid(crd_plot, global_cors, ncol = 1, 
-                     rel_heights = c(.55, .45),
-                     labels = c("A", "B"))
-
-png("./plots/correlations.png", width = 10, height = 6.5, units = "in", res = 300)
-plot_grid(plot_AB, within_vs_between, ncol = 2, rel_widths = c(.55, .45))
+png("./plots/correlations.png", width = 10, height = 4, units = "in", res = 300)
+plot_grid(global_cors, cis_cors, trans_cors, legend, nrow = 1, 
+          rel_widths = c(1, 1, 1, .2))
 dev.off()
 
 # Transactivator
-
 classII_and_CIITA <- gencode_chr_gene %>%
     filter(gene_name %in% c("HLA-DRB1", "HLA-DQA1", "HLA-DQB1", "HLA-DPB1", "CIITA"))
 
@@ -465,7 +434,6 @@ dev.off()
 
 
 # Correlation decrease as number of PCs increase
-
 pcs <- c(seq(0, 20, 5), seq(30, 100, 10))
 
 pca_star_df <-
