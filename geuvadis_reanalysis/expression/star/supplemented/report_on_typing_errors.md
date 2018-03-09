@@ -42,15 +42,19 @@ HG00273
 
 ##### Called
 
-    # A tibble: 0 x 5
-    # ... with 5 variables: subject <chr>, kgp_id <chr>, locus <chr>,
-    #   allele <chr>, est_counts <dbl>
+    # A tibble: 2 x 5
+      subject   kgp_id  locus allele     est_counts
+      <chr>     <chr>   <chr> <chr>           <dbl>
+    1 ERR188034 HG00273 HLA-A A*03:01:01      10778
+    2 ERR188034 HG00273 HLA-A A*11:01:79       7694
 
 ##### Gold
 
-    # A tibble: 0 x 5
-    # ... with 5 variables: subject <chr>, kgp_id <chr>, locus <chr>,
-    #   allele <chr>, est_counts <dbl>
+    # A tibble: 2 x 5
+      subject   kgp_id  locus allele     est_counts
+      <chr>     <chr>   <chr> <chr>           <dbl>
+    1 ERR188034 HG00273 HLA-A A*03:01:01      11390
+    2 ERR188034 HG00273 HLA-A A*11:01:01       7227
 
 NA12005
 -------
@@ -93,15 +97,19 @@ NA12005
 
 ##### Called
 
-    # A tibble: 0 x 5
-    # ... with 5 variables: subject <chr>, kgp_id <chr>, locus <chr>,
-    #   allele <chr>, est_counts <dbl>
+    # A tibble: 2 x 5
+      subject   kgp_id  locus allele     est_counts
+      <chr>     <chr>   <chr> <chr>           <dbl>
+    1 ERR188058 NA12005 HLA-B B*07:02:01      19192
+    2 ERR188058 NA12005 HLA-B B*27:05:02      20791
 
 ##### Gold
 
-    # A tibble: 0 x 5
-    # ... with 5 variables: subject <chr>, kgp_id <chr>, locus <chr>,
-    #   allele <chr>, est_counts <dbl>
+    # A tibble: 2 x 5
+      subject   kgp_id  locus allele     est_counts
+      <chr>     <chr>   <chr> <chr>           <dbl>
+    1 ERR188058 NA12005 HLA-B B*07:02:01      19193
+    2 ERR188058 NA12005 HLA-B B*27:03         20786
 
 NA11892
 -------
@@ -144,15 +152,19 @@ NA11892
 
 ##### Called
 
-    # A tibble: 0 x 5
-    # ... with 5 variables: subject <chr>, kgp_id <chr>, locus <chr>,
-    #   allele <chr>, est_counts <dbl>
+    # A tibble: 2 x 5
+      subject   kgp_id  locus    allele        est_counts
+      <chr>     <chr>   <chr>    <chr>              <dbl>
+    1 ERR188086 NA11892 HLA-DQB1 DQB1*02:02:01       2429
+    2 ERR188086 NA11892 HLA-DQB1 DQB1*04:02:01       2798
 
 ##### Gold
 
-    # A tibble: 0 x 5
-    # ... with 5 variables: subject <chr>, kgp_id <chr>, locus <chr>,
-    #   allele <chr>, est_counts <dbl>
+    # A tibble: 2 x 5
+      subject   kgp_id  locus    allele        est_counts
+      <chr>     <chr>   <chr>    <chr>              <dbl>
+    1 ERR188086 NA11892 HLA-DQB1 DQB1*02:01:01       2430
+    2 ERR188086 NA11892 HLA-DQB1 DQB1*04:02:01       2798
 
 ### HG00256
 
@@ -194,15 +206,19 @@ NA11892
 
 ##### Called
 
-    # A tibble: 0 x 5
-    # ... with 5 variables: subject <chr>, kgp_id <chr>, locus <chr>,
-    #   allele <chr>, est_counts <dbl>
+    # A tibble: 2 x 5
+      subject   kgp_id  locus    allele        est_counts
+      <chr>     <chr>   <chr>    <chr>              <dbl>
+    1 ERR188091 HG00256 HLA-DQB1 DQB1*02:01:10       3874
+    2 ERR188091 HG00256 HLA-DQB1 DQB1*06:03:01       4638
 
 ##### Gold
 
-    # A tibble: 0 x 5
-    # ... with 5 variables: subject <chr>, kgp_id <chr>, locus <chr>,
-    #   allele <chr>, est_counts <dbl>
+    # A tibble: 2 x 5
+      subject   kgp_id  locus    allele        est_counts
+      <chr>     <chr>   <chr>    <chr>              <dbl>
+    1 ERR188091 HG00256 HLA-DQB1 DQB1*02:01:01       3872
+    2 ERR188091 HG00256 HLA-DQB1 DQB1*06:03:01       4638
 
 NA10847
 -------
@@ -247,15 +263,19 @@ NA10847
 
 ##### Called
 
-    # A tibble: 0 x 5
-    # ... with 5 variables: subject <chr>, kgp_id <chr>, locus <chr>,
-    #   allele <chr>, est_counts <dbl>
+    # A tibble: 2 x 5
+      subject   kgp_id  locus allele     est_counts
+      <chr>     <chr>   <chr> <chr>           <dbl>
+    1 ERR188101 NA10847 HLA-C C*07:01:01      11411
+    2 ERR188101 NA10847 HLA-C C*12:03:01      13102
 
 ##### Gold
 
-    # A tibble: 0 x 5
-    # ... with 5 variables: subject <chr>, kgp_id <chr>, locus <chr>,
-    #   allele <chr>, est_counts <dbl>
+    # A tibble: 2 x 5
+      subject   kgp_id  locus allele     est_counts
+      <chr>     <chr>   <chr> <chr>           <dbl>
+    1 ERR188101 NA10847 HLA-C C*07:02:01      11288
+    2 ERR188101 NA10847 HLA-C C*12:03:01      13220
 
 NA20534
 -------
@@ -298,15 +318,19 @@ NA20534
 
 ##### Called
 
-    # A tibble: 0 x 5
-    # ... with 5 variables: subject <chr>, kgp_id <chr>, locus <chr>,
-    #   allele <chr>, est_counts <dbl>
+    # A tibble: 2 x 5
+      subject   kgp_id  locus allele     est_counts
+      <chr>     <chr>   <chr> <chr>           <dbl>
+    1 ERR188114 NA20534 HLA-A A*03:01:01      22330
+    2 ERR188114 NA20534 HLA-A A*11:01:79      16086
 
 ##### Gold
 
-    # A tibble: 0 x 5
-    # ... with 5 variables: subject <chr>, kgp_id <chr>, locus <chr>,
-    #   allele <chr>, est_counts <dbl>
+    # A tibble: 2 x 5
+      subject   kgp_id  locus allele     est_counts
+      <chr>     <chr>   <chr> <chr>           <dbl>
+    1 ERR188114 NA20534 HLA-A A*03:01:01      23378
+    2 ERR188114 NA20534 HLA-A A*11:01:01      15425
 
 HG00311
 -------
@@ -350,15 +374,19 @@ Mismatch at A\*11
 
 ##### Called
 
-    # A tibble: 0 x 5
-    # ... with 5 variables: subject <chr>, kgp_id <chr>, locus <chr>,
-    #   allele <chr>, est_counts <dbl>
+    # A tibble: 2 x 5
+      subject   kgp_id  locus allele     est_counts
+      <chr>     <chr>   <chr> <chr>           <dbl>
+    1 ERR188121 HG00311 HLA-A A*03:01:01      14857
+    2 ERR188121 HG00311 HLA-A A*11:01:79      11693
 
 ##### Gold
 
-    # A tibble: 0 x 5
-    # ... with 5 variables: subject <chr>, kgp_id <chr>, locus <chr>,
-    #   allele <chr>, est_counts <dbl>
+    # A tibble: 2 x 5
+      subject   kgp_id  locus allele     est_counts
+      <chr>     <chr>   <chr> <chr>           <dbl>
+    1 ERR188121 HG00311 HLA-A A*03:01:01      15541
+    2 ERR188121 HG00311 HLA-A A*11:01:01      11125
 
 HG00261
 -------
@@ -408,15 +436,19 @@ HG00261
 
 ##### Called
 
-    # A tibble: 0 x 5
-    # ... with 5 variables: subject <chr>, kgp_id <chr>, locus <chr>,
-    #   allele <chr>, est_counts <dbl>
+    # A tibble: 2 x 5
+      subject   kgp_id  locus    allele           est_counts
+      <chr>     <chr>   <chr>    <chr>                 <dbl>
+    1 ERR188130 HG00261 HLA-DQB1 DQB1*05:03:01:01       3270
+    2 ERR188130 HG00261 HLA-DQB1 DQB1*05:03:01:03       2098
 
 ##### Gold
 
-    # A tibble: 0 x 5
-    # ... with 5 variables: subject <chr>, kgp_id <chr>, locus <chr>,
-    #   allele <chr>, est_counts <dbl>
+    # A tibble: 2 x 5
+      subject   kgp_id  locus    allele           est_counts
+      <chr>     <chr>   <chr>    <chr>                 <dbl>
+    1 ERR188130 HG00261 HLA-DQB1 DQB1*02:01:01          2050
+    2 ERR188130 HG00261 HLA-DQB1 DQB1*05:03:01:01       4961
 
 NA12287
 -------
@@ -466,15 +498,19 @@ NA12287
 
 ##### Called
 
-    # A tibble: 0 x 5
-    # ... with 5 variables: subject <chr>, kgp_id <chr>, locus <chr>,
-    #   allele <chr>, est_counts <dbl>
+    # A tibble: 2 x 5
+      subject   kgp_id  locus allele     est_counts
+      <chr>     <chr>   <chr> <chr>           <dbl>
+    1 ERR188142 NA12287 HLA-B B*15:01:01      10721
+    2 ERR188142 NA12287 HLA-B B*51:01:01      11058
 
 ##### Gold
 
-    # A tibble: 0 x 5
-    # ... with 5 variables: subject <chr>, kgp_id <chr>, locus <chr>,
-    #   allele <chr>, est_counts <dbl>
+    # A tibble: 2 x 5
+      subject   kgp_id  locus allele     est_counts
+      <chr>     <chr>   <chr> <chr>           <dbl>
+    1 ERR188142 NA12287 HLA-B B*15:01:01      10096
+    2 ERR188142 NA12287 HLA-B B*15:01:01      10096
 
 NA11918
 -------
@@ -523,15 +559,19 @@ NA11918
 
 ##### Called
 
-    # A tibble: 0 x 5
-    # ... with 5 variables: subject <chr>, kgp_id <chr>, locus <chr>,
-    #   allele <chr>, est_counts <dbl>
+    # A tibble: 2 x 5
+      subject   kgp_id  locus allele     est_counts
+      <chr>     <chr>   <chr> <chr>           <dbl>
+    1 ERR188161 NA11918 HLA-A A*01:01:01      21975
+    2 ERR188161 NA11918 HLA-A A*02:17:01      24028
 
 ##### Gold
 
-    # A tibble: 0 x 5
-    # ... with 5 variables: subject <chr>, kgp_id <chr>, locus <chr>,
-    #   allele <chr>, est_counts <dbl>
+    # A tibble: 2 x 5
+      subject   kgp_id  locus allele     est_counts
+      <chr>     <chr>   <chr> <chr>           <dbl>
+    1 ERR188161 NA11918 HLA-A A*01:01:01      21977
+    2 ERR188161 NA11918 HLA-A A*02:01:01      23994
 
 NA07357
 -------
@@ -574,15 +614,19 @@ NA07357
 
 ##### Called
 
-    # A tibble: 0 x 5
-    # ... with 5 variables: subject <chr>, kgp_id <chr>, locus <chr>,
-    #   allele <chr>, est_counts <dbl>
+    # A tibble: 2 x 5
+      subject   kgp_id  locus allele     est_counts
+      <chr>     <chr>   <chr> <chr>           <dbl>
+    1 ERR188176 NA07357 HLA-C C*07:01:01       8520
+    2 ERR188176 NA07357 HLA-C C*07:72          6559
 
 ##### Gold
 
-    # A tibble: 0 x 5
-    # ... with 5 variables: subject <chr>, kgp_id <chr>, locus <chr>,
-    #   allele <chr>, est_counts <dbl>
+    # A tibble: 2 x 5
+      subject   kgp_id  locus allele     est_counts
+      <chr>     <chr>   <chr> <chr>           <dbl>
+    1 ERR188176 NA07357 HLA-C C*07:01:01       7463
+    2 ERR188176 NA07357 HLA-C C*07:02:01       7616
 
 NA12234
 -------
@@ -625,15 +669,19 @@ NA12234
 
 ##### Called
 
-    # A tibble: 0 x 5
-    # ... with 5 variables: subject <chr>, kgp_id <chr>, locus <chr>,
-    #   allele <chr>, est_counts <dbl>
+    # A tibble: 2 x 5
+      subject   kgp_id  locus    allele           est_counts
+      <chr>     <chr>   <chr>    <chr>                 <dbl>
+    1 ERR188177 NA12234 HLA-DQB1 DQB1*02:02:01          4306
+    2 ERR188177 NA12234 HLA-DQB1 DQB1*05:03:01:01       6024
 
 ##### Gold
 
-    # A tibble: 0 x 5
-    # ... with 5 variables: subject <chr>, kgp_id <chr>, locus <chr>,
-    #   allele <chr>, est_counts <dbl>
+    # A tibble: 2 x 5
+      subject   kgp_id  locus    allele           est_counts
+      <chr>     <chr>   <chr>    <chr>                 <dbl>
+    1 ERR188177 NA12234 HLA-DQB1 DQB1*02:01:01          4303
+    2 ERR188177 NA12234 HLA-DQB1 DQB1*05:03:01:01       6024
 
 HG00115
 -------
@@ -676,15 +724,19 @@ HG00115
 
 ##### Called
 
-    # A tibble: 0 x 5
-    # ... with 5 variables: subject <chr>, kgp_id <chr>, locus <chr>,
-    #   allele <chr>, est_counts <dbl>
+    # A tibble: 2 x 5
+      subject   kgp_id  locus allele     est_counts
+      <chr>     <chr>   <chr> <chr>           <dbl>
+    1 ERR188186 HG00115 HLA-A A*03:01:01      27808
+    2 ERR188186 HG00115 HLA-A A*11:01:79      24082
 
 ##### Gold
 
-    # A tibble: 0 x 5
-    # ... with 5 variables: subject <chr>, kgp_id <chr>, locus <chr>,
-    #   allele <chr>, est_counts <dbl>
+    # A tibble: 2 x 5
+      subject   kgp_id  locus allele     est_counts
+      <chr>     <chr>   <chr> <chr>           <dbl>
+    1 ERR188186 HG00115 HLA-A A*03:01:01      29007
+    2 ERR188186 HG00115 HLA-A A*11:01:01      23370
 
 HG00171
 -------
@@ -727,15 +779,19 @@ HG00171
 
 ##### Called
 
-    # A tibble: 0 x 5
-    # ... with 5 variables: subject <chr>, kgp_id <chr>, locus <chr>,
-    #   allele <chr>, est_counts <dbl>
+    # A tibble: 2 x 5
+      subject   kgp_id  locus allele     est_counts
+      <chr>     <chr>   <chr> <chr>           <dbl>
+    1 ERR188190 HG00171 HLA-C C*06:135         5421
+    2 ERR188190 HG00171 HLA-C C*15:02:01       4007
 
 ##### Gold
 
-    # A tibble: 0 x 5
-    # ... with 5 variables: subject <chr>, kgp_id <chr>, locus <chr>,
-    #   allele <chr>, est_counts <dbl>
+    # A tibble: 2 x 5
+      subject   kgp_id  locus allele     est_counts
+      <chr>     <chr>   <chr> <chr>           <dbl>
+    1 ERR188190 HG00171 HLA-C C*06:02:01       5471
+    2 ERR188190 HG00171 HLA-C C*15:02:01       3957
 
 NA20585
 -------
@@ -800,15 +856,23 @@ NA20585
 
 ##### Called
 
-    # A tibble: 0 x 5
-    # ... with 5 variables: subject <chr>, kgp_id <chr>, locus <chr>,
-    #   allele <chr>, est_counts <dbl>
+    # A tibble: 4 x 5
+      subject   kgp_id  locus allele     est_counts
+      <chr>     <chr>   <chr> <chr>           <dbl>
+    1 ERR188199 NA20585 HLA-A A*03:01:24      11000
+    2 ERR188199 NA20585 HLA-A A*24:18         11735
+    3 ERR188199 NA20585 HLA-C C*07:102         3712
+    4 ERR188199 NA20585 HLA-C C*07:425         7042
 
 ##### Gold
 
-    # A tibble: 0 x 5
-    # ... with 5 variables: subject <chr>, kgp_id <chr>, locus <chr>,
-    #   allele <chr>, est_counts <dbl>
+    # A tibble: 4 x 5
+      subject   kgp_id  locus allele     est_counts
+      <chr>     <chr>   <chr> <chr>           <dbl>
+    1 ERR188199 NA20585 HLA-A A*03:01:01      11202
+    2 ERR188199 NA20585 HLA-A A*24:02:01      11556
+    3 ERR188199 NA20585 HLA-C C*07:02:01       5368
+    4 ERR188199 NA20585 HLA-C C*07:02:01       5368
 
 NA20538
 -------
@@ -851,15 +915,19 @@ NA20538
 
 ##### Called
 
-    # A tibble: 0 x 5
-    # ... with 5 variables: subject <chr>, kgp_id <chr>, locus <chr>,
-    #   allele <chr>, est_counts <dbl>
+    # A tibble: 2 x 5
+      subject   kgp_id  locus allele     est_counts
+      <chr>     <chr>   <chr> <chr>           <dbl>
+    1 ERR188208 NA20538 HLA-C C*12:140         3373
+    2 ERR188208 NA20538 HLA-C C*15:02:01       2945
 
 ##### Gold
 
-    # A tibble: 0 x 5
-    # ... with 5 variables: subject <chr>, kgp_id <chr>, locus <chr>,
-    #   allele <chr>, est_counts <dbl>
+    # A tibble: 2 x 5
+      subject   kgp_id  locus allele     est_counts
+      <chr>     <chr>   <chr> <chr>           <dbl>
+    1 ERR188208 NA20538 HLA-C C*12:03:01       3417
+    2 ERR188208 NA20538 HLA-C C*15:02:01       2901
 
 NA06986
 -------
@@ -900,15 +968,19 @@ NA06986
 
 ##### Called
 
-    # A tibble: 0 x 5
-    # ... with 5 variables: subject <chr>, kgp_id <chr>, locus <chr>,
-    #   allele <chr>, est_counts <dbl>
+    # A tibble: 2 x 5
+      subject   kgp_id  locus    allele        est_counts
+      <chr>     <chr>   <chr>    <chr>              <dbl>
+    1 ERR188213 NA06986 HLA-DQB1 DQB1*02:02:01       8611
+    2 ERR188213 NA06986 HLA-DQB1 DQB1*02:02:01       8611
 
 ##### Gold
 
-    # A tibble: 0 x 5
-    # ... with 5 variables: subject <chr>, kgp_id <chr>, locus <chr>,
-    #   allele <chr>, est_counts <dbl>
+    # A tibble: 2 x 5
+      subject   kgp_id  locus    allele        est_counts
+      <chr>     <chr>   <chr>    <chr>              <dbl>
+    1 ERR188213 NA06986 HLA-DQB1 DQB1*02:01:01       8609
+    2 ERR188213 NA06986 HLA-DQB1 DQB1*02:01:01       8609
 
 NA11832
 -------
@@ -951,15 +1023,19 @@ NA11832
 
 ##### Called
 
-    # A tibble: 0 x 5
-    # ... with 5 variables: subject <chr>, kgp_id <chr>, locus <chr>,
-    #   allele <chr>, est_counts <dbl>
+    # A tibble: 2 x 5
+      subject   kgp_id  locus allele     est_counts
+      <chr>     <chr>   <chr> <chr>           <dbl>
+    1 ERR188217 NA11832 HLA-B B*27:05:02      30738
+    2 ERR188217 NA11832 HLA-B B*40:02:01      32576
 
 ##### Gold
 
-    # A tibble: 0 x 5
-    # ... with 5 variables: subject <chr>, kgp_id <chr>, locus <chr>,
-    #   allele <chr>, est_counts <dbl>
+    # A tibble: 2 x 5
+      subject   kgp_id  locus allele     est_counts
+      <chr>     <chr>   <chr> <chr>           <dbl>
+    1 ERR188217 NA11832 HLA-B B*27:03         31570
+    2 ERR188217 NA11832 HLA-B B*40:02:01      31733
 
 NA11930
 -------
@@ -1021,15 +1097,27 @@ NA11930
 
 ##### Called
 
-    # A tibble: 0 x 5
-    # ... with 5 variables: subject <chr>, kgp_id <chr>, locus <chr>,
-    #   allele <chr>, est_counts <dbl>
+    # A tibble: 6 x 5
+      subject   kgp_id  locus    allele        est_counts
+      <chr>     <chr>   <chr>    <chr>              <dbl>
+    1 ERR188235 NA11930 HLA-A    A*24:02:01          3905
+    2 ERR188235 NA11930 HLA-A    A*24:02:01          3905
+    3 ERR188235 NA11930 HLA-C    C*06:140            3062
+    4 ERR188235 NA11930 HLA-C    C*06:140            3062
+    5 ERR188235 NA11930 HLA-DQB1 DQB1*02:02:01       2071
+    6 ERR188235 NA11930 HLA-DQB1 DQB1*06:02:01       3333
 
 ##### Gold
 
-    # A tibble: 0 x 5
-    # ... with 5 variables: subject <chr>, kgp_id <chr>, locus <chr>,
-    #   allele <chr>, est_counts <dbl>
+    # A tibble: 6 x 5
+      subject   kgp_id  locus    allele        est_counts
+      <chr>     <chr>   <chr>    <chr>              <dbl>
+    1 ERR188235 NA11930 HLA-A    A*02:01:01          6559
+    2 ERR188235 NA11930 HLA-A    A*24:02:01          6050
+    3 ERR188235 NA11930 HLA-C    C*06:02:01          3044
+    4 ERR188235 NA11930 HLA-C    C*06:02:01          3044
+    5 ERR188235 NA11930 HLA-DQB1 DQB1*02:01:01       2068
+    6 ERR188235 NA11930 HLA-DQB1 DQB1*06:02:01       3334
 
 NA20520
 -------
@@ -1072,15 +1160,19 @@ NA20520
 
 ##### Called
 
-    # A tibble: 0 x 5
-    # ... with 5 variables: subject <chr>, kgp_id <chr>, locus <chr>,
-    #   allele <chr>, est_counts <dbl>
+    # A tibble: 2 x 5
+      subject   kgp_id  locus allele     est_counts
+      <chr>     <chr>   <chr> <chr>           <dbl>
+    1 ERR188239 NA20520 HLA-C C*04:01:01      12290
+    2 ERR188239 NA20520 HLA-C C*05:37          7895
 
 ##### Gold
 
-    # A tibble: 0 x 5
-    # ... with 5 variables: subject <chr>, kgp_id <chr>, locus <chr>,
-    #   allele <chr>, est_counts <dbl>
+    # A tibble: 2 x 5
+      subject   kgp_id  locus allele     est_counts
+      <chr>     <chr>   <chr> <chr>           <dbl>
+    1 ERR188239 NA20520 HLA-C C*04:01:01      12291
+    2 ERR188239 NA20520 HLA-C C*05:01:01       7891
 
 NA11840
 -------
@@ -1125,15 +1217,19 @@ NA11840
 
 ##### Called
 
-    # A tibble: 0 x 5
-    # ... with 5 variables: subject <chr>, kgp_id <chr>, locus <chr>,
-    #   allele <chr>, est_counts <dbl>
+    # A tibble: 2 x 5
+      subject   kgp_id  locus allele     est_counts
+      <chr>     <chr>   <chr> <chr>           <dbl>
+    1 ERR188246 NA11840 HLA-B B*27:05:03      33903
+    2 ERR188246 NA11840 HLA-B B*57:01:01      37401
 
 ##### Gold
 
-    # A tibble: 0 x 5
-    # ... with 5 variables: subject <chr>, kgp_id <chr>, locus <chr>,
-    #   allele <chr>, est_counts <dbl>
+    # A tibble: 2 x 5
+      subject   kgp_id  locus allele     est_counts
+      <chr>     <chr>   <chr> <chr>           <dbl>
+    1 ERR188246 NA11840 HLA-B B*27:03         33899
+    2 ERR188246 NA11840 HLA-B B*57:01:01      37380
 
 HG00246
 -------
@@ -1176,15 +1272,19 @@ HG00246
 
 ##### Called
 
-    # A tibble: 0 x 5
-    # ... with 5 variables: subject <chr>, kgp_id <chr>, locus <chr>,
-    #   allele <chr>, est_counts <dbl>
+    # A tibble: 2 x 5
+      subject   kgp_id  locus allele     est_counts
+      <chr>     <chr>   <chr> <chr>           <dbl>
+    1 ERR188271 HG00246 HLA-A A*03:01:01      22327
+    2 ERR188271 HG00246 HLA-A A*11:01:79      17948
 
 ##### Gold
 
-    # A tibble: 0 x 5
-    # ... with 5 variables: subject <chr>, kgp_id <chr>, locus <chr>,
-    #   allele <chr>, est_counts <dbl>
+    # A tibble: 2 x 5
+      subject   kgp_id  locus allele     est_counts
+      <chr>     <chr>   <chr> <chr>           <dbl>
+    1 ERR188271 HG00246 HLA-A A*03:01:01      23056
+    2 ERR188271 HG00246 HLA-A A*11:01:01      17365
 
 NA20758
 -------
@@ -1234,15 +1334,19 @@ NA20758
 
 ##### Called
 
-    # A tibble: 0 x 5
-    # ... with 5 variables: subject <chr>, kgp_id <chr>, locus <chr>,
-    #   allele <chr>, est_counts <dbl>
+    # A tibble: 2 x 5
+      subject   kgp_id  locus allele     est_counts
+      <chr>     <chr>   <chr> <chr>           <dbl>
+    1 ERR188276 NA20758 HLA-A A*01:01:01      10980
+    2 ERR188276 NA20758 HLA-A A*01:01:01      10980
 
 ##### Gold
 
-    # A tibble: 0 x 5
-    # ... with 5 variables: subject <chr>, kgp_id <chr>, locus <chr>,
-    #   allele <chr>, est_counts <dbl>
+    # A tibble: 2 x 5
+      subject   kgp_id  locus allele     est_counts
+      <chr>     <chr>   <chr> <chr>           <dbl>
+    1 ERR188276 NA20758 HLA-A A*01:01:01      19908
+    2 ERR188276 NA20758 HLA-A A*24:02:01       3481
 
 NA20805
 -------
@@ -1285,15 +1389,19 @@ NA20805
 
 ##### Called
 
-    # A tibble: 0 x 5
-    # ... with 5 variables: subject <chr>, kgp_id <chr>, locus <chr>,
-    #   allele <chr>, est_counts <dbl>
+    # A tibble: 2 x 5
+      subject   kgp_id  locus allele     est_counts
+      <chr>     <chr>   <chr> <chr>           <dbl>
+    1 ERR188286 NA20805 HLA-C C*05:37          6780
+    2 ERR188286 NA20805 HLA-C C*16:04:01       6072
 
 ##### Gold
 
-    # A tibble: 0 x 5
-    # ... with 5 variables: subject <chr>, kgp_id <chr>, locus <chr>,
-    #   allele <chr>, est_counts <dbl>
+    # A tibble: 2 x 5
+      subject   kgp_id  locus allele     est_counts
+      <chr>     <chr>   <chr> <chr>           <dbl>
+    1 ERR188286 NA20805 HLA-C C*05:01:01       6772
+    2 ERR188286 NA20805 HLA-C C*16:04:01       6079
 
 NA11994
 -------
@@ -1348,15 +1456,23 @@ NA11994
 
 ##### Called
 
-    # A tibble: 0 x 5
-    # ... with 5 variables: subject <chr>, kgp_id <chr>, locus <chr>,
-    #   allele <chr>, est_counts <dbl>
+    # A tibble: 4 x 5
+      subject   kgp_id  locus allele      est_counts
+      <chr>     <chr>   <chr> <chr>            <dbl>
+    1 ERR188301 NA11994 HLA-A A*01:01:01       23146
+    2 ERR188301 NA11994 HLA-A A*11:199:01      16039
+    3 ERR188301 NA11994 HLA-C C*07:02:01       12544
+    4 ERR188301 NA11994 HLA-C C*15:13:01       13429
 
 ##### Gold
 
-    # A tibble: 0 x 5
-    # ... with 5 variables: subject <chr>, kgp_id <chr>, locus <chr>,
-    #   allele <chr>, est_counts <dbl>
+    # A tibble: 4 x 5
+      subject   kgp_id  locus allele     est_counts
+      <chr>     <chr>   <chr> <chr>           <dbl>
+    1 ERR188301 NA11994 HLA-A A*01:01:01      23066
+    2 ERR188301 NA11994 HLA-A A*11:01:01      16128
+    3 ERR188301 NA11994 HLA-C C*07:02:01      12542
+    4 ERR188301 NA11994 HLA-C C*15:02:01      13425
 
 HG00380
 -------
@@ -1408,15 +1524,19 @@ HG00380
 
 ##### Called
 
-    # A tibble: 0 x 5
-    # ... with 5 variables: subject <chr>, kgp_id <chr>, locus <chr>,
-    #   allele <chr>, est_counts <dbl>
+    # A tibble: 2 x 5
+      subject   kgp_id  locus allele     est_counts
+      <chr>     <chr>   <chr> <chr>           <dbl>
+    1 ERR188314 HG00380 HLA-B B*08:01:01      17004
+    2 ERR188314 HG00380 HLA-B B*42:01:01      17165
 
 ##### Gold
 
-    # A tibble: 0 x 5
-    # ... with 5 variables: subject <chr>, kgp_id <chr>, locus <chr>,
-    #   allele <chr>, est_counts <dbl>
+    # A tibble: 2 x 5
+      subject   kgp_id  locus allele     est_counts
+      <chr>     <chr>   <chr> <chr>           <dbl>
+    1 ERR188314 HG00380 HLA-B B*07:02:01      15393
+    2 ERR188314 HG00380 HLA-B B*08:01:01      19200
 
 HG00109
 -------
@@ -1466,15 +1586,19 @@ HG00109
 
 ##### Called
 
-    # A tibble: 0 x 5
-    # ... with 5 variables: subject <chr>, kgp_id <chr>, locus <chr>,
-    #   allele <chr>, est_counts <dbl>
+    # A tibble: 2 x 5
+      subject   kgp_id  locus allele     est_counts
+      <chr>     <chr>   <chr> <chr>           <dbl>
+    1 ERR188328 HG00109 HLA-A A*02:05:01       7706
+    2 ERR188328 HG00109 HLA-A A*02:05:01       7706
 
 ##### Gold
 
-    # A tibble: 0 x 5
-    # ... with 5 variables: subject <chr>, kgp_id <chr>, locus <chr>,
-    #   allele <chr>, est_counts <dbl>
+    # A tibble: 2 x 5
+      subject   kgp_id  locus allele     est_counts
+      <chr>     <chr>   <chr> <chr>           <dbl>
+    1 ERR188328 HG00109 HLA-A A*01:01:01       7522
+    2 ERR188328 HG00109 HLA-A A*02:05:01      11595
 
 NA20586
 -------
@@ -1527,15 +1651,19 @@ NA20586
 
 ##### Called
 
-    # A tibble: 0 x 5
-    # ... with 5 variables: subject <chr>, kgp_id <chr>, locus <chr>,
-    #   allele <chr>, est_counts <dbl>
+    # A tibble: 2 x 5
+      subject   kgp_id  locus allele     est_counts
+      <chr>     <chr>   <chr> <chr>           <dbl>
+    1 ERR188353 NA20586 HLA-A A*11:235Q       17939
+    2 ERR188353 NA20586 HLA-A A*25:01:01      22568
 
 ##### Gold
 
-    # A tibble: 0 x 5
-    # ... with 5 variables: subject <chr>, kgp_id <chr>, locus <chr>,
-    #   allele <chr>, est_counts <dbl>
+    # A tibble: 2 x 5
+      subject   kgp_id  locus allele     est_counts
+      <chr>     <chr>   <chr> <chr>           <dbl>
+    1 ERR188353 NA20586 HLA-A A*11:01:01      18019
+    2 ERR188353 NA20586 HLA-A A*25:01:01      22491
 
 NA11920
 -------
@@ -1578,15 +1706,19 @@ NA11920
 
 ##### Called
 
-    # A tibble: 0 x 5
-    # ... with 5 variables: subject <chr>, kgp_id <chr>, locus <chr>,
-    #   allele <chr>, est_counts <dbl>
+    # A tibble: 2 x 5
+      subject   kgp_id  locus    allele        est_counts
+      <chr>     <chr>   <chr>    <chr>              <dbl>
+    1 ERR188371 NA11920 HLA-DRB1 DRB1*04:01:01      24317
+    2 ERR188371 NA11920 HLA-DRB1 DRB1*14:54:01      15759
 
 ##### Gold
 
-    # A tibble: 0 x 5
-    # ... with 5 variables: subject <chr>, kgp_id <chr>, locus <chr>,
-    #   allele <chr>, est_counts <dbl>
+    # A tibble: 2 x 5
+      subject   kgp_id  locus    allele        est_counts
+      <chr>     <chr>   <chr>    <chr>              <dbl>
+    1 ERR188371 NA11920 HLA-DRB1 DRB1*04:01:01      24317
+    2 ERR188371 NA11920 HLA-DRB1 DRB1*14:01:01      15751
 
 HG00260
 -------
@@ -1644,15 +1776,23 @@ HG00260
 
 ##### Called
 
-    # A tibble: 0 x 5
-    # ... with 5 variables: subject <chr>, kgp_id <chr>, locus <chr>,
-    #   allele <chr>, est_counts <dbl>
+    # A tibble: 4 x 5
+      subject   kgp_id  locus allele        est_counts
+      <chr>     <chr>   <chr> <chr>              <dbl>
+    1 ERR188374 HG00360 HLA-A A*02:01:01          6223
+    2 ERR188374 HG00360 HLA-A A*02:01:01          6223
+    3 ERR188374 HG00360 HLA-B B*39:01:24          9986
+    4 ERR188374 HG00360 HLA-B B*44:02:01:01      11317
 
 ##### Gold
 
-    # A tibble: 0 x 5
-    # ... with 5 variables: subject <chr>, kgp_id <chr>, locus <chr>,
-    #   allele <chr>, est_counts <dbl>
+    # A tibble: 4 x 5
+      subject   kgp_id  locus allele        est_counts
+      <chr>     <chr>   <chr> <chr>              <dbl>
+    1 ERR188374 HG00360 HLA-A A*02:01:01          9908
+    2 ERR188374 HG00360 HLA-A A*24:02:01          7775
+    3 ERR188374 HG00360 HLA-B B*39:01:01          9816
+    4 ERR188374 HG00360 HLA-B B*44:02:01:01      11317
 
 NA12045
 -------
@@ -1695,15 +1835,19 @@ NA12045
 
 ##### Called
 
-    # A tibble: 0 x 5
-    # ... with 5 variables: subject <chr>, kgp_id <chr>, locus <chr>,
-    #   allele <chr>, est_counts <dbl>
+    # A tibble: 2 x 5
+      subject   kgp_id  locus    allele        est_counts
+      <chr>     <chr>   <chr>    <chr>              <dbl>
+    1 ERR188377 NA12045 HLA-DRB1 DRB1*13:01:01       9591
+    2 ERR188377 NA12045 HLA-DRB1 DRB1*14:54:01       7532
 
 ##### Gold
 
-    # A tibble: 0 x 5
-    # ... with 5 variables: subject <chr>, kgp_id <chr>, locus <chr>,
-    #   allele <chr>, est_counts <dbl>
+    # A tibble: 2 x 5
+      subject   kgp_id  locus    allele        est_counts
+      <chr>     <chr>   <chr>    <chr>              <dbl>
+    1 ERR188377 NA12045 HLA-DRB1 DRB1*13:01:01      11214
+    2 ERR188377 NA12045 HLA-DRB1 DRB1*14:01:01       5908
 
 NA12156
 -------
@@ -1756,15 +1900,23 @@ NA12156
 
 ##### Called
 
-    # A tibble: 0 x 5
-    # ... with 5 variables: subject <chr>, kgp_id <chr>, locus <chr>,
-    #   allele <chr>, est_counts <dbl>
+    # A tibble: 4 x 5
+      subject   kgp_id  locus    allele        est_counts
+      <chr>     <chr>   <chr>    <chr>              <dbl>
+    1 ERR188410 NA12156 HLA-C    C*06:06            15361
+    2 ERR188410 NA12156 HLA-C    C*15:02:01         12673
+    3 ERR188410 NA12156 HLA-DQB1 DQB1*02:02:01       4643
+    4 ERR188410 NA12156 HLA-DQB1 DQB1*03:01:01       6847
 
 ##### Gold
 
-    # A tibble: 0 x 5
-    # ... with 5 variables: subject <chr>, kgp_id <chr>, locus <chr>,
-    #   allele <chr>, est_counts <dbl>
+    # A tibble: 4 x 5
+      subject   kgp_id  locus    allele        est_counts
+      <chr>     <chr>   <chr>    <chr>              <dbl>
+    1 ERR188410 NA12156 HLA-C    C*06:02:01         14481
+    2 ERR188410 NA12156 HLA-C    C*15:02:01         13549
+    3 ERR188410 NA12156 HLA-DQB1 DQB1*02:01:01       4643
+    4 ERR188410 NA12156 HLA-DQB1 DQB1*03:01:01       6845
 
 NA12058
 -------
@@ -1822,15 +1974,23 @@ NA12058
 
 ##### Called
 
-    # A tibble: 0 x 5
-    # ... with 5 variables: subject <chr>, kgp_id <chr>, locus <chr>,
-    #   allele <chr>, est_counts <dbl>
+    # A tibble: 4 x 5
+      subject   kgp_id  locus allele     est_counts
+      <chr>     <chr>   <chr> <chr>           <dbl>
+    1 ERR188415 NA12058 HLA-B B*35:03:01      28926
+    2 ERR188415 NA12058 HLA-B B*40:01:02      31244
+    3 ERR188415 NA12058 HLA-C C*03:04:01      12613
+    4 ERR188415 NA12058 HLA-C C*04:01:01      22577
 
 ##### Gold
 
-    # A tibble: 0 x 5
-    # ... with 5 variables: subject <chr>, kgp_id <chr>, locus <chr>,
-    #   allele <chr>, est_counts <dbl>
+    # A tibble: 4 x 5
+      subject   kgp_id  locus allele     est_counts
+      <chr>     <chr>   <chr> <chr>           <dbl>
+    1 ERR188415 NA12058 HLA-B B*40:01:01       51.6
+    2 ERR188415 NA12058 HLA-B B*40:01:02    53589  
+    3 ERR188415 NA12058 HLA-C C*03:04:01    18190  
+    4 ERR188415 NA12058 HLA-C C*03:04:01    18190  
 
 HG00102
 -------
@@ -1896,15 +2056,27 @@ HG00102
 
 ##### Called
 
-    # A tibble: 0 x 5
-    # ... with 5 variables: subject <chr>, kgp_id <chr>, locus <chr>,
-    #   allele <chr>, est_counts <dbl>
+    # A tibble: 6 x 5
+      subject   kgp_id  locus allele     est_counts
+      <chr>     <chr>   <chr> <chr>           <dbl>
+    1 ERR188416 HG00102 HLA-A A*01:01:37       6495
+    2 ERR188416 HG00102 HLA-A A*01:09:01       1922
+    3 ERR188416 HG00102 HLA-B B*07:08:01       6119
+    4 ERR188416 HG00102 HLA-B B*08:58          5891
+    5 ERR188416 HG00102 HLA-C C*07:175         2274
+    6 ERR188416 HG00102 HLA-C C*07:83          2175
 
 ##### Gold
 
-    # A tibble: 0 x 5
-    # ... with 5 variables: subject <chr>, kgp_id <chr>, locus <chr>,
-    #   allele <chr>, est_counts <dbl>
+    # A tibble: 6 x 5
+      subject   kgp_id  locus allele     est_counts
+      <chr>     <chr>   <chr> <chr>           <dbl>
+    1 ERR188416 HG00102 HLA-A A*01:01:01       4208
+    2 ERR188416 HG00102 HLA-A A*01:01:01       4208
+    3 ERR188416 HG00102 HLA-B B*07:02:01       5916
+    4 ERR188416 HG00102 HLA-B B*08:01:01       6277
+    5 ERR188416 HG00102 HLA-C C*07:01:01       1801
+    6 ERR188416 HG00102 HLA-C C*07:02:01       2648
 
 HG00327
 -------
@@ -1954,15 +2126,19 @@ HG00327
 
 ##### Called
 
-    # A tibble: 0 x 5
-    # ... with 5 variables: subject <chr>, kgp_id <chr>, locus <chr>,
-    #   allele <chr>, est_counts <dbl>
+    # A tibble: 2 x 5
+      subject   kgp_id  locus allele     est_counts
+      <chr>     <chr>   <chr> <chr>           <dbl>
+    1 ERR188417 HG00327 HLA-C C*05:29:01       3828
+    2 ERR188417 HG00327 HLA-C C*05:29:01       3828
 
 ##### Gold
 
-    # A tibble: 0 x 5
-    # ... with 5 variables: subject <chr>, kgp_id <chr>, locus <chr>,
-    #   allele <chr>, est_counts <dbl>
+    # A tibble: 2 x 5
+      subject   kgp_id  locus allele     est_counts
+      <chr>     <chr>   <chr> <chr>           <dbl>
+    1 ERR188417 HG00327 HLA-C C*05:01:01       4111
+    2 ERR188417 HG00327 HLA-C C*07:01:01       4555
 
 NA11830
 -------
@@ -2005,15 +2181,19 @@ NA11830
 
 ##### Called
 
-    # A tibble: 0 x 5
-    # ... with 5 variables: subject <chr>, kgp_id <chr>, locus <chr>,
-    #   allele <chr>, est_counts <dbl>
+    # A tibble: 2 x 5
+      subject   kgp_id  locus    allele        est_counts
+      <chr>     <chr>   <chr>    <chr>              <dbl>
+    1 ERR188435 NA11830 HLA-DQB1 DQB1*02:02:01       5089
+    2 ERR188435 NA11830 HLA-DQB1 DQB1*03:01:01       6249
 
 ##### Gold
 
-    # A tibble: 0 x 5
-    # ... with 5 variables: subject <chr>, kgp_id <chr>, locus <chr>,
-    #   allele <chr>, est_counts <dbl>
+    # A tibble: 2 x 5
+      subject   kgp_id  locus    allele        est_counts
+      <chr>     <chr>   <chr>    <chr>              <dbl>
+    1 ERR188435 NA11830 HLA-DQB1 DQB1*02:01:01       5088
+    2 ERR188435 NA11830 HLA-DQB1 DQB1*03:01:01       6248
 
 NA12272
 -------
@@ -2074,15 +2254,27 @@ NA12272
 
 ##### Called
 
-    # A tibble: 0 x 5
-    # ... with 5 variables: subject <chr>, kgp_id <chr>, locus <chr>,
-    #   allele <chr>, est_counts <dbl>
+    # A tibble: 6 x 5
+      subject   kgp_id  locus    allele        est_counts
+      <chr>     <chr>   <chr>    <chr>              <dbl>
+    1 ERR188438 NA12272 HLA-A    A*02:614            8608
+    2 ERR188438 NA12272 HLA-A    A*68:01:02          8907
+    3 ERR188438 NA12272 HLA-B    B*44:02:01:01      12099
+    4 ERR188438 NA12272 HLA-B    B*44:270            3170
+    5 ERR188438 NA12272 HLA-DRB1 DRB1*10:01:01      13978
+    6 ERR188438 NA12272 HLA-DRB1 DRB1*14:54:01       9040
 
 ##### Gold
 
-    # A tibble: 0 x 5
-    # ... with 5 variables: subject <chr>, kgp_id <chr>, locus <chr>,
-    #   allele <chr>, est_counts <dbl>
+    # A tibble: 6 x 5
+      subject   kgp_id  locus    allele        est_counts
+      <chr>     <chr>   <chr>    <chr>              <dbl>
+    1 ERR188438 NA12272 HLA-A    A*02:01:01          8676
+    2 ERR188438 NA12272 HLA-A    A*68:01:02          8847
+    3 ERR188438 NA12272 HLA-B    B*44:02:01:01       7635
+    4 ERR188438 NA12272 HLA-B    B*44:02:01:01       7635
+    5 ERR188438 NA12272 HLA-DRB1 DRB1*10:01:01      13988
+    6 ERR188438 NA12272 HLA-DRB1 DRB1*14:01:01       9028
 
 NA12286
 -------
@@ -2125,12 +2317,16 @@ NA12286
 
 ##### Called
 
-    # A tibble: 0 x 5
-    # ... with 5 variables: subject <chr>, kgp_id <chr>, locus <chr>,
-    #   allele <chr>, est_counts <dbl>
+    # A tibble: 2 x 5
+      subject   kgp_id  locus    allele        est_counts
+      <chr>     <chr>   <chr>    <chr>              <dbl>
+    1 ERR188467 NA12286 HLA-DQB1 DQB1*02:02:01       5451
+    2 ERR188467 NA12286 HLA-DQB1 DQB1*03:03:02       4851
 
 ##### Gold
 
-    # A tibble: 0 x 5
-    # ... with 5 variables: subject <chr>, kgp_id <chr>, locus <chr>,
-    #   allele <chr>, est_counts <dbl>
+    # A tibble: 2 x 5
+      subject   kgp_id  locus    allele        est_counts
+      <chr>     <chr>   <chr>    <chr>              <dbl>
+    1 ERR188467 NA12286 HLA-DQB1 DQB1*02:01:01       5452
+    2 ERR188467 NA12286 HLA-DQB1 DQB1*03:03:02       4852

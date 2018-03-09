@@ -123,14 +123,14 @@ quant_called <- "./quantifications_2/processed_imgt_quants.tsv" %>%
     read_tsv() %>%
     left_join(geuvadis_info, by = c("subject" = "ena_id")) %>%
     select(subject, kgp_id = name, locus, allele, est_counts) %>%
-    inner_join(err_df, by = c("subject", "locus")) %>%
+    inner_join(err_df, by = c("kgp_id" = "subject", "locus")) %>%
     mutate(allele = gsub("IMGT_", "", allele))
 
 quant_gold <- "../supplemented_fix_genos/quantifications_2/processed_imgt_quants.tsv" %>%
     read_tsv() %>%
     left_join(geuvadis_info, by = c("subject" = "ena_id")) %>%
     select(subject, kgp_id = name, locus, allele, est_counts) %>%
-    inner_join(err_df, by = c("subject", "locus")) %>%
+    inner_join(err_df, by = c("kgp_id" = "subject", "locus")) %>%
     mutate(allele = gsub("IMGT_", "", allele))
 
 ```
@@ -952,7 +952,7 @@ quant_gold %>% filter(subject == samples[22])
 
 ## NA20758
 
-#### False A\*11 homozygote
+#### False A\*01 homozygote
 ```{r}
 plot_cov(samples[23])
 ```
