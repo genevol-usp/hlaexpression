@@ -1289,7 +1289,7 @@ HG00246
 NA20758
 -------
 
-#### False A\*11 homozygote
+#### False A\*01 homozygote
 
 ![](report_on_typing_errors_files/figure-markdown_github/unnamed-chunk-133-1.png)
 
