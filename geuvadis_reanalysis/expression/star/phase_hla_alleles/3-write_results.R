@@ -1,6 +1,11 @@
 devtools::load_all("~/hlaseqlib")
 library(tidyverse)
 
+typing_errs <- "../supplemented/typing_errors.tsv" %>%
+    read_tsv() %>%
+    distinct(subject, locus) %>%
+    mutate(locus = paste0("HLA-", locus))
+
 expression_df <- 
     read_tsv("../supplemented/quantifications_2/processed_imgt_quants.tsv") %>%
     filter(locus %in% gencode_hla$gene_name) %>%
@@ -8,9 +13,11 @@ expression_df <-
     mutate(allele = gsub("IMGT_", "", allele),
 	   allele_3F = hla_trimnames(allele, 3)) %>%
     select(subject = name, locus, allele, allele_3F, tpm) %>%
+    anti_join(typing_errs, by = c("subject", "locus")) %>%
     arrange(subject, locus)
 
-kgp_calls <- read_tsv("./1000G_comparison/hla_haps_phased.tsv") 
+kgp_calls <- read_tsv("./1000G_comparison/hla_haps_phased.tsv") %>%
+    anti_join(typing_errs, by = c("subject", "locus")) 
 
 #kgp_haps <- kgp_calls %>%
 #    mutate(locus = sub("HLA-", "", locus)) %>%
