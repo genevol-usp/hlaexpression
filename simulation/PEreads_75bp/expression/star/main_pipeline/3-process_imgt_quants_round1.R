@@ -5,7 +5,7 @@ hla_genes <- gencode_hla$gene_name
 
 samples <- sprintf("sample_%02d", 1:50)
 
-imgt_quants <- read_tsv("./quantifications_1/imgt_quants.tsv") %>%
+imgt_quants <- read_tsv("./quantifications_MHC/imgt_quants.tsv") %>%
     mutate(locus = imgt_to_gname(Name),
 	   gene_id = gname_to_gid(locus)) %>%
     select(subject, locus, gene_id, allele = Name, 
@@ -50,4 +50,4 @@ best_th <- accuracies %>%
 
 out_df <- filter(typings, th == best_th) %>% select(-th)
 
-write_tsv(out_df, "./quantifications_1/processed_imgt_quants.tsv")
+write_tsv(out_df, "./quantifications_MHC/processed_imgt_quants.tsv")

@@ -76,11 +76,13 @@ star_genome <-
     select(subject = X1, locus = gene_name, est_counts = X3)
 
 star_transcriptome <- 
-    "./PEreads_75bp/expression/star/transcriptome/quantifications/processed_imgt_quants.tsv" %>%
+    #"./PEreads_75bp/expression/star/transcriptome/quantifications/processed_imgt_quants.tsv" %>%
+    "./PEreads_75bp/expression/star/main_pipeline/quantifications_transcriptome/processed_imgt_quants.tsv" %>%
     read_tsv()
 
 star_hla <- 
-    "./PEreads_75bp/expression/star/supplemented/quantifications_2/processed_imgt_quants.tsv" %>%
+    #"./PEreads_75bp/expression/star/supplemented/quantifications_2/processed_imgt_quants.tsv" %>%
+    "./PEreads_75bp/expression/star/main_pipeline/quantifications_final/processed_imgt_quants.tsv" %>%
     read_tsv() %>%
     filter(locus %in% hla_genes) %>%
     mutate(allele = gsub("IMGT_", "", allele)) %>%
@@ -90,7 +92,6 @@ star_hla <-
               tpm = sum(tpm), 
               dist = mean(dist)) %>%
     ungroup()
-
 
 quant_data <-
     left_join(star_hla, kallisto_hla, by = c("subject", "locus"), 
@@ -179,8 +180,8 @@ plot_dist(counts_star)
 dev.off()
 
 png("./plots/kallisto_vs_star.png", width = 10, height = 6, units = "in", res = 200)
-scatter_plot(quant_data, "tpm.kallisto.hla", "tpm.star.hla") +
-    labs(x = "TPM (kallisto)", y = "TPM (STAR-Salmon)")
+scatter_plot(quant_data, "tpm.star.hla", "tpm.kallisto.hla") +
+    labs(x = "TPM (STAR-Salmon)", y = "TPM (kallisto)")
 dev.off()
 
 png("./plots/star_HLA_vs_refTranscriptome.png", width = 10, height = 6, units = "in", res = 200)

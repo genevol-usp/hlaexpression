@@ -2,7 +2,7 @@
 
 STAR=/home/vitor/STAR
 samtools=/home/vitor/samtools-1.3.1/samtools
-QTLtools=/home/vitor/QTLtools/QTLtools_1.1_Ubuntu16.04_x86_64
+QTLtools=/home/vitor/qtltools/bin/QTLtools
 
 sample=$1
 
@@ -25,10 +25,10 @@ outQuant=./quantifications/$sample
 
 $samtools index $bam $bai
 
-$QTLtools quan --bam $bam --gtf $gencode --samples $sample \
+$QTLtools quan --bam $bam --gtf $gencode --sample $sample \
     --out-prefix $outQuant \
     --filter-mapping-quality 255 --filter-mismatch 6 --filter-mismatch-total 6 \
-    --rpkm --check-proper-pairing --check-consistency --no-merge \
+    --tpm --check-proper-pairing --check-consistency --no-merge \
     --filter-remove-duplicates
 
 rm ${outPrefix}*

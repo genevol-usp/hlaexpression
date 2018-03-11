@@ -5,7 +5,7 @@ hla_genes <- gencode_hla$gene_name
 
 samples <- sprintf("sample_%02d", 1:50)
 
-imgt_quants <- read_tsv("./quantifications_2/imgt_quants.tsv") %>%
+imgt_quants <- read_tsv("./quantifications_final/imgt_quants.tsv") %>%
     mutate(locus = imgt_to_gname(Name),
 	   gene_id = gname_to_gid(locus)) %>%
     select(subject, locus, gene_id, allele = Name,
@@ -32,4 +32,4 @@ accuracies <- calc_genotyping_accuracy(calls, goldstd_genos)
 
 write_tsv(accuracies, "./genotyping_accuracies_2.tsv")
 
-write_tsv(out_df, "./quantifications_2/processed_imgt_quants.tsv")
+write_tsv(out_df, "./quantifications_final/processed_imgt_quants.tsv")

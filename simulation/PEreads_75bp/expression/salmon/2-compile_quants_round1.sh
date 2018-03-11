@@ -1,7 +1,8 @@
 #!/bin/bash
 
-quantDir=./quantifications_2
-samples=(sample_{01..50})
+quantDir=./quantifications_1
+#samples=(sample_{01..50})
+samples=sample_01
 OUTimgt=$quantDir/imgt_quants.tsv
 
 awk 'FNR==1 {print "subject\t" $0}' $quantDir/${samples[0]}/quant.sf > $OUTimgt
