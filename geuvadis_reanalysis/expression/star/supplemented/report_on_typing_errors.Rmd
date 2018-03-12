@@ -132,7 +132,6 @@ quant_gold <- "../supplemented_fix_genos/quantifications_2/processed_imgt_quants
     select(subject, kgp_id = name, locus, allele, est_counts) %>%
     inner_join(err_df, by = c("kgp_id" = "subject", "locus")) %>%
     mutate(allele = gsub("IMGT_", "", allele))
-
 ```
 
 
@@ -1209,7 +1208,7 @@ quant_gold %>% filter(subject == samples[29])
 ```
 
 
-## HG00260
+## HG00360
 
 #### We call a false A\*02 homozygote, also mismatch at B\*39
 ```{r}

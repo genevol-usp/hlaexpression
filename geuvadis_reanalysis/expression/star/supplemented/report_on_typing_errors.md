@@ -1720,7 +1720,7 @@ NA11920
     1 ERR188371 NA11920 HLA-DRB1 DRB1*04:01:01      24317
     2 ERR188371 NA11920 HLA-DRB1 DRB1*14:01:01      15751
 
-HG00260
+HG00360
 -------
 
 #### We call a false A\*02 homozygote, also mismatch at B\*39
