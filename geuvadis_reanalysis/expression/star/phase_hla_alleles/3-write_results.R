@@ -1,7 +1,7 @@
 devtools::load_all("~/hlaseqlib")
 library(tidyverse)
 
-typing_errs <- "../supplemented/typing_errors.tsv" %>%
+typing_errs <- "../supplemented/typing_errors_checked_cov.tsv" %>%
     read_tsv() %>%
     distinct(subject, locus) %>%
     mutate(locus = paste0("HLA-", locus))
@@ -18,41 +18,6 @@ expression_df <-
 
 kgp_calls <- read_tsv("./1000G_comparison/hla_haps_phased.tsv") %>%
     anti_join(typing_errs, by = c("subject", "locus")) 
-
-#kgp_haps <- kgp_calls %>%
-#    mutate(locus = sub("HLA-", "", locus)) %>%
-#    spread(locus, allele)
-#
-#kgp_diff <- read_tsv("./1000G_comparison/hla_diffs_to_1000Ghaps.tsv")
-#
-#allele_codes <- read_tsv("./PHASE/codes-phase.inp") %>%
-#    mutate(allele = sub("IMGT_", "", allele))
-#
-#phase_calls <-
-#    read_phase("./PHASE/phase.out", 
-#	       loci = sub("HLA-", "", gencode_hla$gene_name)) %>%
-#    rename(code = allele) %>%
-#    left_join(allele_codes, by = c("locus", "code")) %>%
-#    select(subject, locus, hap, hla_allele = allele, uncertain)
-#
-#phase_haps <- phase_calls %>%
-#    select(-uncertain) %>%
-#    spread(locus, hla_allele) %>%
-#    select(-hap)
-#
-#kgp_class1 <- select(kgp_haps, subject:C)
-#phase_class1 <- select(phase_haps, subject:C)
-#
-#diff_subjects <- anti_join(kgp_class1, phase_class1) %>%
-#    filter(!grepl("/", A), !grepl("/", B), !grepl("/", C)) %>%
-#    distinct(subject)
-#
-#s <- diff_subjects$subject[2] 
-#kgp_class1 %>% filter(subject == s)
-#phase_class1 %>% filter(subject == s)
-#kgp_diff %>% filter(subject == s, locus %in% paste0("HLA-", c("A", "B", "C")))
-
-
 
 # DQB1*05:03:01:01 and DQB1*05:03:01:03:
 # Pair of alleles which share the same 3 fields but don't have the same CDS due
