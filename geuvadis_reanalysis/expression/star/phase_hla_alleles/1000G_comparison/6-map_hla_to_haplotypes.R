@@ -54,7 +54,6 @@ vcf <- read_tsv("./hla_snps.vcf", comment = "##", progress = FALSE) %>%
     gather(subject, genotype, -(1:3)) %>%
     filter(subject %in% genos$subject) %>%
     separate(genotype, c("h1", "h2"), sep = "\\|", convert = TRUE) %>%
-    filter(h1 != h2) %>%
     mutate(ALT = gsub(",", "", ALT),
 	   h1 = ifelse(h1 == 0, REF, substring(ALT, h1, h1)),
 	   h2 = ifelse(h2 == 0, REF, substring(ALT, h2, h2))) %>%
@@ -65,9 +64,11 @@ out_df <-
     group_by(subject, locus, pos) %>%
     filter(!any(cds == "N")) %>% #for a given pair of alleles, consider only sequenced positions
     ungroup() %>%
-    mutate(a1 = cds == h1, a2 = cds == h2) %>%
+    mutate(a1 = cds == h1, 
+	   a2 = cds == h2,
+	   hom = h1 == h2) %>%
     group_by(subject, locus, allele) %>%
-    summarise(a1 = sum(!a1), a2 = sum(!a2)) %>%
+    summarise(a1 = sum(!a1 & !hom), a2 = sum(!a2 & !hom)) %>%
     ungroup() %>%
     gather(hap, diffs, a1, a2) %>%
     mutate(hap = as.integer(sub("^a", "", hap))) %>%
