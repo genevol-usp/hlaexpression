@@ -29,7 +29,7 @@ hla_cds_pos_df <- hla_cds_final %>%
     unnest()
 
 genos <- 
-    "../../../star/supplemented/quantifications_2/processed_imgt_quants.tsv" %>%
+    "../../supplemented/quantifications_2/processed_imgt_quants.tsv" %>%
     read_tsv() %>%
     filter(locus %in% gencode_hla$gene_name) %>%
     left_join(geuvadis_info, by = c("subject" = "ena_id")) %>%
@@ -54,6 +54,7 @@ vcf <- read_tsv("./hla_snps.vcf", comment = "##", progress = FALSE) %>%
     gather(subject, genotype, -(1:3)) %>%
     filter(subject %in% genos$subject) %>%
     separate(genotype, c("h1", "h2"), sep = "\\|", convert = TRUE) %>%
+    filter(h1 != h2) %>%
     mutate(ALT = gsub(",", "", ALT),
 	   h1 = ifelse(h1 == 0, REF, substring(ALT, h1, h1)),
 	   h2 = ifelse(h2 == 0, REF, substring(ALT, h2, h2))) %>%
