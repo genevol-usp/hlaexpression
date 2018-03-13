@@ -3,21 +3,19 @@ library(tidyverse)
 
 typing_errs <- "../supplemented/typing_errors_checked_cov.tsv" %>%
     read_tsv() %>%
-    distinct(subject, locus) %>%
-    mutate(locus = paste0("HLA-", locus))
+    distinct(subject)
 
 expression_df <- 
     read_tsv("../supplemented/quantifications_2/processed_imgt_quants.tsv") %>%
-    filter(locus %in% gencode_hla$gene_name) %>%
+    filter(!subject %in% typing_errs$subject, locus %in% gencode_hla$gene_name) %>%
     left_join(geuvadis_info, by = c("subject" = "ena_id")) %>%
     mutate(allele = gsub("IMGT_", "", allele),
 	   allele_3F = hla_trimnames(allele, 3)) %>%
     select(subject = name, locus, allele, allele_3F, tpm) %>%
-    anti_join(typing_errs, by = c("subject", "locus")) %>%
     arrange(subject, locus)
 
 kgp_calls <- read_tsv("./1000G_comparison/hla_haps_phased.tsv") %>%
-    anti_join(typing_errs, by = c("subject", "locus")) 
+    filter(!subject %in% typing_errs$subject)
 
 # DQB1*05:03:01:01 and DQB1*05:03:01:03:
 # Pair of alleles which share the same 3 fields but don't have the same CDS due
