@@ -68,7 +68,7 @@ out_df <-
 	   a2 = cds == h2,
 	   hom = h1 == h2) %>%
     group_by(subject, locus, allele) %>%
-    summarise(a1 = sum(!a1 & !hom), a2 = sum(!a2 & !hom)) %>%
+    summarise(a1 = sum(!a1), a2 = sum(!a2)) %>%
     ungroup() %>%
     gather(hap, diffs, a1, a2) %>%
     mutate(hap = as.integer(sub("^a", "", hap))) %>%
