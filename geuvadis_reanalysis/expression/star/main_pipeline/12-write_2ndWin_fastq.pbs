@@ -4,15 +4,15 @@
 #PBS -l mem=1gb
 #PBS -l walltime=24:00:00
 #PBS -q short
-#PBS -t 1-358%12
+#PBS -t 1-358
 #PBS -j oe
-#PBS /home/vitor/hlaexpression/geuvadis_reanalysis/expression/star/main_pipeline/log/$PBS_JOBID.log
+#PBS -o /home/vitor/hlaexpression/geuvadis_reanalysis/expression/star/main_pipeline/log/$PBS_JOBID.log
 
 cd $PBS_O_WORKDIR
 
 seqtk=/home/vitor/seqtk/seqtk
 
-mkdir -p ./fastq_noWin
+mkdir -p ./fastq_2ndWin
 quantDir=./quantifications_top5
 SAMPLE=`awk "FNR==$PBS_ARRAYID" ../../../data/sample_info/samples_phase3_ena_eur.txt`
 sampledir=$quantDir/$SAMPLE
@@ -29,16 +29,17 @@ grep -v "^@" $mappings |\
     uniq > $readsWin
 
 grep -v "^@" $mappings |\
-    grep -F -v -f $readsWin - |\
     cut -f1 |\
+    awk 'FNR==NR {hash[$0]; next} !($0 in hash)' $readsWin - |\
     sort |\
     uniq > $readsNoWin
+
 
 fq1=./mappings/fqs/${SAMPLE}_1.fq
 fq2=./mappings/fqs/${SAMPLE}_2.fq
 
-fq12=./fastq_noWin/${SAMPLE}_1.fq
-fq22=./fastq_noWin/${SAMPLE}_2.fq
+fq12=./fastq_2ndWin/${SAMPLE}_1.fq
+fq22=./fastq_2ndWin/${SAMPLE}_2.fq
 
 $seqtk subseq $fq1 $readsNoWin > $fq12
 $seqtk subseq $fq2 $readsNoWin > $fq22

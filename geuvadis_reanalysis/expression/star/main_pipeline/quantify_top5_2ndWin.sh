@@ -11,13 +11,11 @@ mkdir -p $indexDIR
 
 $salmon index -t $sample_hla -i $indexDIR --type quasi -k 31
 
-fq1=./mappings/fqs/${sample}_1.fq
-fq2=./mappings/fqs/${sample}_2.fq
-outQuant=./quantifications_genos
+fq1=./fastq_2ndWin/${sample}_1.fq
+fq2=./fastq_2ndWin/${sample}_2.fq
+outQuant=./quantifications_top5_2ndWin
 out=$outQuant/$sample
 
 mkdir -p $out
 
 $salmon quant -i $indexDIR -l IU -1 $fq1 -2 $fq2 -o $out -p $CPUS
-
-rm -r $indexDIR

@@ -9,4 +9,4 @@ if [ -d "$outdir" ]; then
     mkdir -p $outdir
 fi
 
-Rscript $write_custom_index ./quants_inferred_genotypes.tsv $outdir
+Rscript $write_custom_index ./quantifications_winners/genotype_calls.tsv $outdir

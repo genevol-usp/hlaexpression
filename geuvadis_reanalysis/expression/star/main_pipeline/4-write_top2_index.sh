@@ -6,4 +6,4 @@ outdir=./sample_indices
 
 mkdir -p $outdir
 
-Rscript $write_custom_index ./quantifications_MHC/imgt_quants_top5.tsv $outdir
+Rscript $write_custom_index ./quantifications_MHC/genotype_calls.tsv $outdir

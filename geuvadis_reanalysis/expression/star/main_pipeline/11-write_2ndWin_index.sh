@@ -9,4 +9,4 @@ if [ -d "$outdir" ]; then
     mkdir -p $outdir
 fi
 
-Rscript $write_custom_index ./quantifications_genos/processed_imgt_quants.tsv $outdir
+Rscript $write_custom_index ./quantifications_top5/Win2_quants.tsv $outdir

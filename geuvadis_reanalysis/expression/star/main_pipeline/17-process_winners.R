@@ -1,13 +1,9 @@
 devtools::load_all("~/hlaseqlib")
 library(tidyverse)
 
-hla_genes <- gencode_hla$gene_name 
+samples <- readLines("../../../data/sample_info/samples_phase3_ena_eur.txt")
 
-samples <- geuvadis_info %>% 
-    filter(kgp_phase3 == 1L & pop != "YRI") %>%
-    pull(ena_id)
-
-imgt_quants <- file.path("./quantifications_genos", samples, "quant.sf") %>%
+imgt_quants <- file.path("./quantifications_winners", samples, "quant.sf") %>%
     setNames(samples) %>%
     map_df(read_tsv, .id = "subject") %>%
     mutate(locus = imgt_to_gname(Name),
@@ -22,17 +18,16 @@ if (length(missing_files) > 0L) {
     stop(paste("missing files:", paste(missing_files, collapse = " ")))
 }
 
-goldstd_genos <- mutate(pag, allele = hla_trimnames(allele, 3))
+goldstd <- mutate(pag, allele = hla_trimnames(allele, 3))
 
 thresholds <- as.list(seq(0, .25, .05))
 names(thresholds) <- seq(0, .25, .05)
 
 typings <- thresholds %>%
-    map_df(function(th) hla_genotype_dt(imgt_quants, 0) %>%
-	   hla_apply_zigosity_threshold(th), .id = "th")
+    map_df(~hla_genotype_dt(imgt_quants, .), .id = "th")
 
 calls <- typings %>%
-    filter(locus %in% hla_genes) %>%
+    filter(locus %in% gencode_hla$gene_name) %>%
     select(th, subject, locus, allele) %>%
     mutate(subject = convert_ena_ids(as.character(subject)),
 	   locus = sub("^HLA-", "", locus),
@@ -41,7 +36,7 @@ calls <- typings %>%
 
 accuracies <- calls %>%
     split(.$th) %>%
-    map_df(~calc_genotyping_accuracy(., goldstd_genos), .id = "th") %>%
+    map_df(~calc_genotyping_accuracy(., goldstd), .id = "th") %>%
     group_by(th) %>%
     mutate(th_average = mean(accuracy)) %>%
     ungroup()
@@ -63,23 +58,39 @@ best_th <- accuracies %>%
 
 geno_calls <- inner_join(typings, best_th, by = c("th", "locus")) %>%
     select(subject, locus, allele) %>%
-    arrange(subject, locus, allele)
+    mutate(allele = sub("^([^=]+).*$", "\\1", allele),
+	   allele = gsub("IMGT_", "", allele))
 
-mhc_calls <- read_tsv("./quantifications_MHC/allele_calls.tsv")
-
-mhc_het <- mhc_calls %>%
-    group_by(subject, locus) %>%
-    filter(n_distinct(allele) > 1L) %>%
-    ungroup()
+mhc_calls <- read_tsv("./quantifications_top2/genotype_calls.tsv") %>%
+    mutate(allele = gsub("IMGT_", "", allele))
 
 mhc_hom <- mhc_calls %>%
     group_by(subject, locus) %>%
     filter(n_distinct(allele) == 1L) %>%
     ungroup()
 
-test_typing <- calc_genotyping_accuracy(mhc_hom, geno_calls, by_locus = FALSE) %>%
+fixed_hom <- calc_genotyping_accuracy(mhc_hom, geno_calls, by_locus = FALSE) %>%
     group_by(subject, locus) %>%
     filter(any(!correct)) %>%
-    ungroup()
+    ungroup() %>%
+    select(subject, locus, allele = allele.y)
 
-print(test_typing, n = Inf)
+fixed_loci <- distinct(fixed_hom, subject, locus)
+
+final_genos <- anti_join(mhc_calls, fixed_loci, by = c("subject", "locus")) %>%
+    bind_rows(fixed_hom) %>%
+    mutate(allele = sub("^([^=]+).*$", "IMGT_\\1", allele)) %>%
+    arrange(subject, locus, allele)
+
+write_tsv(final_genos, "./quantifications_winners/genotype_calls.tsv")
+
+final_calls <- final_genos %>%
+    filter(locus %in% gencode_hla$gene_name) %>%
+    mutate(subject = convert_ena_ids(subject),
+	   locus = sub("HLA-", "", locus),
+	   allele = gsub("IMGT_", "", allele),
+	   allele = hla_trimnames(allele, 3))
+
+calc_genotyping_accuracy(final_calls, goldstd) %>%
+    write_tsv("./genotyping_concordance.tsv")
+

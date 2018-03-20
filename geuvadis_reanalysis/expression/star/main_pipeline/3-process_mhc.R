@@ -19,7 +19,7 @@ if (length(missing_files) > 0L) {
     stop(paste("missing files:", paste(missing_files, collapse = " ")))
 }
 
-goldstd_genos <- mutate(pag, allele = hla_trimnames(allele, 3))
+goldstd <- mutate(pag, allele = hla_trimnames(allele, 3))
 
 thresholds <- as.list(seq(0, .25, .05))
 names(thresholds) <- seq(0, .25, .05)
@@ -37,7 +37,7 @@ calls <- typings %>%
 
 accuracies <- calls %>%
     split(.$th) %>%
-    map_df(~calc_genotyping_accuracy(., goldstd_genos), .id = "th") %>%
+    map_df(~calc_genotyping_accuracy(., goldstd), .id = "th") %>%
     group_by(th) %>%
     mutate(th_average = mean(accuracy)) %>%
     ungroup()
@@ -59,6 +59,7 @@ best_th <- accuracies %>%
 
 out_df <- inner_join(typings, best_th, by = c("th", "locus")) %>%
     select(subject, locus, allele) %>%
-    arrange(subject, locus, allele)
+    arrange(subject, locus, allele) %>%
+    mutate(allele = sub("^([^=]+).*$", "\\1", allele))
 
-write_tsv(out_df, "./quantifications_MHC/allele_calls.tsv")
+write_tsv(out_df, "./quantifications_MHC/genotype_calls.tsv")
