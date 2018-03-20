@@ -20,5 +20,3 @@ mkdir -p $out
 
 $salmon quant -i $indexDIR -l IU -1 $fq1 -2 $fq2 -o $out -p $CPUS \
     --writeMappings > ${out}/mappings.sam
-
-rm -r $indexDIR

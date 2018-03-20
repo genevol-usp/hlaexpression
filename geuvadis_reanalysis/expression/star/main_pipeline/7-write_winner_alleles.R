@@ -14,15 +14,9 @@ winners <- quants %>%
     slice(which.max(est_counts)) %>%
     ungroup()
 
-write_tsv(winners, "./quantifications_top5/winners_quants.tsv")
-
 winners_list <- winners %>%
     select(subject, allele) %>%
     mutate(path = file.path("./quantifications_top5", subject, "winner_alleles.txt")) %>%
     split(.$subject)
 
 map(winners_list, ~writeLines(.$allele, unique(.$path)))
-
-non_winners_quants <- anti_join(quants, winners, by = c("subject", "allele"))
-
-write_tsv(non_winners_quants, "./quantifications_top5/noWin_quants.tsv")

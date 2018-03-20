@@ -7,10 +7,6 @@ CPUS=6
 indexDIR=./sample_indices/$sample
 sample_hla=./sample_indices/hla_$sample.fa
 
-mkdir -p $indexDIR
-
-$salmon index -t $sample_hla -i $indexDIR --type quasi -k 31
-
 fq1=./fastq_noWin/${sample}_1.fq
 fq2=./fastq_noWin/${sample}_2.fq
 outQuant=./quantifications_noWin
