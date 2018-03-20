@@ -57,8 +57,8 @@ cat $readsalign $readsunmap |\
     sort |\
     uniq > $readids
 
-fq12=${outPrefix}1.fq
-fq22=${outPrefix}2.fq
+fq12=./mappings/fqs/${sample}_1.fq
+fq22=./mappings/fqs/${sample}_2.fq
 
 $seqtk subseq $fq1 $readids > $fq12 
 $seqtk subseq $fq2 $readids > $fq22 
@@ -84,6 +84,6 @@ if [ -d "$outMHC" ]; then
     rm -r $outMHC
 fi
 
-$salmon quant -t $fastaMHC -l IU -a $bamMHC -o $outMHC -p $CPUS --seqBias --gcBias
+$salmon quant -t $fastaMHC -l IU -a $bamMHC -o $outMHC -p $CPUS
 
 rm ${outPrefix}*

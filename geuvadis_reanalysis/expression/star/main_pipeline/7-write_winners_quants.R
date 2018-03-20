@@ -1,0 +1,28 @@
+library(tidyverse)
+
+samples <- readLines("../../../data/sample_info/samples_phase3_ena_eur.txt")
+
+quants <- file.path("./quantifications_top5", samples, "quant.sf") %>%
+    setNames(samples) %>%
+    map_df(read_tsv, .id = "subject") %>%
+    rename(allele = Name, est_counts = NumReads) %>%
+    mutate(locus = sub("^IMGT_([^\\*]+).+$", "HLA-\\1", allele)) %>%
+    select(subject, locus, allele, est_counts)
+
+winners <- quants %>%
+    group_by(subject, locus) %>%
+    slice(which.max(est_counts)) %>%
+    ungroup()
+
+write_tsv(winners, "./quantifications_top5/winners_quants.tsv")
+
+winners_list <- winners %>%
+    select(subject, allele) %>%
+    mutate(path = file.path("./quantifications_top5", subject, "winner_alleles.txt")) %>%
+    split(.$subject)
+
+map(winners_list, ~writeLines(.$allele, unique(.$path)))
+
+non_winners_quants <- anti_join(quants, winners, by = c("subject", "allele"))
+
+write_tsv(non_winners_quants, "./quantifications_top5/noWin_quants.tsv")
