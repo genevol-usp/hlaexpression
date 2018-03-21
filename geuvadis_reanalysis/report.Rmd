@@ -25,7 +25,7 @@ kallisto_typing <-
     select(locus, kallisto = accuracy)
 
 star_typing <-
-    read_tsv("./expression/star/supplemented/genotyping_accuracies_2.tsv") %>%
+    read_tsv("./expression/star/main_pipeline/genotyping_accuracies_final.tsv") %>%
     select(locus, star = accuracy)
 
 left_join(star_typing, kallisto_typing, by = "locus") %>%
@@ -39,20 +39,6 @@ left_join(star_typing, kallisto_typing, by = "locus") %>%
 include_graphics("./expression/plots/expression_boxplot.png")
 ```
 
-## STAR-Salmon vs kallisto
-
-### TPM
-
-```{r}
-include_graphics("./expression/plots/star_vs_kallisto_TPM.png")
-```
-
-### PCA
-
-```{r}
-include_graphics("./expression/plots/star_vs_kallisto_PCA.png")
-```
-
 ## HLA diversity vs reference transcriptome
 
 ### TPM
@@ -61,10 +47,10 @@ include_graphics("./expression/plots/star_vs_kallisto_PCA.png")
 include_graphics("./expression/plots/star_imgt_vs_pri_TPM.png")
 ```
 
-### PCA-corrected
+## STAR-Salmon vs kallisto
 
 ```{r}
-include_graphics("./expression/plots/star_imgt_vs_pri_PCA.png")
+include_graphics("./expression/plots/star_vs_kallisto_TPM.png")
 ```
 
 ## Distribution of TPM values
@@ -77,15 +63,6 @@ include_graphics("./expression/plots/tpm_distributions.png")
 
 ```{r}
 include_graphics("./expression/plots/ase.png")
-```
-
-### Genotyping errors impacting ASE:
-
-\*Each point represents a heterozygous genotype in the intersect with Gourraud
-data.
-
-```{r}
-include_graphics("./expression/plots/ase_genot_errors.png")
 ```
 
 ### ASE distribution

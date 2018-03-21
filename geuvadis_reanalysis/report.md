@@ -10,8 +10,8 @@ Typing accuracies
 
 | locus |   star|  kallisto|
 |:------|------:|---------:|
-| A     |  97.22|     97.06|
-| B     |  98.37|     98.04|
+| A     |  97.88|     97.06|
+| B     |  98.20|     98.04|
 | C     |  97.22|     95.92|
 | DQB1  |  98.37|     98.53|
 | DRB1  |  99.51|     99.51|
@@ -21,27 +21,17 @@ Expression estimates
 
 <img src="./expression/plots/expression_boxplot.png" width="1600" />
 
-STAR-Salmon vs kallisto
------------------------
-
-### TPM
-
-<img src="./expression/plots/star_vs_kallisto_TPM.png" width="2000" />
-
-### PCA
-
-<img src="./expression/plots/star_vs_kallisto_PCA.png" width="2000" />
-
 HLA diversity vs reference transcriptome
 ----------------------------------------
 
 ### TPM
 
-<img src="./expression/plots/star_imgt_vs_pri_TPM.png" width="2000" />
+<img src="./expression/plots/star_imgt_vs_pri_TPM.png" width="3000" />
 
-### PCA-corrected
+STAR-Salmon vs kallisto
+-----------------------
 
-<img src="./expression/plots/star_imgt_vs_pri_PCA.png" width="2000" />
+<img src="./expression/plots/star_vs_kallisto_TPM.png" width="2000" />
 
 Distribution of TPM values
 --------------------------
@@ -52,12 +42,6 @@ ASE
 ---
 
 <img src="./expression/plots/ase.png" width="1600" />
-
-### Genotyping errors impacting ASE:
-
-\*Each point represents a heterozygous genotype in the intersect with Gourraud data.
-
-<img src="./expression/plots/ase_genot_errors.png" width="1600" />
 
 ### ASE distribution
 
@@ -100,7 +84,7 @@ Distribution of eQTLs around the TSS
 
 Numbers in parentheses are the CaVEMaN probabilities of being causal.
 
-<img src="./qtls/plots/qtls_landscape.png" width="3600" />
+<img src="./qtls/plots/qtls_landscape.png" width="3000" />
 
 Spread of rank 0 eQTLs around the TSS
 -------------------------------------
@@ -191,53 +175,47 @@ Variants with RTC &gt; 0.95 likely mark the same biological signal.
 
 | gene\_imgt | variant\_imgt |  rank\_imgt| gene\_pri | variant\_pri |  rank\_pri|  d\_prime|   rtc|
 |:-----------|:--------------|-----------:|:----------|:-------------|----------:|---------:|-----:|
-| HLA-B      | rs1265094     |           0| HLA-B     | rs3130949    |          0|      0.93|  0.98|
-| HLA-B      | rs9264803     |           1| HLA-B     | rs2844623    |          2|      0.95|  0.97|
+| HLA-A      | rs3823342     |           0| HLA-A     | rs200093949  |          0|      0.99|  0.92|
+| HLA-A      | rs1655924     |           1| HLA-A     | rs2523764    |          1|      0.68|  0.94|
 | HLA-C      | rs146911342   |           0| HLA-C     | rs146911342  |          0|      1.00|  1.00|
-| HLA-C      | rs146911342   |           0| HLA-B     | rs67565791   |          4|      0.90|  0.98|
-| HLA-C      | rs12199223    |           1| HLA-B     | rs3130949    |          0|      1.00|  0.99|
 | HLA-C      | rs12199223    |           1| HLA-C     | rs9264185    |          2|      1.00|  0.97|
 | HLA-C      | rs9266301     |           2| HLA-C     | rs1058067    |          1|      0.37|  0.98|
+| HLA-B      | rs1265094     |           0| HLA-B     | rs3130949    |          0|      0.93|  0.98|
+| HLA-B      | rs9264803     |           1| HLA-B     | rs2844623    |          2|      0.95|  0.97|
+| HLA-B      | rs2308655     |           2| HLA-B     | rs3130949    |          0|      0.47|  0.91|
+| HLA-DRB1   | rs3104412     |           0| HLA-DRB1  | rs9271365    |          1|      0.97|  1.00|
+| HLA-DRB1   | rs28483671    |           1| HLA-DRB1  | rs9269749    |          0|      0.45|  0.71|
+| HLA-DQA1   | rs75170544    |           0| HLA-DQA1  | rs28724008   |          0|      0.58|  0.97|
+| HLA-DQA1   | rs9271375     |           1| HLA-DQA1  | rs9275553    |          1|      0.11|  0.22|
+| HLA-DQB1   | rs1770        |           0| HLA-DQB1  | rs3830059    |          0|      0.95|  0.99|
+| HLA-DQB1   | rs9272209     |           1| HLA-DQB1  | rs114969562  |          2|      0.76|  0.98|
 | HLA-DPB1   | rs9277449     |           0| HLA-DPB1  | rs9277449    |          0|      1.00|  1.00|
 | HLA-DPB1   | rs9296068     |           1| HLA-DPB1  | rs9296068    |          1|      1.00|  1.00|
 | HLA-DPB1   | rs688209      |           2| HLA-DPB1  | rs688209     |          2|      1.00|  1.00|
-| HLA-DQA1   | rs75170544    |           0| HLA-DQA1  | rs28724008   |          0|      0.58|  0.97|
-| HLA-DQA1   | rs9271375     |           1| HLA-DRB1  | rs9271365    |          1|      0.92|  1.00|
-| HLA-DQB1   | rs1770        |           0| HLA-DQB1  | rs3830059    |          0|      0.95|  0.99|
-| HLA-DQB1   | rs9272209     |           1| HLA-DQB1  | rs9273595    |          1|      0.92|  0.96|
-| HLA-DQB1   | rs9272209     |           1| HLA-DQB1  | rs114969562  |          2|      0.76|  0.98|
-| HLA-DRB1   | rs3104412     |           0| HLA-DRB1  | rs9271365    |          1|      0.97|  1.00|
-| HLA-DRB1   | rs3104412     |           0| HLA-DQB1  | rs3134988    |          3|      0.77|  0.96|
 
 RTC with previous eQTLs
 -----------------------
 
-| gene     | rsid        |  rank| qtl\_previous |  d\_prime|   rtc| study          |  pvalue|
-|:---------|:------------|-----:|:--------------|---------:|-----:|:---------------|-------:|
-| HLA-A    | rs3823342   |     0| rs3823342     |      1.00|  1.00| geuvadis\_exon |   82.93|
-| HLA-A    | rs1655924   |     1| rs1655924     |      1.00|  1.00| geuvadis\_gene |   16.11|
-| HLA-A    | rs1655924   |     1| rs1655924     |      1.00|  1.00| geuvadis\_exon |   38.52|
-| HLA-B    | rs1265094   |     0| rs1265094     |      1.00|  1.00| geuvadis\_exon |   15.36|
-| HLA-B    | rs9264803   |     1| rs9264803     |      1.00|  1.00| geuvadis\_exon |   11.41|
-| HLA-B    | rs2308655   |     2| rs2308655     |      1.00|  1.00| geuvadis\_exon |   34.55|
-| HLA-C    | rs146911342 |     0| rs146911342   |      1.00|  1.00| geuvadis\_gene |   24.11|
-| HLA-C    | rs146911342 |     0| rs146911342   |      1.00|  1.00| geuvadis\_exon |   26.17|
-| HLA-C    | rs146911342 |     0| rs41561715    |      1.00|  1.00| geuvadis\_gene |   31.90|
-| HLA-C    | rs146911342 |     0| rs41561715    |      1.00|  1.00| geuvadis\_exon |   37.19|
-| HLA-C    | rs12199223  |     1| rs12199223    |      1.00|  1.00| geuvadis\_exon |    6.83|
-| HLA-C    | rs9266301   |     2| rs9266301     |      1.00|  1.00| geuvadis\_exon |    7.06|
-| HLA-DPB1 | rs9277449   |     0| rs9277538     |      0.99|  1.00| geuvadis\_exon |   57.91|
-| HLA-DPB1 | rs9296068   |     1| rs34885310    |      0.96|  0.98| delaneau       |    3.71|
-| HLA-DQA1 | rs75170544  |     0| rs75170544    |      1.00|  1.00| geuvadis\_gene |   28.39|
-| HLA-DQA1 | rs75170544  |     0| rs75170544    |      1.00|  1.00| geuvadis\_exon |   48.27|
-| HLA-DQA1 | rs75170544  |     0| rs75170544    |      1.00|  1.00| gtex\_v7       |   17.34|
-| HLA-DQA1 | rs9271375   |     1| rs9271375     |      1.00|  1.00| geuvadis\_exon |   13.39|
-| HLA-DQB1 | rs1770      |     0| rs1770        |      1.00|  1.00| geuvadis\_gene |   43.43|
-| HLA-DQB1 | rs1770      |     0| rs1770        |      1.00|  1.00| geuvadis\_exon |   68.29|
-| HLA-DQB1 | rs1770      |     0| rs1770        |      1.00|  1.00| gtex\_v7       |   21.21|
-| HLA-DQB1 | rs9272209   |     1| rs9272209     |      1.00|  1.00| geuvadis\_gene |    7.02|
-| HLA-DRB1 | rs3104412   |     0| rs3104412     |      1.00|  1.00| geuvadis\_exon |   17.70|
-| HLA-DRB1 | rs28483671  |     1| rs28483671    |      1.00|  1.00| geuvadis\_exon |   36.76|
+| gene     |  rank| rsid        | qtl\_previous |  d\_prime|   rtc| study\_pval                                                 |
+|:---------|-----:|:------------|:--------------|---------:|-----:|:------------------------------------------------------------|
+| HLA-A    |     0| rs3823342   | rs3823342     |      1.00|  1.00| geuvadis\_exon (82.9)                                       |
+| HLA-A    |     1| rs1655924   | rs1655924     |      1.00|  1.00| geuvadis\_gene (16.1)/geuvadis\_exon (38.5)                 |
+| HLA-C    |     0| rs146911342 | rs146911342   |      1.00|  1.00| geuvadis\_gene (24.1)/geuvadis\_exon (26.2)                 |
+| HLA-C    |     0| rs146911342 | rs41561715    |      1.00|  1.00| geuvadis\_gene (31.9)/geuvadis\_exon (37.2)                 |
+| HLA-C    |     1| rs12199223  | rs12199223    |      1.00|  1.00| geuvadis\_exon (6.8)                                        |
+| HLA-C    |     2| rs9266301   | rs9266301     |      1.00|  1.00| geuvadis\_exon (7.1)                                        |
+| HLA-B    |     0| rs1265094   | rs1265094     |      1.00|  1.00| geuvadis\_exon (15.4)                                       |
+| HLA-B    |     1| rs9264803   | rs9264803     |      1.00|  1.00| geuvadis\_exon (11.4)                                       |
+| HLA-B    |     2| rs2308655   | rs2308655     |      1.00|  1.00| geuvadis\_exon (34.6)                                       |
+| HLA-DRB1 |     0| rs3104412   | rs3104412     |      1.00|  1.00| geuvadis\_exon (17.7)                                       |
+| HLA-DRB1 |     1| rs28483671  | rs28483671    |      1.00|  1.00| geuvadis\_exon (36.8)                                       |
+| HLA-DQA1 |     0| rs75170544  | rs75170544    |      1.00|  1.00| geuvadis\_gene (28.4)/geuvadis\_exon (48.3)/gtex\_v7 (17.3) |
+| HLA-DQA1 |     1| rs9271375   | rs9271375     |      1.00|  1.00| geuvadis\_exon (13.4)                                       |
+| HLA-DQB1 |     0| rs1770      | rs1770        |      1.00|  1.00| geuvadis\_gene (43.4)/geuvadis\_exon (68.3)/gtex\_v7 (21.2) |
+| HLA-DQB1 |     1| rs9272209   | rs9272209     |      1.00|  1.00| geuvadis\_gene (7)                                          |
+| HLA-DPB1 |     0| rs9277449   | rs9277538     |      0.99|  1.00| geuvadis\_exon (57.9)                                       |
+| HLA-DPB1 |     1| rs9296068   | rs34885310    |      0.96|  0.98| delaneau (3.7)                                              |
+| HLA-DPB1 |     2| rs688209    | rs184379497   |      0.68|  0.95| NA (NA)                                                     |
 
 Association with GWAS traits
 ----------------------------
@@ -265,7 +243,7 @@ Association with GWAS traits
 HLA lineages
 ------------
 
-<img src="./qtls/plots/lineage_and_effects.png" width="3600" />
+<img src="./qtls/plots/lineage_and_effects.png" width="2100" />
 
 ### F-test: is there a difference between lineages?
 
@@ -273,22 +251,22 @@ HLA lineages
 
 | locus    |   df|        F| p.value  |
 |:---------|----:|--------:|:---------|
-| HLA-A    |   14|   10.196| 4.28e-21 |
-| HLA-B    |   26|    5.059| 1.86e-14 |
-| HLA-C    |   13|   48.648| 7.45e-89 |
-| HLA-DPB1 |   22|    7.017| 2.02e-19 |
-| HLA-DQA1 |    5|  112.100| 2.88e-87 |
-| HLA-DQB1 |    4|   46.275| 1.41e-34 |
-| HLA-DRB1 |   12|   27.793| 8.89e-52 |
+| HLA-A    |   12|   12.138| 1.52e-22 |
+| HLA-B    |   14|    8.381| 9.59e-17 |
+| HLA-C    |   11|   56.132| 3.66e-88 |
+| HLA-DPB1 |    8|   13.568| 3.05e-18 |
+| HLA-DQA1 |    4|  140.118| 3.07e-88 |
+| HLA-DQB1 |    4|   47.233| 3.30e-35 |
+| HLA-DRB1 |    9|   34.090| 1.16e-49 |
 
 #### Welch ANOVA
 
 | locus    |  num.df|  denom.df|        F| p.value  |
 |:---------|-------:|---------:|--------:|:---------|
-| HLA-A    |      14|    42.915|    8.971| 1.12e-08 |
-| HLA-B    |      23|    59.350|    5.572| 4.88e-08 |
-| HLA-C    |      12|    99.683|   45.777| 4.25e-35 |
-| HLA-DPB1 |      18|    35.704|    5.217| 1.35e-05 |
+| HLA-A    |      12|   111.205|   12.112| 2.34e-15 |
+| HLA-B    |      14|   147.755|    9.538| 8.23e-15 |
+| HLA-C    |      11|   139.582|   35.195| 6.45e-35 |
+| HLA-DPB1 |       8|    63.895|    9.484| 1.55e-08 |
 | HLA-DQA1 |       4|   215.519|  107.624| 3.07e-50 |
-| HLA-DQB1 |       4|   257.402|   52.633| 2.31e-32 |
-| HLA-DRB1 |      12|    99.833|   39.444| 1.76e-32 |
+| HLA-DQB1 |       4|   256.090|   53.511| 9.80e-33 |
+| HLA-DRB1 |       9|   167.656|   48.290| 4.59e-42 |
