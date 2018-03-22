@@ -29,7 +29,7 @@ qtls_rtc_pri <-
     filter(rtc == max(rtc)) %>%
     ungroup() %>%
     select(gene_imgt, variant_imgt = variant, rank_imgt,
-	   gene_pri, variant_pri = qtl_pri, rank_pri, d_prime, rtc) %>%
+	   variant_pri = qtl_pri, rank_pri, d_prime, rtc) %>%
     mutate(rtc = round(rtc, 2))
 
 write_tsv(qtls_rtc_pri, "./results.tsv")
