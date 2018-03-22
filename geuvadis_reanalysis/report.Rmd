@@ -41,8 +41,6 @@ include_graphics("./expression/plots/expression_boxplot.png")
 
 ## HLA diversity vs reference transcriptome
 
-### TPM
-
 ```{r}
 include_graphics("./expression/plots/star_imgt_vs_pri_TPM.png")
 ```
@@ -116,8 +114,6 @@ include_graphics("./qtls/plots/n_of_egenes.png")
 
 ## Distribution of eQTLs around the TSS
 
-Numbers in parentheses are the CaVEMaN probabilities of being causal.
-
 ```{r}
 include_graphics("./qtls/plots/qtls_landscape.png")
 ```
@@ -151,7 +147,7 @@ read_tsv("./investigate_bias/correlations.tsv") %>%
 ### HLA-personalized index
 
 ```{r}
-"./qtls/star/supplemented/encode_TF_Seq_DNase/hla.qtl.functional.elements.tsv" %>%
+"./qtls/star/main_pipeline/supplemented/encode_TF_Seq_DNase/hla.qtl.functional.elements.tsv" %>%
     read_tsv()%>%
     kable(digits = 2)
 ```
@@ -159,7 +155,7 @@ read_tsv("./investigate_bias/correlations.tsv") %>%
 ### Reference transcriptome index
 
 ```{r}
-"./qtls/star/transcriptome/encode_TF_Seq_DNase/hla.qtl.functional.elements.tsv" %>%
+"./qtls/star/main_pipeline/transcriptome/encode_TF_Seq_DNase/hla.qtl.functional.elements.tsv" %>%
     read_tsv() %>%
     kable(digits = 2)
 ```
@@ -170,7 +166,7 @@ read_tsv("./investigate_bias/correlations.tsv") %>%
 Variants with RTC > 0.95 likely mark the same biological signal.
 
 ```{r}
-read_tsv("./qtls/star/supplemented/rtc/pri_eqtls/results.tsv") %>%
+read_tsv("./qtls/star/main_pipeline/supplemented/rtc/pri_eqtls/results.tsv") %>%
     kable(digits = 2)
 ```
 
@@ -184,12 +180,7 @@ read_tsv("./qtls/star/supplemented/rtc/previous_qtls/results.tsv") %>%
 ## Association with GWAS traits
 
 ```{r}
-read_tsv("./qtls/star/supplemented/rtc/gwas/results.tsv") %>%
-    mutate(info = ifelse(is.na(gwas_var), NA, paste0(trait, " (", gwas_var, ")"))) %>%
-    group_by(gene, variant, rank) %>%
-    summarise(info = paste(info, collapse = "; ")) %>%
-    ungroup() %>%
-    arrange(gene, rank) %>%
+read_tsv("./qtls/star/main_pipeline/supplemented/rtc/gwas/results.tsv") %>%
     kable()
 ```
 
