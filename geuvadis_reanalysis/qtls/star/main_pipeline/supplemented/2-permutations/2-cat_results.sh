@@ -1,7 +1,6 @@
 #!/bin/bash
 
 QTLtools_dir=/home/vitor/QTLtools
-QTLtools=$QTLtools_dir/QTLtools_1.1_Ubuntu16.04_x86_64
 
 for PC in $(seq 0 5 20; seq 30 10 100)
 do
