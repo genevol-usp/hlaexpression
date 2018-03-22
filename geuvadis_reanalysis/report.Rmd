@@ -147,7 +147,7 @@ read_tsv("./investigate_bias/correlations.tsv") %>%
 ### HLA-personalized index
 
 ```{r}
-"./qtls/star/main_pipeline/supplemented/encode_TF_Seq_DNase/hla.qtl.functional.elements.tsv" %>%
+"./qtls/star/main_pipeline/supplemented/functional_features/results.tsv" %>%
     read_tsv()%>%
     kable(digits = 2)
 ```
@@ -155,7 +155,7 @@ read_tsv("./investigate_bias/correlations.tsv") %>%
 ### Reference transcriptome index
 
 ```{r}
-"./qtls/star/main_pipeline/transcriptome/encode_TF_Seq_DNase/hla.qtl.functional.elements.tsv" %>%
+"./qtls/star/main_pipeline/transcriptome/functional_features/results.tsv" %>%
     read_tsv() %>%
     kable(digits = 2)
 ```

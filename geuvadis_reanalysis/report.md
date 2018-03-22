@@ -116,54 +116,54 @@ Intersect with Encode Elements
 
 ### HLA-personalized index
 
-| locus    |  rank| rsid        |       pos| tf                          | dhs | chrom\_state | histone\_marks                                            |
-|:---------|-----:|:------------|---------:|:----------------------------|:----|:-------------|:----------------------------------------------------------|
-| HLA-A    |     0| rs28780070  |  29954564| NA                          | NA  | T            | NA                                                        |
-| HLA-A    |     1| rs1611615   |  29888662| NA                          | NA  | TSS          | H3k4me2/H3k4me3/H3k79me2/H2az/H3k9ac/H3k27ac              |
-| HLA-B    |     0| rs1265094   |  31139116| NA                          | NA  | R            | NA                                                        |
-| HLA-B    |     1| rs9380240   |  31301055| NA                          | NA  | R            | H3k27me3                                                  |
-| HLA-B    |     2| rs2523616   |  31352785| POL2-4/MTA3/STAT5/BCL3/POL2 | NA  | T            | H4k20me1/H3k4me1/H3k36me3/H3k4me2/H3k79me2                |
-| HLA-C    |     0| rs146911342 |  31270002| POL2-4                      | NA  | TSS          | H4k20me1/H3k36me3/H3k4me3/H3k4me2/H3k79me2/H3k4me1/H3k9ac |
-| HLA-C    |     1| rs9263875   |  31203137| IKZF1/TCF12                 | NA  | TSS          | H3k4me1/H3k4me3/H3k27ac/H3k4me2/H3k9ac/H3k79me2/H2az      |
-| HLA-C    |     2| rs1793890   |  31254279| NA                          | NA  | R            | NA                                                        |
-| HLA-DPB1 |     0| rs9277449   |  33084838| NA                          | NA  | T            | H3k36me3                                                  |
-| HLA-DPB1 |     1| rs9296068   |  33020918| NA                          | NA  | R            | H3k4me1/H2az                                              |
-| HLA-DPB1 |     2| rs688209    |  33732599| NA                          | NA  | R            | NA                                                        |
-| HLA-DQA1 |     0| rs9272316   |  32636273| NA                          | NA  | NA           | H3k27ac/H3k4me2/H3k9ac/H3k4me1/H3k4me3/H3k79me2           |
-| HLA-DQA1 |     1| rs9271375   |  32619290| NA                          | NA  | R            | H3k9me3                                                   |
-| HLA-DQA1 |     2| rs148834340 |  32522048| NA                          | NA  | PF           | H3k79me2                                                  |
-| HLA-DQB1 |     0| rs9274688   |  32669123| POL2-4                      | NA  | E            | H3k79me2/H3k4me2/H3k4me3/H3k27ac/H3k9ac/H3k4me1           |
-| HLA-DQB1 |     1| rs3134978   |  32683700| NA                          | NA  | R            | NA                                                        |
-| HLA-DRB1 |     0| rs3129759   |  32617386| NA                          | NA  | R            | NA                                                        |
-| HLA-DRB1 |     1| rs9273375   |  32659009| POL2-4                      | NA  | T            | H3k36me3/H3k4me1/H3k27ac/H3k79me2                         |
-| HLA-DRB1 |     2| rs34693360  |  32586337| PU1                         | DHS | TSS          | H3k79me2/H3k9ac/H3k4me2/H3k4me3/H3k27ac/H3k36me3          |
+| locus    |  rank| rsid        |     dist| regulome\_score | tfbs                        | dhs | histone\_marks                                            |
+|:---------|-----:|:------------|--------:|:----------------|:----------------------------|:----|:----------------------------------------------------------|
+| HLA-A    |     0| rs28780070  |     8.68| 5               | NA                          | NA  | NA                                                        |
+| HLA-A    |     1| rs1611615   |   -52.60| 2b              | NA                          | NA  | H3k4me2/H3k4me3/H3k79me2/H2az/H3k9ac/H3k27ac              |
+| HLA-B    |     0| rs1265094   |   214.76| 4               | NA                          | NA  | NA                                                        |
+| HLA-B    |     1| rs9380240   |    52.82| 4               | NA                          | NA  | H3k27me3                                                  |
+| HLA-B    |     2| rs2523616   |     1.09| 3a              | POL2-4/MTA3/STAT5/BCL3/POL2 | NA  | H4k20me1/H3k4me1/H3k36me3/H3k4me2/H3k79me2                |
+| HLA-C    |     0| rs146911342 |     0.00| 3a              | POL2-4                      | NA  | H4k20me1/H3k36me3/H3k4me3/H3k4me2/H3k79me2/H3k4me1/H3k9ac |
+| HLA-C    |     1| rs9263875   |    65.61| 1f              | IKZF1/TCF12                 | NA  | H3k4me1/H3k4me3/H3k27ac/H3k4me2/H3k9ac/H3k79me2/H2az      |
+| HLA-C    |     2| rs1793890   |    14.47| 6               | NA                          | NA  | NA                                                        |
+| HLA-DPB1 |     0| rs9277449   |     0.00| 7               | NA                          | NA  | H3k36me3                                                  |
+| HLA-DPB1 |     1| rs9296068   |   -55.01| 6               | NA                          | NA  | H3k4me1/H2az                                              |
+| HLA-DPB1 |     2| rs688209    |   645.40| 4               | NA                          | NA  | NA                                                        |
+| HLA-DQA1 |     0| rs9272316   |     0.00| 6               | NA                          | NA  | H3k27ac/H3k4me2/H3k9ac/H3k4me1/H3k4me3/H3k79me2           |
+| HLA-DQA1 |     1| rs9271375   |    -8.89| 7               | NA                          | NA  | H3k9me3                                                   |
+| HLA-DQA1 |     2| rs148834340 |  -106.13| 4               | NA                          | NA  | H3k79me2                                                  |
+| HLA-DQB1 |     0| rs9274688   |    -0.74| 5               | POL2-4                      | NA  | H3k79me2/H3k4me2/H3k4me3/H3k27ac/H3k9ac/H3k4me1           |
+| HLA-DQB1 |     1| rs3134978   |   -15.32| 7               | NA                          | NA  | NA                                                        |
+| HLA-DRB1 |     0| rs3129759   |   -27.54| 6               | NA                          | NA  | NA                                                        |
+| HLA-DRB1 |     1| rs9273375   |   -69.16| 4               | POL2-4                      | NA  | H3k36me3/H3k4me1/H3k27ac/H3k79me2                         |
+| HLA-DRB1 |     2| rs34693360  |     0.00| 4               | PU1                         | DHS | H3k79me2/H3k9ac/H3k4me2/H3k4me3/H3k27ac/H3k36me3          |
 
 ### Reference transcriptome index
 
-| locus    |  rank| rsid        |       pos| tf                                                                                                                | dhs | chrom\_state | histone\_marks                                       |
-|:---------|-----:|:------------|---------:|:------------------------------------------------------------------------------------------------------------------|:----|:-------------|:-----------------------------------------------------|
-| HLA-A    |     0| rs2523764   |  29849840| NA                                                                                                                | NA  | R            | NA                                                   |
-| HLA-A    |     1| rs2975046   |  29947372| POL2-4/NFATC1/BCL3                                                                                                | NA  | T            | H4k20me1/H3k36me3                                    |
-| HLA-A    |     2| rs9259825   |  29927076| POL2-4/SIN3A/IRF4/POU2F2                                                                                          | DHS | TSS          | H3k4me2/H3k4me3/H3k79me2/H2az/H3k9ac/H3k27ac         |
-| HLA-B    |     0| rs2853926   |  31295274| NA                                                                                                                | NA  | R            | NA                                                   |
-| HLA-B    |     1| rs1265109   |  31151812| NA                                                                                                                | NA  | T            | NA                                                   |
-| HLA-B    |     2| rs36057735  |  31352146| POL2-4/NFATC1/MTA3/POL2/NFIC                                                                                      | NA  | T            | H4k20me1/H3k4me1/H3k36me3                            |
-| HLA-C    |     0| rs4947308   |  31334507| NA                                                                                                                | NA  | R            | H3k9me3                                              |
-| HLA-C    |     1| rs2074491   |  31272119| POL2-4/NRSF/BCL11A/TCF3/TCF12/MXI1/EBF1/POU2F2/TBP/TAF1/POL2/NF-YA/CHD2/BHLHE40/CFOS/RFX5/NFKB/NF-YB/IRF4/PU1/SP1 | DHS | TSS          | H3k4me3/H3k4me2/H3k79me2/H3k9ac/H3k27ac/H2az/H3k4me1 |
-| HLA-C    |     2| rs1064627   |  30730764| STAT3                                                                                                             | NA  | TSS          | H3k36me3/H3k4me2                                     |
-| HLA-C    |     3| rs9501587   |  31379160| NA                                                                                                                | NA  | R            | H3k27me3                                             |
-| HLA-DPB1 |     0| rs9277538   |  33087270| NA                                                                                                                | NA  | T            | NA                                                   |
-| HLA-DPB1 |     1| rs9296068   |  33020918| NA                                                                                                                | NA  | R            | H3k4me1/H2az                                         |
-| HLA-DPB1 |     2| rs688209    |  33732599| NA                                                                                                                | NA  | R            | NA                                                   |
-| HLA-DQA1 |     0| rs9270521   |  32591752| NA                                                                                                                | NA  | R            | NA                                                   |
-| HLA-DQA1 |     1| rs3129758   |  32616848| NA                                                                                                                | NA  | R            | H3k9me3                                              |
-| HLA-DQB1 |     0| rs1770      |  32660056| POL2-4/CHD2/TBP/TAF1/EBF1/ELF1/TCF12/POL2                                                                         | DHS | E            | H3k4me1/H3k27ac/H3k4me2/H3k36me3/H3k79me2            |
-| HLA-DQB1 |     1| rs9274622   |  32668213| POL2-4/IKZF1/AFT2                                                                                                 | NA  | E            | H3k79me2/H3k4me2/H3k4me3/H3k27ac/H3k9ac/H2az/H3k4me1 |
-| HLA-DQB1 |     2| rs28891461  |  32674241| NA                                                                                                                | NA  | R            | NA                                                   |
-| HLA-DQB1 |     3| rs116102092 |  32570895| NA                                                                                                                | NA  | NA           | NA                                                   |
-| HLA-DQB1 |     4| rs139547197 |  33076379| POL2-4/MTA3                                                                                                       | NA  | TSS          | H3k79me2/H3k4me3/H3k4me2/H3k9ac/H3k27ac/H2az         |
-| HLA-DRB1 |     0| rs73729140  |  32553513| NA                                                                                                                | NA  | T            | NA                                                   |
-| HLA-DRB1 |     1| rs28383307  |  32618978| NA                                                                                                                | NA  | R            | H3k9me3                                              |
+| locus    |  rank| rsid        |     dist| regulome\_score | tfbs                                                                                                              | dhs | histone\_marks                                       |
+|:---------|-----:|:------------|--------:|:----------------|:------------------------------------------------------------------------------------------------------------------|:----|:-----------------------------------------------------|
+| HLA-A    |     0| rs2523764   |   -91.42| 2b              | NA                                                                                                                | NA  | NA                                                   |
+| HLA-A    |     1| rs2975046   |     1.49| 1f              | POL2-4/NFATC1/BCL3                                                                                                | NA  | H4k20me1/H3k36me3                                    |
+| HLA-A    |     2| rs9259825   |   -14.19| 2b              | POL2-4/SIN3A/IRF4/POU2F2                                                                                          | DHS | H3k4me2/H3k4me3/H3k79me2/H2az/H3k9ac/H3k27ac         |
+| HLA-B    |     0| rs2853926   |    58.60| 6               | NA                                                                                                                | NA  | NA                                                   |
+| HLA-B    |     1| rs1265109   |   202.06| 6               | NA                                                                                                                | NA  | NA                                                   |
+| HLA-B    |     2| rs36057735  |     1.73| 4               | POL2-4/NFATC1/MTA3/POL2/NFIC                                                                                      | NA  | H4k20me1/H3k4me1/H3k36me3                            |
+| HLA-C    |     0| rs4947308   |   -62.38| 6               | NA                                                                                                                | NA  | H3k9me3                                              |
+| HLA-C    |     1| rs2074491   |     0.00| 4               | POL2-4/NRSF/BCL11A/TCF3/TCF12/MXI1/EBF1/POU2F2/TBP/TAF1/POL2/NF-YA/CHD2/BHLHE40/CFOS/RFX5/NFKB/NF-YB/IRF4/PU1/SP1 | DHS | H3k4me3/H3k4me2/H3k79me2/H3k9ac/H3k27ac/H2az/H3k4me1 |
+| HLA-C    |     2| rs1064627   |   537.99| 1f              | STAT3                                                                                                             | NA  | H3k36me3/H3k4me2                                     |
+| HLA-C    |     3| rs9501587   |  -107.03| 6               | NA                                                                                                                | NA  | H3k27me3                                             |
+| HLA-DPB1 |     0| rs9277538   |     0.07| 4               | NA                                                                                                                | NA  | NA                                                   |
+| HLA-DPB1 |     1| rs9296068   |   -55.01| 6               | NA                                                                                                                | NA  | H3k4me1/H2az                                         |
+| HLA-DPB1 |     2| rs688209    |   645.40| 4               | NA                                                                                                                | NA  | NA                                                   |
+| HLA-DQA1 |     0| rs9270521   |   -36.43| 6               | NA                                                                                                                | NA  | NA                                                   |
+| HLA-DQA1 |     1| rs3129758   |   -11.33| 5               | NA                                                                                                                | NA  | H3k9me3                                              |
+| HLA-DQB1 |     0| rs1770      |     0.00| 1f              | POL2-4/CHD2/TBP/TAF1/EBF1/ELF1/TCF12/POL2                                                                         | DHS | H3k4me1/H3k27ac/H3k4me2/H3k36me3/H3k79me2            |
+| HLA-DQB1 |     1| rs9274622   |     0.00| 1f              | POL2-4/IKZF1/AFT2                                                                                                 | NA  | H3k79me2/H3k4me2/H3k4me3/H3k27ac/H3k9ac/H2az/H3k4me1 |
+| HLA-DQB1 |     2| rs28891461  |    -5.86| 7               | NA                                                                                                                | NA  | NA                                                   |
+| HLA-DQB1 |     3| rs116102092 |    88.57| 6               | NA                                                                                                                | NA  | NA                                                   |
+| HLA-DQB1 |     4| rs139547197 |  -408.00| 4               | POL2-4/MTA3                                                                                                       | NA  | H3k79me2/H3k4me3/H3k4me2/H3k9ac/H3k27ac/H2az         |
+| HLA-DRB1 |     0| rs73729140  |     0.00| 6               | NA                                                                                                                | NA  | NA                                                   |
+| HLA-DRB1 |     1| rs28383307  |   -29.13| 7               | NA                                                                                                                | NA  | H3k9me3                                              |
 
 RTC between IMGT and Ref Transcriptome eQTLs
 --------------------------------------------
