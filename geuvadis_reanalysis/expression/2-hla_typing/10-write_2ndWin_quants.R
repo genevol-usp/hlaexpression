@@ -1,7 +1,7 @@
 devtools::load_all("~/hlaseqlib")
 library(tidyverse)
 
-samples <- readLines("../../../data/sample_info/samples_phase3_ena_eur.txt")
+samples <- readLines("../../data/sample_info/samples_phase3_ena_eur.txt")
 
 quants <- file.path("./quantifications_top5", samples, "quant.sf") %>%
     setNames(samples) %>%

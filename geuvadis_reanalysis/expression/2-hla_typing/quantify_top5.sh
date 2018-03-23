@@ -11,8 +11,8 @@ mkdir -p $indexDIR
 
 $salmon index -t $sample_hla -i $indexDIR --type quasi -k 31
 
-fq1=./mappings/fqs/${sample}_1.fq
-fq2=./mappings/fqs/${sample}_2.fq
+fq1=../1-map_to_genome/mappings/mhc_fqs/${sample}_1.fq
+fq2=../1-map_to_genome/mappings/mhc_fqs/${sample}_2.fq
 outQuant=./quantifications_top5
 out=$outQuant/$sample
 

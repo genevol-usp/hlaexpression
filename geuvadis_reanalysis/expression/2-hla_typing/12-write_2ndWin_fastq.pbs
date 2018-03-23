@@ -6,7 +6,7 @@
 #PBS -q short
 #PBS -t 1-358
 #PBS -j oe
-#PBS -o /home/vitor/hlaexpression/geuvadis_reanalysis/expression/star/2-hla_typing/log/$PBS_JOBID.log
+#PBS -o /home/vitor/hlaexpression/geuvadis_reanalysis/expression/2-hla_typing/log/$PBS_JOBID.log
 
 cd $PBS_O_WORKDIR
 
@@ -14,7 +14,7 @@ seqtk=/home/vitor/seqtk/seqtk
 
 mkdir -p ./fastq_2ndWin
 quantDir=./quantifications_top5
-SAMPLE=`awk "FNR==$PBS_ARRAYID" ../../../data/sample_info/samples_phase3_ena_eur.txt`
+SAMPLE=`awk "FNR==$PBS_ARRAYID" ../../data/sample_info/samples_phase3_ena_eur.txt`
 sampledir=$quantDir/$SAMPLE
 
 winners=$sampledir/winner_alleles.txt
