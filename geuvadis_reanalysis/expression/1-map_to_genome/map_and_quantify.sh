@@ -9,8 +9,8 @@ sample=$1
 
 CPUS=8
 indexDIR=/home/vitor/hlaexpression/index_genome/star/index
-fq1=/home/vitor/hlaexpression/geuvadis_reanalysis/data/fastq/${sample}_1.fastq.gz
-fq2=/home/vitor/hlaexpression/geuvadis_reanalysis/data/fastq/${sample}_2.fastq.gz
+fq1=../../data/fastq/${sample}_1.fastq.gz
+fq2=../../data/fastq/${sample}_2.fastq.gz
 outMap=./mappings
 outPrefix=${outMap}/${sample}_
 

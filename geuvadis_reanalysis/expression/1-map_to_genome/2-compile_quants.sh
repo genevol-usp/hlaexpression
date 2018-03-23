@@ -1,6 +1,6 @@
 #!/bin/bash
 
-readarray -t samples < /home/vitor/hlaexpression/geuvadis_reanalysis/data/sample_info/samples_phase3_ena_eur.txt
+readarray -t samples < ../../data/sample_info/samples_phase3_ena_eur.txt
 hlaIDs=/home/vitor/hlaexpression/index_transcriptome/hla_ids_pri.txt
 quant=./quantifications
 out=$quant/imgt_quants.tsv

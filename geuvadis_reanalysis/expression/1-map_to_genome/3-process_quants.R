@@ -3,7 +3,7 @@ library(tidyverse)
 
 hla_genes <- gencode_hla$gene_name 
 
-samples <- readLines("../../../data/sample_info/samples_phase3_ena_eur.txt")
+samples <- readLines("../../data/sample_info/samples_phase3_ena_eur.txt")
 
 imgt_quants <- read_tsv("./quantifications/imgt_quants.tsv")
 
