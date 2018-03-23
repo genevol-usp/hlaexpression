@@ -58,6 +58,12 @@ rnaseq_lineage <- rnaseq_allele %>%
     select(subject, locus, lineage, hom, expression = tpm) %>%
     ungroup()
 
+common <-
+    inner_join(select(rnaseq_lineage, subject, locus, lineage),
+               select(nci_lineage, subject, locus, lineage),
+               by = c("subject", "locus", "lineage")) %>%
+    distinct()
+
 gene_df <- inner_join(rnaseq_gene, nci_gene, by = c("subject", "locus"))
 
 hlac_df <- gene_df %>%
@@ -100,13 +106,14 @@ dev.off()
 
 png("./plots/rnaseq_lineages.png", width=12, height=6, units="in", res=300)
 rnaseq_lineage %>%
-    filter(locus %in% c("HLA-A", "HLA-B", "HLA-C")) %>%
-    plot_lineages() + 
-    labs(y = "TPM")
+    inner_join(common) %>%
+    plot_lineages() + labs(y = "TPM")
 dev.off()
 
 png("./plots/nci_lineages.png", width=12, height=6, units="in", res=300)
-plot_lineages(nci_lineage) + labs(y = "mRNA (qPCR)")
+nci_lineage %>%
+    inner_join(common) %>%
+    plot_lineages() + labs(y = "mRNA (qPCR)")
 dev.off()
 
 png("./plots/expression_boxplot.png", width = 8, height = 5, units = "in", res = 200)

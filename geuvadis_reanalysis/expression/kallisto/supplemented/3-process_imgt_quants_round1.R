@@ -52,11 +52,23 @@ accuracies <- calls %>%
 
 write_tsv(accuracies, "./genotyping_accuracies_1.tsv")
 
-best_th <- accuracies %>%
+best_th_average <- accuracies %>%
     slice(which.max(th_average)) %>%
     pull(th) %>%
     as.character()
 
-out_df <- filter(typings, th == best_th) %>% select(-th)
+best_th <- accuracies %>%
+    group_by(locus) %>%
+    slice(which.max(accuracy)) %>%
+    ungroup() %>%
+    mutate(locus = paste0("HLA-", locus),
+           th = as.character(th)) %>%
+    select(th, locus) %>%
+    full_join(distinct(imgt_quants, locus), by = "locus") %>%
+    mutate(th = ifelse(is.na(th), best_th_average, th))
+
+out_df <- inner_join(typings, best_th, by = c("th", "locus")) %>%
+    select(-th) %>%
+    arrange(subject, locus, allele)
 
 write_tsv(out_df, "./quantifications_1/processed_imgt_quants.tsv") 

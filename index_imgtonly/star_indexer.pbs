@@ -1,0 +1,20 @@
+#!/bin/bash
+
+#PBS -l nodes=1:ppn=12
+#PBS -l mem=32gb
+#PBS -l walltime=12:00:00
+#PBS -q short
+#PBS -j oe
+#PBS -o /home/vitor/hlaexpression/index_imgtonly/index.log
+
+STAR=/home/vitor/STAR
+
+cd $PBS_O_WORKDIR
+
+indexDIR=./index
+fasta=../imgt_index_v2/imgt_index.fa
+
+mkdir -p $indexDIR
+
+$STAR --runThreadN 12 --runMode genomeGenerate --genomeDir $indexDIR\
+  --genomeFastaFiles $fasta --genomeChrBinNbits 10 --genomeSAindexNbases 6

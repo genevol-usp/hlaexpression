@@ -5,12 +5,12 @@
 #PBS -l walltime=12:00:00
 #PBS -q short
 #PBS -j oe
-#PBS -o /home/vitor/hlaexpression/imgt_index_v2/kallisto/index.log
+#PBS -o /home/vitor/hlaexpression/index_transcriptome/kallisto/index.log
 
 kallisto=/home/vitor/kallisto_linux-v0.43.1/kallisto
 
-fasta=/home/vitor/gencode_data/gencode.v25.PRI.transcripts.fa
-out=./gencode.v25.PRI.transcripts.idx
+fasta=../gencode.v25.PRI.uniqTranscripts.fa
+out=./index.idx
 
 cd $PBS_O_WORKDIR
 

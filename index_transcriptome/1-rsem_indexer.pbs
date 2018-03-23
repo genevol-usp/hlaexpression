@@ -5,14 +5,14 @@
 #PBS -l walltime=01:00:00
 #PBS -q short
 #PBS -j oe
-#PBS -o home/vitor/hlaexpression/index_transcriptome/rsem.log
+#PBS -o home/vitor/hlaexpression/index_transcriptome/index.log
 
 rsem=/home/vitor/RSEM
 
-cd /home/vitor/gencode_data
+cd $PBS_O_WORKDIR
 
-genome=./GRCh38.primary_assembly.genome.fa
-gtf=./gencode.v25.primary_assembly.annotation.gtf
+genome=/home/vitor/gencode_data/GRCh38.primary_assembly.genome.fa
+gtf=/home/vitor/gencode_data/gencode.v25.primary_assembly.annotation.gtf
 out=./gencode.v25.PRI
 
 zcat $genome.gz > $genome

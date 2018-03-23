@@ -2,7 +2,7 @@ devtools::load_all("/home/vitor/hlaseqlib")
 library(tidyverse)
 
 qtls <-
-    read_qtltools("../../3-conditional_analysis/conditional_60_all.txt.gz") %>%
+    read_qtltools("../../3-conditional_analysis/conditional_50_all.txt.gz") %>%
     filter(bwd_best == 1) %>%
     inner_join(gencode_hla, by = c("phen_id" = "gene_id")) %>%
     select(gene = gene_name, rsid = var_id, rank)

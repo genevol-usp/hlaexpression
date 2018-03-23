@@ -6,7 +6,7 @@ setDT(geuvadis_info)
 setDT(gencode_chr_tx)
 setDT(gencode_chr_gene)
 
-quant_dir <- commandArgs(TRUE)[1]
+quant_dir <- "./quantifications_2"
 
 gencode <- 
     gencode_chr_tx[chr %in% 1:22, .(target_id = tx_id, gene_id, gene_name)]

@@ -6,7 +6,7 @@ sample=$1
 fq1=/home/vitor/hlaexpression/geuvadis_reanalysis/data/fastq/${sample}_1.fastq.gz
 fq2=/home/vitor/hlaexpression/geuvadis_reanalysis/data/fastq/${sample}_2.fastq.gz
 
-gencode=/home/vitor/hlaexpression/imgt_index/gencode.v25.PRI.transcripts.noIMGT.fa
+gencode=/home/vitor/hlaexpression/imgt_index_v2/gencode.v25.PRI.transcripts.noIMGT.fa
 sample_hla=./sample_indices/hla_$sample.fa
 sample_fa=./sample_indices/index_$sample.fa
 sample_idx=./sample_indices/index_$sample.idx

@@ -1,0 +1,19 @@
+#!/bin/bash
+
+#PBS -l nodes=1:ppn=1
+#PBS -l mem=12gb
+#PBS -l walltime=06:00:00
+#PBS -q short
+#PBS -j oe
+#PBS -o /home/vitor/hlaexpression/index_transcriptome/salmon/index.log
+
+cd $PBS_O_WORKDIR
+
+salmon=/home/vitor/Salmon-latest_linux_x86_64/bin/salmon
+
+indexDIR=./index
+fasta=../gencode.v25.PRI.uniqTranscripts.fa
+
+mkdir -p $indexDIR
+
+$salmon index -t $fasta -i $indexDIR --type quasi -k 31 

@@ -1,8 +1,6 @@
 devtools::load_all("/home/vitor/hlaseqlib")
 library(tidyverse)
 
-gencode_hla <- select(gencode_hla, gene_id, gene_name)
-
 qtls <-
     read_qtltools("../../3-conditional_analysis/conditional_60_all.txt.gz") %>%
     filter(bwd_best == 1) %>%
@@ -25,11 +23,17 @@ rtc <-
 rtc_df <- 
     left_join(qtls, rtc, by = c("gene", "rsid" =  "qtl_var")) %>%
     left_join(previous_eqtls, by = c("gene", "qtl_previous" =  "rsid")) %>%
-    filter(rtc > 0.95) %>%
     group_by(gene, rsid) %>%
     filter(rtc == max(rtc)) %>%
     ungroup() %>%
-    arrange(gene, rank, desc(rtc)) %>%
-    mutate(rtc = round(rtc, 3))
-
+    mutate(rtc = round(rtc, 3),
+	   pvalue = round(as.numeric(pvalue), 1),
+	   study_pval = paste0(study, " (", pvalue, ")")) %>% 
+    group_by(gene, rsid, rank, qtl_previous, d_prime, rtc) %>%
+    summarise(study_pval = paste(study_pval, collapse = "/")) %>%
+    ungroup() %>%
+    left_join(gencode_hla, by = c("gene" = "gene_name")) %>%
+    arrange(start, rank) %>%
+    select(gene, rank, rsid, qtl_previous, d_prime, rtc, study_pval)
+    
 write_tsv(rtc_df, "./results.tsv")
