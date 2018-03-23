@@ -2,7 +2,7 @@
 
 quantDir=./quantifications_1
 
-readarray -t samples < /home/vitor/hlaexpression/geuvadis_reanalysis/data/sample_info/samples_phase3_ena_eur.txt
+readarray -t samples < ../../../data/sample_info/samples_phase3_ena_eur.txt
 
 OUTimgt=$quantDir/imgt_quants.tsv
 

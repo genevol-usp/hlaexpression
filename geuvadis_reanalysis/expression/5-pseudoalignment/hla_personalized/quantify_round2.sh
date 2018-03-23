@@ -3,8 +3,8 @@
 kallisto=/home/vitor/kallisto_linux-v0.43.1/kallisto
 
 sample=$1
-fq1=/home/vitor/hlaexpression/geuvadis_reanalysis/data/fastq/${sample}_1.fastq.gz
-fq2=/home/vitor/hlaexpression/geuvadis_reanalysis/data/fastq/${sample}_2.fastq.gz
+fq1=../../../data/fastq/${sample}_1.fastq.gz
+fq2=../../../data/fastq/${sample}_2.fastq.gz
 
 gencode=/home/vitor/hlaexpression/imgt_index_v2/gencode.v25.PRI.transcripts.noIMGT.fa
 sample_hla=./sample_indices/hla_$sample.fa

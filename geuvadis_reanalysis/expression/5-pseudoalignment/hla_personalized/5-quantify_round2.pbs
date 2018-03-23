@@ -4,9 +4,9 @@
 #PBS -l mem=6gb
 #PBS -l walltime=24:00:00
 #PBS -q short
-#PBS -t 1-358%50
+#PBS -t 1-358
 #PBS -j oe
-#PBS -o /home/vitor/hlaexpression/geuvadis_reanalysis/expression/kallisto/supplemented/log/$PBS_JOBIB.log
+#PBS -o /home/vitor/hlaexpression/geuvadis_reanalysis/expression/5-pseudoalignment/hla_personalized/log/$PBS_JOBIB.log
 
 cd $PBS_O_WORKDIR
 

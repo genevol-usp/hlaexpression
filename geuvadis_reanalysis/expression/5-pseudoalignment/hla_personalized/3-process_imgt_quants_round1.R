@@ -1,19 +1,9 @@
 devtools::load_all("/home/vitor/hlaseqlib")
 library(tidyverse)
 
-make_genot_calls_df <- function(typings_df) {
-
-    typings_df %>%
-	mutate(subject = convert_ena_ids(as.character(subject)),
-	       locus = sub("^HLA-", "", locus),
-	       allele = hla_trimnames(gsub("IMGT_", "", allele), 3)) %>%
-	arrange(subject, locus, allele)
-}
-
 hla_genes <- gencode_hla$gene_name
 
-samples <-
-    geuvadis_info %>%
+samples <- geuvadis_info %>%
     filter(kgp_phase3 == 1L & pop != "YRI") %>%
     pull(ena_id)
 
@@ -40,7 +30,10 @@ typings <- plyr::ldply(thresholds,
 calls <- typings %>%
     filter(locus %in% hla_genes) %>%
     select(th, subject, locus, allele) %>%
-    make_genot_calls_df()
+    mutate(subject = convert_ena_ids(as.character(subject)),
+	   locus = sub("^HLA-", "", locus),
+	   allele = hla_trimnames(gsub("IMGT_", "", allele), 3)) %>%
+    arrange(subject, locus, allele)
 
 accuracies <- calls %>%
     split(.$th) %>%

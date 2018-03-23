@@ -6,7 +6,7 @@
 #PBS -q short
 #PBS -t 1-358
 #PBS -j oe
-#PBS -o /home/vitor/hlaexpression/geuvadis_reanalysis/expression/kallisto/supplemented/log/$PBS_JOBID.log
+#PBS -o /home/vitor/hlaexpression/geuvadis_reanalysis/expression/5-pseudoalignment/hla_personalized/log/$PBS_JOBID.log
 
 cd $PBS_O_WORKDIR
 
