@@ -195,26 +195,28 @@ Variants with RTC &gt; 0.95 likely mark the same biological signal.
 RTC with previous eQTLs
 -----------------------
 
-| gene     |  rank| rsid        | qtl\_previous |  d\_prime|   rtc| study\_pval                                                 |
-|:---------|-----:|:------------|:--------------|---------:|-----:|:------------------------------------------------------------|
-| HLA-A    |     0| rs3823342   | rs3823342     |      1.00|  1.00| geuvadis\_exon (82.9)                                       |
-| HLA-A    |     1| rs1655924   | rs1655924     |      1.00|  1.00| geuvadis\_gene (16.1)/geuvadis\_exon (38.5)                 |
-| HLA-C    |     0| rs146911342 | rs146911342   |      1.00|  1.00| geuvadis\_gene (24.1)/geuvadis\_exon (26.2)                 |
-| HLA-C    |     0| rs146911342 | rs41561715    |      1.00|  1.00| geuvadis\_gene (31.9)/geuvadis\_exon (37.2)                 |
-| HLA-C    |     1| rs12199223  | rs12199223    |      1.00|  1.00| geuvadis\_exon (6.8)                                        |
-| HLA-C    |     2| rs9266301   | rs9266301     |      1.00|  1.00| geuvadis\_exon (7.1)                                        |
-| HLA-B    |     0| rs1265094   | rs1265094     |      1.00|  1.00| geuvadis\_exon (15.4)                                       |
-| HLA-B    |     1| rs9264803   | rs9264803     |      1.00|  1.00| geuvadis\_exon (11.4)                                       |
-| HLA-B    |     2| rs2308655   | rs2308655     |      1.00|  1.00| geuvadis\_exon (34.6)                                       |
-| HLA-DRB1 |     0| rs3104412   | rs3104412     |      1.00|  1.00| geuvadis\_exon (17.7)                                       |
-| HLA-DRB1 |     1| rs28483671  | rs28483671    |      1.00|  1.00| geuvadis\_exon (36.8)                                       |
-| HLA-DQA1 |     0| rs75170544  | rs75170544    |      1.00|  1.00| geuvadis\_gene (28.4)/geuvadis\_exon (48.3)/gtex\_v7 (17.3) |
-| HLA-DQA1 |     1| rs9271375   | rs9271375     |      1.00|  1.00| geuvadis\_exon (13.4)                                       |
-| HLA-DQB1 |     0| rs1770      | rs1770        |      1.00|  1.00| geuvadis\_gene (43.4)/geuvadis\_exon (68.3)/gtex\_v7 (21.2) |
-| HLA-DQB1 |     1| rs9272209   | rs9272209     |      1.00|  1.00| geuvadis\_gene (7)                                          |
-| HLA-DPB1 |     0| rs9277449   | rs9277538     |      0.99|  1.00| geuvadis\_exon (57.9)                                       |
-| HLA-DPB1 |     1| rs9296068   | rs34885310    |      0.96|  0.98| delaneau (3.7)                                              |
-| HLA-DPB1 |     2| rs688209    | rs184379497   |      0.68|  0.95| NA (NA)                                                     |
+| gene     |  rank| rsid        | qtl\_previous |  d\_prime|   rtc| study\_pval                                              |
+|:---------|-----:|:------------|:--------------|---------:|-----:|:---------------------------------------------------------|
+| HLA-A    |     0| rs28780070  | rs28749167    |      1.00|  1.00| geuvadis\_exon (44.7)                                    |
+| HLA-A    |     1| rs1611615   | rs1611615     |      1.00|  1.00| geuvadis\_gene (7.1)/geuvadis\_exon (33)                 |
+| HLA-C    |     0| rs146911342 | rs146911342   |      1.00|  1.00| geuvadis\_gene (24.1)/geuvadis\_exon (26.2)              |
+| HLA-C    |     1| rs9263875   | rs9263875     |      1.00|  1.00| geuvadis\_gene (17)/geuvadis\_exon (33.3)/gtex\_v7 (7.4) |
+| HLA-C    |     2| rs1793890   | rs1793890     |      1.00|  1.00| geuvadis\_exon (5.6)                                     |
+| HLA-B    |     0| rs1265094   | rs1265094     |      1.00|  1.00| geuvadis\_exon (15.4)                                    |
+| HLA-B    |     1| rs9380240   | rs9380240     |      1.00|  1.00| geuvadis\_gene (6.2)/geuvadis\_exon (24.8)               |
+| HLA-B    |     2| rs2523616   | rs2523616     |      1.00|  1.00| geuvadis\_exon (41.5)                                    |
+| HLA-DRB1 |     0| rs3129759   | rs3129759     |      1.00|  1.00| geuvadis\_exon (30.2)                                    |
+| HLA-DRB1 |     1| rs9273375   | rs9273375     |      1.00|  1.00| geuvadis\_exon (39.9)                                    |
+| HLA-DRB1 |     2| rs34693360  | rs34646374    |      1.00|  1.00| geuvadis\_gene (14.2)/geuvadis\_exon (15.5)              |
+| HLA-DQA1 |     0| rs9272316   | rs111382741   |      0.92|  1.00| geuvadis\_gene (14.9)/geuvadis\_exon (26.9)              |
+| HLA-DQA1 |     1| rs9271375   | rs9271375     |      1.00|  1.00| geuvadis\_exon (13.4)                                    |
+| HLA-DQA1 |     2| rs148834340 | rs2395222     |      0.64|  1.00| NA (NA)                                                  |
+| HLA-DQB1 |     0| rs9274688   | rs9274688     |      1.00|  1.00| geuvadis\_gene (28.3)/geuvadis\_exon (54)                |
+| HLA-DQB1 |     1| rs3134978   | rs3134977     |      0.98|  1.00| geuvadis\_gene (10.9)/geuvadis\_exon (6.1)               |
+| HLA-DQB1 |     1| rs3134978   | rs3134978     |      1.00|  1.00| geuvadis\_gene (11)/geuvadis\_exon (5.9)                 |
+| HLA-DPB1 |     0| rs9277449   | rs9277538     |      0.99|  1.00| geuvadis\_exon (57.9)                                    |
+| HLA-DPB1 |     1| rs9296068   | rs112540072   |      0.57|  0.98| NA (NA)                                                  |
+| HLA-DPB1 |     2| rs688209    | rs184379497   |      0.68|  0.95| NA (NA)                                                  |
 
 Association with GWAS traits
 ----------------------------

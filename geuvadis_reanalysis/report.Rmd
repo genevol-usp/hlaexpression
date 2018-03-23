@@ -173,7 +173,7 @@ read_tsv("./qtls/star/main_pipeline/supplemented/rtc/pri_eqtls/results.tsv") %>%
 ## RTC with previous eQTLs
 
 ```{r, eval}
-read_tsv("./qtls/star/supplemented/rtc/previous_qtls/results.tsv") %>%
+read_tsv("./qtls/star/main_pipeline/supplemented/rtc/previous_qtls/results.tsv") %>%
     kable(digits = 2)
 ```
 
