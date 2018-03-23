@@ -6,7 +6,7 @@
 #PBS -q short
 #PBS -t 1-358
 #PBS -j oe
-#PBS -o /home/vitor/hlaexpression/geuvadis_reanalysis/expression/star/3-map_to_transcriptome/reference/log/$PBS_NAMEID.log
+#PBS -o /home/vitor/hlaexpression/geuvadis_reanalysis/expression/3-map_to_transcriptome/reference/log/$PBS_NAMEID.log
 
 cd $PBS_O_WORKDIR
 

@@ -6,8 +6,8 @@ salmon=/home/vitor/Salmon-latest_linux_x86_64/bin/salmon
 sample=$1
 
 indexDIR=/home/vitor/hlaexpression/index_transcriptome/star/index
-fq1=/home/vitor/hlaexpression/geuvadis_reanalysis/data/fastq/${sample}_1.fastq.gz
-fq2=/home/vitor/hlaexpression/geuvadis_reanalysis/data/fastq/${sample}_2.fastq.gz
+fq1=../../../data/fastq/${sample}_1.fastq.gz
+fq2=../../../data/fastq/${sample}_2.fastq.gz
 outMap=./mappings
 outPrefix=$outMap/${sample}_
 outQuant=./quantifications

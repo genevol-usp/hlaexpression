@@ -1,15 +1,6 @@
 devtools::load_all("~/hlaseqlib")
 library(tidyverse)
 
-make_genot_calls_df <- function(typings_df) {
-    
-    typings_df %>%
-        mutate(subject = convert_ena_ids(as.character(subject)),
-	       locus = sub("^HLA-", "", locus),
-	       allele = hla_trimnames(gsub("IMGT_", "", allele), 3)) %>%
-	arrange(subject, locus, allele)
-}
-
 hla_genes <- gencode_hla$gene_name 
 
 samples <- geuvadis_info %>% 
@@ -31,13 +22,15 @@ if (length(missing_files) > 0L) {
 goldstd_genos <- mutate(pag, allele = hla_trimnames(allele, 3))
 
 out_df <- hla_genotype_dt(imgt_quants, th = 0) %>%
-    hla_apply_zigosity_threshold(th = 0.2)
-    #hla_apply_zigosity_threshold(th = 0.1)
+    hla_apply_zigosity_threshold(th = 0.1)
 
 calls <- out_df %>%
     filter(locus %in% hla_genes) %>%
     select(subject, locus, allele) %>%
-    make_genot_calls_df()
+    mutate(subject = convert_ena_ids(as.character(subject)),
+	   locus = sub("^HLA-", "", locus),
+	   allele = hla_trimnames(gsub("IMGT_", "", allele), 3)) %>%
+    arrange(subject, locus, allele)
 
 accuracies <- calc_genotyping_accuracy(calls, goldstd_genos)
 

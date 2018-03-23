@@ -18,8 +18,8 @@ $STAR --runThreadN 6 --runMode genomeGenerate --genomeDir $indexDIR\
     --genomeChrBinNbits 11 --genomeSAindexNbases 13\
     --outFileNamePrefix ${indexDIR}_
 
-fq1=/home/vitor/hlaexpression/geuvadis_reanalysis/data/fastq/${sample}_1.fastq.gz
-fq2=/home/vitor/hlaexpression/geuvadis_reanalysis/data/fastq/${sample}_2.fastq.gz
+fq1=../../../data/fastq/${sample}_1.fastq.gz
+fq2=../../../data/fastq/${sample}_2.fastq.gz
 outMap=./mappings
 outQuant=./quantifications
 outPrefix=$outMap/${sample}_
