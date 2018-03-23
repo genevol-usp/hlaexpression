@@ -12,7 +12,6 @@ geuvadis_ids <- geuvadis_info %>%
     select(subject = ena_id, name)
 
 # Boxplot
-
 imgt_loci <- readLines("~/hlaexpression/imgt_index_v2/imgt_loci.txt") %>%
     paste0("HLA-", .)
 
@@ -87,7 +86,6 @@ scatter_plot_cors(star_kallisto_df, "tpm.star", "tpm.kallisto") +
 dev.off()
 
 ## supplemented vs reference transcriptome
- 
 ref_dist <- "~/hlaexpression/imgt_index_v2/distances_to_reference.tsv" %>%
     read_tsv()
 
@@ -109,7 +107,7 @@ star_imgt_vs_pri_df <-
 	      suffix = c(".imgt", ".ref")) %>%
     mutate(locus = factor(locus, levels = gencode_hla$gene_name))
 
-cor_df <- star_imgt_vs_pri_df %>%
+cor_df_imgt_pri <- star_imgt_vs_pri_df %>%
     group_by(locus) %>%
     do(data.frame(r = cor(.$tpm.imgt, .$tpm.ref),
                   x = min(.$tpm.imgt),
@@ -118,11 +116,13 @@ cor_df <- star_imgt_vs_pri_df %>%
     mutate(r = round(r, digits = 3))
 
 png("./plots/star_imgt_vs_pri_TPM.png", height = 6, width = 10, units = "in", res = 300)
-ggplot(star_imgt_vs_pri_df, aes(tpm.imgt, tpm.ref, color = dist)) +
+ggplot(star_imgt_vs_pri_df, aes(tpm.imgt, tpm.ref)) +
     geom_abline() +
-    geom_point() +
+    geom_point(aes(color = dist)) +
     scale_color_gradient(low = "white", high = "darkred") +
     facet_wrap(~locus, scales = "free") +
+    geom_text(data = cor_df_imgt_pri, aes(x, y, label = paste("r =", r)),
+              hjust = "inward", vjust = "inward", size = 5, color = "white") +
     theme_dark() +
     theme(axis.text = element_text(size = 12),
           axis.title = element_text(size = 16),
@@ -133,6 +133,30 @@ ggplot(star_imgt_vs_pri_df, aes(tpm.imgt, tpm.ref, color = dist)) +
     labs(x = "TPM (HLA personalized index)", y = "TPM (Ref transcriptome)",
          color = "divergence to Ref")
 dev.off()
+
+
+# STAR supplemented: mapping vs quasi-mappings
+star_quasi <- 
+    read_tsv("./star/main_pipeline/quantifications_final/processed_imgt_quants.tsv") %>%
+    filter(locus %in% hla_genes) %>%
+    group_by(subject, locus) %>%
+    summarize(tpm = sum(tpm)) %>%
+    ungroup() 
+
+star_mapping <- 
+    read_tsv("./star/supplemented/quantifications_2/processed_imgt_quants.tsv") %>%
+    filter(locus %in% hla_genes) %>%
+    group_by(subject, locus) %>%
+    summarize(tpm = sum(tpm)) %>%
+    ungroup() 
+
+star_mapping_quasi <- 
+    left_join(star_quasi, star_mapping, by = c("subject", "locus"),
+              suffix = c(".quasi", ".mapping")) %>%
+    mutate(locus = factor(locus, levels = gencode_hla$gene_name))
+
+scatter_plot_cors(star_mapping_quasi, "tpm.quasi", "tpm.mapping") +
+    labs(x = "TPM (quasi-mapping)", y = "TPM (mapping)")
 
 
 # TPM distributions
