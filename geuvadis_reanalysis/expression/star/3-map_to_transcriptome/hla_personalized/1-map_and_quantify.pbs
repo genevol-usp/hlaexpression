@@ -1,0 +1,19 @@
+#!/bin/bash
+
+#PBS -l nodes=1:ppn=6
+#PBS -l mem=12gb
+#PBS -l walltime=24:00:00
+#PBS -q short
+#PBS -t 1-358
+#PBS -j oe
+#PBS -o /home/vitor/hlaexpression/geuvadis_reanalysis/expression/star/3-map_to_transcriptome/hla_personalized/log/$PBS_JOBID.log
+
+cd $PBS_O_WORKDIR
+
+mkdir -p ./log
+mkdir -p ./mappings
+mkdir -p ./quantifications
+
+SAMPLE=`awk "NR==$PBS_ARRAYID" ../../../data/sample_info/samples_phase3_ena_eur.txt`
+
+./map_and_quantify.sh $SAMPLE
