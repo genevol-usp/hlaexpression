@@ -3,7 +3,7 @@
 quantDir=./quantifications
 hlaIDs=/home/vitor/hlaexpression/index_transcriptome/hla_ids_pri.txt
 
-readarray -t samples < /home/vitor/hlaexpression/geuvadis_reanalysis/data/sample_info/samples_phase3_ena_eur.txt
+readarray -t samples < ../../../data/sample_info/samples_phase3_ena_eur.txt
 
 OUTgw=$quantDir/all_transcripts_quants.tsv
 OUTimgt=$quantDir/imgt_quants.tsv
