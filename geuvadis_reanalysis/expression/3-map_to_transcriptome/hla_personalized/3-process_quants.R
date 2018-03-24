@@ -21,10 +21,6 @@ if (length(missing_files) > 0L) {
 
 goldstd <- mutate(pag, allele = hla_trimnames(allele, 3))
 
-goldstd <- "../../2-hla_typing/quantifications_winners/genotype_calls.tsv" %>%
-    read_tsv() %>%
-    mutate(allele = gsub("IMGT_", "", allele)) 
-
 out_df <- hla_genotype_dt(imgt_quants, th = 0) %>%
     hla_apply_zigosity_threshold(th = 0.1)
 
