@@ -1,7 +1,7 @@
 #!/bin/bash
 
-readarray -t samples < /home/vitor/hlaexpression/geuvadis_reanalysis/data/sample_info/samples_phase3_ena_eur.txt
-quantIMGT=./quantifications_final
+readarray -t samples < ../../../data/sample_info/samples_phase3_ena_eur.txt
+quantIMGT=./quantifications
 outIMGT=$quantIMGT/imgt_quants.tsv
 
 awk 'FNR==1 {print "subject\t" $0}' $quantIMGT/${samples[0]}/quant.sf > $outIMGT

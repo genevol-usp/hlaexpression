@@ -1,7 +1,7 @@
 devtools::load_all("/home/vitor/hlaseqlib")
 library(tidyverse)
 
-quant_dir <- "./quantifications_final"
+quant_dir <- "./quantifications"
 
 gencode <- gencode_chr_tx %>%
     filter(chr %in% 1:22) %>%

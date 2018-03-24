@@ -7,7 +7,7 @@ samples <- geuvadis_info %>%
     filter(kgp_phase3 == 1L & pop != "YRI") %>%
     pull(ena_id)
 
-imgt_quants <- read_tsv("./quantifications_2/imgt_quants.tsv") %>%
+imgt_quants <- read_tsv("./quantifications/imgt_quants.tsv") %>%
     mutate(locus = imgt_to_gname(Name),
 	   gene_id = gname_to_gid(locus)) %>%
     select(subject, locus, gene_id, allele = Name,
@@ -19,7 +19,11 @@ if (length(missing_files) > 0L) {
     stop(paste("missing files:", paste(missing_files, collapse = " ")))
 }
 
-goldstd_genos <- mutate(pag, allele = hla_trimnames(allele, 3))
+goldstd <- mutate(pag, allele = hla_trimnames(allele, 3))
+
+goldstd <- "../../2-hla_typing/quantifications_winners/genotype_calls.tsv" %>%
+    read_tsv() %>%
+    mutate(allele = gsub("IMGT_", "", allele)) 
 
 out_df <- hla_genotype_dt(imgt_quants, th = 0) %>%
     hla_apply_zigosity_threshold(th = 0.1)
@@ -32,8 +36,8 @@ calls <- out_df %>%
 	   allele = hla_trimnames(gsub("IMGT_", "", allele), 3)) %>%
     arrange(subject, locus, allele)
 
-accuracies <- calc_genotyping_accuracy(calls, goldstd_genos)
+accuracies <- calc_genotyping_accuracy(calls, goldstd)
 
-write_tsv(accuracies, "./genotyping_accuracies_2.tsv")
+write_tsv(accuracies, "./genotyping_concordance.tsv")
 
-write_tsv(out_df, "./quantifications_2/processed_imgt_quants.tsv")
+write_tsv(out_df, "./quantifications/processed_imgt_quants.tsv")
