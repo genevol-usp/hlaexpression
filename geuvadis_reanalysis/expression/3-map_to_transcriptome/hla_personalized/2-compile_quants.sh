@@ -1,26 +1,16 @@
 #!/bin/bash
 
-quantDir=./quantifications
-
 readarray -t samples < ../../../data/sample_info/samples_phase3_ena_eur.txt
+quant=./quantifications
+out=$quant/imgt_quants.tsv
 
-OUTgw=$quantDir/all_transcripts_quants.tsv
-OUTimgt=$quantDir/imgt_quants.tsv
+awk 'FNR==1 {print "subject\t" $0}' $quant/${samples[0]}/quant.sf > $out
 
-awk 'NR == 1 {print "subject\t" $0}' $quantDir/${samples[0]}/quant.sf > $OUTgw
-
-cp $OUTgw $OUTimgt
-
-for id in "${samples[@]}" 
+for id in "${samples[@]}"
 do
-    file=$quantDir/$id/quant.sf
+    file=$quant/$id/quant.sf
 
-    awk -v SUBJECT="$id" 'NR != 1 {print SUBJECT "\t" $0}' $file >> $OUTgw
-
-    awk -v SUBJECT="$id" 'NR != 1 && $1 ~ /IMGT/ {print SUBJECT "\t" $0}' $file >> $OUTimgt
+    awk -v SUBJECT="$id" 'FNR > 1 && $1 ~ /IMGT/ {print SUBJECT "\t" $0}' $file >> $out
 done
 
-awk '{print $1 "\t" $2 "\t" $5 "\t" $6}' $OUTimgt > $OUTimgt.tmp &&\
-    mv $OUTimgt.tmp $OUTimgt
-
-gzip -f $OUTgw
+awk '{print $1 "\t" $2 "\t" $5 "\t" $6}' $out > $out.tmp && mv $out.tmp $out
