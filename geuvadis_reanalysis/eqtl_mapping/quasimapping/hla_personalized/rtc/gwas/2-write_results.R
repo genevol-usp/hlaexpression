@@ -4,7 +4,8 @@ library(tidyverse)
 gencode_hla <- select(gencode_hla, gene_id, gene_name)
 
 catalog <- 
-    read_tsv("./gwas_catalog_filtered.txt", col_names = c("variant", "trait"))
+    "~/hlaexpression/geuvadis_reanalysis/data/gwas_catalog/gwas_catalog_filtered.txt" %>% 
+    read_tsv(col_names = c("variant", "trait"))
 
 qtls <-
     read_qtltools("../../3-conditional_analysis/conditional_50_all.txt.gz") %>%
@@ -12,7 +13,9 @@ qtls <-
     inner_join(gencode_hla, by = c("phen_id" = "gene_id")) %>%
     select(gene = gene_name, variant = var_id, rank)
 
-rtc <- list.files(".", pattern = "^rtc_results") %>%
+rtc_files <- list.files(".", pattern = "^rtc_results")   
+
+rtc <- rtc_files %>%
     map_df(read_qtltools_rtc) %>%
     filter(rtc > .95) %>%
     inner_join(gencode_hla, by = c("gene" = "gene_id")) %>%
@@ -31,3 +34,4 @@ qtls_rtc <- left_join(qtls, rtc, by = c("gene", "variant" = "qtl_var")) %>%
     ungroup()
 
 write_tsv(qtls_rtc, "./results.tsv")
+unlink(rtc_files)

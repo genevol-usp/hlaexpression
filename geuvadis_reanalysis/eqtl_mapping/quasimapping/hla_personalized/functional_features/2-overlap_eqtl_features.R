@@ -10,23 +10,30 @@ overlap_elements <- function(pos, element_df) {
 	paste(collapse = "/")
 }
 
-dnase <- read_tsv("./DNase.ENCODE.chr6.hg38.bed", col_names = FALSE) %>%
+dnase <- 
+    "~/hlaexpression/geuvadis_reanalysis/data/encode/DNase.ENCODE.chr6.hg38.bed" %>%
+    read_tsv(col_names = FALSE) %>%
     select(X1:X3) %>%
     mutate(X4 = "DHS") %>%
     distinct()
 
-tf <- read_tsv("./TF.ENCODE.chr6.hg38.bed", col_names = FALSE) %>%
+tf <- 
+    "~/hlaexpression/geuvadis_reanalysis/data/encode/TF.ENCODE.chr6.hg38.bed" %>%
+    read_tsv(col_names = FALSE) %>%
     distinct()
 
-seg <- read_tsv("./Seg.ENCODE.chr6.hg38.bed", col_names = FALSE) %>%
+seg <- 
+    "~/hlaexpression/geuvadis_reanalysis/data/encode/Seg.ENCODE.chr6.hg38.bed" %>%
+    read_tsv(col_names = FALSE) %>%
     select(X1:X4) %>%
     distinct()
 
-hm <- read_tsv("./HM.ENCODE.chr6.hg38.bed", col_names = FALSE) %>%
+hm <- 
+    "~/hlaexpression/geuvadis_reanalysis/data/encode/HM.ENCODE.chr6.hg38.bed" %>%
+    read_tsv(col_names = FALSE) %>%
     distinct()
 
-qtl <- 
-    read_tsv("./hla.qtls.bed", col_names = FALSE) %>%
+qtl <- read_tsv("./hla.qtls.bed", col_names = FALSE) %>%
     mutate(tf = map_chr(X2, overlap_elements, tf),
 	   dhs = map_chr(X2, overlap_elements, dnase),
 	   chrom_state = map_chr(X2, overlap_elements, seg),

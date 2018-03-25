@@ -10,13 +10,15 @@ qtls <-
     select(gene = gene_name, variant = var_id, rank)
 
 pri_eqtls <- 
-    "../../../transcriptome/3-conditional_analysis/conditional_70_all.txt.gz" %>%
+    "../../../reference/3-conditional_analysis/conditional_70_all.txt.gz" %>%
     read_qtltools() %>%
     filter(bwd_best == 1) %>%
     inner_join(gencode_hla, by = c("phen_id" = "gene_id")) %>%
     select(gene = gene_name, variant = var_id, rank)
 
-rtc <- read_qtltools_rtc("./rtc_results.txt") %>%
+rtc_files <- "./rtc_results.txt" 
+
+rtc <- read_qtltools_rtc(rtc_files) %>%
     inner_join(gencode_hla, by = c("gene" = "gene_id")) %>%
     select(gene = gene_name, qtl_var, qtl_pri = gwas_var, d_prime, rtc)
 
@@ -33,3 +35,4 @@ qtls_rtc_pri <-
     mutate(rtc = round(rtc, 2))
 
 write_tsv(qtls_rtc_pri, "./results.tsv")
+unlink(rtc_files)

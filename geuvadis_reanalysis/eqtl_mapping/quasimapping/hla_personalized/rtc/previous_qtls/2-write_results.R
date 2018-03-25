@@ -12,9 +12,10 @@ previous_eqtls <-
     read_tsv(col_names = c("rsid", "info")) %>%
     separate_rows(info, sep = ";") %>%
     separate(info, c("study", "gene", "pvalue"), sep = "\\|")
-    
-rtc <- 
-    list.files(".", pattern = "^rtc_results") %>%
+   
+rtc_files <- list.files(".", pattern = "^rtc_results")
+
+rtc <- rtc_files %>%
     map_df(read_qtltools_rtc) %>%
     rename(qtl_previous = gwas_var) %>%
     inner_join(gencode_hla, by = c("gene" = "gene_id")) %>%
@@ -37,3 +38,4 @@ rtc_df <-
     select(gene, rank, rsid, qtl_previous, d_prime, rtc, study_pval)
     
 write_tsv(rtc_df, "./results.tsv")
+unlink(rtc_files)

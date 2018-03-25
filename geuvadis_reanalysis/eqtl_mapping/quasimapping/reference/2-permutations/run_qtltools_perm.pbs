@@ -1,0 +1,21 @@
+#!/bin/bash
+
+#PBS -l nodes=1:ppn=1
+#PBS -l mem=1gb
+#PBS -l walltime=24:00:00 
+#PBS -q short 
+#PBS -j oe 
+#PBS -o /home/vitor/hlaexpression/geuvadis_reanalysis/eqtl_mapping/quasimapping/reference/2-permutations/log/$PBS_JOBID.log
+
+cd $PBS_O_WORKDIR
+
+qtltools=/home/vitor/qtltools/bin/QTLtools
+
+SAMPLES=../../../genotypes/samples.eur
+VCF=../../../genotypes/eur_maf05.vcf.gz
+COV=../../../pca_genotypes/covariates_genos.txt
+BED=../1-phenotypes/phenotypes_eur_$PC.bed.gz
+OUT=./results/permutations_$PC
+
+$qtltools cis --vcf $VCF --bed $BED --cov $COV --include-samples $SAMPLES\
+    --normal --chunk $CHUNK 60 --permute 1000 --out ${OUT}_$CHUNK.txt

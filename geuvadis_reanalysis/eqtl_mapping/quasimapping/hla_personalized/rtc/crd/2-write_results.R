@@ -15,7 +15,9 @@ qtls <-
 
 catalog <- read_tsv("./variants.tsv", col_names = c("var_id", "info"))
 
-rtc_crd <- list.files(".", pattern = "^rtc_results") %>%
+rtc_files <- list.files(".", pattern = "^rtc_results")  
+
+rtc_crd <- rtc_files %>%
     map_df(read_qtltools_rtc) %>%
     inner_join(gencode_hla, by = c("gene" = "gene_id")) %>%
     select(gene = gene_name, qtl_var, crd_var = gwas_var, d_prime, rtc)
@@ -29,3 +31,4 @@ qtls_rtc <-
     ungroup()
 
 write_tsv(qtls_rtc, "./results.tsv")
+unlink(rtc_files)

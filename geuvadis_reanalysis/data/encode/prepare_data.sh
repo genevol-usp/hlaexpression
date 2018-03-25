@@ -5,10 +5,10 @@ liftover=$liftDIR/liftOver
 chain=$liftDIR/hg19ToHg38.over.chain
 
 # Files obtained from O. Delaneau:
-TF=/home/vitor/ENCODE/TranscriptionFactors/step5_merged/ALL.bed.gz
-SEG=/home/vitor/ENCODE/Segmentation/step0_raw/wgEncodeAwgSegmentationCombinedGm12878.bed
-DNase=/home/vitor/ENCODE/DNAse/step1_bed/wgEncodeAwgDnaseUwdukeGm12878UniPk.narrowPeak.bed.gz
-HM=/home/vitor/ENCODE/HistoneModifications/step2_merge/HM.ALL.bed.gz
+TF=./TranscriptionFactors/step5_merged/ALL.bed.gz
+SEG=./Segmentation/step0_raw/wgEncodeAwgSegmentationCombinedGm12878.bed
+DNase=./DNAse/step1_bed/wgEncodeAwgDnaseUwdukeGm12878UniPk.narrowPeak.bed.gz
+HM=./HistoneModifications/step2_merge/HM.ALL.bed.gz
 
 tmp1=TF.ENCODE.chr6.bed
 tmp2=Seg.ENCODE.chr6.bed 
