@@ -4,15 +4,15 @@
 #PBS -l mem=4gb
 #PBS -l walltime=24:00:00
 #PBS -q short
-#PBS -t 1001-1839
+#PBS -t 1000-1830
 #PBS -j oe
-#PBS -o /home/vitor/hlaexpression/geuvadis_reanalysis/qtls/star/supplemented/caveman/log/$PBS_JOBID.log
+#PBS -o /home/vitor/hlaexpression/geuvadis_reanalysis/eqtl_mapping/transcriptomemapping/hla_personalized/caveman/log/$PBS_JOBID.log
 
 cd $PBS_O_WORKDIR
 
 caveman=/home/vitor/CaVEMaN
 BED=./phenotypes_corrected.bed
-VCF=/home/vitor/hlaexpression/geuvadis_reanalysis/qtls/genotypes/eur_maf05.vcf.gz
+VCF=/home/vitor/hlaexpression/geuvadis_reanalysis/data/genotypes/eur_maf05.vcf.gz
 
 $caveman --bed $BED --vcf $VCF --genes 6 --job-number $PBS_ARRAYID \
     --out results/results$PBS_ARRAYID --verbose
