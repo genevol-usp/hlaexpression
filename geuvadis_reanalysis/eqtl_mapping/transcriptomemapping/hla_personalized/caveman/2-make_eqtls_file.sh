@@ -1,7 +1,7 @@
 #!/bin/bash
 
 bcftools=/home/vitor/bcftools/bcftools
-vcf=/home/vitor/hlaexpression/geuvadis_reanalysis/qtls/genotypes/eur_maf05.vcf.gz
+vcf=/home/vitor/hlaexpression/geuvadis_reanalysis/data/genotypes/eur_maf05.vcf.gz
 
 zcat ../3-conditional_analysis/conditional_60_all.txt.gz |\
     awk '$19 == 1 && $20 == 1' > ./conditional_eqtl_best_significant.txt 

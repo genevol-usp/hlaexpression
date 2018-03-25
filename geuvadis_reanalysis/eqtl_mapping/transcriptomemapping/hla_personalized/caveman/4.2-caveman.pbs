@@ -10,6 +10,9 @@
 
 cd $PBS_O_WORKDIR
 
+mkdir -p ./log
+mkdir -p ./results
+
 caveman=/home/vitor/CaVEMaN
 BED=./phenotypes_corrected.bed
 VCF=/home/vitor/hlaexpression/geuvadis_reanalysis/data/genotypes/eur_maf05.vcf.gz
