@@ -5,14 +5,13 @@
 #PBS -l walltime=24:00:00 
 #PBS -q short 
 #PBS -j oe 
-#PBS -o /home/vitor/hlaexpression/geuvadis_reanalysis/eqtl_mapping/quasimapping/hla_personalized/2-permutations/log/$PBS_JOBID.log
+#PBS -o /home/vitor/hlaexpression/geuvadis_reanalysis/eqtl_mapping/genomemapping/2-permutations/log/$PBS_JOBID.log
 
 cd $PBS_O_WORKDIR
 
 qtltools=/home/vitor/qtltools/bin/QTLtools
 
 datadir=/home/vitor/hlaexpression/geuvadis_reanalysis/data
-
 SAMPLES=$datadir/genotypes/samples.eur
 VCF=$datadir/genotypes/eur_maf05.vcf.gz
 COV=$datadir/pca_genotypes/covariates_genos.txt
