@@ -6,7 +6,8 @@ outdir=./sample_indices
 
 if [ -d "$outdir" ]; then
     rm -r $outdir
-    mkdir -p $outdir
 fi
+    
+mkdir -p $outdir
 
-Rscript $write_custom_index ./quantifications_winners/genotype_calls.tsv $outdir
+Rscript $write_custom_index ./genotype_calls.tsv $outdir

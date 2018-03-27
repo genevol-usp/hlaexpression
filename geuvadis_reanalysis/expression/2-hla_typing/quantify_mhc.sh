@@ -27,7 +27,7 @@ $STAR --runMode alignReads --runThreadN $CPUS --genomeDir $indexDIR\
 
 fasta=/home/vitor/hlaexpression/index_mhc/gencode.v25.MHC.IMGT.transcripts.fa
 bam=${outPrefix}Aligned.out.bam
-out=./quantifications/$sample
+out=./quantifications_MHC/$sample
 
 if [ -d "$out" ]; then
     rm -r $out

@@ -10,8 +10,8 @@
 
 cd $PBS_O_WORKDIR
 
-mkdir -p ./quantifications_top5_2ndWin
+mkdir -p ./quantifications_noWinner
 
 SAMPLE=`awk "FNR==$PBS_ARRAYID" ../../data/sample_info/samples_phase3_ena_eur.txt`
 
-./quantify_top5_2ndWin.sh $SAMPLE 
+./quantify_noWinner.sh $SAMPLE 

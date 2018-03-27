@@ -4,7 +4,7 @@
 #PBS -l mem=12gb
 #PBS -l walltime=24:00:00
 #PBS -q short
-#PBS -t 1-13
+#PBS -t 1-358
 #PBS -j oe
 #PBS -o /home/vitor/hlaexpression/geuvadis_reanalysis/expression/3-map_to_transcriptome/hla_personalized/log/$PBS_JOBID.log
 
@@ -15,7 +15,6 @@ mkdir -p ./sample_indices
 mkdir -p ./mappings
 mkdir -p ./quantifications
 
-#SAMPLE=`awk "NR==$PBS_ARRAYID" ../../../data/sample_info/samples_phase3_ena_eur.txt`
-SAMPLE=`awk "NR==$PBS_ARRAYID" ./repeat_samples.txt`
+SAMPLE=`awk "NR==$PBS_ARRAYID" ../../../data/sample_info/samples_phase3_ena_eur.txt`
 
 ./map_and_quantify.sh $SAMPLE

@@ -12,12 +12,15 @@ cd $PBS_O_WORKDIR
 
 seqtk=/home/vitor/seqtk/seqtk
 
-mkdir -p ./fastq_2ndWin
-quantDir=./quantifications_top5
-SAMPLE=`awk "FNR==$PBS_ARRAYID" ../../data/sample_info/samples_phase3_ena_eur.txt`
-sampledir=$quantDir/$SAMPLE
+fqdir=./fastq_noWinner
 
-winners=$sampledir/winner_alleles.txt
+mkdir -p $fqdir
+
+SAMPLE=`awk "FNR==$PBS_ARRAYID" ../../data/sample_info/samples_phase3_ena_eur.txt`
+
+quantDir=./quantifications_topAlleles
+sampledir=$quantDir/$SAMPLE
+winners=$sampledir/winner.txt
 mappings=$sampledir/mappings.sam
 readsWin=$sampledir/readsWin.txt
 readsNoWin=$sampledir/readsNoWin.txt
@@ -37,8 +40,8 @@ grep -v "^@" $mappings |\
 fq1=../1-map_to_genome/mappings/mhc_fqs/${SAMPLE}_1.fq
 fq2=../1-map_to_genome/mappings/mhc_fqs/${SAMPLE}_2.fq
 
-fq12=./fastq_2ndWin/${SAMPLE}_1.fq
-fq22=./fastq_2ndWin/${SAMPLE}_2.fq
+fq12=$fqdir/${SAMPLE}_1.fq
+fq22=$fqdir/${SAMPLE}_2.fq
 
 $seqtk subseq $fq1 $readsNoWin > $fq12
 $seqtk subseq $fq2 $readsNoWin > $fq22

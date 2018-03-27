@@ -13,9 +13,13 @@ imgt_quants <- read_tsv("./quantifications_MHC/imgt_quants.tsv") %>%
     select(subject, locus, gene_id, allele = Name, 
 	   est_counts = NumReads, tpm = TPM)
 
-top_5 <- imgt_quants %>%
+top_alleles <- imgt_quants %>%
     group_by(subject, gene_id) %>%
     top_n(5, est_counts) %>%
+    ungroup() %>%
+    mutate(lineage = hla_trimnames(sub("IMGT_", "", allele), 1)) %>%
+    group_by(subject, locus, lineage) %>%
+    filter(tpm/max(tpm) > 0.25) %>%
     ungroup()
 
-write_tsv(top_5, "./quantifications_MHC/imgt_quants_top5.tsv")
+write_tsv(top_alleles, "./quantifications_MHC/imgt_quants_topAlleles.tsv")
