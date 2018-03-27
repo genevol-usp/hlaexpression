@@ -1,17 +1,16 @@
 #!/bin/bash
 
 readarray -t samples < ../../../data/sample_info/samples_phase3_ena_eur.txt
-quantIMGT=./quantifications
-outIMGT=$quantIMGT/imgt_quants.tsv
+quant=./quantifications
+out=$quant/imgt_quants.tsv
 
-awk 'FNR==1 {print "subject\t" $0}' $quantIMGT/${samples[0]}/quant.sf > $outIMGT
+awk 'FNR==1 {print "subject\t" $0}' $quant/${samples[0]}/quant.sf > $out
 
 for id in "${samples[@]}"
 do
-    file=$quantIMGT/$id/quant.sf
+    file=$quant/$id/quant.sf
 
-    awk -v SUBJECT="$id" 'FNR > 1 && $1 ~ /IMGT/ {print SUBJECT "\t" $0}' $file >> $outIMGT
+    awk -v SUBJECT="$id" 'FNR > 1 && $1 ~ /IMGT/ {print SUBJECT "\t" $0}' $file >> $out
 done
 
-awk '{print $1 "\t" $2 "\t" $5 "\t" $6}' $outIMGT > $outIMGT.tmp &&\
-    mv $outIMGT.tmp $outIMGT
+awk '{print $1 "\t" $2 "\t" $5 "\t" $6}' $out > $out.tmp && mv $out.tmp $out

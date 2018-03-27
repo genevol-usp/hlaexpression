@@ -3,10 +3,10 @@
 salmon=/home/vitor/Salmon-latest_linux_x86_64/bin/salmon
 
 sample=$1
-CPUS=8
+CPUS=6
 indexDIR=./sample_indices/$sample
 fasta=/home/vitor/hlaexpression/imgt_index_v2/gencode.v25.PRI.transcripts.noIMGT.fa
-sample_hla=./sample_indices/hla_$sample.fa
+sample_hla=../../2-hla_typing/sample_indices/hla_$sample.fa
 sample_fa=./sample_indices/index_$sample.fa
 
 mkdir -p $indexDIR
