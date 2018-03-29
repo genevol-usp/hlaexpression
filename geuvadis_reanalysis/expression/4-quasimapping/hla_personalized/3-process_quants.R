@@ -24,16 +24,4 @@ goldstd <- mutate(pag, allele = hla_trimnames(allele, 3))
 out_df <- hla_genotype_dt(imgt_quants, th = 0) %>%
     hla_apply_zigosity_threshold(th = 0.1)
 
-calls <- out_df %>%
-    filter(locus %in% hla_genes) %>%
-    select(subject, locus, allele) %>%
-    mutate(subject = convert_ena_ids(as.character(subject)),
-	   locus = sub("^HLA-", "", locus),
-	   allele = hla_trimnames(gsub("IMGT_", "", allele), 3)) %>%
-    arrange(subject, locus, allele)
-
-accuracies <- calc_genotyping_accuracy(calls, goldstd)
-
-write_tsv(accuracies, "./genotyping_concordance.tsv")
-
 write_tsv(out_df, "./quantifications/processed_imgt_quants.tsv")
