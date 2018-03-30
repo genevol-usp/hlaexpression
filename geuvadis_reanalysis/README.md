@@ -1,18 +1,6 @@
 Report
 ================
 
-<style type="text/css">
-
-body, td {
-   font-size: 14px;
-}
-code.r{
-  font-size: 12px;
-}
-pre {
-  font-size: 12px
-}
-</style>
 Methods outline
 ===============
 
@@ -224,16 +212,50 @@ coming soon...
 
 ##### eQTLs from Conventional pipeline
 
-| gene\_imgt | variant\_imgt |  rank\_imgt| variant\_pri |  rank\_pri|  d\_prime|   rtc|
-|:-----------|:--------------|-----------:|:-------------|----------:|---------:|-----:|
-| HLA-A      | rs3823342     |           0| rs2523764    |          1|      0.94|  0.72|
-| HLA-A      | rs1655924     |           1| rs2523764    |          1|      0.68|  0.92|
-| HLA-DPB1   | rs9296068     |           1| rs9296068    |          1|      1.00|  1.00|
-| HLA-DPB1   | rs688209      |           2| rs688209     |          2|      1.00|  1.00|
+| gene     | variant\_HLA-personalized |  rank\_HLA-personalized| variant\_Conventional |  rank\_Conventional|  d\_prime|   rtc|
+|:---------|:--------------------------|-----------------------:|:----------------------|-------------------:|---------:|-----:|
+| HLA-A    | rs3823342                 |                       0| rs2523764             |                   0|      0.94|  0.72|
+| HLA-A    | rs1655924                 |                       1| rs2523764             |                   0|      0.68|  0.92|
+| HLA-C    | rs146911342               |                       0| rs4947308             |                   0|      0.97|  0.97|
+| HLA-C    | rs3134776                 |                       1| rs2074491             |                   1|      0.97|  0.86|
+| HLA-C    | rs9266301                 |                       2| rs2074491             |                   1|      0.59|  1.00|
+| HLA-B    | rs1265094                 |                       0| rs1265109             |                   1|      0.75|  1.00|
+| HLA-B    | rs9264803                 |                       1| rs2853926             |                   0|      0.98|  1.00|
+| HLA-B    | rs2308655                 |                       2| rs36057735            |                   2|      0.96|  0.96|
+| HLA-DRB1 | rs9270698                 |                       0| rs73729140            |                   0|      0.59|  0.59|
+| HLA-DRB1 | rs1048372                 |                       1| rs28383307            |                   1|      0.85|  0.99|
+| HLA-DRB1 | rs11752186                |                       2| rs28383307            |                   1|      0.29|  0.74|
+| HLA-DQA1 | rs75438654                |                       0| rs3129758             |                   1|      0.94|  0.70|
+| HLA-DQA1 | rs9271375                 |                       1| rs3129758             |                   1|      0.64|  0.78|
+| HLA-DQB1 | rs1770                    |                       0| rs1770                |                   0|      1.00|  1.00|
+| HLA-DQB1 | rs9281986                 |                       1| rs9274622             |                   1|      0.98|  0.85|
+| HLA-DPB1 | rs9277449                 |                       0| rs9277538             |                   0|      0.99|  1.00|
+| HLA-DPB1 | rs9296068                 |                       1| rs9296068             |                   1|      1.00|  1.00|
+| HLA-DPB1 | rs688209                  |                       2| rs688209              |                   2|      1.00|  1.00|
 
 ##### Previously reported eQTLs
 
-coming soon...
+| gene     |  rank| rsid        | qtl\_previous |  d\_prime|   rtc| study\_pval                                                 |
+|:---------|-----:|:------------|:--------------|---------:|-----:|:------------------------------------------------------------|
+| HLA-A    |     0| rs3823342   | rs3823342     |      1.00|  1.00| geuvadis\_exon (82.9)                                       |
+| HLA-A    |     1| rs1655924   | rs1655924     |      1.00|  1.00| geuvadis\_gene (16.1)/geuvadis\_exon (38.5)                 |
+| HLA-C    |     0| rs146911342 | rs146911342   |      1.00|  1.00| geuvadis\_gene (24.1)/geuvadis\_exon (26.2)                 |
+| HLA-C    |     1| rs3134776   | rs3134776     |      1.00|  1.00| geuvadis\_exon (6.5)                                        |
+| HLA-C    |     2| rs9266301   | rs9266301     |      1.00|  1.00| geuvadis\_exon (7.1)                                        |
+| HLA-B    |     0| rs1265094   | rs1265094     |      1.00|  1.00| geuvadis\_exon (15.4)                                       |
+| HLA-B    |     1| rs9264803   | rs9264803     |      1.00|  1.00| geuvadis\_exon (11.4)                                       |
+| HLA-B    |     2| rs2308655   | rs2308655     |      1.00|  1.00| geuvadis\_exon (34.6)                                       |
+| HLA-DRB1 |     0| rs9270698   | rs9270704     |      0.98|  1.00| geuvadis\_exon (67.4)                                       |
+| HLA-DRB1 |     1| rs1048372   | rs1048372     |      1.00|  1.00| geuvadis\_exon (13.4)                                       |
+| HLA-DRB1 |     2| rs11752186  | rs11752186    |      1.00|  1.00| geuvadis\_exon (6.5)                                        |
+| HLA-DQA1 |     0| rs75438654  | rs75170544    |      0.67|  1.00| geuvadis\_gene (28.4)/geuvadis\_exon (48.3)/gtex\_v7 (17.3) |
+| HLA-DQA1 |     1| rs9271375   | rs9271375     |      1.00|  1.00| geuvadis\_exon (13.4)                                       |
+| HLA-DQB1 |     0| rs1770      | rs1770        |      1.00|  1.00| geuvadis\_gene (43.4)/geuvadis\_exon (68.3)/gtex\_v7 (21.2) |
+| HLA-DQB1 |     1| rs9281986   | rs2187668     |      1.00|  1.00| geuvadis\_gene (10.6)/geuvadis\_exon (5.6)                  |
+| HLA-DQB1 |     1| rs9281986   | rs9272729     |      0.97|  1.00| geuvadis\_gene (10)/gtex\_v7 (6)                            |
+| HLA-DPB1 |     0| rs9277449   | rs9277538     |      0.99|  1.00| geuvadis\_exon (57.9)                                       |
+| HLA-DPB1 |     1| rs9296068   | rs34885310    |      0.96|  0.98| delaneau (3.7)                                              |
+| HLA-DPB1 |     2| rs688209    | rs184379497   |      0.68|  0.94| NA (NA)                                                     |
 
 ##### CRD-QTLs
 

@@ -3,19 +3,6 @@ title: "Report"
 output: github_document
 ---
 
-<style type="text/css">
-
-body, td {
-   font-size: 14px;
-}
-code.r{
-  font-size: 12px;
-}
-pre {
-  font-size: 12px
-}
-</style>
-
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE, comment = "")
@@ -228,13 +215,10 @@ read_tsv("./eqtl_mapping/transcriptomemapping/hla_personalized/rtc/conventional_
 ```
 
 ##### Previously reported eQTLs
-```{r, eval=FALSE}
+```{r}
 read_tsv("./eqtl_mapping/transcriptomemapping/hla_personalized/rtc/previous_qtls/results.tsv") %>%
     kable(digits = 2)
 ```
-
-coming soon...
-
 
 ##### CRD-QTLs
 ```{r}
