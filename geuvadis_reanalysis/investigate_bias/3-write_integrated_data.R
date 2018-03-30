@@ -6,7 +6,7 @@ dist_to_ref <- "../../imgt_index_v2/distances_to_reference.tsv" %>%
     select(-locus)
 
 hla_dist <- 
-    "../expression/star/main_pipeline/quantifications_final/processed_imgt_quants.tsv" %>%
+    "../expression/3-map_to_transcriptome/hla_personalized/quantifications/processed_imgt_quants.tsv" %>%
     read_tsv() %>%
     filter(locus %in% gencode_hla$gene_name) %>%
     left_join(select(geuvadis_info, name, ena_id), by = c("subject" = "ena_id")) %>%
@@ -19,22 +19,23 @@ hla_dist <-
     ungroup()
 
 phen_best_imgt <- 
-    "../qtls/star/main_pipeline/supplemented/1-phenotypes/phenotypes_eur_50.bed.gz" %>%
+    "../eqtl_mapping/transcriptomemapping/hla_personalized/1-phenotypes/phenotypes_eur_60.bed.gz" %>%
     read_tsv() %>% 
     inner_join(gencode_hla, by = c("gid" = "gene_id")) %>%
     select(gene_name, HG00096:NA20828) %>%
     gather(subject, resid, -gene_name) %>%
     select(subject, gene_name, resid)
 
-phen_best_pri <- 
-    "../qtls/star/main_pipeline/transcriptome/1-phenotypes/phenotypes_eur_70.bed.gz" %>%
+phen_best_conventional <- 
+    "../eqtl_mapping/genomemapping/1-phenotypes/phenotypes_eur_70.bed.gz" %>%
     read_tsv() %>% 
     inner_join(gencode_hla, by = c("gid" = "gene_id")) %>%
     select(gene_name, HG00096:NA20828) %>%
     gather(subject, resid, -gene_name) %>%
     select(subject, gene_name, resid)
 
-expression_df <- list(imgt = phen_best_imgt, ref = phen_best_pri) %>%
+expression_df <- 
+    list(personalized = phen_best_imgt, conventional = phen_best_conventional) %>%
     bind_rows(.id = "index")
 
 eqtl_df <- read_tsv("./best_eqtl.tsv") %>%

@@ -2,7 +2,7 @@ devtools::load_all("/home/vitor/hlaseqlib")
 library(tidyverse)
 
 eqtl_imgt <- 
-    "../qtls/star/main_pipeline/supplemented/3-conditional_analysis/conditional_50_all.txt.gz" %>%
+    "../eqtl_mapping/transcriptomemapping/hla_personalized/3-conditional_analysis/conditional_60_all.txt.gz" %>%
     read_qtltools() %>%
     filter(phen_id %in% gencode_hla$gene_id, bwd_best == 1L) %>%
     group_by(phen_id) %>%
@@ -10,8 +10,8 @@ eqtl_imgt <-
     ungroup() %>%
     select(phen_id, var_id, bwd_slope) 
 
-eqtl_pri <- 
-    "../qtls/star/main_pipeline/transcriptome/3-conditional_analysis/conditional_70_all.txt.gz" %>%
+eqtl_conventional <- 
+    "../eqtl_mapping/genomemapping/3-conditional_analysis/conditional_70_all.txt.gz" %>%
     read_qtltools() %>%
     filter(phen_id %in% gencode_hla$gene_id, bwd_best == 1L) %>%
     group_by(phen_id) %>%
@@ -19,7 +19,7 @@ eqtl_pri <-
     ungroup() %>%
     select(phen_id, var_id, bwd_slope) 
 
-eqtl_df <- list(imgt = eqtl_imgt, ref = eqtl_pri) %>%
+eqtl_df <- list(personalized = eqtl_imgt, conventional = eqtl_conventional) %>%
     bind_rows(.id = "index")
 
 write_tsv(eqtl_df, "./best_eqtl.tsv")
