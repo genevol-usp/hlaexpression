@@ -168,7 +168,11 @@ include_graphics("./eqtl_mapping/plots/qtls_landscape.png")
 
 ### Causal probabilities
 
-coming soon...
+Conventional mapping seems to provide better eQTLs overall, especially at the rank 0.
+
+```{r}
+include_graphics("./eqtl_mapping/plots/caveman.png")
+```
 
 ### HLA lineages and eQTLs
 ```{r}

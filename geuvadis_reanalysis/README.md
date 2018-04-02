@@ -132,7 +132,9 @@ PCs 1-3 were used as covariates to account for population structure.
 
 ### Causal probabilities
 
-coming soon...
+Conventional mapping seems to provide better eQTLs overall, especially at the rank 0.
+
+<img src="./eqtl_mapping/plots/caveman.png" width="3000" />
 
 ### HLA lineages and eQTLs
 
