@@ -31,7 +31,8 @@ gene_set <- bind_rows(autosomes_set, imgt_set)
 gene_df <- gene_set %>%
     group_by(subject, gene_id) %>%
     summarise(tpm = sum(tpm)) %>%
-    ungroup()
+    ungroup() %>% 
+    complete(subject, gene_id, fill = list(tpm = 0))
 
 expressed_genes <- gene_df %>%
     group_by(gene_id) %>%
