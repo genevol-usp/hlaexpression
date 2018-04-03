@@ -7,8 +7,8 @@ imgt_qtls <-
     filter(bwd_best == 1L) %>%
     select(gene_id = phen_id, gene_name, rank, var_id, pos = var_from)
 
-conventional_qtls <-
-    read_qtltools("../../../genomemapping/3-conditional_analysis/conditional_70_all.txt.gz") %>%
+ref_qtls <-
+    read_qtltools("../../reference/3-conditional_analysis/conditional_60_all.txt.gz") %>%
     inner_join(select(gencode_hla, gene_id, gene_name), by = c("phen_id" = "gene_id")) %>%
     filter(bwd_best == 1L) %>%
     select(gene_id = phen_id, gene_name, rank, var_id, pos = var_from)
@@ -26,9 +26,9 @@ results_best_imgt <- read_tsv("./results.best") %>%
     summarize(caveman_var_pos = paste(caveman_var_pos, collapse = "/")) %>%
     ungroup()
 
-results_best_conventional <- read_tsv("../../../genomemapping/caveman/results.best") %>%
+results_best_ref <- read_tsv("../../reference/caveman/results.best") %>%
     separate(GENE, c("gene_id", "chr", "pos", "ref", "alt"), sep = "_", convert = TRUE) %>%
-    inner_join(conventional_qtls, by = c("gene_id", "pos")) %>%
+    inner_join(ref_qtls, by = c("gene_id", "pos")) %>%
     select(gene_name, rank, var_id, pos, caveman_var_pos = POS, P, CaVEMaN, Probability) %>%
     arrange(gene_name, rank) %>%
     mutate(P = -log10(P),
@@ -39,6 +39,6 @@ results_best_conventional <- read_tsv("../../../genomemapping/caveman/results.be
     summarize(caveman_var_pos = paste(caveman_var_pos, collapse = "/")) %>%
     ungroup()
 
-list(HLA_personalized = results_best_imgt, Conventional = results_best_conventional) %>%
+list(HLA_personalized = results_best_imgt, Ref_Transcriptome = results_best_ref) %>%
     bind_rows(.id = "index") %>%
     write_tsv("./results.hla")
