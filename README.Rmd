@@ -65,23 +65,6 @@ Here we compare estimates from:
 include_graphics("./simulation/plots/prop_mapped_divergence.png")
 ```
 
-## STAR: mapping to Genome vs. mapping to Transcriptome
-
-Our pipeline uses STAR to map directly to the transcriptome. This is not the conventional way of running STAR. If we compare the genome-wide estimates from our approach with estimates from the conventional mapping, we get differences.
-
-Conventional mapping here means mapping to the genome, reflect mappings to transcripts with STAR, and quantify with Salmon.
-
-```{r}
-include_graphics("./simulation/plots/ref_methods.png")
-```
-
-When we compare the estimated counts to the ground truth, we observe large deviation.
-Genes in the lower right corner are mainly HLA-DRB5, RN7SL1 and SNORD3C, which are non-coding. This means that we should do some filtering on the annotations, as Manolis group and many other people advise.
-
-```{r}
-include_graphics("./simulation/plots/ref_methods_groundTruth.png")
-```
-
 
 # GEUVADIS
 
@@ -113,7 +96,7 @@ include_graphics("./geuvadis_reanalysis/expression/plots/tpm_distributions.png")
 
 ### HLA diversity vs reference transcriptome 
 
-#### TranscriptMap pipeline
+#### Mapping to transcriptome pipeline
 
 Here we see higher expression for HLA-C for the reference, which may be overestimation.
 
@@ -121,7 +104,7 @@ Here we see higher expression for HLA-C for the reference, which may be overesti
 include_graphics("./geuvadis_reanalysis/expression/plots/pers_vs_ref_mapping.png")
 ```
 
-#### TranscriptQuasi pipeline
+#### Quasi-mapping to transcriptome pipeline
 
 Here we see a massive read loss for the reference, except for DQB1, that shows
 a pattern which is difficult to explain. It looks like the axes are swapped for 
@@ -131,7 +114,7 @@ that locus.
 include_graphics("./geuvadis_reanalysis/expression/plots/pers_vs_ref_quasi.png")
 ```
 
-### TranscriptMap vs. TranscriptPseudo
+### Mapping vs. Pseudomapping to transcriptome
 ```{r}
 include_graphics("./geuvadis_reanalysis/expression/plots/comparison_pseudoalignment.png")
 ```
