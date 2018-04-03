@@ -58,6 +58,10 @@ Conventional mapping here means mapping to the genome, reflect mappings to trans
 
 <img src="./simulation/plots/ref_methods.png" width="1200" />
 
+When we compare the estimated counts to the ground truth, we observe large deviation. Genes in the lower right corner are mainly HLA-DRB5, RN7SL1 and SNORD3C, which are non-coding. This means that we should do some filtering on the annotations, as Manolis group and many other people advise.
+
+<img src="./simulation/plots/ref_methods_groundTruth.png" width="1200" />
+
 GEUVADIS
 ========
 
