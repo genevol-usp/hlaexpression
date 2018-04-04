@@ -1,6 +1,6 @@
 #!/bin/bash
 
-BED=/home/vitor/hlaexpression/geuvadis_reanalysis/expression/star/main_pipeline/quantifications_expressed50%.bed
+BED=../../../../expression/4-quasimapping/hla_personalized/quantifications_expressed50%.bed
 OUT=./phenotypes_eur.bed
 
 cp $BED $OUT

@@ -12,11 +12,19 @@ geuvadis_ids <- geuvadis_info %>%
     select(subject = ena_id, name)
 
 # Boxplot
+pipelines <- c("Ref Transcriptome", "HLA-personalized",
+               "Ref Transcriptome (quasi)", "HLA-personalized (quasi)", 
+               "Conventional", "Ref Genome (Unique)") 
+
+cols <- ggsci::pal_npg()(6) %>%
+    setNames(pipelines)
+
 imgt_loci <- readLines("~/hlaexpression/imgt_index_v2/imgt_loci.txt") %>%
     paste0("HLA-", .)
 
-imgt_all_loci <- 
-    read_tsv("./star/main_pipeline/quantifications_final/processed_imgt_quants.tsv") %>%
+mapping_imgt <- 
+    "./3-map_to_transcriptome/hla_personalized/quantifications/processed_imgt_quants.tsv" %>%
+    read_tsv() %>%
     filter(locus %in% imgt_loci) %>%
     group_by(subject, locus) %>%
     summarize(tpm = sum(tpm)) %>%
@@ -24,183 +32,251 @@ imgt_all_loci <-
     mutate(locus = reorder(locus, tpm, median),
            locus = factor(locus, levels = rev(levels(locus))))
 
-png("./plots/expression_boxplot.png", width = 8, height = 5, units = "in", res = 200)
-ggplot(imgt_all_loci, aes(locus, tpm)) +
+mapping_ref <-
+    "./3-map_to_transcriptome/reference/quantifications/processed_imgt_quants.tsv" %>%
+    read_tsv() %>%
+    select(subject, locus, tpm)
+
+quasi_imgt <- 
+    "./4-quasimapping/hla_personalized/quantifications/processed_imgt_quants.tsv" %>%
+    read_tsv() %>%
+    filter(locus %in% imgt_loci) %>%
+    group_by(subject, locus) %>%
+    summarize(tpm = sum(tpm)) %>%
+    ungroup() 
+
+quasi_ref <- 
+    "./4-quasimapping/reference/quantifications/processed_imgt_quants.tsv" %>%
+    read_tsv() %>%
+    select(subject, locus, tpm)
+
+standard_imgt <- 
+    read_tsv("./1-map_to_genome/quantifications/processed_imgt_quants.tsv") %>%
+    select(subject, locus, tpm)
+
+imgt_df <- list("Conventional" = standard_imgt, 
+                "HLA-personalized" = mapping_imgt,
+                "Ref Transcriptome" = mapping_ref,
+                "HLA-personalized (quasi)" = quasi_imgt,
+                "Ref Transcriptome (quasi)" = quasi_ref) %>% 
+    bind_rows(.id = "pipeline") %>%
+    group_by(locus) %>%
+    filter(mean(tpm) >= 100) %>%
+    ungroup() %>%
+    mutate(locus = factor(locus, levels = levels(mapping_imgt$locus)),
+           pipeline = factor(pipeline, levels = pipelines))
+
+png("./plots/expression_boxplot.png", width = 8, height = 4, units = "in", res = 200)
+ggplot(filter(imgt_df, pipeline == "HLA-personalized"), aes(locus, tpm)) +
     geom_boxplot(fill = "grey") +
     theme_bw() +
     theme(axis.title.x = element_blank(),
           axis.title.y = element_text(size = 16),
-          axis.text.x = element_text(size = 12, angle = 90, hjust = 1, vjust = 0.5),
+          axis.text.x = element_text(size = 12, angle = 45, hjust = 1, vjust = 1),
           axis.text.y = element_text(size = 12)) +
     labs(y = "TPM")
 dev.off()
 
+png("./plots/expression_boxplot_pipelines.png", width = 10, height = 5, units = "in", res = 300)
+ggplot(imgt_df, aes(locus, tpm)) +
+    geom_boxplot(aes(fill = pipeline), outlier.size = .5) +
+    scale_fill_manual(values = cols) +
+    theme_bw() +
+    theme(axis.title.x = element_blank(),
+          axis.title.y = element_text(size = 16),
+          axis.text.x = element_text(size = 12, angle = 45, hjust = 1, vjust = 1),
+          axis.text.y = element_text(size = 12),
+          legend.position = "top") +
+    labs(y = "TPM")
+dev.off()
+
+# TPM distributions
+tpm_distribution_df <- imgt_df %>%
+    filter(locus %in% gencode_hla$gene_name) %>%
+    mutate(locus = factor(locus, levels = gencode_hla$gene_name))
+
+png("./plots/tpm_distributions.png", height = 6, width = 10, units = "in", res = 200)
+ggplot(tpm_distribution_df, aes(tpm, fill = pipeline)) +
+    geom_density(alpha = .75) +
+    scale_x_continuous(breaks = function(x) scales::pretty_breaks(3)(x)) +
+    scale_fill_manual(values = cols) +
+    facet_wrap(~locus, scales = "free") +
+    theme_bw() +
+    theme(legend.position = "top") +
+    labs(x = "TPM")
+dev.off()
+
 
 # Scatterplots of pipeline comparisons
-scatter_plot_cors <- function(df, x_var, y_var) {
+scatter_plot_cors <- function(df, x_var, y_var, dist_var) {
     
     cor_df <- df %>%
         group_by(locus) %>%
         do(data.frame(r = cor(.[[x_var]], .[[y_var]]),
+                      p = cor(.[[x_var]], .[[y_var]], method = "spearman"),
                       x = min(.[[x_var]]),
                       y = max(.[[y_var]]))) %>%
         ungroup() %>%
-        mutate(r = round(r, digits = 3))
+        mutate_at(vars(r, p), ~round(., digits = 2)) %>%
+        mutate(label = paste("r == ", r, "*','~rho ==", p))
         
     ggplot(df, aes_string(x_var, y_var)) +
         geom_abline() +
-        geom_point(size = .8) +
-        geom_text(data = cor_df, aes(x, y, label = paste("r =", r)),
-                  hjust = "inward", vjust = "inward", size = 5) +
+        geom_point(aes_string(color = dist_var), size = .8) +
+        scale_color_gradient(low = "white", high = "darkred") +
+        geom_text(data = cor_df, aes(x, y, label = label), parse = TRUE, 
+                  hjust = "inward", vjust = "inward", size = 4, 
+                  color = "white") +
         facet_wrap(~locus, scales = "free") +
-        theme_bw() +
+        theme_dark() +
         theme(axis.text = element_text(size = 12),
               axis.title = element_text(size = 16),
-              strip.text = element_text(size = 16))
+              strip.text = element_text(size = 16),
+              legend.text = element_text(size = 12),
+              legend.title = element_text(size = 16),
+              legend.position = c(.75, .15))
 }
 
 
 ## STAR vs kallisto
-kallisto_imgt <- 
-    read_tsv("./kallisto/supplemented/quantifications_2/processed_imgt_quants.tsv") %>%
+kallisto <- 
+    "./5-pseudoalignment/hla_personalized/quantifications_2/processed_imgt_quants.tsv" %>%
+    read_tsv() %>%
     filter(locus %in% hla_genes) %>%
     group_by(subject, locus) %>%
-    summarize(tpm = sum(tpm)) %>%
-    ungroup()
-
-star_imgt <- 
-    read_tsv("./star/main_pipeline/quantifications_final/processed_imgt_quants.tsv") %>%
-    filter(locus %in% hla_genes) %>%
-    group_by(subject, locus) %>%
-    summarize(tpm = sum(tpm)) %>%
-    ungroup()
-
-star_kallisto_df <-
-    left_join(star_imgt, kallisto_imgt, by = c("subject", "locus"), 
-	      suffix = c(".star", ".kallisto")) %>%
-    mutate(locus = factor(locus, levels = gencode_hla$gene_name))
-
-png("./plots/star_vs_kallisto_TPM.png", width = 10, height = 6, units = "in", res = 200)
-scatter_plot_cors(star_kallisto_df, "tpm.star", "tpm.kallisto") +
-    labs(x = "TPM (STAR-Salmon)", y = "TPM (kallisto)")
-dev.off()
-
-## supplemented vs reference transcriptome
-ref_dist <- "~/hlaexpression/imgt_index_v2/distances_to_reference.tsv" %>%
-    read_tsv()
-
-star_supp <- 
-    read_tsv("./star/main_pipeline/quantifications_final/processed_imgt_quants.tsv") %>%
-    filter(locus %in% hla_genes) %>%
-    mutate(allele = sub("IMGT_", "", allele)) %>%
-    left_join(ref_dist, by = c("locus", "allele")) %>%
-    group_by(subject, locus) %>%
-    summarize(tpm = sum(tpm), dist = mean(dist)) %>%
-    ungroup()
-
-star_ref <- 
-    read_tsv("./star/main_pipeline/quantifications_transcriptome/processed_imgt_quants.tsv") %>%
-    select(subject, locus, tpm)
-
-star_imgt_vs_pri_df <- 
-    left_join(star_supp, star_ref, by = c("subject", "locus"), 
-	      suffix = c(".imgt", ".ref")) %>%
-    mutate(locus = factor(locus, levels = gencode_hla$gene_name))
-
-cor_df_imgt_pri <- star_imgt_vs_pri_df %>%
-    group_by(locus) %>%
-    do(data.frame(r = cor(.$tpm.imgt, .$tpm.ref),
-                  x = min(.$tpm.imgt),
-                  y = max(.$tpm.ref))) %>%
+    summarize(est_counts = sum(est_counts), tpm = sum(tpm)) %>%
     ungroup() %>%
-    mutate(r = round(r, digits = 3))
+    gather(unit, estimate, est_counts, tpm)
 
-png("./plots/star_imgt_vs_pri_TPM.png", height = 6, width = 10, units = "in", res = 300)
-ggplot(star_imgt_vs_pri_df, aes(tpm.imgt, tpm.ref)) +
+star_salmon <- 
+    "./3-map_to_transcriptome/hla_personalized/quantifications/processed_imgt_quants.tsv" %>%
+    read_tsv() %>%
+    filter(locus %in% hla_genes) %>%
+    group_by(subject, locus) %>%
+    summarize(est_counts = sum(est_counts), tpm = sum(tpm)) %>%
+    ungroup() %>%
+    gather(unit, estimate, est_counts, tpm)
+
+star_kallisto_df <- 
+    left_join(star_salmon, kallisto, by = c("subject", "locus", "unit"),
+              suffix = c(".mapping", ".pseudo")) %>%
+    mutate(locus = factor(locus, levels = gencode_hla$gene_name))
+
+cor_df_star_kallisto <- star_kallisto_df %>%
+    group_by(locus, unit) %>%
+    do(data.frame(r = cor(.$estimate.mapping, .$estimate.pseudo),
+                  p = cor(.$estimate.mapping, .$estimate.pseudo, method = "spearman"),
+                  x = min(.$estimate.mapping),
+                  y = max(.$estimate.pseudo))) %>%
+    ungroup() %>%
+    mutate_at(vars(r, p), ~round(., digits = 2)) %>%
+    mutate(label = paste("r == ", r, "*','~rho ==", p))
+
+png("./plots/comparison_pseudoalignment.png", width = 6, height = 8, units = "in", res = 300)
+p_counts <- 
+    ggplot(filter(star_kallisto_df, unit == "est_counts"),
+           aes(estimate.mapping, estimate.pseudo)) +
     geom_abline() +
-    geom_point(aes(color = dist)) +
-    scale_color_gradient(low = "white", high = "darkred") +
+    geom_point(size = .8) +
+    scale_x_continuous(breaks = pretty_breaks(n = 2)) +
+    scale_y_continuous(breaks = pretty_breaks(n = 3)) +
     facet_wrap(~locus, scales = "free") +
-    geom_text(data = cor_df_imgt_pri, aes(x, y, label = paste("r =", r)),
-              hjust = "inward", vjust = "inward", size = 5, color = "white") +
-    theme_dark() +
-    theme(axis.text = element_text(size = 12),
-          axis.title = element_text(size = 16),
-          strip.text = element_text(size = 16),
-          legend.text = element_text(size = 12),
-          legend.title = element_text(size = 16),
-          legend.position = c(.75, .15)) +
-    labs(x = "TPM (HLA personalized index)", y = "TPM (Ref transcriptome)",
-         color = "divergence to Ref")
+    geom_text(data = filter(cor_df_star_kallisto, unit == "est_counts"), 
+              aes(x, y, label = label),
+              parse = TRUE, hjust = "inward", vjust = "inward", size = 3.5) +
+    theme_bw() +
+    theme(axis.text = element_text(size = 10, hjust = 1),
+          axis.title = element_text(size = 12),
+          strip.text = element_text(size = 12)) +
+    labs(x = "STAR-Salmon", y = "kallisto",
+         title = "Estimated Counts")
+
+p_tpm <- 
+    ggplot(filter(star_kallisto_df, unit == "tpm"),
+           aes(estimate.mapping, estimate.pseudo)) +
+    geom_abline() +
+    geom_point(size = .8) +
+    scale_x_continuous(breaks = pretty_breaks(n = 2)) +
+    scale_y_continuous(breaks = pretty_breaks(n = 3)) +
+    facet_wrap(~locus, scales = "free") +
+    geom_text(data = filter(cor_df_star_kallisto, unit == "tpm"), 
+              aes(x, y, label = label),
+              parse = TRUE, hjust = "inward", vjust = "inward", size = 3.5) +
+    theme_bw() +
+    theme(axis.text = element_text(size = 10, hjust = 1),
+          axis.title = element_text(size = 12),
+          strip.text = element_text(size = 12)) +
+    labs(x = "STAR-Salmon", y = "kallisto", 
+         title = "Transcripts per Million")
+
+plot_grid(p_counts, NULL, p_tpm, nrow = 3, ncol = 1, rel_heights = c(1, 0.07, 1))
 dev.off()
 
 
-# STAR supplemented: mapping vs quasi-mappings
-star_quasi <- 
-    read_tsv("./star/main_pipeline/quantifications_final/processed_imgt_quants.tsv") %>%
-    filter(locus %in% hla_genes) %>%
-    group_by(subject, locus) %>%
-    summarize(tpm = sum(tpm)) %>%
-    ungroup() 
+## Personalized vs reference
+dist_ref <- read_tsv("../../imgt_index_v2/distances_to_reference.tsv")
 
-star_mapping <- 
-    read_tsv("./star/supplemented/quantifications_2/processed_imgt_quants.tsv") %>%
-    filter(locus %in% hla_genes) %>%
+mapping_imgt_dist <- 
+    "./3-map_to_transcriptome/hla_personalized/quantifications/processed_imgt_quants.tsv" %>%
+    read_tsv() %>%
+    filter(locus %in% gencode_hla$gene_name) %>%
+    select(subject, locus, allele) %>%
+    mutate(allele = sub("IMGT_", "", allele)) %>%
+    left_join(dist_ref, by = c("locus", "allele")) %>%
     group_by(subject, locus) %>%
-    summarize(tpm = sum(tpm)) %>%
-    ungroup() 
+    summarise(dist = mean(dist)) %>%
+    ungroup()
 
-star_mapping_quasi <- 
-    left_join(star_quasi, star_mapping, by = c("subject", "locus"),
-              suffix = c(".quasi", ".mapping")) %>%
+quasi_imgt_dist <- 
+    "./4-quasimapping//hla_personalized/quantifications/processed_imgt_quants.tsv" %>%
+    read_tsv() %>%
+    filter(locus %in% gencode_hla$gene_name) %>%
+    select(subject, locus, allele) %>%
+    mutate(allele = sub("IMGT_", "", allele)) %>%
+    left_join(dist_ref, by = c("locus", "allele")) %>%
+    group_by(subject, locus) %>%
+    summarise(dist = mean(dist)) %>%
+    ungroup()
+
+dist_df <- left_join(mapping_imgt_dist, quasi_imgt_dist, 
+                     by = c("subject", "locus"), suffix = c(".mapping", ".quasi"))
+
+imgt_df_wide <- imgt_df %>%
+    filter(locus %in% gencode_hla$gene_name) %>%
+    spread(pipeline, tpm) %>%
+    rename(mapping.hla_personalized = `HLA-personalized`,
+           mapping.ref = `Ref Transcriptome`,
+           quasi.hla_personalized = `HLA-personalized (quasi)`,
+           quasi.ref = `Ref Transcriptome (quasi)`,
+           conventional = Conventional) %>%
+    left_join(dist_df) %>%
     mutate(locus = factor(locus, levels = gencode_hla$gene_name))
 
-scatter_plot_cors(star_mapping_quasi, "tpm.quasi", "tpm.mapping") +
-    labs(x = "TPM (quasi-mapping)", y = "TPM (mapping)")
+### Mapping Pipeline
+png("./plots/pers_vs_ref_mapping.png", height = 6, width = 10, units = "in", res = 300)
+scatter_plot_cors(imgt_df_wide, "mapping.hla_personalized", "mapping.ref", "dist.mapping") +
+    labs(x = "HLA-personalized", y = "Reference", color = "Divergence from Ref")
+dev.off()
 
 
-# TPM distributions
-tpm_distribution_df <- star_imgt_vs_pri_df %>%
-    gather(index, tpm, tpm.imgt, tpm.ref) %>%
-    mutate(index = sub("^tpm\\.", "", index)) %>%
-    arrange(subject, index) %>%
-    mutate(locus = factor(locus, levels = gencode_hla$gene_name))
-
-png("./plots/tpm_distributions.png", height = 6, width = 10, units = "in", res = 200)
-ggplot(tpm_distribution_df, aes(tpm, fill = index)) +
-    geom_density(alpha = 1/2) +
-    scale_x_continuous(breaks = function(x) scales::pretty_breaks(3)(x)) +
-    scale_fill_manual(values = c(imgt = "#8491B4B2", ref = "#DC0000B2"),
-		       labels = c(imgt = "HLA-supplemented", ref = "Ref transcriptome")) +
-    theme_bw() +
-    theme(axis.text.x = element_text(angle = 45, margin = margin(t = 10))) +
-    facet_wrap(~locus, scales = "free")
+### Quasi-mapping Pipeline
+png("./plots/pers_vs_ref_quasi.png", height = 6, width = 10, units = "in", res = 300)
+scatter_plot_cors(imgt_df_wide, "quasi.hla_personalized", "quasi.ref", "dist.quasi") +
+    labs(x = "HLA-personalized", y = "Reference", color = "Divergence from Ref")
 dev.off()
 
 
 # ASE
 calc_ase <- function(tpm) min(tpm)/sum(tpm)
 
-pag3f <- mutate(pag, allele = hla_trimnames(allele, 3))
-
-typing_err <- read_tsv("./star/main_pipeline/typing_errors.tsv") %>%
-    mutate(locus = paste0("HLA-", locus))
-
-df_for_ase <- 
-    "./star/main_pipeline/quantifications_final/processed_imgt_quants.tsv" %>%
+ase_df <- 
+    "./3-map_to_transcriptome/hla_personalized/quantifications/processed_imgt_quants.tsv" %>%
     read_tsv() %>%
     filter(locus %in% hla_genes) %>%
     group_by(subject, locus) %>%
     filter(n_distinct(allele) == 2) %>%
-    ungroup() %>%
-    left_join(geuvadis_ids, by = "subject") %>%
-    select(subject = name, locus, allele, tpm) %>%
-    anti_join(typing_err)
-
-ase_df <- df_for_ase %>% 
-    group_by(subject, locus) %>%
-    summarize(ase = calc_ase(tpm)) %>%
-    ungroup() 
+    summarise(ase = calc_ase(tpm)) %>%
+    ungroup()
 
 png("./plots/ase.png", width = 8, height = 4, units = "in", res = 200)
 ggplot(ase_df, aes(reorder(locus, ase, median), ase)) +
@@ -214,22 +290,12 @@ ggplot(ase_df, aes(reorder(locus, ase, median), ase)) +
           strip.text = element_text(size = 16))
 dev.off()
 
-png("./plots/ase_histogram.png", width = 8, height = 4, units = "in", res = 200)
-ggplot(ase_df, aes(ase)) +
-  geom_density(fill = "grey35", color = NA) +
-  facet_wrap(~locus) +
-  theme_bw() +
-  theme(axis.text.x = element_text(size = 12),
-        axis.title = element_text(size = 16),
-        strip.text = element_text(size = 16))
-dev.off()
-
 
 # Correlation decrease as number of PCs increase
 pcs <- c(seq(0, 20, 5), seq(30, 100, 10))
 
 pca_star_df <-
-    sprintf("../qtls/star/main_pipeline/supplemented/1-phenotypes/phenotypes_eur_%d.bed.gz", pcs) %>%
+    sprintf("../eqtl_mapping/transcriptomemapping/hla_personalized/1-phenotypes/phenotypes_eur_%d.bed.gz", pcs) %>%
     setNames(pcs) %>%
     map_df(. %>% read_tsv(progress = FALSE) %>% select(gid, matches("^HG|^NA")), 
            .id = "PC") %>%
@@ -287,19 +353,15 @@ calc_trans_cors <- function(locus1, locus2, df) {
     m[c(locus1, locus2), c(locus1, locus2)] <<- m_sub 
 }
 
-typing_errs <- read_tsv("./star/main_pipeline/typing_errors.tsv") %>%
-    distinct(subject, locus) %>%
-    mutate(locus = paste0("HLA-", locus))
 
 star_alleles <- 
-    "./star/main_pipeline/quantifications_final/processed_imgt_quants.tsv" %>%
+    "./3-map_to_transcriptome/hla_personalized/quantifications/processed_imgt_quants.tsv" %>%
     read_tsv() %>%
     filter(locus %in% hla_genes) %>%
     mutate(subject = convert_ena_ids(subject),
            allele = gsub("IMGT_", "", allele)) %>%
-    select(subject, locus, allele, tpm) %>%
-    anti_join(typing_errs)
-    
+    select(subject, locus, allele, tpm)
+
 star_genes <- star_alleles %>%
     group_by(subject, locus) %>%
     summarize(tpm = sum(tpm)) %>%
@@ -317,7 +379,6 @@ haps_data <- "../phase_hla/phase_hla_haps_snps.tsv" %>%
     read_tsv() %>% 
     distinct(subject, locus, hap, allele_gene) %>%
     rename(allele = allele_gene) %>%
-    anti_join(typing_errs) %>%
     left_join(star_alleles, by = c("subject", "locus", "allele")) %>%
     distinct() %>%
     select(-allele) %>%
@@ -360,7 +421,7 @@ classII_and_CIITA <- gencode_chr_gene %>%
     filter(gene_name %in% c("HLA-DRB1", "HLA-DQA1", "HLA-DQB1", "HLA-DPB1", "CIITA"))
 
 class_2_trans_df <- 
-    "../expression/star/main_pipeline/quantifications_expressed50%.bed" %>%
+    "../expression/3-map_to_transcriptome/hla_personalized/quantifications_expressed50%.bed" %>%
     read_tsv() %>%
     inner_join(classII_and_CIITA, by = c("gid" = "gene_id")) %>%
     select(gid, locus = gene_name, starts_with("HG"), starts_with("NA")) %>%

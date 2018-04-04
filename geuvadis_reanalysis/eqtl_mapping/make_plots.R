@@ -11,8 +11,7 @@ make_pca_plot <- function(PC_x, PC_y) {
     
     ggplot(pcs, aes_string(PC_x, PC_y)) +
     geom_point(aes(color = pop)) +
-	scale_color_manual(values = c("CEU" = "#8491B4", "FIN" = "#DC0000B2",
-	                              "GBR" = "#7E6148FF", "TSI" = "#91D1C2")) +
+    ggsci::scale_color_npg() +
     guides(color = guide_legend(override.aes = list(size = 2))) +
     theme(legend.text = element_text(size = 12)) +
     labs(color = "Population")
@@ -21,7 +20,7 @@ make_pca_plot <- function(PC_x, PC_y) {
 geuvadis_pops <- select(geuvadis_info, subject = name, pop)
 
 pcs <- 
-    read_delim("./pca_genotypes/eur.pca", delim = " ") %>%
+    read_delim("../data/pca_genotypes/eur.pca", delim = " ") %>%
     mutate(SampleID = sub("^.+_(PC\\d+)$", "\\1", SampleID)) %>%
     filter(SampleID %in% paste0("PC", 1:100)) %>%
     gather(subject, value, -1) %>%
@@ -46,22 +45,31 @@ plot_grid(p1 + guides(color=FALSE),
 dev.off()
 
 # Number of eQTLs according to index
+
+pipelines <- c("Ref Transcriptome", "HLA-personalized",
+               "Ref Transcriptome (quasi)", "HLA-personalized (quasi)", 
+               "Conventional", "Ref Genome (Unique)") 
+
+cols <- ggsci::pal_npg()(6) %>%
+    setNames(pipelines)
+
 pcs <- c(seq(0, 20, 5), seq(30, 100, 10))
 
-egenes_pca_star_imgt <- 
-    sprintf("./star/main_pipeline/supplemented/2-permutations/results/permutations_%d.significant.txt", pcs) %>%
+egenes_hla_mapping <- 
+    sprintf("./transcriptomemapping/hla_personalized/2-permutations/results/permutations_%d.significant.txt", pcs) %>%
     setNames(pcs) %>%
-    plyr::ldply(. %>% read_delim(delim = " ", col_names = FALSE), .id = "f") %>%
+    map_df(~read_delim(., delim = " ", col_names = FALSE), .id = "f") %>%
     count(f)
 
-egenes_pca_star_pri <- 
-    sprintf("./star/main_pipeline/transcriptome/2-permutations/results/permutations_%d.significant.txt", pcs) %>%
+egenes_ref_mapping <- 
+    sprintf("./transcriptomemapping/reference/2-permutations/results/permutations_%d.significant.txt", pcs) %>%
     setNames(pcs) %>%
-    plyr::ldply(. %>% read_delim(, delim = " ", col_names = FALSE), .id = "f") %>%
+    map_df(~read_delim(., delim = " ", col_names = FALSE), .id = "f") %>%
     count(f)
 
 egenes_df <- 
-    list(imgt = egenes_pca_star_imgt, pri = egenes_pca_star_pri) %>%
+    list("HLA-personalized" = egenes_hla_mapping,
+         "Ref Transcriptome" = egenes_ref_mapping) %>%
     bind_rows(.id = "index") %>%
     mutate(f = as.integer(as.character(f))) %>%
     arrange(f, index)
@@ -71,27 +79,41 @@ ggplot(egenes_df, aes(f, n, color = index, group = index)) +
     geom_point(size = 2.5) + 
     geom_line() +
     scale_x_continuous(breaks = sort(unique(egenes_df$f))) +
-    scale_color_manual(values = c(imgt = "#8491B4B2", pri = "#DC0000B2"),
-		       labels = c(imgt = "HLA-personalized", pri = "Ref transcriptome")) +
+    scale_color_manual(values = cols) +
     theme_bw() +
     labs(x = "Number of PCs", y = "Number of eGenes")
 dev.off()
 
 # eQTL landscape around TSS
 read_conditional_mhc <- function(file, mhc_genes) {
-    read_qtltools(file) %>%
+    qtltools_res <- 
+        read_qtltools(file) %>%
         inner_join(mhc_genes, by = c("phen_id" = "gene_id")) %>%
         mutate(tss = ifelse(strand == "+", phen_from, phen_to),
                dist_to_tss = var_from - tss,
                pval = -log10(bwd_pval)) %>%
         select(gene = gene_name, tss, strand, rank, var_id, 
                var_from, dist, dist_to_tss, pval, best = bwd_best, 
-               signif = bwd_signif) %>%
+               signif = bwd_signif) 
+    
+    fix_rank <- qtltools_res %>%
+        filter(best == 1) %>%
+        arrange(gene, desc(pval), rank) %>%
+        group_by(gene) %>%
+        mutate(new_rank = 1:n() - 1L) %>%
+        ungroup() %>%
+        select(gene, rank, new_rank)
+    
+    out_df <- left_join(qtltools_res, fix_rank, by = c("gene", "rank")) %>%
+        select(gene, tss, strand, rank = new_rank, var_id, var_from, dist,
+               dist_to_tss, pval, best, signif) %>%
         group_by(gene, var_id) %>%
         filter(pval == max(pval)) %>%
         ungroup() %>%
         mutate(gene = reorder(gene, tss),
             rank = as.character(rank))
+    
+    out_df
 }
 
 plot_qtls_index <- function(qtl_df) {
@@ -159,15 +181,15 @@ mhc_genes <- gencode_pri_gene %>%
     select(gene_id, gene_name)
 
 hla_qtls <-
-    "./star/main_pipeline/supplemented/3-conditional_analysis/conditional_50_all.txt.gz" %>%
+    "./transcriptomemapping/hla_personalized/3-conditional_analysis/conditional_60_all.txt.gz" %>%
     read_conditional_mhc(mhc_genes)
 
-transcriptome_qtls <-
-    "./star/main_pipeline/transcriptome/3-conditional_analysis/conditional_70_all.txt.gz" %>%
+ref_qtls <-
+    "./transcriptomemapping/reference/3-conditional_analysis/conditional_60_all.txt.gz" %>%
     read_conditional_mhc(mhc_genes)
 
 qtls_df <- 
-    list("HLA-personalized" = hla_qtls, "Ref Transcriptome" = transcriptome_qtls) %>%
+    list("HLA-personalized" = hla_qtls, "Ref Transcriptome" = ref_qtls) %>%
     bind_rows(.id = "index") %>%
     mutate(gene = reorder(gene, tss))
 
@@ -187,7 +209,7 @@ plot_qtls_1 <- ggplot() +
                color = "grey", alpha = .1, size = .5) +
     geom_point(data = filter(hla_qtls, colorize == 1L),
                aes(var_from, pval, color = gene),
-               alpha = .25, size = .7) +
+               alpha = .25, size = .5) +
     ggsci::scale_color_npg() +
     scale_x_continuous(labels = function(x) x/1e6L) +
     guides(color = guide_legend(override.aes = list(alpha = 1, size = 3))) +
@@ -205,23 +227,22 @@ plot_grid(plot_qtls_1, plot_qtls_2, ncol = 1,
 dev.off()
 
 
-
 # QTLs density genome-wide vs HLA
 all_rank0 <- 
-    "./star/main_pipeline/supplemented/3-conditional_analysis/conditional_50_all.txt.gz" %>%
+    "./transcriptomemapping/hla_personalized/3-conditional_analysis/conditional_60_all.txt.gz" %>%
     read_qtltools() %>%
     filter(bwd_signif == 1L) %>%
     mutate(genome_context = ifelse(phen_id %in% gencode_hla$gene_id, "HLA", "genomewide")) %>%
     select(genome_context, dist, bwd_best)
-
-png("./plots/qtls_density_geneStart.png", height = 2, width = 5, units = "in", res = 300)
-ggplot(all_rank0) +
-    coord_cartesian(xlim = c(-1e6, 1e6)) +
-    geom_density(aes(x = dist, fill = genome_context), alpha = 1/2) +
-    scale_fill_manual(values = c("genomewide" = "#8491B4B2", "HLA" = "#DC0000B2")) +
-    theme_bw() +
-    labs(x = "Gene start", fill = "Genome context")
-dev.off()
+#
+#png("./plots/qtls_density_geneStart.png", height = 2, width = 5, units = "in", res = 300)
+#ggplot(all_rank0) +
+#    coord_cartesian(xlim = c(-1e6, 1e6)) +
+#    geom_density(aes(x = dist, fill = genome_context), alpha = 1/2) +
+#    scale_fill_manual(values = c("genomewide" = "#8491B4B2", "HLA" = "#DC0000B2")) +
+#    theme_bw() +
+#    labs(x = "Gene start", fill = "Genome context")
+#dev.off()
 
 # proportion of lead eQTLs further than the HLA-B lead eQTL
 all_rank0 %>% 
@@ -231,14 +252,8 @@ all_rank0 %>%
 
 # Lineage and effects plot
 ## lineages
-typing_errs <- 
-    "../expression/star/main_pipeline/typing_errors.tsv" %>%
-    read_tsv() %>%
-    distinct(subject, locus) %>%
-    mutate(locus = paste0("HLA-", locus))
-
 lineage_df <- 
-    "../expression/star/main_pipeline/quantifications_final/processed_imgt_quants.tsv" %>%
+    "../expression/3-map_to_transcriptome/hla_personalized/quantifications/processed_imgt_quants.tsv" %>%
     read_tsv() %>%
     filter(locus %in% gencode_hla$gene_name) %>%
     select(subject, locus, allele, tpm) %>%
@@ -246,8 +261,7 @@ lineage_df <-
            allele = gsub("IMGT_", "", allele),
            allele_3f = hla_trimnames(allele, 3),
            allele_2f = hla_trimnames(allele, 2),
-           lineage = hla_trimnames(allele, 1)) %>%
-    anti_join(typing_errs)
+           lineage = hla_trimnames(allele, 1))
 
 lineage_df %>%
     select(subject, locus, lineage, tpm) %>%
@@ -272,8 +286,6 @@ lineage_df %>%
     select(locus, df, F = statistic, p.value) %>%
     write_tsv("./f_test_lineages.tsv")
 
-hla_start <- select(gencode_hla, locus = gene_name, start)
-
 dist_to_ref <- "../../imgt_index_v2/distances_to_reference.tsv" %>%
     read_tsv() %>%
     select(-locus)
@@ -282,7 +294,6 @@ haps_expression <- "../phase_hla/phase_hla_haps_snps.tsv" %>%
     read_tsv() %>%
     filter(rank == 0L) %>%
     rename(hla_allele = allele_gene) %>%
-    anti_join(typing_errs) %>% 
     left_join(lineage_df, by = c("subject", "locus", "hla_allele" = "allele_3f")) %>%
     distinct() %>%
     group_by(subject, locus) %>%
@@ -296,7 +307,7 @@ hap_snps <- haps_expression %>%
     select(subject, locus, hap, allele = allele_snp)
 
 phen_best <- 
-    "./star/main_pipeline/supplemented/1-phenotypes/phenotypes_eur_50.bed.gz" %>%
+    "./transcriptomemapping/hla_personalized/1-phenotypes/phenotypes_eur_60.bed.gz" %>%
     read_tsv() %>%
     inner_join(gencode_hla, by = c("gid" = "gene_id")) %>%
     select(gene_name, HG00096:NA20828) %>%
@@ -320,8 +331,7 @@ lineage_phased <- haps_expression %>%
     group_by(lineage) %>%
     filter(n() >= 10L) %>%
     ungroup() %>%
-    left_join(hla_start, by = "locus") %>%
-    mutate(locus = reorder(locus, start))
+    mutate(locus = factor(locus, levels = gencode_hla$gene_name))
     
 
 ## effects
@@ -345,8 +355,7 @@ eqtl_info <- "../phase_hla/eqtl_snps.vcf" %>%
     unite(id, genotype, locus, sep = "_", remove = FALSE)
 
 eqtls_expression_df <- left_join(eqtl_info, phen_best, by = c("subject", "locus")) %>%
-    left_join(hla_start, by = "locus") %>%
-    mutate(locus = reorder(locus, start))
+    mutate(locus = factor(locus, levels = gencode_hla$gene_name))
 
 ## plot
 plot_lineages <- function(df) { 
@@ -355,7 +364,9 @@ plot_lineages <- function(df) {
                y = tpm)) +
     geom_jitter(aes(color = eQTL), size = .75) +
     geom_boxplot(outlier.shape = NA, fill = NA, color = "grey5", alpha = .1) +
-    scale_color_manual(values = c("Low" = "blue", "High" = "#DC0000B2", "ND" = "grey")) +
+    scale_color_manual(values = c("Low" = ggsci::pal_npg()(6)[6], 
+                                  "High" = ggsci::pal_npg()(1), 
+                                  "ND" = "grey")) +
     scale_x_discrete(labels = function(x) sub("^(.+\\*)", "", x)) +
     facet_wrap(~locus, scales = "free", ncol = 1, strip.position = "left") +
     labs(x = " ", y = "TPM") +
@@ -400,4 +411,19 @@ ggdraw(grid1) +
     draw_label("HLA lineage", 0.45, 0.01, size = 14) +
     draw_label("eQTL genotype", 0.82, 0.01, size = 14) +
     draw_label("PCA-corrected expression", .985, 0.5, size = 14, angle = 90)
+dev.off()
+
+# CaVEMaN
+caveman <- "./transcriptomemapping/hla_personalized/caveman/results.hla" %>%
+    read_tsv() %>%
+    mutate(gene = factor(gene, levels = gencode_hla$gene_name),
+           rank = as.character(rank))
+
+png("./plots/caveman.png", width = 10, height = 3, units = "in", res = 300)
+ggplot(data = caveman, aes(rank, Probability, fill = index)) +
+    geom_bar(stat = "identity", position = "dodge", alpha = .8) +
+    ggsci::scale_fill_npg() +
+    facet_wrap(~gene, nrow = 1, scales = "free_x") +
+    labs(x = "") +
+    theme(legend.position = "top")
 dev.off()

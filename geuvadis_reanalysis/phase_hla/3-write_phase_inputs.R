@@ -1,19 +1,14 @@
 devtools::load_all("~/hlaseqlib")
 library(tidyverse)
 
-typing_errs <- "../expression/star/main_pipeline/typing_errors.tsv" %>%
-    read_tsv() %>%
-    distinct(subject)
-
 hla_genos <- 
-    "../expression/star/main_pipeline/quantifications_final/processed_imgt_quants.tsv" %>%
+    "../expression/3-map_to_transcriptome/hla_personalized/quantifications/processed_imgt_quants.tsv" %>%
     read_tsv() %>%
     filter(locus %in% gencode_hla$gene_name) %>%
     select(subject, locus, allele) %>%
     mutate(subject = convert_ena_ids(subject),
 	   allele = gsub("IMGT_", "", allele),
 	   allele = hla_trimnames(allele, 3)) %>%
-    anti_join(typing_errs) %>%
     arrange(subject, locus, allele)
 
 hla_genos_recoded <- code_alleles(hla_genos)

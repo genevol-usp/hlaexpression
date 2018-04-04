@@ -9,6 +9,8 @@
 
 cd $PBS_O_WORKDIR
 
+mkdir -p ./log
+
 qtltools=/home/vitor/qtltools/bin/QTLtools
 
 PC=50
@@ -16,8 +18,8 @@ datadir=/home/vitor/hlaexpression/geuvadis_reanalysis/data
 SAMPLES=$datadir/genotypes/samples.eur
 VCF=$datadir/genotypes/eur_maf05.vcf.gz
 COV=$datadir/pca_genotypes/covariates_genos.txt
-HOTSPOTS=$datadir/hotspots_hg38_fixed_distances.bed
-CATALOG=./refrence_qtls.tsv
+HOTSPOTS=$datadir/recomb_hotspots/hotspots_hg38_fixed_distances.bed
+CATALOG=./reference_qtls.tsv
 BED=../../1-phenotypes/phenotypes_eur_$PC.bed.gz
 COND=../../3-conditional_analysis/conditional_${PC}_all.txt.gz
 OUT=./rtc_results.txt

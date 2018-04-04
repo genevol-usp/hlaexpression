@@ -10,7 +10,7 @@ qtls <-
     select(gene = gene_name, variant = var_id, rank)
 
 pri_eqtls <- 
-    "../../../reference/3-conditional_analysis/conditional_70_all.txt.gz" %>%
+    "../../../reference/3-conditional_analysis/conditional_50_all.txt.gz" %>%
     read_qtltools() %>%
     filter(bwd_best == 1) %>%
     inner_join(gencode_hla, by = c("phen_id" = "gene_id")) %>%

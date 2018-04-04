@@ -13,7 +13,8 @@ qtls <-
     inner_join(gencode_hla, by = c("phen_id" = "gene_id")) %>%
     select(gene = gene_name, variant = var_id, rank)
 
-catalog <- read_tsv("./variants.tsv", col_names = c("var_id", "info"))
+catalog <- "~/hlaexpression/geuvadis_reanalysis/data/crd/catalog.tsv" %>%
+    read_tsv(col_names = c("var_id", "info"))
 
 rtc_files <- list.files(".", pattern = "^rtc_results")  
 

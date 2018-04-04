@@ -36,7 +36,7 @@ phase_df <-
     distinct()
 
 hla_qtls <- 
-    "../qtls/star/main_pipeline/supplemented/3-conditional_analysis/conditional_50_all.txt.gz" %>%
+    "../eqtl_mapping/transcriptomemapping/hla_personalized/3-conditional_analysis/conditional_60_all.txt.gz" %>%
     read_qtltools() %>%
     filter(bwd_best == 1L) %>%
     select(phen_id, rank, var_id) %>%
@@ -58,12 +58,3 @@ gene_snp_df <- left_join(hla_df, qtl_df, by = c("subject", "locus", "hap"),
     ungroup()
 
 write_tsv(gene_snp_df, "./phase_hla_haps_snps.tsv")
-
-gene_df <- hla_df %>%
-    group_by(subject, locus) %>%
-    filter(all(uncertain == 0)) %>%
-    ungroup() %>%
-    select(-uncertain, -pos)
-
-gene_df %>% spread(locus, allele) %>% drop_na
-

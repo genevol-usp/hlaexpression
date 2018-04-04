@@ -1,8 +1,6 @@
 devtools::load_all("~/hlaseqlib")
 library(tidyverse)
 
-hla_genes <- gencode_hla$gene_name 
-
 samples <- readLines("../../data/sample_info/samples_phase3_ena_eur.txt")
 
 imgt_quants <- read_tsv("./quantifications/imgt_quants.tsv")
@@ -17,7 +15,6 @@ out_df <- imgt_quants %>%
     left_join(gencode_pri_tx, by = c("Name" = "tx_id")) %>%
     select(subject, tx_id = Name, locus = gene_name, 
 	   est_counts = NumReads, tpm = TPM) %>%
-    filter(locus %in% hla_genes) %>%
     group_by(subject, locus) %>%
     summarize_at(vars(est_counts, tpm), sum) %>%
     ungroup()

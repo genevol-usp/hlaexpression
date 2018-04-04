@@ -1,41 +1,41 @@
 devtools::load_all("/home/vitor/hlaseqlib")
-library(data.table)
-
-setDTthreads(1)
-setDT(geuvadis_info)
-setDT(gencode_chr_tx)
-setDT(gencode_chr_gene)
+library(tidyverse)
 
 quant_dir <- "./quantifications"
 
-gencode <- 
-    gencode_chr_tx[chr %in% 1:22, .(target_id = tx_id, gene_id, gene_name)]
+gencode <- gencode_chr_tx %>%
+    filter(chr %in% 1:22) %>%
+    select(target_id = tx_id, gene_id, gene_name)
 
-samples_dt <- 
-    geuvadis_info[kgp_phase3 == 1 & pop != "YRI", .(name, subject = ena_id)]
+samples <- geuvadis_info %>%
+    filter(kgp_phase3 == 1, pop != "YRI") %>%
+    select(name, subject = ena_id)
 
-expression_dt <-
-    fread(paste("zcat <", file.path(quant_dir, "all_transcripts_quants.tsv.gz"))
-	)[samples_dt, on = .(subject)
-	][, .(subject = name, target_id = Name, tpm = TPM)]
+expression_df <- file.path(quant_dir, samples$subject, "quant.sf") %>%
+    setNames(samples$subject) %>%
+    map_df(read_tsv, .id = "subject") %>%
+    left_join(samples, by = "subject") %>%
+    select(subject = name, target_id = Name, tpm = TPM)
 
-gene_dt <- 
-    expression_dt[gencode, on = .(target_id), nomatch = 0L
-		][, .(gene_tpm = sum(tpm)), by = .(subject, gene_id)]
+gene_df <- expression_df %>%
+    inner_join(gencode, by = "target_id") %>%
+    group_by(subject, gene_id) %>%
+    summarise(tpm = sum(tpm)) %>%
+    ungroup()
 
-expressedGenes <- gene_dt[, .(mean(gene_tpm > 0.1)), by = .(gene_id)][V1 >= 0.5]
+expressed_genes <- gene_df %>%
+    group_by(gene_id) %>%
+    filter(mean(tpm>0.1) >= 0.5) %>%
+    ungroup()
+    
+final_df <- expressed_genes %>%
+    spread(subject, tpm)
 
-gene_dt <- gene_dt[gene_id %in% expressedGenes$gene_id]
+gene_bed <- inner_join(final_df, gencode_chr_gene, by = "gene_id") %>%
+    filter(chr %in% 1:22) %>%
+    mutate(chr = as.integer(chr), gid = gene_id) %>%
+    select(`#chr` = chr, start, end, id = gene_id, gid, strd = strand, 
+	   starts_with("HG"), starts_with("NA")) %>%
+    arrange(`#chr`, start)
 
-gene_dt_wide <- dcast(gene_dt, gene_id ~ subject, value.var = "gene_tpm")
-
-gene_bed <- 
-    gene_dt_wide[gencode_chr_gene, on = .(gene_id), nomatch = 0L
-	       ][, `:=`(gid = gene_id, gene_name = NULL)]
-
-setcolorder(gene_bed, c("chr", "start", "end", "gene_id", "gid", "strand",
-			grep("^HG|^NA", names(gene_bed), value = TRUE)))
-
-setnames(gene_bed, c("chr", "gene_id", "strand"), c("#chr", "id", "strd"))
-
-fwrite(gene_bed, "quantifications_expressed50%.bed", sep = "\t")
+write_tsv(gene_bed, "quantifications_expressed50%.bed")

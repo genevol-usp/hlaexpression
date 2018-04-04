@@ -1,0 +1,34 @@
+#!/bin/bash
+
+#PBS -l nodes=1:ppn=1
+#PBS -l mem=4gb
+#PBS -l walltime=24:00:00
+#PBS -q short
+#PBS -t 1-7
+#PBS -j oe
+#PBS -o /home/vitor/hlaexpression/geuvadis_reanalysis/eqtl_mapping/transcriptomemapping/hla_personalized/rtc/gwas/log/$PBS_JOBID.log
+
+cd $PBS_O_WORKDIR
+
+mkdir -p ./log
+
+qtltools=/home/vitor/qtltools/bin/QTLtools
+
+PC=60
+datadir=/home/vitor/hlaexpression/geuvadis_reanalysis/data
+SAMPLES=$datadir/genotypes/samples.eur
+VCF=$datadir/genotypes/eur_maf05.vcf.gz
+COV=$datadir/pca_genotypes/covariates_genos.txt
+HOTSPOTS=$datadir/recomb_hotspots/hotspots_hg38_fixed_distances.bed
+CATALOG=$datadir/gwas_catalog/gwas_catalog_filtered.txt
+BED=../../1-phenotypes/phenotypes_eur_$PC.bed.gz
+COND=../../3-conditional_analysis/conditional_${PC}_all.txt.gz
+
+REGION=`awk "NR==$PBS_ARRAYID" ./hla_regions.txt`
+
+OUT=./rtc_results_$REGION.txt
+
+$qtltools rtc --vcf $VCF --bed $BED --include-samples $SAMPLES\
+    --region $REGION --D-prime-threshold 0.5\
+    --cov $COV --hotspot $HOTSPOTS --gwas-cis $CATALOG $COND --normal\
+    --conditional --out $OUT

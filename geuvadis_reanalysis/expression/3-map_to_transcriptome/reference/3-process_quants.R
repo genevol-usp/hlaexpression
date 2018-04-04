@@ -1,11 +1,12 @@
 devtools::load_all("~/hlaseqlib")
 library(tidyverse)
 
-hla_genes <- gencode_hla$gene_name 
-
 samples <- geuvadis_info %>% 
     filter(kgp_phase3 == 1L & pop != "YRI") %>%
     pull(ena_id)
+
+imgt_loci <- readLines("../../../../imgt_index_v2/imgt_loci.txt") %>%
+    paste0("HLA-", .)
 
 imgt_quants <- read_tsv("./quantifications/imgt_quants.tsv")
 
@@ -19,7 +20,7 @@ out_df <- imgt_quants %>%
     left_join(gencode_pri_tx, by = c("Name" = "tx_id")) %>%
     select(subject, tx_id = Name, locus = gene_name, 
 	   est_counts = NumReads, tpm = TPM) %>%
-    filter(locus %in% hla_genes) %>%
+    filter(locus %in% imgt_loci) %>%
     group_by(subject, locus) %>%
     summarize_at(vars(est_counts, tpm), sum) %>%
     ungroup()

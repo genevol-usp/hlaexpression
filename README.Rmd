@@ -180,8 +180,6 @@ include_graphics("./geuvadis_reanalysis/eqtl_mapping/plots/qtls_landscape.png")
 
 ### Causal probabilities
 
-Conventional mapping seems to provide better eQTLs overall, especially at the rank 0.
-
 ```{r}
 include_graphics("./geuvadis_reanalysis/eqtl_mapping/plots/caveman.png")
 ```
@@ -210,7 +208,17 @@ read_tsv("./geuvadis_reanalysis/eqtl_mapping/f_onewaytest_lineages.tsv") %>%
     kable(digits = 2)
 ```
 
-#### Conventional pipeline
+#### Ref Transcriptome pipeline
+```{r}
+"./geuvadis_reanalysis/eqtl_mapping/transcriptomemapping/reference/functional_features/results.tsv" %>%
+    read_tsv() %>%
+    kable(digits = 2)
+```
+
+#### Conventional mapping
+
+Conventional mapping seems to provide better eQTLs
+
 ```{r}
 "./geuvadis_reanalysis/eqtl_mapping/genomemapping/functional_features/results.tsv" %>%
     read_tsv() %>%
@@ -224,14 +232,14 @@ read_tsv("./geuvadis_reanalysis/eqtl_mapping/f_onewaytest_lineages.tsv") %>%
 
 #### eQTLs from HLA-personalized vs...
 
-##### eQTLs from Conventional pipeline
+##### eQTLs from Reference transcriptome pipeline
 ```{r}
-read_tsv("./geuvadis_reanalysis/eqtl_mapping/transcriptomemapping/hla_personalized/rtc/conventional_qtls/results.tsv") %>%
+read_tsv("./geuvadis_reanalysis/eqtl_mapping/transcriptomemapping/hla_personalized/rtc/reference_qtls/results.tsv") %>%
     kable(digits = 2)
 ```
 
 ##### Previously reported eQTLs
-```{r}
+```{r, eval=FALSE}
 read_tsv("./geuvadis_reanalysis/eqtl_mapping/transcriptomemapping/hla_personalized/rtc/previous_qtls/results.tsv") %>%
     kable(digits = 2)
 ```
