@@ -23,19 +23,4 @@ gene_df <- expression_df %>%
     summarise(tpm = sum(tpm)) %>%
     ungroup()
 
-expressed_genes <- gene_df %>%
-    group_by(gene_id) %>%
-    filter(mean(tpm>0.1) >= 0.5) %>%
-    ungroup()
-    
-final_df <- expressed_genes %>%
-    spread(subject, tpm)
-
-gene_bed <- inner_join(final_df, gencode_chr_gene, by = "gene_id") %>%
-    filter(chr %in% 1:22) %>%
-    mutate(chr = as.integer(chr), gid = gene_id) %>%
-    select(`#chr` = chr, start, end, id = gene_id, gid, strd = strand, 
-	   starts_with("HG"), starts_with("NA")) %>%
-    arrange(`#chr`, start)
-
-write_tsv(gene_bed, "quantifications_expressed50%.bed")
+write_tsv(gene_df, "gene_quantifications.tsv")

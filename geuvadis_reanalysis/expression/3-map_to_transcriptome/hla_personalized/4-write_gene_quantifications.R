@@ -18,35 +18,18 @@ expression_df <- file.path(quant_dir, samples$subject, "quant.sf") %>%
     select(subject = name, target_id = Name, tpm = TPM)
 
 autosomes_set <- inner_join(expression_df, gencode, by = c("target_id")) %>%
-    select(subject, target_id, gene_id, tpm)
+    select(subject, gene_id, tpm)
 
 imgt_set <- expression_df %>%
     filter(grepl("^IMGT", target_id)) %>%
     mutate(gene_name = sub("^IMGT_([^\\*]+).+$", "HLA-\\1", target_id)) %>%
     inner_join(distinct(gencode, gene_id, gene_name), by = "gene_name") %>%
-    select(subject, target_id, gene_id, tpm)
-
-gene_set <- bind_rows(autosomes_set, imgt_set)
-
-gene_df <- gene_set %>%
-    group_by(subject, gene_id) %>%
-    summarise(tpm = sum(tpm)) %>%
-    ungroup() %>% 
+    select(subject, gene_id, tpm) %>%
     complete(subject, gene_id, fill = list(tpm = 0))
 
-expressed_genes <- gene_df %>%
-    group_by(gene_id) %>%
-    filter(mean(tpm>0.1) >= 0.5) %>%
+gene_df <- bind_rows(autosomes_set, imgt_set) %>%
+    group_by(subject, gene_id) %>%
+    summarise(tpm = sum(tpm)) %>%
     ungroup()
-    
-final_df <- expressed_genes %>%
-    spread(subject, tpm)
 
-gene_bed <- inner_join(final_df, gencode_chr_gene, by = "gene_id") %>%
-    filter(chr %in% 1:22) %>%
-    mutate(chr = as.integer(chr), gid = gene_id) %>%
-    select(`#chr` = chr, start, end, id = gene_id, gid, strd = strand, 
-	   starts_with("HG"), starts_with("NA")) %>%
-    arrange(`#chr`, start)
-
-write_tsv(gene_bed, "quantifications_expressed50%.bed")
+write_tsv(gene_df, "gene_quantifications.tsv")
