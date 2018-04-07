@@ -1,14 +1,16 @@
-library(data.table)
+library(tidyverse)
 
-pcs_dt <- 
-    fread("./phenotypes_eur_pcs.pca", nrows = 100
-	)[, SampleID := sub("^.+(PC\\d+)$", "\\1", SampleID)]
-setnames(pcs_dt, "SampleID", "id")
+dir.create("./covariates")
+
+pcs_df <-  
+    read_delim("./phenotypes_pcs.pca", n_max = 100L, delim = " ") %>%
+    mutate(SampleID = sub("^.+(PC\\d+)$", "\\1", SampleID)) %>%
+    rename(id = SampleID)
 
 out_basename <- "./covariates/covariates_pheno_"
 
-for (pc in c(seq(5, 20, 5), seq(30, 100, 10))) {
+for (pc in seq(10, 100, 10)) {
 
-  dti <- pcs_dt[id %in% paste0("PC", seq_len(pc))]
-  fwrite(dti, paste0(out_basename, pc, ".txt"), sep = "\t", quote = FALSE)
+    df_i <- filter(pcs_df, id %in% paste0("PC", seq_len(pc)))
+    write_tsv(df_i, paste0(out_basename, pc, ".txt"))
 }
