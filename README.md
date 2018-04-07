@@ -22,7 +22,7 @@ Reads mapped to the MHC region and unmapped reads are extracted from a conventio
 
 2.  These reads were mapped to the IMGT panel with STAR. Expression was estimated with Salmon.
 
-3.  The top 5 alleles were separated for further analysis. A zigosity threshold of 0.25 was applied intra-lineage, meaning that only alleles which had at least 25% of the total expression in their lineage were considered for further steps.
+3.  The top 5 alleles were selected for further analysis. A zigosity threshold of 0.25 was applied intra-lineage, meaning that only alleles which had at least 25% of the total expression in their lineage were considered for further steps.
 
 4.  Quasi-mapping and quantification was performed for these top alleles with Salmon. In this step, a threshold of 0.15 was applied at the lineage-level, meaning that genotypes were considered heterozygous at the lineage-level if more than 1 lineage had at least 15% of the locus read counts. Lead alleles from each lineage were chosen to compose the genotype. A zigosity threshold of 0.15 was again applied to decide whether the genotype was heterozygous at the allele-level.
 
@@ -90,6 +90,8 @@ Here we see a massive read loss for the reference, except for DQB1, that shows a
 
 ### Mapping vs. Pseudomapping to transcriptome
 
+High correlation with estimated counts. Correlation drops for Class I genes with TPM estimates, possibly due to different bias correction in Salmon and kallisto.
+
 <img src="./geuvadis_reanalysis/expression/plots/comparison_pseudoalignment.png" width="1800" />
 
 ### ASE
@@ -129,11 +131,11 @@ PCs 1-3 were used as covariates to account for population structure.
 
 <img src="./geuvadis_reanalysis/eqtl_mapping/plots/genotype_pca.png" width="3000" />
 
-### Number of eGenes according to index
+### Number of eGenes
 
 <img src="./geuvadis_reanalysis/eqtl_mapping/plots/n_of_egenes.png" width="1500" />
 
-### Distribution of eQTLs around the TSS, and a comparison with conventional mapping
+### Distribution of eQTLs around the TSS
 
 <img src="./geuvadis_reanalysis/eqtl_mapping/plots/qtls_landscape.png" width="3000" />
 
