@@ -249,6 +249,12 @@ read_tsv("./geuvadis_reanalysis/eqtl_mapping/transcriptomemapping/hla_personaliz
     kable(digits = 2)
 ```
 
+##### Previous top eQTLs
+```{r}
+read_tsv("./geuvadis_reanalysis/eqtl_mapping/transcriptomemapping/hla_personalized/rtc/top_previous_qtls/results.tsv") %>%
+    kable(digits = 2)
+```
+
 ##### CRD-QTLs
 ```{r}
 read_tsv("./geuvadis_reanalysis/eqtl_mapping/transcriptomemapping/hla_personalized/rtc/crd/results.tsv") %>%
