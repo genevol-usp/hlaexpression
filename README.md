@@ -267,6 +267,25 @@ Conventional mapping seems to provide better eQTLs
 
 ##### Previously reported eQTLs
 
+| gene     |  rank| rsid       | qtl\_previous |  d\_prime|   rtc| study\_pval                                                 |
+|:---------|-----:|:-----------|:--------------|---------:|-----:|:------------------------------------------------------------|
+| HLA-A    |     0| rs3823342  | rs3823342     |      1.00|  1.00| geuvadis\_exon (82.9)                                       |
+| HLA-A    |     1| rs1655924  | rs1655924     |      1.00|  1.00| geuvadis\_gene (16.1)/geuvadis\_exon (38.5)                 |
+| HLA-C    |     0| rs41561715 | rs41561715    |      1.00|  1.00| geuvadis\_gene (31.9)/geuvadis\_exon (37.2)                 |
+| HLA-C    |     1| rs12199223 | rs12199223    |      1.00|  1.00| geuvadis\_exon (6.8)                                        |
+| HLA-C    |     2| rs2074491  | rs2074491     |      1.00|  1.00| geuvadis\_exon (26.3)/gtex\_v7 (8.5)                        |
+| HLA-B    |     0| rs1265081  | rs1265081     |      1.00|  1.00| geuvadis\_exon (15.2)                                       |
+| HLA-B    |     1| rs9380240  | rs9380240     |      1.00|  1.00| geuvadis\_gene (6.2)/geuvadis\_exon (24.8)                  |
+| HLA-B    |     2| rs2523616  | rs2523616     |      1.00|  1.00| geuvadis\_exon (41.5)                                       |
+| HLA-DRB1 |     0| rs9271108  | rs9271108     |      1.00|  1.00| geuvadis\_exon (80.1)                                       |
+| HLA-DRB1 |     1| rs9271377  | rs9271377     |      1.00|  1.00| geuvadis\_gene (9.8)/geuvadis\_exon (13.8)/gtex\_v7 (6.4)   |
+| HLA-DQA1 |     0| rs75170544 | rs75170544    |      1.00|  1.00| geuvadis\_gene (28.4)/geuvadis\_exon (48.3)/gtex\_v7 (17.3) |
+| HLA-DQA1 |     1| rs9271375  | rs9271375     |      1.00|  1.00| geuvadis\_exon (13.4)                                       |
+| HLA-DQB1 |     0| rs9274688  | rs9274688     |      1.00|  1.00| geuvadis\_gene (28.3)/geuvadis\_exon (54)                   |
+| HLA-DQB1 |     1| rs3134978  | rs3134978     |      1.00|  1.00| geuvadis\_gene (11)/geuvadis\_exon (5.9)                    |
+| HLA-DPB1 |     0| rs9277449  | rs9277538     |      0.99|  1.00| geuvadis\_exon (57.9)                                       |
+| HLA-DPB1 |     1| rs9296068  | rs112540072   |      0.57|  0.98| NA (NA)                                                     |
+
 ##### CRD-QTLs
 
 | gene     | variant    |  rank| crd\_var  |  d\_prime|       rtc| info                           |

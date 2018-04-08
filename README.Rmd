@@ -244,7 +244,7 @@ read_tsv("./geuvadis_reanalysis/eqtl_mapping/transcriptomemapping/hla_personaliz
 ```
 
 ##### Previously reported eQTLs
-```{r, eval=FALSE}
+```{r}
 read_tsv("./geuvadis_reanalysis/eqtl_mapping/transcriptomemapping/hla_personalized/rtc/previous_qtls/results.tsv") %>%
     kable(digits = 2)
 ```
