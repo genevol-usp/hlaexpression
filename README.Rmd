@@ -183,8 +183,6 @@ include_graphics("./geuvadis_reanalysis/eqtl_mapping/plots/qtls_landscape.png")
 
 ### Causal probabilities
 
-**old version, waiting for analysis running on cluster to update**
-
 ```{r}
 include_graphics("./geuvadis_reanalysis/eqtl_mapping/plots/caveman.png")
 ```

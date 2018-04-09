@@ -141,8 +141,6 @@ PCs 1-3 were used as covariates to account for population structure.
 
 ### Causal probabilities
 
-**old version, waiting for analysis running on cluster to update**
-
 <img src="./geuvadis_reanalysis/eqtl_mapping/plots/caveman.png" width="3000" />
 
 ### HLA lineages and eQTLs
