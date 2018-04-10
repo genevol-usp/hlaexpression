@@ -45,40 +45,30 @@ plot_grid(p1 + guides(color=FALSE),
 dev.off()
 
 # Number of eQTLs according to index
+#pipelines <- c("Ref Transcriptome", "HLA-personalized",
+#               "Ref Transcriptome (quasi)", "HLA-personalized (quasi)", 
+#               "Conventional", "Ref Genome (Unique)") 
+#
+#cols <- ggsci::pal_npg()(6) %>%
+#    setNames(pipelines)
 
-pipelines <- c("Ref Transcriptome", "HLA-personalized",
-               "Ref Transcriptome (quasi)", "HLA-personalized (quasi)", 
-               "Conventional", "Ref Genome (Unique)") 
+pcs <- seq(0, 100, 10)
 
-cols <- ggsci::pal_npg()(6) %>%
-    setNames(pipelines)
-
-pcs <- c(seq(0, 20, 5), seq(30, 100, 10))
-
-egenes_hla_mapping <- 
-    sprintf("./transcriptomemapping/hla_personalized/2-permutations/results/permutations_%d.significant.txt", pcs) %>%
+egenes <- 
+    "./transcriptomemapping/hla_personalized/1-map_eqtls/th_50/2-permutations/results/permutations_%d.significant.txt" %>%
+    sprintf(pcs) %>%
     setNames(pcs) %>%
     map_df(~read_delim(., delim = " ", col_names = FALSE), .id = "f") %>%
-    count(f)
+    count(f) %>%
+    mutate(f = as.integer(f)) %>%
+    arrange(f)
 
-egenes_ref_mapping <- 
-    sprintf("./transcriptomemapping/reference/2-permutations/results/permutations_%d.significant.txt", pcs) %>%
-    setNames(pcs) %>%
-    map_df(~read_delim(., delim = " ", col_names = FALSE), .id = "f") %>%
-    count(f)
-
-egenes_df <- 
-    list("HLA-personalized" = egenes_hla_mapping,
-         "Ref Transcriptome" = egenes_ref_mapping) %>%
-    bind_rows(.id = "index") %>%
-    mutate(f = as.integer(as.character(f))) %>%
-    arrange(f, index)
-
-png("./plots/n_of_egenes.png", width = 6, height = 3, units = "in", res = 300)
-ggplot(egenes_df, aes(f, n, color = index, group = index)) + 
+png("./plots/n_of_egenes.png", width = 5, height = 3, units = "in", res = 300)
+ggplot(egenes, aes(f, n)) + 
     geom_point(size = 2.5) + 
     geom_line() +
-    scale_x_continuous(breaks = sort(unique(egenes_df$f))) +
+    scale_x_continuous(breaks = egenes$f) +
+    scale_y_continuous(labels = comma) +
     scale_color_manual(values = cols) +
     theme_bw() +
     labs(x = "Number of PCs", y = "Number of eGenes")
@@ -181,7 +171,7 @@ mhc_genes <- gencode_pri_gene %>%
     select(gene_id, gene_name)
 
 hla_qtls <-
-    "./transcriptomemapping/hla_personalized/3-conditional_analysis/conditional_60_all.txt.gz" %>%
+    "./transcriptomemapping/hla_personalized/2-conditional_analysis/conditional_60_all.txt.gz" %>%
     read_conditional_mhc(mhc_genes)
 
 ref_qtls <-
@@ -229,25 +219,16 @@ dev.off()
 
 # QTLs density genome-wide vs HLA
 all_rank0 <- 
-    "./transcriptomemapping/hla_personalized/3-conditional_analysis/conditional_60_all.txt.gz" %>%
+    "./transcriptomemapping/hla_personalized/2-conditional_analysis/conditional_60_all.txt.gz" %>%
     read_qtltools() %>%
     filter(bwd_signif == 1L) %>%
     mutate(genome_context = ifelse(phen_id %in% gencode_hla$gene_id, "HLA", "genomewide")) %>%
     select(genome_context, dist, bwd_best)
-#
-#png("./plots/qtls_density_geneStart.png", height = 2, width = 5, units = "in", res = 300)
-#ggplot(all_rank0) +
-#    coord_cartesian(xlim = c(-1e6, 1e6)) +
-#    geom_density(aes(x = dist, fill = genome_context), alpha = 1/2) +
-#    scale_fill_manual(values = c("genomewide" = "#8491B4B2", "HLA" = "#DC0000B2")) +
-#    theme_bw() +
-#    labs(x = "Gene start", fill = "Genome context")
-#dev.off()
 
 # proportion of lead eQTLs further than the HLA-B lead eQTL
 all_rank0 %>% 
     filter(bwd_best == 1L) %>%
-    summarize(mean(abs(dist) >= 214757))
+    summarize(mean(abs(dist) >= 209975))
 
 
 # Lineage and effects plot
@@ -307,7 +288,7 @@ hap_snps <- haps_expression %>%
     select(subject, locus, hap, allele = allele_snp)
 
 phen_best <- 
-    "./transcriptomemapping/hla_personalized/1-phenotypes/phenotypes_eur_60.bed.gz" %>%
+    "./transcriptomemapping/hla_personalized/1-map_eqtls/th_50/1-phenotypes/phenotypes_60.bed.gz" %>%
     read_tsv() %>%
     inner_join(gencode_hla, by = c("gid" = "gene_id")) %>%
     select(gene_name, HG00096:NA20828) %>%
@@ -368,6 +349,7 @@ plot_lineages <- function(df) {
                                   "High" = ggsci::pal_npg()(1), 
                                   "ND" = "grey")) +
     scale_x_discrete(labels = function(x) sub("^(.+\\*)", "", x)) +
+    scale_y_continuous(labels = comma) +
     facet_wrap(~locus, scales = "free", ncol = 1, strip.position = "left") +
     labs(x = " ", y = "TPM") +
     theme_bw() +
@@ -375,7 +357,7 @@ plot_lineages <- function(df) {
           axis.text = element_text(size = 10),
           legend.title = element_text(size = 14),
           legend.text = element_text(size = 12),
-          strip.text = element_text(face = "bold", size = 12),
+          strip.text = element_text(face = "bold", size = 11),
           legend.position = "top") +
     guides(color = guide_legend(override.aes = list(size = 6)))
 }
@@ -396,7 +378,7 @@ plot_slopes <- function(df) {
           strip.text = element_blank())
 }
 
-png("./plots/lineage_and_effects.png", width = 7, height = 10, units = "in", res = 300)
+png("./plots/lineage_and_effects.png", width = 7, height = 8, units = "in", res = 300)
 p1 <- plot_lineages(lineage_phased)
 
 legend <- get_legend(p1)
@@ -408,8 +390,8 @@ grid1 <- plot_grid(legend, NULL, p1, p2, ncol = 2,
                    rel_widths = c(2.5, 1), rel_heights = c(.07, 1))
 
 ggdraw(grid1) + 
-    draw_label("HLA lineage", 0.45, 0.01, size = 14) +
-    draw_label("eQTL genotype", 0.82, 0.01, size = 14) +
+    draw_label("HLA lineage", 0.45, 0.025, size = 14) +
+    draw_label("eQTL genotype", 0.82, 0.025, size = 14) +
     draw_label("PCA-corrected expression", .985, 0.5, size = 14, angle = 90)
 dev.off()
 

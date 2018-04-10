@@ -69,6 +69,7 @@ imgt_df <- list("Conventional" = standard_imgt,
 png("./plots/expression_boxplot.png", width = 8, height = 4, units = "in", res = 200)
 ggplot(filter(imgt_df, pipeline == "HLA-personalized"), aes(locus, tpm)) +
     geom_boxplot(fill = "grey") +
+    scale_y_continuous(labels = comma) +
     theme_bw() +
     theme(axis.title.x = element_blank(),
           axis.title.y = element_text(size = 16),
@@ -80,6 +81,7 @@ dev.off()
 png("./plots/expression_boxplot_pipelines.png", width = 10, height = 5, units = "in", res = 300)
 ggplot(imgt_df, aes(locus, tpm)) +
     geom_boxplot(aes(fill = pipeline), outlier.size = .5) +
+    scale_y_continuous(labels = comma) +
     scale_fill_manual(values = cols) +
     theme_bw() +
     theme(axis.title.x = element_blank(),
@@ -108,35 +110,6 @@ dev.off()
 
 
 # Scatterplots of pipeline comparisons
-scatter_plot_cors <- function(df, x_var, y_var, dist_var) {
-    
-    cor_df <- df %>%
-        group_by(locus) %>%
-        do(data.frame(r = cor(.[[x_var]], .[[y_var]]),
-                      p = cor(.[[x_var]], .[[y_var]], method = "spearman"),
-                      x = min(.[[x_var]]),
-                      y = max(.[[y_var]]))) %>%
-        ungroup() %>%
-        mutate_at(vars(r, p), ~round(., digits = 2)) %>%
-        mutate(label = paste("r == ", r, "*','~rho ==", p))
-        
-    ggplot(df, aes_string(x_var, y_var)) +
-        geom_abline() +
-        geom_point(aes_string(color = dist_var), size = .8) +
-        scale_color_gradient(low = "white", high = "darkred") +
-        geom_text(data = cor_df, aes(x, y, label = label), parse = TRUE, 
-                  hjust = "inward", vjust = "inward", size = 4, 
-                  color = "white") +
-        facet_wrap(~locus, scales = "free") +
-        theme_dark() +
-        theme(axis.text = element_text(size = 12),
-              axis.title = element_text(size = 16),
-              strip.text = element_text(size = 16),
-              legend.text = element_text(size = 12),
-              legend.title = element_text(size = 16),
-              legend.position = c(.75, .15))
-}
-
 
 ## STAR vs kallisto
 kallisto <- 
@@ -178,8 +151,8 @@ p_counts <-
            aes(estimate.mapping, estimate.pseudo)) +
     geom_abline() +
     geom_point(size = .8) +
-    scale_x_continuous(breaks = pretty_breaks(n = 2)) +
-    scale_y_continuous(breaks = pretty_breaks(n = 3)) +
+    scale_x_continuous(breaks = pretty_breaks(n = 2), labels = comma) +
+    scale_y_continuous(breaks = pretty_breaks(n = 3), labels = comma) +
     facet_wrap(~locus, scales = "free") +
     geom_text(data = filter(cor_df_star_kallisto, unit == "est_counts"), 
               aes(x, y, label = label),
@@ -196,8 +169,8 @@ p_tpm <-
            aes(estimate.mapping, estimate.pseudo)) +
     geom_abline() +
     geom_point(size = .8) +
-    scale_x_continuous(breaks = pretty_breaks(n = 2)) +
-    scale_y_continuous(breaks = pretty_breaks(n = 3)) +
+    scale_x_continuous(breaks = pretty_breaks(n = 2), labels = comma) +
+    scale_y_continuous(breaks = pretty_breaks(n = 3), labels = comma) +
     facet_wrap(~locus, scales = "free") +
     geom_text(data = filter(cor_df_star_kallisto, unit == "tpm"), 
               aes(x, y, label = label),
@@ -214,6 +187,37 @@ dev.off()
 
 
 ## Personalized vs reference
+scatter_plot_cors <- function(df, x_var, y_var, dist_var) {
+    
+    cor_df <- df %>%
+        group_by(locus) %>%
+        do(data.frame(r = cor(.[[x_var]], .[[y_var]]),
+                      p = cor(.[[x_var]], .[[y_var]], method = "spearman"),
+                      x = min(.[[x_var]]),
+                      y = max(.[[y_var]]))) %>%
+        ungroup() %>%
+        mutate_at(vars(r, p), ~round(., digits = 2)) %>%
+        mutate(label = paste("r == ", r, "*','~rho ==", p))
+    
+    ggplot(df, aes_string(x_var, y_var)) +
+        geom_abline() +
+        geom_point(aes_string(color = dist_var), size = .8) +
+        scale_x_continuous(labels = comma) +
+        scale_y_continuous(labels = comma) +
+        scale_color_gradient(low = "white", high = "darkred") +
+        geom_text(data = cor_df, aes(x, y, label = label), parse = TRUE, 
+                  hjust = "inward", vjust = "inward", size = 4, 
+                  color = "white") +
+        facet_wrap(~locus, scales = "free") +
+        theme_dark() +
+        theme(axis.text = element_text(size = 12),
+              axis.title = element_text(size = 16),
+              strip.text = element_text(size = 16),
+              legend.text = element_text(size = 12),
+              legend.title = element_text(size = 16),
+              legend.position = c(.75, .15))
+}
+
 dist_ref <- read_tsv("../../imgt_index_v2/distances_to_reference.tsv")
 
 mapping_imgt_dist <- 
@@ -292,10 +296,11 @@ dev.off()
 
 
 # Correlation decrease as number of PCs increase
-pcs <- c(seq(0, 20, 5), seq(30, 100, 10))
+pcs <- seq(0, 100, 10)
 
 pca_star_df <-
-    sprintf("../eqtl_mapping/transcriptomemapping/hla_personalized/1-phenotypes/phenotypes_eur_%d.bed.gz", pcs) %>%
+    "../eqtl_mapping/transcriptomemapping/hla_personalized/1-map_eqtls/th_50/1-phenotypes/phenotypes_%d.bed.gz" %>%
+    sprintf(pcs) %>%
     setNames(pcs) %>%
     map_df(. %>% read_tsv(progress = FALSE) %>% select(gid, matches("^HG|^NA")), 
            .id = "PC") %>%
@@ -352,7 +357,6 @@ calc_trans_cors <- function(locus1, locus2, df) {
     
     m[c(locus1, locus2), c(locus1, locus2)] <<- m_sub 
 }
-
 
 star_alleles <- 
     "./3-map_to_transcriptome/hla_personalized/quantifications/processed_imgt_quants.tsv" %>%
@@ -463,7 +467,7 @@ gencode_hla_v19 <- "~/gencode_data/gencode.v19.annotation.gtf.gz" %>%
     filter(gene_name %in% hla_genes) %>%
     select(gene_name, start, end, strand)
 
-crd <- "../../LCL_ALL.chr6.subset.txt.gz" %>%
+crd <- "../data/crd/LCL_ALL.chr6.subset.txt.gz" %>%
     read_delim(col_names = FALSE, delim = " ") %>%
     select(-X2, -X4, -X6, -X8, -X9, -X11) %>%
     filter(between(X3, min(gencode_hla_v19$start) - 1e6, max(gencode_hla_v19$end) + 1e6),
