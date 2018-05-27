@@ -1,6 +1,7 @@
 devtools::load_all("/home/vitor/hlaseqlib")
 library(tidyverse)
 library(ggplot2)
+library(cowplot)
 
 # Functions
 plot_lineages <- function(data) {
@@ -16,13 +17,16 @@ plot_lineages <- function(data) {
 	theme_bw() +
 	theme(axis.title = element_text(size = 16),
 	      axis.text.y = element_text(size = 14),
-	      axis.text.x = element_text(size = 12),
-	      legend.text = element_text(size = 14),
+	      axis.text.x = element_text(size = 11, angle = 45, hjust = 1),
+	      legend.text = element_text(size = 12),
 	      strip.text = element_text(face = "bold", size = 16))
 }
 
 # Data
 samples <- readLines("./data/nci_sample_ids.txt")
+
+hla_loci <- readLines("../imgt_index_v2/imgt_loci.txt") %>%
+    paste0("HLA-", .)
 
 nci_allele <- read_tsv("./data/nci_expression.tsv")
 
@@ -39,17 +43,19 @@ nci_lineage <- nci_allele %>%
     filter(n() > 5) %>%
     ungroup() %>%
     mutate(est_allele_exp = lm(expression ~ lineage - 1)$fitted.values)
-      
+
 rnaseq_allele <- 
     read_tsv("./expression/star/quantifications_2/processed_quant.tsv") %>%
-    filter(grepl("HLA", locus)) %>%
+    filter(locus %in% hla_loci) %>%
     mutate(allele = hla_trimnames(gsub("IMGT_", "", allele), 3)) %>%
     select(subject, locus, allele, tpm)
 
 rnaseq_gene <- rnaseq_allele %>%
     group_by(subject, locus) %>%
     summarize(tpm = sum(tpm)) %>%
-    ungroup()
+    ungroup() %>%
+    mutate(locus = reorder(locus, tpm, median),
+           locus = factor(locus, levels = rev(levels(locus))))
 
 rnaseq_lineage <- rnaseq_allele %>%
     mutate(lineage = hla_trimnames(allele, 1)) %>%
@@ -104,16 +110,16 @@ ggplot(hlac_df, aes(expression, c_surface)) +
 			  formula = y ~ x, parse = TRUE, size = 6)
 dev.off()
 
-png("./plots/rnaseq_lineages.png", width=12, height=6, units="in", res=300)
-rnaseq_lineage %>%
+png("./plots/lineages.png", width=10, height=6, units="in", res=300)
+p.rnaseq <- rnaseq_lineage %>%
     inner_join(common) %>%
-    plot_lineages() + labs(y = "TPM")
-dev.off()
+    plot_lineages() + labs(y = "TPM", title = "RNA-seq")
 
-png("./plots/nci_lineages.png", width=12, height=6, units="in", res=300)
-nci_lineage %>%
+p.qpcr <- nci_lineage %>%
     inner_join(common) %>%
-    plot_lineages() + labs(y = "mRNA (qPCR)")
+    plot_lineages() + labs(y = "mRNA (qPCR)", title = "qPCR")
+
+plot_grid(p.rnaseq, p.qpcr, ncol = 2)
 dev.off()
 
 png("./plots/expression_boxplot.png", width = 8, height = 5, units = "in", res = 200)

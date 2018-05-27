@@ -85,14 +85,7 @@ The plots don't show the whole data, but only the overlap between the two
 datasets (although the totality of data was used to estimate/impute expression 
 on both datasets).
 
-## RNAseq
-
 ```{r}
-include_graphics('./plots/rnaseq_lineages.png')
+include_graphics('./plots/lineages.png')
 ```
 
-## qPCR
-
-```{r}
-include_graphics('./plots/nci_lineages.png')
-```

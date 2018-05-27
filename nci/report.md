@@ -55,12 +55,4 @@ Our approach also allows assigning expression level estimates to allelic lineage
 
 The plots don't show the whole data, but only the overlap between the two datasets (although the totality of data was used to estimate/impute expression on both datasets).
 
-RNAseq
-------
-
-<img src="./plots/rnaseq_lineages.png" width="3600" />
-
-qPCR
-----
-
-<img src="./plots/nci_lineages.png" width="3600" />
+<img src="./plots/lineages.png" width="3000" />
