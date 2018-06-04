@@ -4,7 +4,7 @@
 #PBS -l mem=12gb
 #PBS -l walltime=12:00:00
 #PBS -q short
-#PBS -t 1-29
+#PBS -t 1-22
 #PBS -j oe
 #PBS -o /home/vitor/hlaexpression/imgt_index_v2/log/$PBS_JOBID.log
 
