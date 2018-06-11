@@ -66,6 +66,11 @@ kulkarni2011 <- tibble(gene_name = "HLA-C",
 		       pval = NA,
 		       min_rank = NA)
 
+petersdorf2015 <- tibble(gene_name = "HLA-DPB1",
+			 rsid = "rs9277534",
+			 pval = NA,
+			 min_rank = NA)
+
 integrated_data <-
     list(geuvadis_gene = geuvadis_gene,
 	 geuvadis_exon = geuvadis_exon,
@@ -73,24 +78,10 @@ integrated_data <-
 	 delaneau2018 = delaneau2018,
 	 thomas2009 = thomas2009,
 	 kulkarni2011 = kulkarni2011,
-	 vince2017 = vince2017) %>%
+	 vince2017 = vince2017,
+	 petersdorf2015 = petersdorf2015) %>%
     bind_rows(.id = "study") %>%
     convert_rsIDs()
-
-our_eqtls <-
-    "../../qtls/star/imgt/3-conditional_analysis/conditional_60_all.txt.gz" %>%
-    read_qtltools() %>%
-    filter(bwd_best == 1L, bwd_signif == 1L) %>%
-    inner_join(gencode_hla, by = c("phen_id" = "gene_id")) %>%
-    mutate(pval = -log10(bwd_pval)) %>%
-    select(gene_name, rank, rsid = var_id, pval = pval) %>%
-    arrange(gene_name, rank)
-
-overlap <- 
-    left_join(our_eqtls, integrated_data, by = c("gene_name", "rsid")) %>%
-    group_by(gene_name, rank, rsid, study) %>%
-    filter(pval.y == max(pval.y) | is.na(pval.y)) %>%
-    ungroup()
 
 eqtl_catalog <- integrated_data %>%
     group_by(gene_name, rsid, study) %>%
