@@ -286,28 +286,25 @@ Conventional mapping seems to provide better eQTLs
 
 ##### Previous top eQTLs
 
-| gene     |  rank| eqtl\_personalized | eqtl\_previous |  d\_prime|   rtc| info                    |
-|:---------|-----:|:-------------------|:---------------|---------:|-----:|:------------------------|
-| HLA-A    |     0| rs3823342          | rs9260036      |      1.00|  0.98| geuvadis\_exon (124.48) |
-| HLA-A    |     1| rs1655924          | rs2734971      |      0.86|  1.00| geuvadis\_gene (19.4)   |
-| HLA-B    |     0| rs1265081          | rs9266207      |      0.26|  0.58| geuvadis\_exon (74.3)   |
-| HLA-B    |     1| rs9380240          | rs9266216      |      0.89|  0.96| geuvadis\_gene (13.08)  |
-| HLA-B    |     2| rs2523616          | rs2523598      |      0.80|  0.94| delaneau2018 (23.93)    |
-| HLA-C    |     0| rs41561715         | rs9265628      |      0.90|  0.96| geuvadis\_gene (34.33)  |
-| HLA-C    |     1| rs12199223         | rs2395471      |      1.00|  0.94| vince2017 (NA)          |
-| HLA-C    |     2| rs2074491          | rs9264666      |      1.00|  0.84| delaneau2018 (48.2)     |
-| HLA-DPB1 |     0| rs9277449          | rs3128964      |      1.00|  0.99| geuvadis\_exon (59.86)  |
-| HLA-DPB1 |     1| rs9296068          | rs34885310     |      0.96|  0.94| delaneau2018 (3.71)     |
-| HLA-DQA1 |     0| rs75170544         | rs9274660      |      0.72|  0.82| geuvadis\_gene (55.76)  |
-| HLA-DQA1 |     0| rs75170544         | rs9274660      |      0.72|  0.82| geuvadis\_exon (111.8)  |
-| HLA-DQA1 |     1| rs9271375          | rs9274660      |      0.67|  0.87| geuvadis\_gene (55.76)  |
-| HLA-DQA1 |     1| rs9271375          | rs9274660      |      0.67|  0.87| geuvadis\_exon (111.8)  |
-| HLA-DQB1 |     0| rs9274688          | rs9274660      |      1.00|  0.93| geuvadis\_gene (60.56)  |
-| HLA-DQB1 |     0| rs9274688          | rs9274660      |      1.00|  0.93| geuvadis\_exon (102.51) |
-| HLA-DQB1 |     1| rs3134978          | rs9274660      |      1.00|  0.74| geuvadis\_gene (60.56)  |
-| HLA-DQB1 |     1| rs3134978          | rs9274660      |      1.00|  0.74| geuvadis\_exon (102.51) |
-| HLA-DRB1 |     0| rs9271108          | rs35399335     |      0.95|  0.60| delaneau2018 (35.94)    |
-| HLA-DRB1 |     1| rs9271377          | rs35399335     |      0.99|  0.81| delaneau2018 (35.94)    |
+| gene     |  rank| qtl\_personalized | qtl\_previous |  d\_prime|   rtc| study                                          |
+|:---------|-----:|:------------------|:--------------|---------:|-----:|:-----------------------------------------------|
+| HLA-A    |     0| rs3823342         | rs9260036     |      1.00|  0.98| geuvadis\_exon (124.48)                        |
+| HLA-A    |     1| rs1655924         | rs2734971     |      0.86|  1.00| geuvadis\_gene (19.4)                          |
+| HLA-A    |     1| rs1655924         | rs1111180     |      0.91|  0.99| gtex\_v7 (9.59)                                |
+| HLA-C    |     0| rs41561715        | rs9265628     |      0.90|  0.96| geuvadis\_gene (34.33)                         |
+| HLA-C    |     1| rs12199223        | rs2395471     |      1.00|  0.94| vince2017 (NA)                                 |
+| HLA-C    |     2| rs2074491         | rs9264666     |      1.00|  0.84| delaneau2018 (48.2)                            |
+| HLA-B    |     0| rs1265081         | rs9266207     |      0.26|  0.58| geuvadis\_exon (74.3)                          |
+| HLA-B    |     1| rs9380240         | rs9266216     |      0.89|  0.96| geuvadis\_gene (13.08)                         |
+| HLA-B    |     2| rs2523616         | rs2523598     |      0.80|  0.94| delaneau2018 (23.93)                           |
+| HLA-DRB1 |     0| rs9271108         | rs35399335    |      0.95|  0.60| delaneau2018 (35.94)                           |
+| HLA-DRB1 |     1| rs9271377         | rs9271593     |      0.45|  0.83| xl9\_raj2016 (NA)                              |
+| HLA-DQA1 |     0| rs75170544        | rs9274660     |      0.72|  0.82| geuvadis\_gene (55.76)/geuvadis\_exon (111.8)  |
+| HLA-DQA1 |     1| rs9271375         | rs9274660     |      0.67|  0.87| geuvadis\_gene (55.76)/geuvadis\_exon (111.8)  |
+| HLA-DQB1 |     0| rs9274688         | rs9274660     |      1.00|  0.93| geuvadis\_gene (60.56)/geuvadis\_exon (102.51) |
+| HLA-DQB1 |     1| rs3134978         | rs9271593     |      1.00|  0.84| xl9\_raj2016 (NA)                              |
+| HLA-DPB1 |     0| rs9277449         | rs3128964     |      1.00|  0.99| geuvadis\_exon (59.86)                         |
+| HLA-DPB1 |     1| rs9296068         | rs34885310    |      0.96|  0.94| delaneau2018 (3.71)                            |
 
 ##### CRD-QTLs
 
