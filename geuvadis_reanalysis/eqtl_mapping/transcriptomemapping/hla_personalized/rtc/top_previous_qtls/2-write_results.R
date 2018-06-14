@@ -33,6 +33,8 @@ qtls_rtc <-
 	   d_prime, rtc, info) %>%
     group_by(gene, rank, qtl_personalized, qtl_previous, d_prime, rtc) %>%
     summarise(study = paste(info, collapse = "/")) %>%
-    ungroup()
+    ungroup() %>%
+    mutate(gene = factor(gene, levels = gencode_hla$gene_name)) %>%
+    arrange(gene, rank, desc(rtc))
 
 write_tsv(qtls_rtc, "./results.tsv")
