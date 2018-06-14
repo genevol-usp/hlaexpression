@@ -71,6 +71,12 @@ petersdorf2015 <- tibble(gene_name = "HLA-DPB1",
 			 pval = NA,
 			 min_rank = NA)
 
+xl9_raj2016 <- tibble(gene_name = c("HLA-DQA1", "HLA-DQB1", "HLA-DRB1"),
+		      rsid = "rs9271593",
+		      pval = NA,
+		      min_rank = NA)
+
+
 integrated_data <-
     list(geuvadis_gene = geuvadis_gene,
 	 geuvadis_exon = geuvadis_exon,
@@ -79,7 +85,8 @@ integrated_data <-
 	 thomas2009 = thomas2009,
 	 kulkarni2011 = kulkarni2011,
 	 vince2017 = vince2017,
-	 petersdorf2015 = petersdorf2015) %>%
+	 petersdorf2015 = petersdorf2015,
+	 xl9_raj2016 = xl9_raj2016) %>%
     bind_rows(.id = "study") %>%
     convert_rsIDs()
 
