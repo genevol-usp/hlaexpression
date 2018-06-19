@@ -147,6 +147,16 @@ include_graphics("./geuvadis_reanalysis/expression/plots/correlation_decrease.pn
 include_graphics("./geuvadis_reanalysis/expression/plots/correlations.png")
 ```
 
+#### Correlation of eQTLs
+
+Here we evaluate whether a pair of alleles within the same haplotypes are 
+associated with eQTLs alleles in the same direction of regulation, i.e. 
+upper-upper regulation, down-down, or upper-down.
+
+```{r}
+include_graphics("./geuvadis_reanalysis/eqtl_mapping/plots/correlation_of_eqtls.png")
+```
+
 #### Location of HLA genes within CRDs
 
 *CRDs are defined in http://dx.doi.org/10.1101/171694* 

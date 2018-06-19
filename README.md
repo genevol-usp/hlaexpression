@@ -112,6 +112,12 @@ We need to explore why global factors affect correlation among close genes. Why 
 
 <img src="./geuvadis_reanalysis/expression/plots/correlations.png" width="3000" />
 
+#### Correlation of eQTLs
+
+Here we evaluate whether a pair of alleles within the same haplotypes are associated with eQTLs alleles in the same direction of regulation, i.e. upper-upper regulation, down-down, or upper-down.
+
+<img src="./geuvadis_reanalysis/eqtl_mapping/plots/correlation_of_eqtls.png" width="750" />
+
 #### Location of HLA genes within CRDs
 
 \*CRDs are defined in <http://dx.doi.org/10.1101/171694*>

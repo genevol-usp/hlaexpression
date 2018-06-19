@@ -267,7 +267,7 @@ lineage_df %>%
     select(locus, df, F = statistic, p.value) %>%
     write_tsv("./f_test_lineages.tsv")
 
-dist_to_ref <- "../../imgt_index_v2/distances_to_reference.tsv" %>%
+dist_to_ref <- "../../imgt_index/distances_to_reference.tsv" %>%
     read_tsv() %>%
     select(-locus)
 
@@ -313,7 +313,7 @@ lineage_phased <- haps_expression %>%
     filter(n() >= 10L) %>%
     ungroup() %>%
     mutate(locus = factor(locus, levels = gencode_hla$gene_name))
-    
+
 
 ## effects
 best_eqtl_locus <- read_tsv("./plots/eqtl.tsv") %>%
@@ -394,6 +394,21 @@ ggdraw(grid1) +
     draw_label("eQTL genotype", 0.82, 0.025, size = 14) +
     draw_label("PCA-corrected expression", .985, 0.5, size = 14, angle = 90)
 dev.off()
+
+# Direction of eQTLs
+eqtl_direction <- left_join(hap_snps, qtls_high_low, by = c("locus", "allele")) %>%
+    mutate(locus = factor(locus, levels = hla_genes)) %>%
+    select(subject, locus, hap, eQTL) %>%
+    mutate(locus = sub("HLA-", "", locus),
+           eQTL = recode(eQTL, "Low" = 0L, "High" = 1L)) %>%
+    spread(locus, eQTL) %>%
+    select(-subject, -hap)
+
+png("./plots/correlation_of_eqtls.png", width = 2.5, height = 2.5, units = "in", res = 300)
+GGally::ggcorr(eqtl_direction, label = TRUE, label_round = 2, label_size = 2,
+               legend.size = 5, size = 2)
+dev.off()
+
 
 # CaVEMaN
 caveman <- "./transcriptomemapping/hla_personalized/caveman/results.hla" %>%
