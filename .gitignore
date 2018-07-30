@@ -9,6 +9,7 @@
 *.fastq
 *.fq
 *.gem
+*.gtf
 *.idx
 *.inp
 *.json
@@ -44,9 +45,14 @@
 *mappings*
 *quantifications*
 *results*
+geuvadis_reanalysis/data/encode/DNAse
+geuvadis_reanalysis/data/encode/HistoneModifications
+geuvadis_reanalysis/data/encode/Segmentation
+geuvadis_reanalysis/data/encode/TranscriptionFactors
 imgt_index_trimmed
 simulation/PEreads_150bp
 simulation/PEreads_75bp/isoforms
 simulation/PEreads_75bp/expression/star/old
 geuvadis_reanalysis/expression/backup
-nci/expression/backup
+nci
+hug_pilot
