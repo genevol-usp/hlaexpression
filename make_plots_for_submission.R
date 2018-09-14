@@ -1,4 +1,4 @@
-devtools::load_all("/home/vitor/hlaseqlib")
+devtools::load_all("/home/vitor/Libraries/hlaseqlib")
 library(tidyverse)
 library(cowplot)
 library(GGally)
@@ -15,13 +15,17 @@ cols <- ggsci::pal_npg()(4) %>%
     .[c(1, 2, 4)] %>%
     setNames(pipelines)
 
-allele_dist <- "./imgt_index/distances_to_reference.tsv" %>%
+allele_dist <- "./imgt_index/distance_to_ref/distances_to_reference.tsv" %>%
     read_tsv()
 
 hla_genes <- gencode_hla$gene_name
 
+hla_regex <- sub("HLA-", "", hla_genes) %>%
+    paste(collapse = "|") %>%
+    paste0("IMGT_(", ., ")")
+
 ground_truth <- read_tsv("./simulation/data/phenotypes_trueCounts.tsv") %>%
-    filter(grepl("IMGT_(A|B|C|DPB1|DQA1|DQB1|DRB1)", Name)) %>%
+    filter(grepl(hla_regex, Name)) %>%
     mutate(locus = sub("^IMGT_([^*]+).+$", "HLA-\\1", Name)) %>%
     group_by(subject, locus) %>%
     summarize(true_counts = sum(TrueCounts)) %>%
@@ -68,13 +72,13 @@ hla_counts_df <-
            pipeline = factor(pipeline, levels = pipelines),
            prop_mapped = counts/true_counts)
 
-tiff("./plots_for_submission/Fig2.tiff", width = 5, height = 3.5, units = "in", res = 300)
+tiff("./plots_for_submission/Fig2.tiff", width = 5, height = 4, units = "in", res = 300)
 ggplot(hla_counts_df, aes(dist, prop_mapped, color = pipeline)) +
-    geom_point() +
+    geom_point(size = 1) +
     geom_line(stat = "smooth", method = "loess", span = 1, se = FALSE, 
-              alpha = .8, size = 1.5) +
-    scale_x_continuous(labels = scales::percent,
-                       breaks = scales::pretty_breaks(n = 3)) +
+              alpha = 1/2, size = 1) +
+    scale_x_continuous(labels = percent,
+                       breaks = pretty_breaks(n = 3)) +
     scale_y_continuous(breaks = seq(0, 1, 0.5)) +
     facet_wrap(~locus, scales = "free_x") +
     scale_color_manual(values = cols) +
@@ -82,10 +86,10 @@ ggplot(hla_counts_df, aes(dist, prop_mapped, color = pipeline)) +
     theme(text = element_text(size = 9, family = "Arial"),
           strip.text = element_text(face = "bold"),
           panel.spacing.x = unit(1, "lines"),
-          legend.position = c(.75, .125)) +
-    guides(color = guide_legend(override.aes = list(size = 4))) +
+          legend.position = "top") +
+    guides(color = guide_legend(override.aes = list(size = 3))) +
     labs(x = "Sequence divergence to the HLA reference allele", 
-         y = "Aligned reads / Simulated reads")
+         y = expression(frac(Aligned~reads, Simulated~reads)))
 dev.off()
 
 
