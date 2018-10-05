@@ -18,4 +18,4 @@ if (length(missing_files) > 0L) {
 out_df <- hla_genotype_dt(imgt_quants, th = 0) %>%
     hla_apply_zigosity_threshold(th = 0.1)
 
-write_tsv(out_df, "./hla_quantifications")
+write_tsv(out_df, "./hla_quantifications.tsv")
