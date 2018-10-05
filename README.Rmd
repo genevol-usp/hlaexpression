@@ -122,6 +122,16 @@ High correlation with estimated counts. Correlation drops for Class I genes with
 include_graphics("./geuvadis_reanalysis/expression/plots/comparison_pseudoalignment.png")
 ```
 
+
+## Replicates
+
+We assessed the correlation of expression between Geuvadis replicates for 97 European individuals.
+
+```{r}
+include_graphics("./geuvadis_reanalysis/replicates/plots/replicates.png")
+```
+
+
 ### ASE
 
 The genotype with extreme ASE for HLA-A is not a typing error. The genotype is 

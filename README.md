@@ -47,7 +47,7 @@ Here we compare estimates from:
 2.  Personalized: Map to personalized index with STAR, quantify with Salmon
 3.  Ref Genome: Map to genome and count uniquely mapped reads per gene with STAR
 
-<img src="./simulation/plots/prop_mapped_divergence.png" width="1200" />
+<img src="./simulation/plots/prop_mapped_divergence.png" width="1500" />
 
 GEUVADIS
 ========
@@ -80,7 +80,7 @@ HLA genes with average TPM &gt; 100.
 
 Here we see higher expression for HLA-C for the reference, which may be overestimation.
 
-<img src="./geuvadis_reanalysis/expression/plots/pers_vs_ref_mapping.png" width="3000" />
+<img src="./geuvadis_reanalysis/expression/plots/pers_vs_ref_mapping.png" width="1560" />
 
 #### Quasi-mapping to transcriptome pipeline
 
@@ -94,11 +94,18 @@ High correlation with estimated counts. Correlation drops for Class I genes with
 
 <img src="./geuvadis_reanalysis/expression/plots/comparison_pseudoalignment.png" width="1800" />
 
+Replicates
+----------
+
+We assessed the correlation of expression between Geuvadis replicates for 97 European individuals.
+
+<img src="./geuvadis_reanalysis/replicates/plots/replicates.png" width="2400" />
+
 ### ASE
 
 The genotype with extreme ASE for HLA-A is not a typing error. The genotype is concordant with the Sanger sequencing typings.
 
-<img src="./geuvadis_reanalysis/expression/plots/ase.png" width="1600" />
+<img src="./geuvadis_reanalysis/expression/plots/ase.png" width="1560" />
 
 ### Correlation of expression
 
@@ -110,7 +117,7 @@ We need to explore why global factors affect correlation among close genes. Why 
 
 #### Correlation among the HLA genes (uncorrected estimates)
 
-<img src="./geuvadis_reanalysis/expression/plots/correlations.png" width="3000" />
+<img src="./geuvadis_reanalysis/expression/plots/correlations.png" width="2250" />
 
 #### Correlation of eQTLs
 
@@ -126,7 +133,7 @@ Here we evaluate whether a pair of alleles within the same haplotypes are associ
 
 #### Correlation between Class II genes and CIITA
 
-<img src="./geuvadis_reanalysis/expression/plots/trans_activ_corrs.png" width="2000" />
+<img src="./geuvadis_reanalysis/expression/plots/trans_activ_corrs.png" width="2250" />
 
 eQTLs
 -----
@@ -135,7 +142,7 @@ eQTLs
 
 PCs 1-3 were used as covariates to account for population structure.
 
-<img src="./geuvadis_reanalysis/eqtl_mapping/plots/genotype_pca.png" width="3000" />
+<img src="./geuvadis_reanalysis/eqtl_mapping/plots/genotype_pca.png" width="2250" />
 
 ### Number of eGenes
 
@@ -143,15 +150,15 @@ PCs 1-3 were used as covariates to account for population structure.
 
 ### Distribution of eQTLs around the TSS
 
-<img src="./geuvadis_reanalysis/eqtl_mapping/plots/qtls_landscape.png" width="3000" />
+<img src="./geuvadis_reanalysis/eqtl_mapping/plots/qtls_landscape.png" width="1875" />
 
 ### Causal probabilities
 
-<img src="./geuvadis_reanalysis/eqtl_mapping/plots/caveman.png" width="3000" />
+<img src="./geuvadis_reanalysis/eqtl_mapping/plots/caveman.png" width="2250" />
 
 ### HLA lineages and eQTLs
 
-<img src="./geuvadis_reanalysis/eqtl_mapping/plots/lineage_and_effects.png" width="2100" />
+<img src="./geuvadis_reanalysis/eqtl_mapping/plots/lineage_and_effects.png" width="1800" />
 
 #### F-test: is there a difference among lineages?
 
