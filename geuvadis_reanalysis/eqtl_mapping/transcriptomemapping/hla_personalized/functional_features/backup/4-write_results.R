@@ -1,6 +1,6 @@
 library(tidyverse)
 
-qtls <- read_tsv("../3-conditional_analysis/hla_qtls.tsv") %>%
+qtls <- read_tsv("../2-conditional_analysis/hla_qtls.tsv") %>%
     filter(best == 1L) %>%
     select(locus = gene, rank, rsid = var_id, dist)
 

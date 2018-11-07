@@ -1,3 +1,4 @@
+devtools::load_all("/home/vitor/Libraries/hlaseqlib")
 library(tidyverse)
 
 overlap_elements <- function(pos, element_df) {
@@ -39,6 +40,7 @@ qtl <- read_tsv("./hla.qtls.bed", col_names = FALSE) %>%
 	   chrom_state = map_chr(X2, overlap_elements, seg),
 	   histone_marks = map_chr(X2, overlap_elements, hm)) %>%
     separate(X4, c("locus", "rsid", "rank"), sep = ":", convert = TRUE) %>%
+    mutate(locus = factor(locus, levels = gencode_hla$gene_name)) %>%
     select(locus, rank, rsid, pos = X3, tf, dhs, chrom_state, histone_marks) %>%
     arrange(locus, rank) %>%
     mutate_at(vars(tf, dhs, chrom_state, histone_marks), ~ifelse(. == "", NA, .))

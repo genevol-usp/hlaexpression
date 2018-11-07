@@ -1,7 +1,7 @@
 library(tidyverse)
 library(haploR)
 		      
-qtls <- read_tsv("../3-conditional_analysis/hla_qtls.tsv") %>%
+qtls <- read_tsv("../2-conditional_analysis/hla_qtls.tsv") %>%
     filter(best == 1) %>%
     select(gene, rsid = var_id, rank)
 
