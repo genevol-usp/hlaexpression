@@ -5,4 +5,4 @@ gencode_hla %>%
     select(chr, start, end) %>%
     unite(coord, start:end, sep = "-") %>%
     unite(info, chr:coord, sep = ":") %>%
-    write_lines("./hla_regions.txt")
+    write_tsv("./hla_regions.txt", col_names = FALSE)
