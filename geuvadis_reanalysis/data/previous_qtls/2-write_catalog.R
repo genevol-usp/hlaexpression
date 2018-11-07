@@ -1,4 +1,4 @@
-devtools::load_all("~/hlaseqlib")
+devtools::load_all("/home/vitor/Libraries/hlaseqlib")
 library(tidyverse)
 
 convert_rsIDs <- function(df) {
