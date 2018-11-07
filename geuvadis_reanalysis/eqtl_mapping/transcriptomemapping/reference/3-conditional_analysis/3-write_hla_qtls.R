@@ -1,10 +1,9 @@
-devtools::load_all("~/hlaseqlib")
+devtools::load_all("/home/vitor/Libraries/hlaseqlib")
 library(tidyverse)
 
 gencode_hla <- select(gencode_hla, gene_id, gene_name)
 
-qtltools_res <- 
-    read_qtltools("./conditional_60_all.txt.gz") %>%
+qtltools_res <- read_qtltools("./conditional_60_all.txt.gz") %>%
     inner_join(gencode_hla, by = c("phen_id" = "gene_id")) %>%
     mutate(tss = ifelse(strand == "+", phen_from, phen_to),
 	   dist_to_tss = var_from - tss,
@@ -22,8 +21,8 @@ fix_rank <- qtltools_res %>%
     select(gene, rank, new_rank)
 
 out_df <- left_join(qtltools_res, fix_rank, by = c("gene", "rank")) %>%
-    select(gene, tss, strand, rank = new_rank, var_chr, var_id, var_from, var_to,
-	   dist, dist_to_tss, pval, best, signif) %>%
+    select(gene, tss, strand, rank = new_rank, var_chr, var_id, var_from, 
+	   var_to, dist, dist_to_tss, pval, best, signif) %>%
     group_by(gene, var_id) %>%
     filter(pval == max(pval)) %>%
     ungroup() %>%
