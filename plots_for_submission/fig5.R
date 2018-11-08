@@ -30,32 +30,20 @@ read_conditional_mhc <- function(file, mhc_genes) {
         group_by(gene, var_id) %>%
         filter(pval == max(pval)) %>%
         ungroup() %>%
-        mutate(gene = reorder(gene, tss),
-               rank = as.character(rank))
+        mutate(rank = as.character(rank))
     
     out_df
 }
 
-plot_qtls_index <- function(qtl_df) {
-    
-   
-    
-   
-}
-
-hla_qtl_genes <- gencode_hla %>% 
-    filter(!gene_name %in% c("HLA-DRA", "HLA-DPA1")) %>%
-    pull(gene_name)
 
 mhc_coords <- gencode_hla %>% 
-    filter(gene_name %in% hla_qtl_genes) %>%
     summarise(start = min(start) - 1e6L, end = max(end) + 1e6L)
 
 mhc_genes <- gencode_pri_gene %>%
     filter(start >= mhc_coords$start, end <= mhc_coords$end) %>%
     select(gene_id, gene_name)
 
-hla_qtls <-
+hlapers_qtls <-
     "../geuvadis_reanalysis/eqtl_mapping/transcriptomemapping/hla_personalized/2-conditional_analysis/conditional_60_all.txt.gz" %>%
     read_conditional_mhc(mhc_genes)
 
@@ -64,13 +52,12 @@ ref_qtls <-
     read_conditional_mhc(mhc_genes)
 
 qtls_df <- 
-    list("HLA-personalized" = hla_qtls, "Ref Transcriptome" = ref_qtls) %>%
-    bind_rows(.id = "index") %>%
-    mutate(gene = reorder(gene, tss))
+    list("HLA-personalized" = hlapers_qtls, "Ref Transcriptome" = ref_qtls) %>%
+    bind_rows(.id = "index") 
 
-hla_qtls <- hla_qtls %>%
-    mutate(gene = reorder(gene, tss),
-           colorize = ifelse(gene %in% hla_qtl_genes, 1L, 0L))
+hla_qtls <- hlapers_qtls %>%
+    mutate(gene = factor(gene, levels = unique(gene)),
+           colorize = ifelse(gene %in% gencode_hla$gene_name, 1L, 0L))
 
 plot_qtls_1 <- ggplot() +
     geom_point(data = filter(hla_qtls, colorize == 0L), 
@@ -91,7 +78,8 @@ plot_qtls_1 <- ggplot() +
 
 
 plot_qtls_df <- qtls_df %>%
-    filter(gene %in% hla_qtl_genes) 
+    filter(gene %in% gencode_hla$gene_name) %>%
+    mutate(gene = factor(gene, levels = gencode_hla$gene_name))
 
 ori_df <- plot_qtls_df %>%
     distinct(index, gene, strand) %>%
@@ -148,7 +136,7 @@ plot_qtls_2 <-  ggplot(data = plot_qtls_df, aes(dist_to_tss, pval)) +
 
 
 
-tiff("./plots/Fig5.tiff",  width = 6.25, height = 7.25, units = "in", res = 300)
+tiff("./plots/Fig5.tiff",  width = 6.25, height = 8, units = "in", res = 300)
 plot_grid(NULL, plot_qtls_1, plot_qtls_2, ncol = 1,
           rel_heights = c(.025, .225, 1),
           labels = c("", "A", "B"), label_size = 12, vjust = 1, hjust = 0)

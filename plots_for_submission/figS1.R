@@ -1,14 +1,13 @@
 devtools::load_all("/home/vitor/Libraries/hlaseqlib")
 library(tidyverse)
 library(cowplot)
-#library(GGally)
 library(scales)
-#library(ggpmisc)
-#library(ggrepel)
-#
 
-loci <- readLines("../imgt_index/imgt_loci.txt") %>%
-    paste0("HLA-", .)
+
+#loci <- readLines("../imgt_index/imgt_loci.txt") %>%
+#    paste0("HLA-", .)
+
+loci <- gencode_hla$gene_name
 
 hlapers <- 
     "../geuvadis_reanalysis/expression/3-map_to_transcriptome/hla_personalized/quantifications/processed_imgt_quants.tsv" %>%
@@ -62,6 +61,7 @@ p2 <- ggplot(hla_geuvadis, aes(locus, fpkm)) +
           axis.text.x = element_text(angle = 45, hjust = 1, vjust = 1)) +
     labs(x = NULL, y = "FPKM")
 
-tiff("./plots/S1_fig.tiff", width = 6, height = 6, units = "in", res = 300)
+#tiff("./plots/S1_fig.tiff", width = 6, height = 6, units = "in", res = 300)
+tiff("./plots/S1_fig.tiff", width = 4, height = 6, units = "in", res = 300)
 plot_grid(p1, p2, ncol = 1)
 dev.off()
