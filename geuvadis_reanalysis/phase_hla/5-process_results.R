@@ -1,4 +1,4 @@
-devtools::load_all("~/hlaseqlib")
+devtools::load_all("~/Libraries/hlaseqlib")
 library(tidyverse)
 
 phase_out <- readLines("./phase.out")
@@ -36,7 +36,7 @@ phase_df <-
     distinct()
 
 hla_qtls <- 
-    "../eqtl_mapping/transcriptomemapping/hla_personalized/3-conditional_analysis/conditional_60_all.txt.gz" %>%
+    "../eqtl_mapping/transcriptomemapping/hla_personalized/2-conditional_analysis/conditional_60_all.txt.gz" %>%
     read_qtltools() %>%
     filter(bwd_best == 1L) %>%
     select(phen_id, rank, var_id) %>%

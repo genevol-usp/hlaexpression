@@ -1,4 +1,4 @@
-devtools::load_all("~/hlaseqlib")
+devtools::load_all("~/Libraries/hlaseqlib")
 library(tidyverse)
 
 hla_genos <- 
@@ -7,8 +7,7 @@ hla_genos <-
     filter(locus %in% gencode_hla$gene_name) %>%
     select(subject, locus, allele) %>%
     mutate(subject = convert_ena_ids(subject),
-	   allele = gsub("IMGT_", "", allele),
-	   allele = hla_trimnames(allele, 3)) %>%
+	   allele = gsub("IMGT_", "", allele)) %>%
     arrange(subject, locus, allele)
 
 hla_genos_recoded <- code_alleles(hla_genos)

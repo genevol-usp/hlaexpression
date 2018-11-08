@@ -2,12 +2,12 @@
 
 #PBS -l nodes=1:ppn=1
 #PBS -l mem=8gb
-#PBS -l walltime=24:00:00
-#PBS -q short
+#PBS -l walltime=72:00:00
+#PBS -q long
 #PBS -j oe
 #PBS -o /home/vitor/hlaexpression/geuvadis_reanalysis/phase_hla/phase.log
 
-PHASE=/home/vitor/phase/src/phase.2.1.1.source/PHASE
+PHASE=/home/vitor/Libraries/phase/src/phase.2.1.1.source/PHASE
 
 cd $PBS_O_WORKDIR
 
