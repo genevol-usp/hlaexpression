@@ -1,9 +1,9 @@
-devtools::load_all("~/hlaseqlib")
+devtools::load_all("/home/vitor/Libraries/hlaseqlib")
 library(tidyverse)
 
 gencode_hla <- select(gencode_hla, gene_id, gene_name)
 
-imgt_qtls <- read_tsv("../3-conditional_analysis/hla_qtls.tsv") %>%
+imgt_qtls <- read_tsv("../2-conditional_analysis/hla_qtls.tsv") %>%
     filter(best == 1L) %>%
     left_join(gencode_hla, by = c("gene" = "gene_name")) %>%
     select(gene_id, gene, rank, var_id, pos = var_from)
