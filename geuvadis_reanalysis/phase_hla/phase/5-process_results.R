@@ -52,9 +52,6 @@ qtl_df <- phase_df %>%
     left_join(hla_qtls, by = "rsid")
 
 gene_snp_df <- left_join(hla_df, qtl_df, by = c("subject", "locus", "hap"),
-			 suffix = c("_gene", "_snp")) %>%
-    group_by(subject, locus) %>%
-    filter(!any(uncertain_gene | uncertain_snp)) %>%
-    ungroup()
+			 suffix = c("_gene", "_snp"))
 
 write_tsv(gene_snp_df, "./phase_hla_haps_snps.tsv")
