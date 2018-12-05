@@ -2,7 +2,7 @@ devtools::load_all("~/hlaseqlib")
 library(Biostrings)
 library(tidyverse)
 
-imgt_loci <- readLines("../imgt_index_v2/imgt_loci.txt") %>%
+imgt_loci <- readLines("../imgt_index/imgt_loci.txt") %>%
     paste0("HLA-", .)
 
 mhc_tx <- gencode_pri_tx %>%
@@ -10,7 +10,7 @@ mhc_tx <- gencode_pri_tx %>%
     pull(tx_id)
 
 index <- 
-    readDNAStringSet("../imgt_index_v2/gencode.v25.PRI.IMGT.transcripts.fa") %>%
+    readDNAStringSet("../imgt_index/gencode.v25.PRI.IMGT.transcripts.fa") %>%
     .[grepl("IMGT", names(.)) | names(.) %in% mhc_tx]
 
 writeXStringSet(index, "./gencode.v25.MHC.IMGT.transcripts.fa")

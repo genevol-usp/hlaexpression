@@ -1,4 +1,4 @@
-devtools::load_all("/home/vitor/hlaseqlib")
+devtools::load_all("/home/vitor/Libraries/hlaseqlib")
 library(tidyverse)
 
 geuvadis_samples_phase3 <-
@@ -20,6 +20,12 @@ geuvadis_samples_phase3 %>%
   pull(ena_id) %>%
   sort() %>%
   writeLines("samples_phase3_ena_eur.txt")
+
+geuvadis_samples_phase3 %>%
+  filter(pop != "YRI") %>%
+  pull(name) %>%
+  sort() %>%
+  writeLines("samples_phase3_eur.txt")
 
 geuvadis_samples_phase3 %>%
   filter(pop == "YRI") %>%

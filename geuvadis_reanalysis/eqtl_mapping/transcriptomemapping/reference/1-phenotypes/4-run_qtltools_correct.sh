@@ -1,19 +1,11 @@
 #!/bin/bash
 
-QTLtools=/home/vitor/QTLtools/QTLtools_1.1_Ubuntu16.04_x86_64
+qtltools=/home/vitor/qtltools/bin/QTLtools
 
-BED=./phenotypes_eur.bed.gz
+PC=60
+BED=./phenotypes.bed.gz
+COV=./covariates/covariates_pheno_$PC.txt
+OUT=./phenotypes_$PC.bed
 
-# 0 PCs
-$QTLtools correct --bed $BED --normal --out ./phenotypes_eur_0.bed
-bgzip ./phenotypes_eur_0.bed && tabix -p bed ./phenotypes_eur_0.bed.gz
-
-# 5-100 PCs
-for pcs in $(seq 5 5 20; seq 30 10 100)
-do
-    COV=./covariates/covariates_pheno_$pcs.txt
-    OUT=./phenotypes_eur_$pcs.bed
-
-    $QTLtools correct --bed $BED --cov $COV --normal --out $OUT
-    bgzip $OUT && tabix -p bed $OUT.gz
-done
+$qtltools correct --bed $BED --cov $COV --normal --out $OUT
+bgzip $OUT && tabix -p bed $OUT.gz

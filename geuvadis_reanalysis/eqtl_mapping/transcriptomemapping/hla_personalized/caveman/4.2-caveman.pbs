@@ -4,7 +4,7 @@
 #PBS -l mem=4gb
 #PBS -l walltime=24:00:00
 #PBS -q short
-#PBS -t 1000-1838
+#PBS -t 1000-1786
 #PBS -j oe
 #PBS -o /home/vitor/hlaexpression/geuvadis_reanalysis/eqtl_mapping/transcriptomemapping/hla_personalized/caveman/log/$PBS_JOBID.log
 

@@ -1,4 +1,4 @@
-devtools::load_all("~/hlaseqlib")
+devtools::load_all("/home/vitor/Libraries/hlaseqlib")
 library(tidyverse)
 
 gencode_hla <- select(gencode_hla, gene_name, gene_id)

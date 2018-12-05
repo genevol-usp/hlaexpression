@@ -1,4 +1,4 @@
-devtools::load_all("/home/vitor/hlaseqlib")
+devtools::load_all("/home/vitor/Libraries/hlaseqlib")
 library(tidyverse)
 
 hla_genes <- gencode_hla$gene_name
@@ -8,7 +8,7 @@ gencode_hla <- gencode_chr_gene %>%
     select(gene_id, gene_name)
 
 qtls <- 
-    read_qtltools("../../3-conditional_analysis/conditional_60_all.txt.gz") %>%
+    read_qtltools("../../2-conditional_analysis/conditional_60_all.txt.gz") %>%
     filter(bwd_best == 1) %>%
     inner_join(gencode_hla, by = c("phen_id" = "gene_id")) %>%
     select(gene = gene_name, variant = var_id, rank)
@@ -20,6 +20,7 @@ rtc_files <- list.files(".", pattern = "^rtc_results")
 
 rtc_crd <- rtc_files %>%
     map_df(read_qtltools_rtc) %>%
+    distinct() %>%
     inner_join(gencode_hla, by = c("gene" = "gene_id")) %>%
     select(gene = gene_name, qtl_var, crd_var = gwas_var, d_prime, rtc)
 

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-salmon=/home/vitor/Salmon-latest_linux_x86_64/bin/salmon
+salmon=/home/vitor/Libraries/Salmon-latest_linux_x86_64/bin/salmon
 
 sample=$1
 CPUS=8

@@ -1,7 +1,7 @@
-devtools::load_all("~/hlaseqlib")
+devtools::load_all("/home/vitor/Libraries/hlaseqlib")
 library(tidyverse)
 
-imgt_loci <- readLines("../../../../imgt_index_v2/imgt_loci.txt") %>%
+imgt_loci <- readLines("../../../../imgt_index/imgt_loci.txt") %>%
     paste0("HLA-", .)
 
 samples <- geuvadis_info %>% 

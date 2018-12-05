@@ -1,10 +1,10 @@
-devtools::load_all("~/hlaseqlib")
+devtools::load_all("/home/vitor/Libraries/hlaseqlib")
 library(tidyverse)
 
 gencode_hla <- select(gencode_hla, gene_name, gene_id)
 
 qtls <-
-    read_tsv("../../3-conditional_analysis/hla_qtls.tsv") %>%
+    read_tsv("../../2-conditional_analysis/hla_qtls.tsv") %>%
     filter(best == 1) %>%
     select(gene, variant = var_id, rank)
 

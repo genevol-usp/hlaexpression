@@ -3,7 +3,7 @@
 #PBS -l nodes=1:ppn=1
 #PBS -l mem=4gb
 #PBS -l walltime=24:00:00
-#PBS -t 1-7
+#PBS -t 1-9
 #PBS -q short
 #PBS -j oe
 #PBS -o /home/vitor/hlaexpression/geuvadis_reanalysis/eqtl_mapping/transcriptomemapping/hla_personalized/rtc/crd/log/$PBS_JOBID.log
@@ -12,7 +12,7 @@ cd $PBS_O_WORKDIR
 
 mkdir -p ./log
 
-qtltools=/home/vitor/qtltools/bin/QTLtools
+qtltools=/home/vitor/Libraries/qtltools/bin/QTLtools
 
 PC=60
 datadir=/home/vitor/hlaexpression/geuvadis_reanalysis/data
@@ -21,10 +21,10 @@ VCF=$datadir/genotypes/eur_maf05.vcf.gz
 COV=$datadir/pca_genotypes/covariates_genos.txt
 HOTSPOTS=$datadir/recomb_hotspots/hotspots_hg38_fixed_distances.bed
 CATALOG=$datadir/crd/catalog.tsv
-BED=../../1-phenotypes/phenotypes_eur_$PC.bed.gz
-COND=../../3-conditional_analysis/conditional_${PC}_all.txt.gz
+BED=../../1-map_eqtls/th_50/1-phenotypes/phenotypes_$PC.bed.gz
+COND=../../2-conditional_analysis/conditional_${PC}_all.txt.gz
 
-REGION=`awk "FNR==$PBS_ARRAYID" ./hla_regions.txt`
+REGION=`awk "FNR==$PBS_ARRAYID" ../hla_regions.txt`
 
 OUT=./rtc_results_$REGION.txt
 
