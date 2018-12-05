@@ -1,38 +1,41 @@
 devtools::load_all("/home/vitor/Libraries/hlaseqlib")
 library(tidyverse)
 library(cowplot)
-#library(GGally)
 library(scales)
-#library(ggpmisc)
-#library(ggrepel)
 
-lineage_df <- 
-    "../geuvadis_reanalysis/expression/3-map_to_transcriptome/hla_personalized/quantifications/processed_imgt_quants.tsv" %>%
-    read_tsv() %>%
-    filter(locus %in% gencode_hla$gene_name) %>%
-    select(subject, locus, allele, tpm) %>%
-    mutate(subject = convert_ena_ids(subject),
-           allele = gsub("IMGT_", "", allele),
-           allele_3f = hla_trimnames(allele, 3),
-           allele_2f = hla_trimnames(allele, 2),
-           lineage = hla_trimnames(allele, 1))
 
 dist_to_ref <- "../imgt_index/distance_to_ref/distances_to_reference.tsv" %>%
     read_tsv() %>%
     select(-locus)
 
-haps_expression <- "../geuvadis_reanalysis/phase_hla/phase_hla_haps_snps.tsv" %>%
+hlapers <- 
+    "../geuvadis_reanalysis/expression/3-map_to_transcriptome/hla_personalized/quantifications/processed_imgt_quants.tsv" %>%
     read_tsv() %>%
-    filter(rank == 0L) %>%
-    rename(hla_allele = allele_gene) %>%
-    left_join(lineage_df, by = c("subject", "locus", "hla_allele" = "allele")) %>%
-    distinct() 
+    filter(locus %in% gencode_hla$gene_name) %>%
+    mutate(subject = convert_ena_ids(subject),
+           allele = gsub("IMGT_", "", allele)) %>%
+    select(subject, locus, allele, tpm)
+
+
+haps_expression <- "../geuvadis_reanalysis/phase_hla/phase/phase_hla_haps_snps.tsv" %>%
+    read_tsv() %>%
+    filter(rank == 0) %>% 
+    group_by(subject, locus) %>%
+    filter(!any(uncertain_gene == 1)) %>%
+    ungroup() %>%
+    left_join(hlapers, by = c("subject", "locus", "allele_gene" = "allele")) %>%
+    distinct(subject, locus, hap, .keep_all = TRUE) %>%
+    mutate(locus = sub("HLA-", "", locus),
+           locus = factor(locus, levels = sub("HLA-", "", gencode_hla$gene_name)),
+           lineage = hla_trimnames(allele_gene, 1)) %>%
+    select(subject, hap, locus, allele = allele_gene, lineage, tpm, qtl_rsid = rsid, 
+           qtl_allele = allele_snp)
 
 hap_hla_genot <- haps_expression %>%
-    select(subject, locus, hap, hla_allele)
+    select(subject, locus, hap, allele)
 
 hap_snps <- haps_expression %>%
-    select(subject, locus, hap, allele = allele_snp)
+    select(subject, locus, hap, allele = qtl_allele)
 
 phen_best <- 
     "../geuvadis_reanalysis/eqtl_mapping/transcriptomemapping/hla_personalized/1-map_eqtls/th_50/1-phenotypes/phenotypes_60.bed.gz" %>%
@@ -40,7 +43,9 @@ phen_best <-
     inner_join(gencode_hla, by = c("gid" = "gene_id")) %>%
     select(gene_name, HG00096:NA20828) %>%
     gather(subject, resid, -gene_name) %>%
-    select(subject, locus = gene_name, resid)
+    select(subject, locus = gene_name, resid) %>%
+    mutate(locus = sub("HLA-", "", locus),
+           locus = factor(locus, levels = sub("HLA-", "", gencode_hla$gene_name)))
 
 qtls_high_low <- left_join(hap_snps, phen_best, by = c("subject", "locus")) %>%
     group_by(locus, allele) %>% 
@@ -50,20 +55,17 @@ qtls_high_low <- left_join(hap_snps, phen_best, by = c("subject", "locus")) %>%
     ungroup()
 
 lineage_phased <- haps_expression %>%
-    left_join(qtls_high_low, by = c("locus", "allele_snp" = "allele")) %>%
-    select(subject, locus, hla_allele, lineage, eQTL, tpm) %>%
-    left_join(dist_to_ref, by = c("hla_allele" = "allele")) %>%
+    left_join(qtls_high_low, by = c("locus", "qtl_allele" = "allele")) %>%
+    select(subject, locus, allele, lineage, qtl_rsid, eQTL, tpm) %>%
+    left_join(dist_to_ref, by = "allele") %>%
     mutate(eQTL = factor(eQTL, levels = c("Low", "High"))) %>%
     group_by(lineage) %>%
-    filter(n() >= 10L) %>%
-    ungroup() %>%
-    mutate(locus = factor(locus, levels = gencode_hla$gene_name))
+    filter(n() >= 10) %>%
+    ungroup()
 
-best_eqtl_locus <- read_tsv("../geuvadis_reanalysis/eqtl_mapping/plots/eqtl.tsv") %>%
-    filter(rank == 0) %>%
-    select(locus = gene, variant = var_id)
+best_eqtl_locus <- distinct(lineage_phased, locus, variant = qtl_rsid)
 
-eqtl_info <- "../geuvadis_reanalysis/phase_hla/eqtl_snps.vcf" %>%
+eqtl_info <- "../geuvadis_reanalysis/phase_hla/phase/eqtl_snps.vcf" %>%
     read_tsv(comment = "##") %>%
     select(-`#CHROM`, -POS, -QUAL, -FILTER, -INFO, -FORMAT) %>%
     gather(subject, genotype, -(ID:ALT)) %>%
@@ -78,14 +80,13 @@ eqtl_info <- "../geuvadis_reanalysis/phase_hla/eqtl_snps.vcf" %>%
     ungroup() %>%
     unite(id, genotype, locus, sep = "_", remove = FALSE)
 
-eqtls_expression_df <- left_join(eqtl_info, phen_best, by = c("subject", "locus")) %>%
-    mutate(locus = factor(locus, levels = gencode_hla$gene_name))
+eqtls_expression_df <- left_join(eqtl_info, phen_best, by = c("subject", "locus"))
 
 
-p1 <- ggplot(data = lineage_phased,
-             aes(x = reorder(lineage, tpm, FUN = median, na.rm = TRUE), 
-                 y = tpm)) +
-    geom_jitter(aes(color = eQTL), size = .75) +
+
+plot_lineages <- ggplot(data = lineage_phased,
+       aes(x = reorder(lineage, tpm, FUN = median, na.rm = TRUE), y = tpm)) +
+    geom_jitter(aes(color = eQTL), size = .7) +
     geom_boxplot(outlier.shape = NA, fill = NA, color = "grey5", alpha = .1) +
     scale_color_manual(values = c("Low" = ggsci::pal_npg()(6)[6], 
                                   "High" = ggsci::pal_npg()(1), 
@@ -93,39 +94,180 @@ p1 <- ggplot(data = lineage_phased,
     scale_x_discrete(labels = function(x) sub("^(.+\\*)", "", x)) +
     scale_y_continuous(labels = comma, breaks = pretty_breaks(3)) +
     facet_wrap(~locus, scales = "free", ncol = 1, strip.position = "left") +
-    labs(x = " ", y = "TPM") +
+    guides(color = guide_legend(override.aes = list(size = 3))) +
     theme_bw() +
-    theme(text = element_text(size = 10, family = "Arial"),
-          strip.text = element_text(face = "bold"),
+    theme(text = element_text(size = 9, family = "Times"), 
+          strip.text = element_text(face = "bold"), 
           legend.position = "top") +
-    guides(color = guide_legend(override.aes = list(size = 4)))
+    labs(x = "HLA lineage", y = "TPM")
 
-legend <- get_legend(p1)
+legend <- get_legend(plot_lineages)
 
-p1 <- p1 + theme(legend.position = "none")
+plot_lineages_final <- plot_lineages + theme(legend.position = "none")
 
-p2 <- ggplot(eqtls_expression_df, aes(reorder(id, resid, "mean"), resid)) +
+
+plot_slopes <- ggplot(data = eqtls_expression_df, 
+       aes(reorder(id, resid, "mean"), resid)) +
     geom_jitter(width = .25, alpha = 1/2, size = .75) +
     geom_smooth(aes(group = 1), method = lm, se = FALSE) +
     scale_x_discrete(labels = function(x) sub("^([^_]+).+$", "\\1", x)) +
     scale_y_continuous(position = "right") +
-    geom_text(data = distinct(eqtls_expression_df, locus, variant), 
-              aes(x = 1.5, y = 3, label = variant), size = 3) +
+    geom_label(data = distinct(eqtls_expression_df, locus, variant), 
+              aes(x = 0.5, y = 2.7, label = variant), 
+              label.padding = unit(0.05, "lines"), label.size = NA, alpha = 0.4,
+              size = 2.5, family = "Times", hjust = "inward") +
     coord_cartesian(ylim = c(-3, 3.2)) +
     facet_wrap(~locus, ncol = 1, scales = "free") +
-    labs(x = " ", y = " ") +
     theme_bw() +
-    theme(text = element_text(size = 10, family = "Arial"),
-          strip.text = element_blank())
+    theme(text = element_text(size = 9, family = "Times"), 
+          strip.text = element_blank()) +
+    labs(x = "eQTL genotype", y = "PCA-corrected expression")
 
-
-grid1 <- plot_grid(legend, NULL, p1, p2, ncol = 2, 
+plot_grid <- plot_grid(legend, NULL, plot_lineages_final, plot_slopes, ncol = 2, 
                    rel_widths = c(2.5, 1), rel_heights = c(.07, 1))
 
 
-tiff("./plots/Fig6.tiff", width = 6, height = 8, units = "in", res = 300)
-ggdraw(grid1) + 
-    draw_label("HLA lineage", 0.45, 0.025, size = 10, fontfamily = "Arial") +
-    draw_label("eQTL genotype", 0.82, 0.025, size = 10, fontfamily = "Arial") +
-    draw_label("PCA-corrected expression", .985, 0.5, size = 10, angle = 90, fontfamily = "Arial")
+tiff("./plots/Fig6.tiff", width = 11, height = 18, units = "cm", res = 300)
+ggdraw(plot_grid)
 dev.off()
+
+# plot_data_1.1 <- lineage_phased %>%
+#     filter(locus %in% c("A", "B", "C", "DRB1"))
+# 
+# plot_data_1.2 <- lineage_phased %>%
+#     filter(!locus %in% c("A", "B", "C", "DRB1"))
+# 
+# plot_data_2.1 <- eqtls_expression_df %>%
+#     filter(locus %in% c("A", "B", "C", "DRB1"))
+# 
+# plot_data_2.2 <- eqtls_expression_df %>%
+#     filter(!locus %in% c("A", "B", "C", "DRB1"))
+# 
+# 
+# p1.1 <- ggplot(data = plot_data_1.1,
+#                aes(x = reorder(lineage, tpm, FUN = median, na.rm = TRUE), y = tpm)) +
+#     geom_jitter(aes(color = eQTL), size = .7) +
+#     geom_boxplot(outlier.shape = NA, fill = NA, color = "grey5", alpha = .1) +
+#     scale_color_manual(values = c("Low" = ggsci::pal_npg()(6)[6], 
+#                                   "High" = ggsci::pal_npg()(1), 
+#                                   "ND" = "grey")) +
+#     scale_x_discrete(labels = function(x) sub("^(.+\\*)", "", x)) +
+#     scale_y_continuous(labels = comma, breaks = pretty_breaks(3)) +
+#     facet_wrap(~locus, scales = "free", ncol = 1, strip.position = "left") +
+#     guides(color = guide_legend(override.aes = list(size = 4))) +
+#     theme_bw() +
+#     theme(text = element_text(size = 11, family = "Times"), 
+#           strip.text = element_text(size = 11, family = "Times", face = "bold"), 
+#           plot.margin = margin(l = 0.1, unit = "cm"), 
+#           legend.position = "top") +
+#     labs(x = "HLA lineage", y = "TPM")
+# 
+# legend <- get_legend(p1.1)
+# 
+# p1.1 <- ggplot(data = plot_data_1.1,
+#                aes(x = reorder(lineage, tpm, FUN = median, na.rm = TRUE), y = tpm)) +
+#     geom_jitter(aes(color = eQTL), size = .7, show.legend = FALSE) +
+#     geom_boxplot(outlier.shape = NA, fill = NA, color = "grey5", alpha = .1) +
+#     scale_color_manual(values = c("Low" = ggsci::pal_npg()(6)[6], 
+#                                   "High" = ggsci::pal_npg()(1), 
+#                                   "ND" = "grey")) +
+#     scale_x_discrete(labels = function(x) sub("^(.+\\*)", "", x)) +
+#     scale_y_continuous(labels = comma, breaks = pretty_breaks(3)) +
+#     facet_wrap(~locus, scales = "free", ncol = 1, strip.position = "left") +
+#     theme_bw() +
+#     theme(text = element_text(size = 11, family = "Times"), 
+#           strip.text = element_text(size = 11, family = "Times", face = "bold"), 
+#           plot.margin = margin(l = 0.1, unit = "cm"), 
+#           legend.position = "none") +
+#     labs(x = "HLA lineage", y = "TPM") 
+# 
+# p1.2 <- ggplot(data = plot_data_1.2,
+#                aes(x = reorder(lineage, tpm, FUN = median, na.rm = TRUE), y = tpm)) +
+#     geom_jitter(aes(color = eQTL), size = .7, show.legend = FALSE) +
+#     geom_boxplot(outlier.shape = NA, fill = NA, color = "grey5", alpha = .1) +
+#     scale_color_manual(values = c("Low" = ggsci::pal_npg()(6)[6], 
+#                                   "High" = ggsci::pal_npg()(1), 
+#                                   "ND" = "grey")) +
+#     scale_x_discrete(labels = function(x) sub("^(.+\\*)", "", x)) +
+#     scale_y_continuous(labels = comma, breaks = pretty_breaks(3)) +
+#     facet_wrap(~locus, scales = "free", ncol = 1, strip.position = "left") +
+#     theme_bw() +
+#     theme(text = element_text(size = 11, family = "Times"), 
+#           strip.text = element_text(size = 11, family = "Times", face = "bold"), 
+#           plot.margin = margin(l = 0.1, unit = "cm"), 
+#           legend.position = "none") +
+#     labs(x = "HLA lineage", y = "TPM") 
+# 
+# 
+# p2.1 <- ggplot(data = plot_data_2.1, 
+#                aes(reorder(id, resid, "mean"), resid)) +
+#     geom_jitter(width = .25, alpha = 1/2, size = .75) +
+#     geom_smooth(aes(group = 1), method = lm, se = FALSE) +
+#     scale_x_discrete(labels = function(x) sub("^([^_]+).+$", "\\1", x)) +
+#     scale_y_continuous(position = "right") +
+#     geom_text(data = distinct(plot_data_2.1, locus, variant), 
+#               aes(x = 2, y = 3, label = variant), 
+#               size = 3, family = "Times", hjust = "inward") +
+#     coord_cartesian(ylim = c(-3, 3.2)) +
+#     facet_wrap(~locus, ncol = 1, scales = "free") +
+#     theme_bw() +
+#     theme(text = element_text(size = 11, family = "Times"), 
+#           strip.text = element_blank(),
+#           plot.margin = margin(l = 0.1, unit = "cm")) +
+#     labs(x = "eQTL genotype", y = "PCA-corrected expression")
+# 
+# p2.2 <- ggplot(data = plot_data_2.2, 
+#                aes(reorder(id, resid, "mean"), resid)) +
+#     geom_jitter(width = .25, alpha = 1/2, size = .75) +
+#     geom_smooth(aes(group = 1), method = lm, se = FALSE) +
+#     scale_x_discrete(labels = function(x) sub("^([^_]+).+$", "\\1", x)) +
+#     scale_y_continuous(position = "right") +
+#     geom_text(data = distinct(plot_data_2.2, locus, variant), 
+#               aes(x = 2, y = 3, label = variant), 
+#               size = 3, family = "Times", hjust = "inward") +
+#     coord_cartesian(ylim = c(-3, 3.2)) +
+#     facet_wrap(~locus, ncol = 1, scales = "free") +
+#     theme(text = element_text(size = 11, family = "Times"), 
+#           strip.text = element_blank(),
+#           plot.margin = margin(l = 0.1, unit = "cm")) +
+#     labs(x = "eQTL genotype", y = "PCA-corrected expression")
+# 
+# 
+# grid1 <- plot_grid(legend, NULL, p1.1, p2.1, ncol = 2, 
+#                    rel_widths = c(2.5, 1), rel_heights = c(.07, 1))
+# 
+# grid2 <- plot_grid(NULL, NULL, p1.2, p2.2, ncol = 2, 
+#                    rel_widths = c(2.5, 1), rel_heights = c(.07, 1))
+# 
+# grid_final <- plot_grid(grid1, grid2)
+
+
+
+lineage_df %>%
+    select(subject, locus, lineage, tpm) %>%
+    group_by(lineage) %>%
+    filter(n() > 10) %>%
+    group_by(locus) %>%
+    filter(n_distinct(lineage) > 1) %>% 
+    ungroup() %>% 
+    split(.$locus) %>%
+    map(~oneway.test(tpm~lineage, data = .) %>% broom::tidy()) %>%
+    bind_rows(.id = "locus") %>%
+    select(locus, `num df`, `denom df`, F = statistic, p.value) %>%
+    write_tsv("./f_onewaytest_lineages.tsv")
+
+lineage_df %>%
+    select(subject, locus, lineage, tpm) %>%
+    group_by(lineage) %>%
+    filter(n() > 10) %>%
+    group_by(locus) %>%
+    filter(n_distinct(lineage) > 1) %>% 
+    ungroup() %>% 
+    split(.$locus) %>%
+    map(~lm(tpm~lineage, data = .) %>% anova() %>% broom::tidy()) %>%
+    bind_rows(.id = "locus") %>%
+    filter(term == "lineage") %>%
+    select(locus, df, F = statistic, p.value) %>%
+    write_tsv("./f_test_lineages.tsv")
+
+

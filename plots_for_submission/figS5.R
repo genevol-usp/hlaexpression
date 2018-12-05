@@ -15,6 +15,6 @@ ggplot(data = caveman, aes(rank, Probability, fill = index)) +
     scale_fill_npg() +
     facet_wrap(~gene, nrow = 1, scales = "free_x") +
     labs(x = "") +
-    theme(text = element_text(size = 11, family = "Arial"), 
+    theme(text = element_text(size = 11, family = "Times"), 
           legend.position = "top")
 dev.off()

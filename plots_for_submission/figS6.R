@@ -20,6 +20,6 @@ ggplot(egenes, aes(f, n)) +
     scale_y_continuous(labels = comma) +
     scale_color_manual(values = cols) +
     theme_bw() +
-    theme(text = element_text(size = 11, family = "Arial")) +
+    theme(text = element_text(size = 11, family = "Times")) +
     labs(x = "Number of PCs", y = "Number of eGenes")
 dev.off()

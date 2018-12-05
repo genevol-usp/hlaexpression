@@ -52,12 +52,13 @@ ref_qtls <-
     read_conditional_mhc(mhc_genes)
 
 qtls_df <- 
-    list("HLA-personalized" = hlapers_qtls, "Ref Transcriptome" = ref_qtls) %>%
+    list("HLApers" = hlapers_qtls, "Ref Transcriptome" = ref_qtls) %>%
     bind_rows(.id = "index") 
 
 hla_qtls <- hlapers_qtls %>%
     mutate(gene = factor(gene, levels = unique(gene)),
            colorize = ifelse(gene %in% gencode_hla$gene_name, 1L, 0L))
+
 
 plot_qtls_1 <- ggplot() +
     geom_point(data = filter(hla_qtls, colorize == 0L), 
@@ -67,19 +68,19 @@ plot_qtls_1 <- ggplot() +
                aes(var_from, pval, color = gene),
                alpha = .25, size = .5) +
     coord_cartesian(xlim = c(29.2e6L, 33.8e6L)) +
-    ggsci::scale_color_npg() +
+    ggsci::scale_color_npg(labels = function(x) sub("HLA-", "", x)) +
     scale_x_continuous(labels = function(x) x/1e6L) +
-    theme(text = element_text(size = 9, family = "Arial"),
-          axis.text = element_text(size = 8, family = "Arial"),
-          axis.title.y = element_text(hjust = 0)) +
-    guides(color = guide_legend(keyheight = .5, override.aes = list(alpha = 1, size = 3))) +
+    guides(color = guide_legend(keyheight = .5, override.aes = list(alpha = 1, size = 2.5))) +
+    theme_bw() +
+    theme(text = element_text(family = "Times", size = 9)) +
     labs(x = "position (Mb)",
          y = expression(paste("-log"[10], italic(Pvalue)))) 
 
 
 plot_qtls_df <- qtls_df %>%
     filter(gene %in% gencode_hla$gene_name) %>%
-    mutate(gene = factor(gene, levels = gencode_hla$gene_name))
+    mutate(gene = sub("HLA-", "", gene),
+           gene = factor(gene, levels = sub("HLA-", "", gencode_hla$gene_name)))
 
 ori_df <- plot_qtls_df %>%
     distinct(index, gene, strand) %>%
@@ -87,7 +88,6 @@ ori_df <- plot_qtls_df %>%
     select(index, gene, xend)
 
 best_df <- filter(plot_qtls_df, best == 1L)
-
 
 plot_qtls_2 <-  ggplot(data = plot_qtls_df, aes(dist_to_tss, pval)) +
     geom_blank(data = plot_qtls_df %>% 
@@ -112,12 +112,18 @@ plot_qtls_2 <-  ggplot(data = plot_qtls_df, aes(dist_to_tss, pval)) +
     geom_point(data = best_df, 
                aes(dist_to_tss, pval), 
                shape = 1, size = 2, color = "black", stroke = 1) +
-    geom_text_repel(data = best_df,
+    geom_label_repel(data = best_df,
                     aes(dist_to_tss, pval, label = var_id),
-                    fontface = "bold", size = 3, 
-                    segment.color = "gray35",
-                    nudge_x = 1.75e5, force = 1,
+                    label.size = NA, label.padding = 0.05, alpha = 0.4, seed = 1,
+                    size = 2.5, family = "Times", fontface = "bold",
+                    direction = "both",
                     show.legend = FALSE) +
+    geom_label_repel(data = best_df,
+                     aes(dist_to_tss, pval, label = var_id),
+                     label.size = NA, label.padding = 0.05, fill = NA, seed = 1,
+                     size = 2.5, family = "Times", fontface = "bold",
+                     direction = "both",
+                     show.legend = FALSE) +
     scale_color_manual(values = c("0" = "#8491B4B2",
                                   "1" = "#DC0000B2",
                                   "2" = "gold3",
@@ -125,19 +131,17 @@ plot_qtls_2 <-  ggplot(data = plot_qtls_df, aes(dist_to_tss, pval)) +
                                   "4" = "#009E73")) +
     scale_x_continuous(breaks = seq(-5e5L, 5e5L, by = 2.5e5L),
                        labels = function(x) x/1e6L) +
-    theme_bw() +
-    theme(text = element_text(size = 10, family = "Arial"),
-          strip.text = element_text(face = "bold"),
-          strip.background = element_rect(fill = "grey")) +
     facet_grid(gene~index, scales = "free_y") +
+    guides(color = guide_legend(override.aes = list(alpha = 1, size = 2.5))) +
+    theme_bw() +
+    theme(text = element_text(family = "Times", size = 9)) +
     labs(x = "distance from TSS (Mb)", 
-         y = expression(paste("-log"[10], italic(Pvalue)))) +
-    guides(color = guide_legend(override.aes = list(alpha = 1, size = 3)))
+         y = expression(paste("-log"[10], italic(Pvalue))))
 
 
-
-tiff("./plots/Fig5.tiff",  width = 6.25, height = 8, units = "in", res = 300)
+tiff("./plots/Fig5.tiff", width = 12, height = 18, units = "cm", res = 300)
 plot_grid(NULL, plot_qtls_1, plot_qtls_2, ncol = 1,
           rel_heights = c(.025, .225, 1),
-          labels = c("", "A", "B"), label_size = 12, vjust = 1, hjust = 0)
+          labels = c("A", "", "B"), label_size = 9, label_fontfamily = "Times",
+          vjust = 1.4, hjust = -0.7)
 dev.off()

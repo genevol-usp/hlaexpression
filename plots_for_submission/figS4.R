@@ -2,10 +2,6 @@ devtools::load_all("/home/vitor/Libraries/hlaseqlib")
 library(tidyverse)
 library(ggrepel)
 
-gencode_hla_v19 <- "~/gencode_data/gencode.v19.annotation.gtf.gz" %>%
-    get_gencode_coords(feature = "gene") %>%
-    filter(gene_name %in% gencode_hla$gene_name) %>%
-    select(gene_name, start, end, strand)
 
 crd <- "../geuvadis_reanalysis/data/crd/LCL_ALL.chr6.subset.txt.gz" %>%
     read_delim(col_names = FALSE, delim = " ") %>%
@@ -43,12 +39,12 @@ ggplot() +
                  arrow = arrow(length = unit(0.2, "cm"), type = "closed", ends = "last"),
                  color = "red", alpha = 1/2) +
     geom_text(data = filter(gene_pos, strand == "+"),
-              aes(x = closest, y = -5, label = gene_name),
+              aes(x = closest, y = -5, label = gene_name), family = "Times",
               size = 3, hjust = 0) +
     geom_text_repel(data = filter(gene_pos, strand == "-"),
-                    aes(x = closest, y = -25, label = gene_name),
-                    size = 3, color = "red") +
-    theme(text = element_text(size = 11, family = "Arial"),
+                    aes(x = closest, y = -25, label = gene_name), force = .3,
+                    size = 3, color = "red", family = "Times") +
+    theme(text = element_text(size = 11, family = "Times"),
           axis.title.y = element_blank(),
           axis.text.y = element_blank(),
           axis.ticks.y = element_blank(),

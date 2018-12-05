@@ -11,7 +11,7 @@ make_pca_plot <- function(PC_x, PC_y) {
         scale_x_continuous(breaks = pretty_breaks(3)) +
         scale_y_continuous(breaks = pretty_breaks(3)) +
         guides(color = guide_legend(override.aes = list(size = 2))) +
-        theme(text = element_text(size = 11, family = "Arial")) +
+        theme(text = element_text(size = 11, family = "Times")) +
         labs(color = "Population")
 }
 

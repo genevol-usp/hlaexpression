@@ -3,13 +3,6 @@ library(tidyverse)
 library(scales)
 
 
-pipelines <- 
-    c("HLApers (ML)", "Ref Transcriptome (ML)", "Ref Genome (Unique)") 
-
-cols <- ggsci::pal_npg()(4) %>%
-    .[c(1, 2, 4)] %>%
-    setNames(pipelines)
-
 allele_dist <- "../imgt_index/distance_to_ref/distances_to_reference.tsv" %>%
     read_tsv()
 
@@ -48,6 +41,13 @@ transcriptMap_pers <-
               dist = mean(dist)) %>%
     ungroup()
 
+pipelines <- 
+    c("HLApers (ML)", "Ref Transcriptome (ML)", "Ref Genome (Unique)") 
+
+cols <- ggsci::pal_npg()(4) %>%
+    .[c(1, 2, 4)] %>%
+    setNames(pipelines)
+
 hla_counts_df <-
     left_join(transcriptMap_pers, transcriptMap_ref, by = c("subject", "locus")) %>%
     left_join(uniq_reads, by = c("subject", "locus")) %>%
@@ -58,7 +58,8 @@ hla_counts_df <-
            dist) %>%
     left_join(ground_truth, by = c("subject", "locus")) %>%
     gather(pipeline, counts, starts_with("counts")) %>%
-    mutate(locus = factor(locus, levels = gencode_hla$gene_name),
+    mutate(locus = sub("HLA-", "", locus),
+           locus = factor(locus, levels = sub("HLA-", "", gencode_hla$gene_name)),
            pipeline = sub("^counts\\.", "", pipeline),
            pipeline = recode(pipeline, 
                              transcriptMap_pers = "HLApers (ML)",
@@ -67,7 +68,8 @@ hla_counts_df <-
            pipeline = factor(pipeline, levels = pipelines),
            prop_mapped = counts/true_counts)
 
-tiff("./plots/Fig2.tiff", width = 6, height = 3.5, units = "in", res = 300)
+
+tiff("./plots/Fig2.tiff", width = 13.2, height = 8, units = "cm", res = 300)
 ggplot(hla_counts_df, aes(dist, prop_mapped, color = pipeline)) +
     geom_line(stat = "smooth", method = "loess", span = 1, se = FALSE, 
               alpha = .4, size = 1) +
@@ -77,11 +79,10 @@ ggplot(hla_counts_df, aes(dist, prop_mapped, color = pipeline)) +
     scale_y_continuous(breaks = seq(0, 1, 0.5)) +
     facet_wrap(~locus, scales = "free_x") +
     scale_color_manual(values = cols) +
-    theme_bw() +
-    theme(text = element_text(size = 9, family = "Arial"),
-          strip.text = element_text(face = "bold"),
-          panel.spacing.x = unit(1, "lines")) +
     guides(color = guide_legend(override.aes = list(size = 3))) +
+    theme_bw() + 
+    theme(text = element_text(family = "Times", size = 9), 
+          strip.text = element_text(face = "bold")) +
     labs(x = "Sequence divergence to the HLA reference allele (%)", 
          y = expression(frac(Aligned~reads, Simulated~reads)))
 dev.off()

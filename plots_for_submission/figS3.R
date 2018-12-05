@@ -1,6 +1,6 @@
+devtools::load_all("/home/vitor/Libraries/hlaseqlib/")
 library(tidyverse)
 library(scales)
-devtools::load_all("/home/vitor/Libraries/hlaseqlib/")
 
 sample_info <- read_tsv("../geuvadis_reanalysis/replicates/data/sample_info.tsv")
 
@@ -44,6 +44,7 @@ ggplot(gene_df, aes(finalset, replicate)) +
     scale_y_continuous(breaks = pretty_breaks(2)) +
     facet_wrap(~locus, scales = "free") +
     geom_text(data = cor_df, aes(x, y, label = label), parse = TRUE, 
-              hjust = "inward", vjust = "inward", size = 4) +
-    theme_bw() 
+              hjust = "inward", vjust = "inward", size = 4, family = "Times") +
+    theme_bw() +
+    theme(text = element_text(family = "Times"))
 dev.off()

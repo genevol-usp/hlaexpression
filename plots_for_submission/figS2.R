@@ -1,10 +1,7 @@
 devtools::load_all("/home/vitor/Libraries/hlaseqlib")
 library(tidyverse)
 library(cowplot)
-#library(GGally)
-#library(scales)
-#library(ggpmisc)
-#library(ggrepel)
+library(scales)
 
 
 kallisto <- 
@@ -49,10 +46,10 @@ p_counts <-
     scale_y_continuous(breaks = pretty_breaks(n = 3), labels = comma) +
     facet_wrap(~locus, scales = "free") +
     geom_text(data = filter(cor_df_star_kallisto, unit == "est_counts"), 
-              aes(x, y, label = label),
+              aes(x, y, label = label), family = "Times",
               parse = TRUE, hjust = "inward", vjust = "inward", size = 3.5) +
     theme_bw() +
-    theme(text = element_text(size = 11, family = "Arial"),
+    theme(text = element_text(size = 11, family = "Times"),
           axis.text = element_text(hjust = 1)) +
     labs(x = "STAR-Salmon", y = "kallisto", title = "Estimated Counts")
 
@@ -65,10 +62,10 @@ p_tpm <-
     scale_y_continuous(breaks = pretty_breaks(n = 3), labels = comma) +
     facet_wrap(~locus, scales = "free") +
     geom_text(data = filter(cor_df_star_kallisto, unit == "tpm"), 
-              aes(x, y, label = label),
+              aes(x, y, label = label), family = "Times",
               parse = TRUE, hjust = "inward", vjust = "inward", size = 3.5) +
     theme_bw() +
-    theme(text = element_text(size = 11, family = "Arial"),
+    theme(text = element_text(size = 11, family = "Times"),
           axis.text = element_text(hjust = 1)) +
     labs(x = "STAR-Salmon", y = "kallisto", title = "Transcripts per Million")
 

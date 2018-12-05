@@ -4,9 +4,6 @@ library(cowplot)
 library(scales)
 
 
-#loci <- readLines("../imgt_index/imgt_loci.txt") %>%
-#    paste0("HLA-", .)
-
 loci <- gencode_hla$gene_name
 
 hlapers <- 
@@ -22,18 +19,13 @@ hlapers <-
            locus = factor(locus, levels = rev(levels(locus))),
            source = "HLA-personalized")
 
-gencode12_hla <-
-    "~/gencode_data/gencode.v12.annotation.gtf.gz" %>%
-    get_gencode_coords(feature = "gene") %>%
-    filter(gene_name %in% loci)
-
 hla_geuvadis <-  
     "../geuvadis_reanalysis/data/quantifications/peer/published/geuvadis_fpkms.csv" %>%
     read_csv() %>%
     filter(subject %in% hlapers$subject) %>%
-    select(subject, gencode12_hla$gene_id) %>%
+    select(subject, gencode_hla_v12$gene_id) %>%
     gather(gene_id, fpkm, -subject) %>%
-    left_join(gencode12_hla, by = "gene_id") %>%
+    left_join(gencode_hla_v12, by = "gene_id") %>%
     select(subject, locus = gene_name, fpkm) %>%
     mutate(locus = factor(locus, levels = loci)) %>%
     complete(subject, locus, fill = list(fpkm = 0)) %>%
@@ -47,7 +39,7 @@ p1 <- ggplot(hlapers, aes(locus, tpm)) +
     scale_y_continuous(labels = comma) +
     facet_wrap(~source) +
     theme_bw() +
-    theme(text = element_text(size = 11, family = "Arial"),
+    theme(text = element_text(size = 11, family = "Times"),
           axis.text.x = element_text(angle = 45, hjust = 1, vjust = 1)) +
     labs(x = NULL, y = "TPM")
 
@@ -57,11 +49,10 @@ p2 <- ggplot(hla_geuvadis, aes(locus, fpkm)) +
     scale_y_continuous(labels = comma) +
     facet_wrap(~source) +
     theme_bw() +
-    theme(text = element_text(size = 11, family = "Arial"),
+    theme(text = element_text(size = 11, family = "Times"),
           axis.text.x = element_text(angle = 45, hjust = 1, vjust = 1)) +
     labs(x = NULL, y = "FPKM")
 
-#tiff("./plots/S1_fig.tiff", width = 6, height = 6, units = "in", res = 300)
 tiff("./plots/S1_fig.tiff", width = 4, height = 6, units = "in", res = 300)
 plot_grid(p1, p2, ncol = 1)
 dev.off()
