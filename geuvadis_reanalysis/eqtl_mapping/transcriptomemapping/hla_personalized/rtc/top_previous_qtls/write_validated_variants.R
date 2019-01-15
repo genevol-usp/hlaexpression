@@ -42,4 +42,4 @@ out <- qtls_rtc %>%
     mutate_at(vars(r_squared:validated_var_pval), ~round(., 2))
 
 
-write_tsv(out, "./validated_variants_results.tsv")
+write_csv(out, "./validated_variants_results.csv")
