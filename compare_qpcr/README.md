@@ -40,7 +40,7 @@ In the table below,
 
 `sign_qpcr` and `sign_hlapers`: (1) if expression of `a1` &gt; expression of `a2`, or (-1) if expression of `a1` &lt; expression of `a2`.
 
-\*p-values were ajusted for multiple testing (FDR method).
+\*p-values were calculated only for lineages with &gt;=10 points, and were ajusted for multiple testing (FDR method).
 
 The table shows all pairs present in the qPCR data, and their results in RNA-seq for comparison. When a pair present in qPCR data is not present in RNA-seq data, we have NA.
 
