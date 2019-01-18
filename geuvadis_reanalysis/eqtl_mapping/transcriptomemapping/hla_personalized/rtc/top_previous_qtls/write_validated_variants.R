@@ -16,7 +16,7 @@ catalog <-
     separate(X2, c("study", "gene", "pvalue"), sep = "\\|") %>%
     mutate(pvalue = round(as.numeric(pvalue), 2)) %>%
     select(variant = X1, gene, study, pvalue) %>%
-    filter(study %in% c("petersdorf2015", "kulkarni2011", "vince2017", "xl9_raj2016"))
+    filter(study %in% c("petersdorf2015", "kulkarni2011", "vince2017", "xl9_raj2016", "ou2018"))
 
 ref_vars_status <- catalog %>%
     select(-pvalue) %>%

@@ -23,7 +23,8 @@ qtls_rtc <-
     left_join(qtls, rtc, by = c("gene", "qtl_personalized" =  "qtl_var")) %>%
     left_join(catalog, by = c("qtl_ref" =  "variant"), 
 	      suffix = c("_personalized", "_ref")) %>%
-    filter(gene_personalized == gene_ref) %>%
+    #filter(study == "kulkarni2011")
+    filter(gene_personalized == gene_ref) %>% 
     group_by(gene_personalized, rank) %>%
     filter((all(rtc < .95) & rtc == max(rtc)) | rtc >= .95) %>%
     ungroup() %>%
