@@ -111,12 +111,11 @@ pvals_comp <-
 
 write_tsv(pvals_comp, "results.tsv")
 
-
-
-ggplot(hla_c_filtered, aes(reorder(lineage, mrna, FUN = median), mrna)) +
-    geom_boxplot(outlier.shape = NA, fill = NA, color = "blue") +
-    ggbeeswarm::geom_quasirandom(method = "smiley", varwidth = TRUE,
-                                 alpha = .75, show.legend = FALSE) +
-    theme_bw() +
-    labs(x = NULL, y = "mRNA")
+pvals_comp %>%
+    filter(signif_qpcr == 1, signif_hlapers == 1) %>%
+    mutate(same_dir = sign_qpcr == sign_hlapers) %>%
+    arrange(desc(same_dir), a1, a2) %>%
+    mutate(i = seq_len(n())) %>%
+    select(i, everything()) %>%
+    write_tsv("results_significant.tsv")
 
