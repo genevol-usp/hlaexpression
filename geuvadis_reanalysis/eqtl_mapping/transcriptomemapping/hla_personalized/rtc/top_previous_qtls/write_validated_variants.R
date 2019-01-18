@@ -35,11 +35,18 @@ qtls_rtc <-
 	      suffix = c("_hlapers", "_ref")) %>% 
     filter(gene_hlapers == gene_ref)
 
+af <- 
+    "/home/vitor/hlaexpression/geuvadis_reanalysis/data/genotypes/validated_af.tsv" %>%
+    read_delim(col_names = c("varid", "af"), delim = " ")
+
 out <- qtls_rtc %>%
     select(gene = gene_hlapers, rank, qtl = qtl_hlapers, 
 	   validated_var = qtl_ref, study, r_squared, d_prime, rtc) %>%
     left_join(ref_vars_status, by = c("gene", "rank", "validated_var", "study")) %>%
-    mutate_at(vars(r_squared:validated_var_pval), ~round(., 2))
+    left_join(af, by = c("qtl" = "varid")) %>% 
+    left_join(af, by = c("validated_var" = "varid"), suffix = c("_qtl", "_validated")) %>% 
+    mutate_at(vars(r_squared:validated_var_pval), ~round(., 2)) %>%
+    select(gene, rank, qtl, validated_var, study, r_squared, d_prime, af_qtl, af_validated, everything())
 
 
 write_csv(out, "./validated_variants_results.csv")
