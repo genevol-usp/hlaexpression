@@ -1,23 +1,16 @@
 library(tidyverse)
 
-reorder_within <- function(x, by, within, fun = median, sep = "___", ...) {
-    new_x <- paste(x, within, sep = sep)
-    reorder(new_x, by, FUN = fun)
-}
-
-scale_x_reordered <- function(..., sep = "___") {
-    reg <- paste0(sep, ".+$")
-    ggplot2::scale_x_discrete(labels = function(x) gsub(reg, "", x), ...)
-}
-
 make_plot <- function(plot_df) {
-    ggplot(plot_df, aes(reorder_within(lineage, mrna, method, FUN = median), mrna)) +
-        ggbeeswarm::geom_quasirandom(color = ggsci::pal_npg()(6)[6], size = .5,
-                                     method = "smiley", varwidth = TRUE,
+    ggplot(plot_df, aes(reorder(to_order, rna, FUN = median), rna)) +
+        ggbeeswarm::geom_quasirandom(aes(color = hom), size = .25, alpha = 1/3,
+                                     method = "smiley", varwidth = TRUE, 
                                      show.legend = FALSE) +
-        geom_boxplot(outlier.shape = NA, fill = NA, alpha = .5) +
-        scale_x_reordered() +
-        facet_wrap(~method, ncol = 1, scales = "free") +
+        stat_summary(fun.y = median, geom = "point", shape = "\U2014", size = 4,
+                     color = "cornflowerblue") +
+        scale_x_discrete(labels = function(x) sub("_.+$", "", x)) +
+        scale_y_continuous(labels = function(x) ifelse(x > 999, scales::comma(x), x)) +
+        scale_color_manual(values = c("0" = "black", "1" = "green")) +
+        facet_wrap(~locus+method, ncol = 1, scales = "free", strip.position = "left") +
         theme_bw() +
         theme(text = element_text(size = 8, family = "Times"), 
               axis.text.x = element_text(angle = 45, hjust = 1, vjust = 1),
@@ -26,12 +19,12 @@ make_plot <- function(plot_df) {
 }
 
 
-pcr <- 
-    bind_rows(read_tsv("HLA_A_formatted.tsv"),
-              read_tsv("HLA_B_formatted.tsv"),
-              read_tsv("HLA_C_formatted.tsv") %>% select(lineage, mrna)) %>%
-    mutate(locus = sub("^([ABC])\\*\\d+$", "\\1", lineage)) %>%
-    select(locus, lineage, mrna)
+pcr <- read_tsv("./data/hla_carrington_data_filteredN10.tsv") %>%
+    group_by(subject, locus) %>%
+    mutate(hom = as.integer(n_distinct(lineage) == 1)) %>%
+    ungroup() %>%
+    arrange(subject, locus, lineage) %>%
+    select(locus, lineage, hom, rna)
 
 hlapers <- 
     "../geuvadis_reanalysis/expression/3-map_to_transcriptome/hla_personalized/quantifications/processed_imgt_quants.tsv" %>%
@@ -40,24 +33,20 @@ hlapers <-
     mutate(locus = sub("HLA-", "", locus),
            allele = sub("IMGT_", "", allele),
            lineage = sub("^([^:]+).+$", "\\1", allele)) %>%
-    select(locus, lineage, mrna = tpm) 
+    group_by(lineage) %>%
+    mutate(nLineage = n_distinct(subject)) %>%
+    group_by(subject, locus) %>%
+    filter(all(nLineage >= 10)) %>%
+    mutate(hom = as.integer(n_distinct(lineage) == 1)) %>%
+    ungroup() %>%
+    select(locus, lineage, hom, rna = tpm) 
 
 plot_df <- list(qPCR = pcr, RNAseq = hlapers) %>%
-    bind_rows(.id = "method")
-
-plot_df_a <- filter(plot_df, locus == "A")
-plot_df_b <- filter(plot_df, locus == "B")
-plot_df_c <- filter(plot_df, locus == "C")
+    bind_rows(.id = "method") %>%
+    unite(to_order, c("lineage", "method"), sep = "_", remove = FALSE) %>%
+    mutate(hom = factor(hom))
 
 
-tiff("./FigSA.png", width = 10, height = 10, units = "cm", res = 300)
-make_plot(plot_df_a)
-dev.off()
-
-tiff("./FigSB.png", width = 10, height = 10, units = "cm", res = 300)
-make_plot(plot_df_b)
-dev.off()
-
-tiff("./FigSC.png", width = 10, height = 10, units = "cm", res = 300)
-make_plot(plot_df_c)
+tiff("./FigSA.png", width = 8.5, height = 14, units = "cm", res = 300)
+make_plot(plot_df)
 dev.off()
