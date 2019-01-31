@@ -3,14 +3,14 @@ library(tidyverse)
 
 gencode_hla <- select(gencode_hla, gene_name, gene_id)
 
-qtls <- read_tsv("../../2-conditional_analysis/hla_qtls_all.tsv") 
+qtls <- read_tsv("../../../2-conditional_analysis/hla_qtls_all.tsv") 
 
 best_qtls <- qtls %>%
     filter(best == 1) %>%
     select(gene, rank, qtl_hlapers = var_id)
 
 catalog <-
-    "~/hlaexpression/geuvadis_reanalysis/data/previous_qtls/top_qtl_catalog.tsv" %>%
+    "/home/vitor/hlaexpression/geuvadis_reanalysis/data/previous_qtls/top_qtl_catalog.tsv" %>%
     read_tsv(col_names = FALSE) %>%
     separate_rows(X2, sep = ";") %>%
     separate(X2, c("study", "gene", "pvalue"), sep = "\\|") %>%
@@ -25,7 +25,7 @@ ref_vars_status <- catalog %>%
     select(validated_var = variant, gene, study, rank, 
 	   validated_var_pval = pval, validated_var_signif = signif)
 
-rtc <- read_qtltools_rtc("./rtc_results.txt") %>%
+rtc <- read_qtltools_rtc("../rtc_results.txt") %>%
     inner_join(gencode_hla, by = c("gene" = "gene_id")) %>%
     select(gene = gene_name, qtl_var, qtl_ref = gwas_var, r_squared, d_prime, rtc)
 
