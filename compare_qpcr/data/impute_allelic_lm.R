@@ -41,44 +41,44 @@ fitted_df <- lm_df %>%
     ungroup() %>%
     select(subject, locus, lineage, rna, y)
 
-write_tsv(fitted_df, "./carrington_data_lmEstimates.tsv")
-
+write_tsv(estimate_df, "./carrington_data_lmEstimates.tsv")
+write_tsv(fitted_df, "./carrington_data_lmFittedValues.tsv")
 
 
 ### shrinkage correction
 
-estimate_df %>% group_by(locus) %>% summarise(mean(y))
-
-se <- fitted_df %>% filter(locus == "A") %>% summarise(se = sd(y)/n()) %>% pull(se)
-
-fitted_df %>% filter(locus == "A") %>%
-    mutate(adj_y = y / (10000000 - (1 * se))) %>%
-    select(subject, adj_y) %>%
-    left_join(filter(lm_df, locus == "A"), .) %>%
-    select(subject, locus, lineage, hit, rna = adj_y) %>%
-    spread(lineage, hit) %>%
-    split(.$locus) %>%
-    map(~select(., -subject, -locus)) %>%
-    lapply(function(x) broom::tidy(lm(rna ~ . - 1, data = x)))
-
-
-
-
-###
-
-
-means_df <- left_join(observed_means, estimate_df, by = "lineage") %>%
-    select(locus, lineage, obs = m, exp = y)
-
-x <- dat_filtered %>%
-    left_join(means_df, by = c("locus", "lineage")) %>%
-    group_by(subject, locus) %>%
-    summarise(rna = unique(rna), obs = sum(obs), exp = sum(exp)) %>%
-    ungroup()
-
-summary(lm(obs ~ rna, data = filter(x, locus == "A")))
-broom::tidy(lm(obs ~ rna, data = filter(x, locus == "A")))
-
-summary(lm(exp ~ rna, data = filter(x, locus == "A")))
-broom::tidy(lm(exp ~ rna, data = filter(x, locus == "A")))
-
+#estimate_df %>% group_by(locus) %>% summarise(mean(y))
+#
+#se <- fitted_df %>% filter(locus == "A") %>% summarise(se = sd(y)/n()) %>% pull(se)
+#
+#fitted_df %>% filter(locus == "A") %>%
+#    mutate(adj_y = y / (10000000 - (1 * se))) %>%
+#    select(subject, adj_y) %>%
+#    left_join(filter(lm_df, locus == "A"), .) %>%
+#    select(subject, locus, lineage, hit, rna = adj_y) %>%
+#    spread(lineage, hit) %>%
+#    split(.$locus) %>%
+#    map(~select(., -subject, -locus)) %>%
+#    lapply(function(x) broom::tidy(lm(rna ~ . - 1, data = x)))
+#
+#
+#
+#
+####
+#
+#
+#means_df <- left_join(observed_means, estimate_df, by = "lineage") %>%
+#    select(locus, lineage, obs = m, exp = y)
+#
+#x <- dat_filtered %>%
+#    left_join(means_df, by = c("locus", "lineage")) %>%
+#    group_by(subject, locus) %>%
+#    summarise(rna = unique(rna), obs = sum(obs), exp = sum(exp)) %>%
+#    ungroup()
+#
+#summary(lm(obs ~ rna, data = filter(x, locus == "A")))
+#broom::tidy(lm(obs ~ rna, data = filter(x, locus == "A")))
+#
+#summary(lm(exp ~ rna, data = filter(x, locus == "A")))
+#broom::tidy(lm(exp ~ rna, data = filter(x, locus == "A")))
+#
