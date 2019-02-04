@@ -44,9 +44,10 @@ hlapers <-
 plot_df <- list(qPCR = pcr, RNAseq = hlapers) %>%
     bind_rows(.id = "method") %>%
     unite(to_order, c("lineage", "method"), sep = "_", remove = FALSE) %>%
-    mutate(hom = factor(hom))
+    mutate(hom = factor(hom)) %>%
+    filter(lineage %in% unique(hlapers$lineage) & lineage %in% unique(pcr$lineage))
 
 
-tiff("./FigSA.png", width = 8.5, height = 14, units = "cm", res = 300)
+png("./FigSA.png", width = 8.5, height = 14, units = "cm", res = 300)
 make_plot(plot_df)
 dev.off()
