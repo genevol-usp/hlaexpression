@@ -34,11 +34,17 @@ Results
 
 A visual inspection of the allelic ordering allows us to compare qPCR and RNA-seq, and shows a moderate to low concordance (Figure 1).
 
+<br><br>
+
 ![](./FigSA.png) Figure 1: Allele-level expression in previous qPCR studies and RNA-seq (HLApers) for HLA-A, -B and -C. We included only lineages present in at least 5 individuals, and those which were present both in GEUVADIS and in the qPCR data. Y-axis: Transcript per Million for RNA-seq, and 2^-∆∆Ct for qPCR.
+
+<br><br>
 
 However, this simple comparison can be misleading, because the orderings are affected by the sample sizes of each allele and the degree of differentiation among them (e.g., when we randomly remove few individuals some orderings change, data not shown).
 
 Therefore, we chose to compare only pairs of alleles which are statistically different in both qPCR and RNA-seq. We selected all significant pairs in the qPCR dataset, we checked their status in the RNA-seq dataset. We then calculated the number of pairs with the same or different ordering in qPCR and RNAseq.
+
+<br><br>
 
 Table 1: Number of significant allelic pairs (n\_significant), and amount of significant pairs with the same ordering in qPCR and RNA-seq (same\_dir) for HLA-A, -B and -C.
 
@@ -48,6 +54,8 @@ Table 1: Number of significant allelic pairs (n\_significant), and amount of sig
 | B     |          3|               4|
 | C     |         13|              13|
 
+<br><br>
+
 This showed us that, overall for HLA-A, -B and -C, 20 allele pairs out of 31 tested have the same ordering in our study and in previous studies. For HLA-C, 100% of the pairs had the same ordering. For HLA-B, we have 75% (3/4) of concordance, but there is a low number of significant different pairs, which can be explained by the low differentiation of expression levels among HLA-B alleles in the qPCR data (6 pairs out of 55 were significant, whereas RNA-seq had 29). At HLA-A, the ordering in qPCR and RNA-seq was concordant in only 28% (4/14) of the pairs. This may reflect a difficulty in qPCR methods for estimating allele-level expression for HLA-A. For example, in the data which we used (Ramsuram et al, 2015) all homozygotes for A\*03 had expression close to zero.
 
 This results highlight the extreme difficulty in comparing between tissues and populations, and with methods which do not even directly measure the expression of an HLA allele, such as qPCR.
@@ -55,6 +63,8 @@ This results highlight the extreme difficulty in comparing between tissues and p
 ### Independence regarding previous regulatory SNPs with validation support.
 
 The eQTLs we mapped for HLA-C is very highly correlated at the haplotypic level with variants described by Kulkarni et al (2011) and Vince et al (2016) (0.97 ≤ D’ ≤ 1). Because the minor allele frequencies of our variants are lower than those in the previous studies, variation at our SNP is nested within that of the previously validated SNPs, i.e. the allele present in our SNPs predict the allele in the previous SNP, but the opposite is not true. The RTC test suggest that accounting for the previously validated SNP does not erase the signal represented by our SNPs, which means that, although there are strong haplotypic association, our SNPs seem to be driving the biological signal in our sample. For HLA-DP we also found strong association, both in terms of D’ and r^2, for our SNPs and those previously validated for HLA-DPB1 (Petersdorf et al, 2015) and HLA-DPA1 (Ou et al, 2018). However, the RTC test suggest that, although the allele in one SNP predicts the allele in previously validated SNP, accounting for the previous SNP does not remove the signal of the SNP we mapped.
+
+<br><br>
 
 Table 2: Relationship between our eQTLs and previous SNPs with validation support. r2: r-squared; AF: allele frequency; pval (validated SNP): the backward pass p-value from QTLtools for the validated SNP (NA when SNP did not pass to the backward stage).
 
@@ -70,5 +80,7 @@ Table 2: Relationship between our eQTLs and previous SNPs with validation suppor
 | HLA-DPA1 |     0| rs72870107 | rs3077        | Ou 2018         |  0.96|  1.00|       0.16|                0.17|  0.66|                  8.58|
 | HLA-DPB1 |     0| rs9277449  | rs9277534     | Petersdorf 2015 |  0.98|  1.00|       0.30|                0.30|  0.87|                 32.85|
 | HLA-DPB1 |     0| rs9277449  | rs2281389     | Petersdorf 2015 |  0.51|  0.99|       0.30|                0.18|  0.50|                 17.33|
+
+<br><br>
 
 Therefore, this exercise of comparing our findings on HLA regulatory SNPs with variants with some previous validation, we find some agreements and disagreements. We note however that it is plausible that previously validated variants will not have a strong effect in our sample, because different tissues have different mechanisms for regulating a gene, so a mechanism identified in a previous study may not be among the most relevant processes involved in the regulation of HLA-C in our sample/tissue. Furthermore, previous studies have not queried all the variation in the region, but only a few candidate SNPs.
