@@ -56,13 +56,13 @@ Table 1: Number of significant allelic pairs (n\_significant), and amount of sig
 
 <br><br>
 
-This showed us that, overall for HLA-A, -B and -C, 20 allele pairs out of 31 tested have the same ordering in our study and in previous studies. For HLA-C, 100% of the pairs had the same ordering. For HLA-B, we have 75% (3/4) of concordance, but there is a low number of significant different pairs, which can be explained by the low differentiation of expression levels among HLA-B alleles in the qPCR data (6 pairs out of 55 were significant, whereas RNA-seq had 29). At HLA-A, the ordering in qPCR and RNA-seq was concordant in only 28% (4/14) of the pairs. This may reflect a difficulty in qPCR methods for estimating allele-level expression for HLA-A. For example, in the data which we used (Ramsuram et al, 2015) all homozygotes for A\*03 had expression close to zero.
+This showed us that, overall for HLA-A, -B and -C, 20 allele pairs out of 31 tested have the same ordering in our study and in previous studies. For HLA-C, 13 out of 13 significant pairs had the same ordering. For HLA-B, 3 out 4 had the same ordering. The low number of significant pairs can be explained by the low differentiation of expression levels among HLA-B alleles in the qPCR data (6 pairs out of 55 were significant, whereas RNA-seq had 29). At HLA-A, the ordering in qPCR and RNA-seq was concordant in only 4 out 14 pairs. This may reflect a difficulty in qPCR methods for estimating allele-level expression for HLA-A. For example, in the data which we used (Ramsuram et al, 2015) all homozygotes for A\*03 had expression close to zero.
 
 This results highlight the extreme difficulty in comparing between tissues and populations, and with methods which do not even directly measure the expression of an HLA allele, such as qPCR.
 
 ### Independence regarding previous regulatory SNPs with validation support.
 
-The eQTLs we mapped for HLA-C is very highly correlated at the haplotypic level with variants described by Kulkarni et al (2011) and Vince et al (2016) (0.97 ≤ D’ ≤ 1). Because the minor allele frequencies of our variants are lower than those in the previous studies, variation at our SNP is nested within that of the previously validated SNPs, i.e. the allele present in our SNPs predict the allele in the previous SNP, but the opposite is not true. The RTC test suggest that accounting for the previously validated SNP does not erase the signal represented by our SNPs, which means that, although there are strong haplotypic association, our SNPs seem to be driving the biological signal in our sample. For HLA-DP we also found strong association, both in terms of D’ and r^2, for our SNPs and those previously validated for HLA-DPB1 (Petersdorf et al, 2015) and HLA-DPA1 (Ou et al, 2018). However, the RTC test suggest that, although the allele in one SNP predicts the allele in previously validated SNP, accounting for the previous SNP does not remove the signal of the SNP we mapped.
+We find that the eQTLs we mapped for HLA-C is very highly correlated at the haplotypic level with variants described by Kulkarni et al (2011) and Vince et al (2016) (0.97 ≤ *D*’≤1), which were shown to regulate HLA-C expression via a miRNA binding site at the 3’UTR, and at an Oct1 binding site at the promoter region, respectively. The minor allele frequencies of our variants are lower than those in the previous studies, and the variation at our SNPs is nested within that of the previously validated SNPs, i.e. the allele present in our SNPs predict the allele in the previous SNP, but the opposite is not true. The RTC test suggest that accounting for the previously validated SNP does not erase the signal represented by our SNPs, which means that, although there are strong haplotypic association, our SNPs seem to be driving the biological signal in our sample. This is also the case for the rank 1 eQTL which we mapped for HLA-DQB1 and a variant reported by Raj et al (2016) as part of a super-enhancer which regulates HLA-DQA1, HLA-DQB1 and HLA-DRB1. For HLA-DP we also found strong association, both in terms of D’ and *r*<sup>2</sup>, between our SNPs and those previously validated for HLA-DPB1 (Petersdorf et al, 2015) and HLA-DPA1 (Ou et al, 2018). However, the RTC test suggest that, although the allele in one SNP predicts the allele in previously validated SNP, accounting for the previous SNP does not remove the signal of the SNP we mapped.
 
 <br><br>
 
@@ -84,3 +84,30 @@ Table 2: Relationship between our eQTLs and previous SNPs with validation suppor
 <br><br>
 
 Therefore, this exercise of comparing our findings on HLA regulatory SNPs with variants with some previous validation, we find some agreements and disagreements. We note however that it is plausible that previously validated variants will not have a strong effect in our sample, because different tissues have different mechanisms for regulating a gene, so a mechanism identified in a previous study may not be among the most relevant processes involved in the regulation of HLA-C in our sample/tissue. Furthermore, previous studies have not queried all the variation in the region, but only a few candidate SNPs.
+
+References
+----------
+
+[Boegel S et al. HLA typing from RNA-Seq sequence reads. Genome Medicine. 2012;4(102).](https://doi.org/10.1186/gm403)
+
+[Boegel S et al. HLA and proteasome expression body map. BMC Medical Genomics. 2018;11(36).](https://doi.org/10.1186/s12920-018-0354-x)
+
+[Kulkarni et al. Differential microRNA regulation of HLA-C expression and its association with HIV control. Nature. 2011;472(7344).](https://doi.org/10.1038/nature09914)
+
+[Lee W et al. AltHapAlignR: improved accuracy of RNA-seq analyses through the use of alternative haplotypes. Bioinformatics. 2018;34(14).](https://doi.org/10.1093/bioinformatics/bty125)
+
+[Nédélec Y et al. Genetic Ancestry and Natural Selection Drive Population Differences in Immune Responses to Pathogens. Cell. 2016;167.](https://doi.org/10.1016/j.cell.2016.09.025)
+
+[Ou G et al. Relationship between HLA-DPA1 mRNA expression and susceptibility to hepatitis B. Journal of Viral Hepatitis. 2019;26.](https://doi.org/10.1111/jvh.13012)
+
+[Petersdorf E et al. High HLA-DP Expression and Graft-versus-Host Disease. The New England Journal of Medicine. 2015;373(7).](https://doi.org/10.1056/NEJMoa1500140)
+
+[Pan N et al. Quantification of classical HLA class I mRNA by allele-specific,real-time polymerase chain reaction for most Han individuals. HLA. 2019;91.](https://doi.org/10.1111/tan.13186)
+
+[Raj P et al. Regulatory polymorphisms modulate the expression of HLA class II molecules and promote autoimmunity. eLife. 2016;5.](https://doi.org/10.7554/eLife.12089)
+
+[Ramsuram V et al. Epigenetic regulation of differential HLA-A allelic expression levels. Human Molecular Genetics. 2015;24(15).](https://doi.org/10.1093/hmg/ddv158)
+
+[Ramsuram V et al. Sequence and Phylogenetic Analysis of the Untranslated Promoter Regions for HLA Class I Genes. The Journal of Immunology. 2017;198.](https://doi.org/10.4049/jimmunol.1601679)
+
+[Vince N et al. HLA-C Level Is Regulated by a Polymorphic Oct1 Binding Site in the HLA-C Promoter Region. The American Journal of Human Genetics. 2016;99(6).](https://doi.org/10.1016/j.ajhg.2016.09.023)
