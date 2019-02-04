@@ -88,15 +88,7 @@ Therefore, this exercise of comparing our findings on HLA regulatory SNPs with v
 References
 ----------
 
-[Boegel S et al. HLA typing from RNA-Seq sequence reads. Genome Medicine. 2012;4(102).](https://doi.org/10.1186/gm403)
-
-[Boegel S et al. HLA and proteasome expression body map. BMC Medical Genomics. 2018;11(36).](https://doi.org/10.1186/s12920-018-0354-x)
-
 [Kulkarni et al. Differential microRNA regulation of HLA-C expression and its association with HIV control. Nature. 2011;472(7344).](https://doi.org/10.1038/nature09914)
-
-[Lee W et al. AltHapAlignR: improved accuracy of RNA-seq analyses through the use of alternative haplotypes. Bioinformatics. 2018;34(14).](https://doi.org/10.1093/bioinformatics/bty125)
-
-[Nédélec Y et al. Genetic Ancestry and Natural Selection Drive Population Differences in Immune Responses to Pathogens. Cell. 2016;167.](https://doi.org/10.1016/j.cell.2016.09.025)
 
 [Ou G et al. Relationship between HLA-DPA1 mRNA expression and susceptibility to hepatitis B. Journal of Viral Hepatitis. 2019;26.](https://doi.org/10.1111/jvh.13012)
 
