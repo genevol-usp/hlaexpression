@@ -25,12 +25,10 @@ pcr <- inner_join(pcr_genos, pcr_rna, by = c("subject", "locus")) %>%
 
 write_tsv(pcr, "./hla_carrington_data.tsv")
 
-pcr_filtered <- pcr %>%
+pcr_filtered <- pcr %>% 
     group_by(lineage) %>%
-    mutate(nLineage = n_distinct(subject)) %>%
-    group_by(subject, locus) %>%
-    filter(all(nLineage >= 10)) %>%
-    ungroup() %>%
+    filter(n_distinct(subject) >= 10) %>%
+    ungroup() %>% 
     arrange(subject, locus, lineage) %>%
     select(subject, locus, lineage, rna)
 

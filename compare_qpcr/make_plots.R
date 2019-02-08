@@ -21,7 +21,7 @@ make_plot <- function(plot_df) {
 
 pcr <- read_tsv("./data/hla_carrington_data_filteredN10.tsv") %>%
     group_by(subject, locus) %>%
-    mutate(hom = as.integer(n_distinct(lineage) == 1)) %>%
+    mutate(hom = as.integer(n() == 2 & n_distinct(lineage) == 1)) %>%
     ungroup() %>%
     arrange(subject, locus, lineage) %>%
     select(locus, lineage, hom, rna)
@@ -34,10 +34,9 @@ hlapers <-
            allele = sub("IMGT_", "", allele),
            lineage = sub("^([^:]+).+$", "\\1", allele)) %>%
     group_by(lineage) %>%
-    mutate(nLineage = n_distinct(subject)) %>%
+    filter(n_distinct(subject) >= 10) %>%
     group_by(subject, locus) %>%
-    filter(all(nLineage >= 10)) %>%
-    mutate(hom = as.integer(n_distinct(lineage) == 1)) %>%
+    mutate(hom = as.integer(n() == 2 & n_distinct(lineage) == 1)) %>%
     ungroup() %>%
     select(locus, lineage, hom, rna = tpm) 
 

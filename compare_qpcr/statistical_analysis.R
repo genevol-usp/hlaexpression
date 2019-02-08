@@ -51,11 +51,8 @@ hlapers <-
            lineage = sub("^([^:]+).+$", "\\1", allele)) %>%
     select(subject, locus, lineage, tpm) %>%
     group_by(lineage) %>%
-    mutate(nLineage = n_distinct(subject)) %>%
-    group_by(subject, locus) %>%
-    filter(all(nLineage >= 10)) %>%
+    filter(n_distinct(subject) >= 10) %>%
     ungroup() %>%
-    select(-nLineage) %>%
     arrange(subject, locus, lineage)
 
 hlapers_a <- filter(hlapers, locus == "A")
