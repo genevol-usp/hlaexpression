@@ -17,7 +17,7 @@ Existing qPCR findings for HLA expression and its association with regulatory SN
 
 In our review of the qPCR literature on HLA expression, we found it difficult to compare results across studies because qPCR data are usually not comparable among different HLA loci, due to the different experimental techniques which are developed for each locus.
 
-Regarding allele-level estimates, they are not obtained directly with qPCR. Although some efforts have been made to develop allele-specific primers (Pan et al, 2018), to our knowledge, these have not yet been validated and used to obtain expression levels. Allele-based expression levels from qPCR (e.g., Kulkarni et al, 2011; Ramsuram et al, 2015; Ramsuram et al, 2017) are usually imputed from the locus-level expression levels (in the graphs included in those papers, locus-level expression is plotted twice, one point for each allele). Attempts have been made to improve the imputation with the use of a linear model of expression~genotype (e.g., Ramsuram et al, 2015). Besides the technical and biological differences between studies, the imputed nature of allele-level estimates from qPCR makes us not not surprised that many differences will emerge when we compare our RNA-seq data with qPCR data at the HLA-allele level.
+Regarding allele-level estimates, they are not obtained directly with qPCR. Although some efforts have been made to develop allele-specific primers (Pan et al, 2018), to our knowledge, these have not yet been validated and used to obtain expression levels. Allele-based expression levels from qPCR (e.g., Kulkarni et al, 2013; Ramsuram et al, 2015; Ramsuram et al, 2017) are usually imputed from the locus-level expression levels (in the graphs included in those papers, locus-level expression is plotted twice, one point for each allele). Attempts have been made to improve the imputation with the use of a linear model of expression~genotype (e.g., Ramsuram et al, 2015). Besides the technical and biological differences between studies, the imputed nature of allele-level estimates from qPCR makes us not not surprised that many differences will emerge when we compare our RNA-seq data with qPCR data at the HLA-allele level.
 
 
 
@@ -139,6 +139,8 @@ Therefore, this exercise of comparing our findings on HLA regulatory SNPs with v
 
 
 [Kulkarni et al. Differential microRNA regulation of HLA-C expression and its association with HIV control. Nature. 2011;472(7344).](https://doi.org/10.1038/nature09914)
+
+[Kulkarni et al. Genetic interplay between HLA-C and MIR148A in HIV control and Crohn disease. PNAS. 2013;110(51).](https://doi.org/10.1073/pnas.1312237110)
 
 [Ou G et al. Relationship between HLA-DPA1 mRNA expression and susceptibility to hepatitis B. Journal of Viral Hepatitis. 2019;26.](https://doi.org/10.1111/jvh.13012)
 
