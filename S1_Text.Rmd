@@ -13,13 +13,16 @@ library(tidyverse)
 
 ## Introduction
 
-Existing qPCR findings for HLA expression and its association with regulatory SNPs and diseases provide an important reference for any study on HLA expression. Many researchers in the field consider qPCR as a golden standard for HLA expression. Here, because of the indisputable importance of placing our novel findings in the context of well established functional studies, we provide a comparison with previous qPCR studies. Of course, this comparison has limitations: when comparing across studies we often are dealing with different individuals, cell types, and techniques. Thus, our efforts to compare our RNA-seq findings to those of published papers using qPCR are at best a first approximation.
+RNAseq constitutes a relatively new approach to quantify HLA expression. In order to place our novel findings in the context of well established  methods, and because many researchers consider qPCR as a golden standard for HLA expression, we provide an in-depth comparisson of RNAseq with previous qPCR studies. We investigate two main results: 1. The variation in expression among HLA lineages; 2. The influence of regulatory SNPs, previously documented in qPCR studies, in shaping expression levels in our RNAseq-based study.
+
+Of course,  this carries limitations: when comparing across studies we are often dealing with different individuals, cell types, and techniques. Thus, our efforts to compare our RNA-seq findings to those of published papers using qPCR are at best a first approximation.
 
 In our review of the qPCR literature on HLA expression, we found it difficult to compare results across studies because qPCR data are usually not comparable among different HLA loci, due to the different experimental techniques which are developed for each locus.
+ACHO QUE DÁ PARA TIRAR O PARÁGRAFO ACIMA, ELE TIRA O FOCO.
 
-Regarding allele-level estimates, they are not obtained directly with qPCR. Although some efforts have been made to develop allele-specific primers (Pan et al, 2018), to our knowledge, these have not yet been validated and used to obtain expression levels. Allele-based expression levels from qPCR (e.g., Kulkarni et al, 2013; Ramsuram et al, 2015; Ramsuram et al, 2017) are usually imputed from the locus-level expression levels (in the graphs included in those papers, locus-level expression is plotted twice, one point for each allele). Attempts have been made to improve the imputation with the use of a linear model of expression~genotype (e.g., Ramsuram et al, 2015). Besides the technical and biological differences between studies, the imputed nature of allele-level estimates from qPCR makes us not not surprised that many differences will emerge when we compare our RNA-seq data with qPCR data at the HLA-allele level.
+Although some efforts have been made to develop allele-specific primers (Pan et al, 2018), to our knowledge, these have not yet been validated and used to obtain expression levels. Thus, allele-based expression levels from qPCR (e.g., Kulkarni et al, 2013; Ramsuram et al, 2015; Ramsuram et al, 2017) are usually imputed from the locus-level expression levels (in the graphs included in those papers, locus-level expression is plotted twice, one point for each allele). Attempts have been made to improve the imputation with the use of a linear model of expression~genotype (e.g., Ramsuram et al, 2015). Besides the technical and biological differences between studies, the imputed nature of allele-level estimates from qPCR provide another source of differences between our RNA-seq estimates with qPCR data at the HLA-allele level. Nevertheless, we designed a survey to compare HLA-allele level expression between RNAseq and qPCR as rigorously as possible (see below), and to obtain a quantitative summary of the degree of agreement across these methods.
 
-
+RESUMO GERAL DA SEGUNDA QUESTÃO.
 
 
 ## Methods
@@ -31,9 +34,11 @@ Expression estimates for *HLA-A*, *HLA-B* and *HLA-C* as reported by [Ramsuram e
 
 ### Comparison of expression levels between qPCR and RNAseq
 
-Because our study and the previously published papers with qPCR expression data involved different tissues and samples, they cannot be directly compared (e.g., using a correlation analysis). Instead, we chose to ask whether the the ordering of HLA lineages given their expression levels differs among studies.  
+Because our study and the previously published papers with qPCR expression data involve different tissues and samples, they cannot be directly compared (e.g., using a correlation analysis). Instead, we chose to ask whether the the ranking of HLA lineages by their expression levels differs among studies.  
 
-Because this ordering is affected by the sample sizes of each lineage, the variation of individuals for the same lineage, and the degree of differentiation among lineages, we performed a comparison of our data (HLApers on GEUVADIS) with those in qPCR-based studies only for pairs of lineages with $N \ge 10$, and with statistically different distributions of expression values according to a pairwise Mann-Whitney U test with FDR correction for multiple testing, as available in the R statistical environment.
+**DECIDIR SE USAMOS ORDERING OU RANKING**
+
+Because this ordering is affected by the sample sizes of each lineage, the variation of individuals for the same lineage, and the degree of differentiation among lineages, we performed a comparison of our data (RNAseq-based estimates obtained using HLApers on GEUVADIS) with those in qPCR-based studies only for pairs of HLA lineages with $N \ge 10$, and with statistically different distributions of expression values with respect to at least one other lineage (Mann-Whitney U test with FDR correction for multiple testing, as available in the R statistical environment).
 
 
 ### Association of expression with SNPs and diseases
