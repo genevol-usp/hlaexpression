@@ -37,7 +37,7 @@ Because our study and the previously published papers with qPCR expression data 
 
 Existing qPCR findings for the association of SNPs and HLA expression provide an important reference for any study on HLA expression.
 
-In our Table S3, we assessed the degree of independence of the eQTLs we mapped in respect to previously reported regulatory SNPs, including those from qPCR studies, but there we showed results for the best association for each eQTL only. Here we extend that analysis, and dedicate more space to a comparison with previous SNPs shown to have regulatory role on HLA (Kulkarni et al, 2011; Petersdorf et al, 2015; Vince et al, 2016; Raj et al, 2016; Ou et al, 2019). We evaluate independence in terms of D', $r^2$ and RTC score (Nica et al, 2010; Delaneau et al, 2018).
+In our Table S3, we assessed the degree of independence of the eQTLs we mapped in respect to previously reported regulatory SNPs, including those from qPCR studies, but there we showed results for the best association for each eQTL only. Here we extend that analysis, and dedicate more space to a comparison with previous SNPs shown to have regulatory role on HLA (Kulkarni et al, 2011; Thomas et al, 2012; Petersdorf et al, 2015; Vince et al, 2016; Raj et al, 2016; Ou et al, 2019). We evaluate independence in terms of D', $r^2$ and RTC score (Nica et al, 2010; Delaneau et al, 2018).
 
 
 
@@ -108,7 +108,7 @@ The low number of significant pairs for *HLA-B* can be explained by the low vari
 
 ### Independence regarding previous regulatory SNPs with validation support.
 
-The eQTLs we mapped for *HLA-C* are very highly correlated at the haplotypic level with variants described by Kulkarni et al (2011) and Vince et al (2016) ($0.97 \le D’ \le 1$), which were shown to regulate *HLA-C* expression via a miRNA binding site at the 3’UTR, and at an Oct1 binding site at the promoter region, respectively. The minor allele frequencies of our variants are lower than those in the previous studies, and the variation at our SNPs is nested within that of the previously validated SNPs, i.e. the allele present in our SNPs predicts the allele in the previous SNP, but the opposite is not true. The RTC test, which is designed to formally evaluate if all variation explained by a SNP can be accounted for by another one, suggests that accounting for the previously validated SNP does not erase the signal of the SNPs identified in our data. Thus, despite the strong haplotypic association, the SNPs we report seem to be driving the biological signal in our sample. This is also the case for the rank 1 eQTL which we mapped for *HLA-DQB1*, and a variant reported by Raj et al (2016) as part of a super-enhancer which regulates *HLA-DQA1*, *HLA-DQB1* and *HLA-DRB1*. For HLA-DP we also found  a strong association, both in terms of D’ and $r^2$, between our SNPs and those previously validated for *HLA-DPB1* (Petersdorf et al, 2015) and *HLA-DPA1* (Ou et al, 2018). However, the RTC test suggest that, although the allele in one SNP predicts the allele in previously validated SNP, accounting for the previous SNP does not remove the signal of the SNP we mapped (Table 3).
+The eQTLs we mapped for *HLA-C* are very highly correlated at the haplotypic level with variants described by Kulkarni et al (2011) and Vince et al (2016) ($0.97 \le D’ \le 1$), which were shown to regulate *HLA-C* expression via a miRNA binding site at the 3’UTR, and at an Oct1 binding site at the promoter region, respectively. The minor allele frequencies of our variants are lower than those in the previous studies, and the variation at our SNPs is nested within that of the previously validated SNPs, i.e. the allele present in our SNPs predicts the allele in the previous SNP, but the opposite is not true. The RTC test, which is designed to formally evaluate if all variation explained by a SNP can be accounted for by another one, suggests that accounting for the previously validated SNP does not erase the signal of the SNPs identified in our data. Thus, despite the strong haplotypic association, the SNPs we report seem to be driving the biological signal in our sample. This is also the case for the rank 1 eQTL which we mapped for *HLA-DQB1*, and a variant reported by Raj et al (2016) as part of a super-enhancer which regulates *HLA-DQA1*, *HLA-DQB1* and *HLA-DRB1*. For HLA-DP we also found  a strong association, both in terms of D’ and $r^2$, between our SNPs and those previously validated for *HLA-DPB1* (Thomas et al, 2012) and *HLA-DPA1* (Ou et al, 2018). However, the RTC test suggest that, although the allele in one SNP predicts the allele in previously validated SNP, accounting for the previous SNP does not remove the signal of the SNP we mapped (Table 3).
 
 \hfill\break
 \hfill\break
@@ -116,20 +116,16 @@ The eQTLs we mapped for *HLA-C* are very highly correlated at the haplotypic lev
 \hfill\break
 
 
-**Table 3.** Relationship between our eQTLs and previous SNPs with validation support ("Valid-SNP"). r2: r-squared; AF: allele frequency; p: the backward pass p-value from QTLtools for the validated SNP (NA when SNP did not pass to the backward stage).  
+**Table 3.** Relationship between our eQTLs and SNPs with previously shown regulatory role. r2: r-squared; AF: allele frequency).  
 
 ```{r}
 "./geuvadis_reanalysis/eqtl_mapping/transcriptomemapping/hla_personalized/rtc/top_previous_qtls/validated_variants/validated_variants_results.csv" %>%
     read_csv() %>%
     filter(d_prime > 0.65) %>%
-    select(Gene = 1, rank = 2, eQTL = 3, `Valid-SNP` = 4, Study = 5,  
-           `r2` = 6, `D'` = 7, `AF (eQTL)` = 8, `AF (Valid-SNP)` = 9,
-           RTC = 10, p = 11) %>%
-    mutate(Study = recode(Study, kulkarni2011 = "Kulkarni 2011", 
-                          vince2017 = "Vince 2016", 
-                          xl9_raj2016 = "Raj 2016",
-                          ou2018 = "Ou 2018", 
-                          petersdorf2015 = "Petersdorf 2015")) %>%
+    mutate(previous_snp = paste0(validated_var, " (", study, ")")) %>%
+    select(Gene = 1, rank = 2, eQTL = 3, `Previous SNP` = previous_snp,  
+           `r2` = 6, `D'` = 7, `AF (eQTL)` = 8, `AF (previous SNP)` = 9,
+           RTC = 10) %>%
     kable(digits = 2) %>%
     kable_styling(latex_options = "scale_down")
 ```
