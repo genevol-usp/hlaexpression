@@ -25,7 +25,7 @@ We also queried whether SNPs identified as having a regulatory role upon qPCR-ba
 
 ### Data
 
-Expression estimates for *HLA-A*, *HLA-B* and *HLA-C*  reported by [Ramsuram et al, HMG, 2015](https://doi.org/10.1093/hmg/ddv158), [Ramsuram et al, JI, 2017](http://www.jimmunol.org/content/198/6/2320), and [Kulkarni et al, PNAS, 2013](https://doi.org/10.1073/pnas.1312237110), were kindly provided by corresponding authors.
+Expression estimates for *HLA-A*, *HLA-B* and *HLA-C*  reported by [Ramsuram et al (2015)](https://doi.org/10.1093/hmg/ddv158), [Ramsuram et al (2017)](http://www.jimmunol.org/content/198/6/2320), and [Kulkarni et al (2013)](https://doi.org/10.1073/pnas.1312237110), were kindly provided by corresponding authors.
 
 
 ### Comparison of expression levels between qPCR and RNA-seq
