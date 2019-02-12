@@ -51,7 +51,7 @@ delaneau2018 <- read_delim("./delaneau_LCL_eqtls.txt", col_names = FALSE, delim 
     mutate(pval = -log10(X20)) %>%
     select(gene_name, rsid = X8, pval, min_rank)
 
-vince2017 <- tibble(gene_name = "HLA-C",
+vince2016 <- tibble(gene_name = "HLA-C",
 		rsid = "rs2395471",
 		pval = NA,
 		min_rank = NA)
@@ -61,20 +61,30 @@ thomas2009 <- tibble(gene_name = "HLA-C",
 		     pval = NA,
 		     min_rank = NA)
 
+thomas2012 <- tibble(gene_name = "HLA-DPB1",
+		     rsid = "rs9277534",
+		     pval = NA,
+		     min_rank = NA)
+
 kulkarni2011 <- tibble(gene_name = "HLA-C",
 		       rsid = "rs67384697",
 		       pval = NA,
 		       min_rank = NA)
 
-petersdorf2015 <- tibble(gene_name = "HLA-DPB1",
-			 rsid = "rs9277534",
+petersdorf2015 <- tibble(gene_name = c("HLA-DPB1"),
+			 rsid = c("rs2281389"), 
 			 pval = NA,
 			 min_rank = NA)
 
-xl9_raj2016 <- tibble(gene_name = c("HLA-DQA1", "HLA-DQB1", "HLA-DRB1"),
+raj2016 <- tibble(gene_name = c("HLA-DQA1", "HLA-DQB1", "HLA-DRB1"),
 		      rsid = "rs9271593",
 		      pval = NA,
 		      min_rank = NA)
+
+ou2019 <- tibble(gene_name = "HLA-DPA1",
+		 rsid = "rs3077",
+		 pval = NA,
+		 min_rank = NA)
 
 
 integrated_data <-
@@ -83,10 +93,12 @@ integrated_data <-
 	 gtex_v7 = gtex_gene,
 	 delaneau2018 = delaneau2018,
 	 thomas2009 = thomas2009,
+	 thomas2012 = thomas2012,
 	 kulkarni2011 = kulkarni2011,
-	 vince2017 = vince2017,
+	 vince2016 = vince2016,
 	 petersdorf2015 = petersdorf2015,
-	 xl9_raj2016 = xl9_raj2016) %>%
+	 raj2016 = raj2016,
+	 ou2019 = ou2019) %>%
     bind_rows(.id = "study") %>%
     convert_rsIDs()
 
