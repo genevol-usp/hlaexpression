@@ -35,7 +35,7 @@ Because our study and the previously published papers with qPCR expression data 
 
 ### Association of expression with SNPs and diseases
 
-Existing qPCR findings for the association of SNPs and HLA expression provide an important reference for any study on HLA expression. In our Table S3, we assessed the degree of independence of the eQTLs we mapped in respect to previously reported regulatory SNPs, including those from qPCR studies, but only showed results for the best association for each eQTL. Here we extend that analysis, and dedicate more space to a comparison with previous SNPs shown to have regulatory role on HLA (Kulkarni et al, 2011; Thomas et al, 2012; Petersdorf et al, 2015; Vince et al, 2016; Raj et al, 2016; Ou et al, 2019). We evaluate independence using D', $r^2$ and the Relative Trait Concordance (RTC) score (Nica et al, 2010; Delaneau et al, 2018). The RTC score tests if different eQTLs mark the same biological signal (Nica et al, 2010).
+Existing qPCR findings for the association of SNPs and HLA expression provide an important reference for any study on HLA expression. In our Table S3, we assessed the degree of independence of the eQTLs we mapped in respect to previously reported regulatory SNPs, including those from qPCR studies, but only showed results for the best association for each eQTL. Here we extend that analysis, and dedicate more space to a comparison with previous SNPs shown to have regulatory role on HLA (Kulkarni et al, 2011; Thomas et al, 2012; Vince et al, 2016; Raj et al, 2016; Ou et al, 2019). We evaluate independence using D', $r^2$ and the Relative Trait Concordance (RTC) score (Nica et al, 2010; Delaneau et al, 2018). The RTC score tests if different eQTLs mark the same biological signal (Nica et al, 2010).
 
 
 ## Results
@@ -145,8 +145,6 @@ Furthermore, previous studies did not always query all the variation in the regi
 [Nica A et al. Candidate causal regulatory effects by integration of expression QTLs withcomplex trait genetic associations. PLoS Genetics. 2010;6(4)](https://doi.org/10.1371/journal.pgen.1000895)
 
 [Ou G et al. Relationship between HLA-DPA1 mRNA expression and susceptibility to hepatitis B. Journal of Viral Hepatitis. 2019;26.](https://doi.org/10.1111/jvh.13012)
-
-[Petersdorf E et al. High HLA-DP Expression and Graft-versus-Host Disease. The New England Journal of Medicine. 2015;373(7).](https://doi.org/10.1056/NEJMoa1500140)
 
 [Pan N et al. Quantification of classical HLA class I mRNA by allele-specific,real-time polymerase chain reaction for most Han individuals. HLA. 2019;91.](https://doi.org/10.1111/tan.13186)
 
