@@ -118,11 +118,12 @@ The eQTLs we mapped for *HLA-C* are very highly correlated at the haplotypic lev
 ```{r}
 "./geuvadis_reanalysis/eqtl_mapping/transcriptomemapping/hla_personalized/rtc/top_previous_qtls/validated_variants/validated_variants_results.csv" %>%
     read_csv() %>%
-    filter(d_prime > 0.65) %>%
+    group_by(validated_var) %>%
+    filter(all(rtc < 0.95)) %>%
+    ungroup() %>%
     mutate(previous_snp = paste0(validated_var, " (", study, ")")) %>%
     select(Gene = 1, rank = 2, eQTL = 3, `Reg-SNP (study)` = previous_snp,  
-           `r2` = 6, `D'` = 7, `AF (eQTL)` = 8, `AF (Reg-SNP)` = 9,
-           RTC = 10) %>%
+           `r2` = 6, `D'` = 7, `AF (eQTL)` = 8, `AF (Reg-SNP)` = 9, RTC = 10) %>%
     kable(digits = 2) %>%
     kable_styling(latex_options = "scale_down")
 ```
