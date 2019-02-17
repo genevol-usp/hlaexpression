@@ -13,7 +13,7 @@ library(tidyverse)
 
 ## Introduction
 
-RNA-seq constitutes a relatively new approach to quantify HLA expression. In order to place our novel findings in the context of well established methods, and because many researchers consider qPCR as a golde standard for HLA expression, we provide an in-depth comparison of RNA-seq with previous qPCR studies. We investigate two main aspects: (1) The variation in expression among HLA lineages; (2) The influence of regulatory SNPs, previously documented in qPCR studies, in shaping expression levels in our RNA-seq study.
+RNA-seq constitutes a relatively new approach to quantify HLA expression. In order to place our novel findings in the context of well established methods, and because many researchers consider qPCR as a gold standard for HLA expression, we provide an in-depth comparison of RNA-seq with previous qPCR studies. We investigate two main aspects: (1) The variation in expression among HLA lineages; (2) The influence of regulatory SNPs, previously documented in qPCR studies, in shaping expression levels in our RNA-seq study.
 
 Of course, this carries limitations: when comparing across studies we are often dealing with different individuals, cell types, and techniques. Thus, our efforts to compare our RNA-seq findings to those of published papers using qPCR are at best a first approximation.
 
@@ -35,7 +35,7 @@ Because our study and the previously published papers with qPCR expression data 
 
 ### Association of expression with SNPs and diseases
 
-Existing qPCR findings for the association of SNPs and HLA expression provide an important reference for any study on HLA expression. In our Table S3, we assessed the degree of independence of the eQTLs we mapped in respect to previously reported regulatory SNPs, including those from qPCR studies, but only showed results for the best association for each eQTL. Here we extend that analysis, and dedicate more space to a comparison with previous SNPs shown to have regulatory role on HLA (Kulkarni et al, 2011; Thomas et al, 2012; Vince et al, 2016; Raj et al, 2016; Ou et al, 2019). We evaluate independence using D', $r^2$ and the Relative Trait Concordance (RTC) score (Nica et al, 2010; Delaneau et al, 2018). The RTC score tests if different eQTLs mark the same biological signal (Nica et al, 2010).
+Existing qPCR findings for the association of SNPs and HLA expression provide an important reference for any study on HLA expression. In our Table S3, we assessed the degree of independence of the eQTLs we mapped in respect to previously reported regulatory SNPs, including those from qPCR studies, but only showed results for the significant associations according to the RTC test. Here we dedicate more space to a comparison with previous SNPs shown to have regulatory role on HLA (Kulkarni et al, 2011; Thomas et al, 2012; Fairfax et al, 2012; Raj et al, 2016; Ou et al, 2019). We evaluate independence using D', $r^2$ and the Relative Trait Concordance (RTC) score (Nica et al, 2010; Delaneau et al, 2018). The RTC score tests if different eQTLs mark the same biological signal (Nica et al, 2010).
 
 
 ## Results
@@ -105,7 +105,9 @@ The low number of lineages with significantly different expression for *HLA-B* r
 
 ### Independence between newly identified eQTLs and SNPs with previously shown regulatory role.
 
-The eQTLs we mapped for *HLA-C* are very highly correlated at the haplotypic level with variants described by Kulkarni et al (2011) and Vince et al (2016) ($0.97 \le D’ \le 1$), which were shown to regulate *HLA-C* expression via a miRNA binding site at the 3’UTR, and at an Oct1 binding site at the promoter region, respectively. The minor allele frequencies of our variants are lower than those in the previous studies, and the variation at our SNPs is completely nested within that of the previously validated SNPs, i.e. the allele present in our SNPs predicts the allele in the previous SNP, but the opposite is not true. The RTC test, which is designed to formally evaluate if all variation explained by a SNP can be accounted for by another one, suggests that accounting for the previously validated SNP does not erase the signal of the SNPs identified in our data. Thus, despite the strong haplotypic association, the SNPs we report seem to be driving the biological signal in our sample. This is also the case for the rank 1 eQTL which we mapped for *HLA-DQB1*, and a variant reported by Raj et al (2016) as part of a super-enhancer which regulates *HLA-DQA1*, *HLA-DQB1* and *HLA-DRB1*. For HLA-DP we also found  a strong association, both in terms of D’ and $r^2$, between our SNPs and those previously validated for *HLA-DPB1* (Thomas et al, 2012) and *HLA-DPA1* (Ou et al, 2019). However, the RTC test suggest that, although the allele in one SNP predicts the allele in previously validated SNP, accounting for the previous SNP does not remove the signal of the SNP we mapped (Table 3).
+The eQTLs we mapped for *HLA-C* are very highly correlated at the haplotypic level with variants described by Kulkarni et al (2011), which was shown to regulate *HLA-C* expression via a miRNA binding site at the 3’UTR. The minor allele frequencies of our variants are lower than that of the SNP in Kulkarni et al (2011), and the variation at our SNPs is completely nested within that of the previously validated SNP, i.e. the allele present in our SNPs predicts the allele in the previous SNP, but the opposite is not true. The RTC test, which is designed to formally evaluate if all variation explained by a SNP can be accounted for by another one, suggests that accounting for the previously validated SNP does not erase the signal of the SNPs identified in our data. Thus, despite the strong haplotypic association, the SNPs we report seem to be driving the biological signal in our sample. Further, two independent eQTLs we identified for HLA-C likely share the biological signals with one eQTL mapped in the GEUVADIS study and the eQTL mapped by Fairfax et al (2012). 
+
+The high haplotypic association is also seen for the rank 1 eQTL which we mapped for *HLA-DQB1*, and a variant reported by Raj et al (2016) as part of a super-enhancer which regulates *HLA-DQA1*, *HLA-DQB1* and *HLA-DRB1*. For HLA-DP we also found  a strong association, both in terms of D’ and $r^2$, between our SNPs and those previously validated for *HLA-DPB1* (Thomas et al, 2012) and *HLA-DPA1* (Ou et al, 2019). However, the RTC test suggest that, although the allele in one SNP predicts the allele in previously validated SNP, accounting for the previous SNP does not remove the signal of the SNP we mapped (Table 3).
 
 
 \hfill\break
@@ -131,9 +133,11 @@ The eQTLs we mapped for *HLA-C* are very highly correlated at the haplotypic lev
 
 \hfill\break
 
-Our results show that the eQTLs we identified are not simply tagging  previously identified variants. This is consistent with multiple sites playing a detectable role in modulating HLA expression (as seen in other loci, e.g., Delaneau et al, 2018), and with the fact that the site with greatest regulatory effect often differs among populations or tissues, thus explaining differences across studies.
+Our results show that the eQTLs we identified are not simply tagging previously identified variants. This is consistent with multiple sites playing a detectable role in modulating HLA expression (as seen for other loci genome-wide, e.g., Delaneau et al, 2017), and with the fact that the site with greatest regulatory effect often differs among populations or tissues, thus explaining differences across studies.
 
 Furthermore, previous studies did not always query all the variation in the region (focusing instead on candidate SNPs for which there was an expectation of a regulatory role). Thus, while it is reasonable to expect that the SNPs previously assayed may have some regulatory role in our sample, the finding of novel variants in a study that queried all documented variation in the neighborhood of a locus is not unexpected. 
+
+However, by exploring a larger catalog of previous regulatory SNPs, we show that the majority of the eQTLs we mapped likely share a biological signal with SNPs identified in previous studies (see S3 and S5 Tables).
 
 
 ## References
