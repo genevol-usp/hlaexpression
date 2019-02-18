@@ -122,7 +122,6 @@ The high haplotypic association is also seen for the rank 1 eQTL which we mapped
     read_csv() %>%
     filter(d_prime > .65) %>%
     group_by(validated_var) %>%
-    filter(all(rtc < 0.9)) %>%
     ungroup() %>%
     mutate(previous_snp = paste0(validated_var, " (", study, ")")) %>%
     select(Gene = 1, rank = 2, eQTL = 3, `Reg-SNP (study)` = previous_snp,  
