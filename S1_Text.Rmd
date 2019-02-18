@@ -13,13 +13,11 @@ library(tidyverse)
 
 ## Introduction
 
-RNA-seq constitutes a relatively new approach to quantify HLA expression. In order to place our novel findings in the context of well established methods, and because many researchers consider qPCR as a gold standard for HLA expression, we provide an in-depth comparison of RNA-seq with previous qPCR studies. We compare two aspects: (1) the quantification of the HLA lineage-level expression in RNA-seq and qPCR; (2) the influence of regulatory SNPs, previously documented in qPCR studies, in shaping expression levels in our RNA-seq study.
+RNA-seq constitutes a relatively new approach to quantify HLA expression. In order to place our novel findings in the context of well established methods, and because many researchers consider qPCR as a gold standard for HLA expression, we provide an in-depth comparison of RNA-seq with previous qPCR studies.
 
 Of course, our analyses have limitations: when comparing across studies we are often dealing with different individuals, cell types, and techniques. Thus, our efforts to compare our RNA-seq findings to those of published papers that used qPCR are at best a first approximation.
 
 Although some efforts have been made to develop allele-specific primers (Pan et al, 2018), to our knowledge, these have not yet been used to obtain expression levels for population datasets. Thus, allele-based expression levels from qPCR (e.g., Kulkarni et al, 2013; Ramsuram et al, 2015; Ramsuram et al, 2017) are usually imputed from the locus-level expression levels (in the graphs included in those papers, locus-level expression is plotted twice, one point for each allele). Attempts have been made to improve the imputation with the use of a linear model of expression~genotype (e.g., Ramsuram et al, 2015). Thus, besides the technical and biological differences between studies, the imputed nature of allele-level estimates from qPCR provide another source of differences between our RNA-seq estimates with qPCR data at the HLA allele-level. Nevertheless, we designed a survey to compare HLA allele-level expression between RNA-seq and qPCR as rigorously as possible (see below), and to obtain a quantitative summary of the degree of agreement across these methods.
-
-To compare our eQTL mapping results to the findings of previous studies which identified SNPs with a regulatory effect on HLA expression, we  used different methods to test whether tese SNP were statistically correlated (i.e., in linkage disequilibrium), and if these effects were independent.
 
 ## Methods
 
@@ -31,11 +29,6 @@ Expression estimates for *HLA-A*, *HLA-B* and *HLA-C*  reported by [Ramsuram et 
 ### Comparison of expression levels between qPCR and RNA-seq
 
 Because our study and the previously published papers with qPCR expression data involve different samples, they cannot be directly compared (e.g., using a correlation analysis). Instead, we asked whether the ordering of HLA lineages by their expression levels differs among studies. To do this, we applied a pairwise Mann-Whitney U test (with FDR correction for multiple testing) to pairwise comparissons between all pairs of lineages with $N \ge 10$ in both the qPCR and RNA-seq data. We restricted subsequent analyses to lineage pairs that showed significantly different expression for both qPCR and RNA-seq quantification.
-
-
-### Association of expression with SNPs and diseases
-
-Existing qPCR findings for the association of SNPs and HLA expression provide an important reference for any study on HLA expression. In our Table S3, we assessed the degree of independence of the eQTLs we mapped with respect to previously reported regulatory SNPs, including those from qPCR studies, but only showed results for the significant associations according to the RTC test. Here we dedicate more space to a comparison with previous SNPs shown to have regulatory role on HLA (Kulkarni et al, 2011; Thomas et al, 2012; Fairfax et al, 2012; Raj et al, 2016; Ou et al, 2019). We evaluate independence using D', $r^2$ and the Relative Trait Concordance (RTC) score (Nica et al, 2010; Delaneau et al, 2018). The RTC score tests if different eQTLs mark the same biological signal (Nica et al, 2010).
 
 
 ## Results
@@ -60,6 +53,9 @@ The apparent lack of agreement among the methods in the ordering of alleles can 
 For *HLA-A*, *HLA-B* and *HLA-C* we found 33 instances where the expression was significantly different for a pair of lineages in both qPCR and RNA-seq datasets (Table 1). 
 
 \hfill\break
+\hfill\break
+\hfill\break
+
 
 **Table 1** Significant lineage pairs in both qPCR and RNA-seq in a pairwise Mann-Whitney test.
 
@@ -103,63 +99,14 @@ The low number of lineages with significantly different expression for *HLA-B* r
 
 
 
-### Independence between newly identified eQTLs and SNPs with previously shown regulatory role.
-
-The eQTLs we mapped for *HLA-C* are very highly correlated at the haplotypic level with the variant described by Kulkarni et al (2011), which was shown to regulate *HLA-C* expression via a miRNA binding site at the 3’UTR. The minor allele frequencies of our variants are lower than that of the SNP in Kulkarni et al (2011), and the variation at our SNPs is completely nested within that of the previously validated SNP, i.e. the allele present in our SNPs predicts the allele in the previous SNP, but the opposite is not true. The RTC test, which is designed to formally evaluate if all variation explained by a SNP can be accounted for by another one, suggests that accounting for the previously validated SNP does not erase the signal of the SNPs identified in our data. Thus, despite the strong haplotypic association, the SNPs we report seem to be driving the biological signal in our sample. Further, two independent eQTLs we identified for HLA-C likely share the biological signals with one eQTL mapped in the GEUVADIS study and the eQTL mapped by Fairfax et al (2012). 
-
-The high haplotypic association is also seen for the rank 1 eQTL which we mapped for *HLA-DQB1*, and a variant reported by Raj et al (2016) as part of a super-enhancer which regulates *HLA-DQA1*, *HLA-DQB1* and *HLA-DRB1*. For HLA-DP we also found  a strong association, both in terms of D’ and $r^2$, between our SNPs and those previously validated for *HLA-DPB1* (Thomas et al, 2012) and *HLA-DPA1* (Ou et al, 2019). However, the RTC test suggest that, although the allele in one SNP predicts the allele in previously validated SNP, accounting for the previous SNP does not remove the signal of the SNP we mapped (Table 3).
-
-
-\hfill\break
-\hfill\break
-\hfill\break
-\hfill\break
-
-**Table 3.** Relationship between our eQTLs and previously described regulatory SNPs ("Reg-SNP"). r2: r-squared; AF: allele frequency.  
-
-```{r}
-"./geuvadis_reanalysis/eqtl_mapping/transcriptomemapping/hla_personalized/rtc/top_previous_qtls/validated_variants/validated_variants_results.csv" %>%
-    read_csv() %>%
-    filter(d_prime > .65) %>%
-    group_by(validated_var) %>%
-    ungroup() %>%
-    mutate(previous_snp = paste0(validated_var, " (", study, ")")) %>%
-    select(Gene = 1, rank = 2, eQTL = 3, `Reg-SNP (study)` = previous_snp,  
-           `r2` = 6, `D'` = 7, `AF (eQTL)` = 8, `AF (Reg-SNP)` = 9, RTC = 10) %>%
-    kable(digits = 2) %>%
-    kable_styling(latex_options = "scale_down")
-```
-
-\hfill\break
-
-Our results show that the eQTLs we identified are not simply tagging previously identified variants. This is consistent with multiple sites playing a detectable role in modulating HLA expression (as seen for other loci genome-wide, e.g., Delaneau et al, 2017), and with the fact that the site with greatest regulatory effect often differs among populations or tissues, thus explaining differences across studies.
-
-Furthermore, previous studies did not always query all the variation in the region (focusing instead on candidate SNPs for which there was an expectation of a regulatory role). Thus, while it is reasonable to expect that the SNPs previously assayed may have some regulatory role in our sample, the finding of novel variants in a study that queried all documented variation in the neighborhood of a locus is not unexpected. 
-
-However, by exploring a larger catalog of previous regulatory SNPs, we show that the majority of the eQTLs we mapped likely share a biological signal with SNPs identified in previous studies (see S3 and S5 Tables).
-
-
 ## References
 
-[Delaneau O et al. A complete tool set for molecular QTL discovery and analysis. Nature Communications. 2017;8(15452)](https://doi.org/10.1101/068635)
-
-[Kulkarni et al. Differential microRNA regulation of HLA-C expression and its association with HIV control. Nature. 2011;472(7344).](https://doi.org/10.1038/nature09914)
 
 [Kulkarni et al. Genetic interplay between HLA-C and MIR148A in HIV control and Crohn disease. PNAS. 2013;110(51).](https://doi.org/10.1073/pnas.1312237110)
 
-[Nica A et al. Candidate causal regulatory effects by integration of expression QTLs withcomplex trait genetic associations. PLoS Genetics. 2010;6(4)](https://doi.org/10.1371/journal.pgen.1000895)
-
-[Ou G et al. Relationship between HLA-DPA1 mRNA expression and susceptibility to hepatitis B. Journal of Viral Hepatitis. 2019;26.](https://doi.org/10.1111/jvh.13012)
-
 [Pan N et al. Quantification of classical HLA class I mRNA by allele-specific,real-time polymerase chain reaction for most Han individuals. HLA. 2019;91.](https://doi.org/10.1111/tan.13186)
-
-[Raj P et al. Regulatory polymorphisms modulate the expression of HLA class II molecules and promote autoimmunity. eLife. 2016;5.](https://doi.org/10.7554/eLife.12089)
 
 [Ramsuram V et al. Epigenetic regulation of differential HLA-A allelic expression levels. Human Molecular Genetics. 2015;24(15).](https://doi.org/10.1093/hmg/ddv158)
 
 [Ramsuram V et al. Sequence and Phylogenetic Analysis of the Untranslated Promoter Regions for HLA Class I Genes. The Journal of Immunology. 2017;198.](https://doi.org/10.4049/jimmunol.1601679)
-
-[Thomas R et al. A Novel Variant Marking HLA-DP Expression Levels Predicts Recovery from Hepatitis B Virus Infection. Journal of Virology. 2012;86(12).](https://doi.org/10.1128/JVI.00406-12)
-
-[Vince N et al. HLA-C Level Is Regulated by a Polymorphic Oct1 Binding Site in the HLA-C Promoter Region. The American Journal of Human Genetics. 2016;99(6).](https://doi.org/10.1016/j.ajhg.2016.09.023)
 
