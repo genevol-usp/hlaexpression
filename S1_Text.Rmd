@@ -84,7 +84,7 @@ Of the significant pairs, for 21/33 cases the results were concordant (i.e. we f
 ```{r}
 read_tsv("./compare_qpcr/summary_results.tsv") %>% 
     mutate(locus = paste0("HLA-", locus),
-           `Percentage of concordance` = same_dir/n_significant * 100) %>%
+           `Concordance (%)` = same_dir/n_significant * 100) %>%
     rename(Locus = 1, `Concordant between qPCR and RNA-seq` = 2, `Total signif. pairs` = 3) %>%
     kable(digits = 1)
 ``` 
