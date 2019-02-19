@@ -58,6 +58,8 @@ For *HLA-A*, *HLA-B* and *HLA-C* we found 33 instances where the expression was 
 
 
 **Table 1** Significant lineage pairs in both qPCR and RNA-seq in a pairwise Mann-Whitney test.
+**Table 1** Lineage pairs with significantly different expression for both qPCR and RNA-seq (pairwise Mann-Whitney test_.
+
 
 \begin{center}
 
