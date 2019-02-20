@@ -57,7 +57,7 @@ For *HLA-A*, *HLA-B* and *HLA-C* we found 33 instances where the expression was 
 \hfill\break
 
 
-**Table 1** Lineage pairs with significantly different expression for both qPCR and RNA-seq (pairwise Mann-Whitney test.
+**Table 1.** Lineage pairs with significantly different expression for both qPCR and RNA-seq (pairwise Mann-Whitney test.
 
 
 \begin{center}
