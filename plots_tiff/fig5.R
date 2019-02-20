@@ -145,3 +145,73 @@ plot_grid(NULL, plot_qtls_1, plot_qtls_2, ncol = 1,
           labels = c("A", "", "B"), label_size = 9, label_fontfamily = "Times",
           vjust = 1.4, hjust = -0.7)
 dev.off()
+
+
+#### non-classical
+
+gencode_hla_nclassical <- gencode_chr_gene %>% 
+    filter(gene_name %in% c("HLA-E", "HLA-F", "HLA-G", "HLA-H"))
+
+plot_qtls_df <- qtls_df %>%
+    filter(gene %in% gencode_hla_nclassical$gene_name) %>%
+    mutate(gene = sub("HLA-", "", gene),
+           gene = factor(gene, levels = sub("HLA-", "", gencode_hla_nclassical$gene_name)))
+
+ori_df <- plot_qtls_df %>%
+    distinct(index, gene, strand) %>%
+    mutate(xend = ifelse(strand == "+", 1e5L, -1e5L)) %>%
+    select(index, gene, xend)
+
+best_df <- filter(plot_qtls_df, best == 1L)
+
+png("./plots/eqtls_nonclassic.png", width = 12, height = 9, units = "cm", res = 150)
+ggplot(data = plot_qtls_df, aes(dist_to_tss, pval)) +
+    geom_blank(data = plot_qtls_df %>% 
+                   group_by(gene, index) %>%
+                   slice(which.max(pval)) %>% 
+                   mutate(max_pval = pval + 1L),
+               aes(y = max_pval)) +
+    coord_cartesian(xlim = c(-1e6, +1e6)) +
+    geom_vline(aes(xintercept = 0), color = "grey", size = 1.5) + 
+    geom_point(data = filter(plot_qtls_df, signif == 0), 
+               aes(dist_to_tss, pval),
+               size = .5, color = "grey", show.legend = FALSE) +
+    geom_segment(data = ori_df,
+                 aes(x = 0, xend = xend, y = -2.5, yend = -2.5),
+                 arrow = arrow(length = unit(0.25, "cm"), type = "closed", ends = "last"),
+                 size = 1, color = "darkgreen", alpha = .5) +
+    geom_point(data = filter(plot_qtls_df, signif == 1L), 
+               aes(dist_to_tss, pval, color = rank), 
+               size = .5) +
+    geom_point(data = best_df, 
+               aes(dist_to_tss, pval, color = rank), size = 2) +
+    geom_point(data = best_df, 
+               aes(dist_to_tss, pval), 
+               shape = 1, size = 2, color = "black", stroke = 1) +
+    geom_label_repel(data = best_df,
+                     aes(dist_to_tss, pval, label = var_id),
+                     label.size = NA, label.padding = 0.05, alpha = 0.4, seed = 1,
+                     size = 2.5, family = "Times", fontface = "bold",
+                     direction = "both",
+                     show.legend = FALSE) +
+    geom_label_repel(data = best_df,
+                     aes(dist_to_tss, pval, label = var_id),
+                     label.size = NA, label.padding = 0.05, fill = NA, seed = 1,
+                     size = 2.5, family = "Times", fontface = "bold",
+                     direction = "both",
+                     show.legend = FALSE) +
+    scale_color_manual(values = c("0" = "#8491B4B2",
+                                  "1" = "#DC0000B2",
+                                  "2" = "gold3",
+                                  "3" = "#7E6148FF",
+                                  "4" = "#009E73")) +
+    scale_x_continuous(breaks = seq(-1e6L, 1e6L, by = 2.5e5L),
+                       labels = function(x) x/1e6L) +
+    scale_y_continuous(breaks = seq(0, 30, by = 5)) +
+    facet_grid(gene~index, scales = "free_y") +
+    guides(color = guide_legend(override.aes = list(alpha = 1, size = 2.5))) +
+    theme_bw() +
+    theme(text = element_text(family = "Times", size = 9)) +
+    labs(x = "distance from TSS (Mb)", 
+         y = expression(paste("-log"[10], italic(Pvalue))))
+dev.off()

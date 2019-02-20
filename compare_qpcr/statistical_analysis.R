@@ -103,9 +103,22 @@ pvals_comp <-
     left_join(pcr_pairs, by = c("a1", "a2")) %>%
     left_join(hlapers_pairs, by = c("a1", "a2"), suffix = c("_qpcr", "_hlapers"))
 
+pvals_comp %>%
+    select(a1, a2, signif_qpcr, signif_hlapers) %>%
+    mutate(locus = sub("^([^\\*]).+$", "\\1", a1)) %>%
+    group_by(locus) %>%
+    summarise(signif_qpcr = sum(signif_qpcr), signif_hlapers = sum(signif_hlapers),
+	      n = n()) %>%
+    ungroup()
+
+pvals_comp %>% filter((a1 == "B*13" & a2 == "B*51") | (a1 == "B*51" & a2 == "B*13")) 
+
 significant <- pvals_comp %>%
     filter(signif_qpcr == 1, signif_hlapers == 1) %>%
     select(-starts_with("signif"))
+
+significant %>%
+    filter(grepl("A", a1), direction_qpcr != direction_hlapers)
 
 write_tsv(significant, "results_significant.tsv")
 
