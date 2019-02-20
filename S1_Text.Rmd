@@ -1,5 +1,5 @@
 ---
-title: "Comparison with previous qPCR findings"
+title: "Supplementary Text 1"
 output: pdf_document
 ---
 
