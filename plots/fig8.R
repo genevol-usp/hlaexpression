@@ -104,7 +104,7 @@ classII_and_CIITA <- gencode_chr_gene %>%
     mutate(gene_name = factor(gene_name, levels = .$gene_name))
 
 class_2_trans_df <- 
-    "../geuvadis_reanalysis/expression/3-map_to_transcriptome/hla_personalized/gene_quantifications.tsv" %>%
+    "../geuvadis_reanalysis/expression/3-map_to_transcriptome/hla_personalized/gene_quantifications.tsv.gz" %>%
     read_tsv() %>%
     inner_join(classII_and_CIITA, by = "gene_id") %>%
     select(subject, locus = gene_name, tpm) %>%

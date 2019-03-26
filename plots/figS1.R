@@ -20,7 +20,7 @@ hlapers <-
            source = "HLA-personalized")
 
 hla_geuvadis <-  
-    "../geuvadis_reanalysis/data/quantifications/peer/published/geuvadis_fpkms.csv" %>%
+    "../geuvadis_reanalysis/data/quantifications/peer/published/geuvadis_fpkms.csv.gz" %>%
     read_csv() %>%
     filter(subject %in% hlapers$subject) %>%
     select(subject, gencode_hla_v12$gene_id) %>%

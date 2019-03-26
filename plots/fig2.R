@@ -12,7 +12,7 @@ hla_regex <- sub("HLA-", "", hla_genes) %>%
     paste(collapse = "|") %>%
     paste0("IMGT_(", ., ")")
 
-ground_truth <- read_tsv("../simulation/data/phenotypes_trueCounts.tsv") %>%
+ground_truth <- read_tsv("../simulation/data/phenotypes_trueCounts.tsv.gz") %>%
     filter(grepl(hla_regex, Name)) %>%
     mutate(locus = sub("^IMGT_([^*]+).+$", "HLA-\\1", Name)) %>%
     group_by(subject, locus) %>%
@@ -20,7 +20,7 @@ ground_truth <- read_tsv("../simulation/data/phenotypes_trueCounts.tsv") %>%
     ungroup()
 
 uniq_reads <-
-    "../simulation/expression/1-map_to_genome/quantifications_uniq/gw_quants.tsv" %>%
+    "../simulation/expression/1-map_to_genome/quantifications_uniq/gw_quants.tsv.gz" %>%
     read_tsv(col_names = FALSE) %>%
     inner_join(gencode_hla, c("X2" = "gene_id")) %>%
     select(subject = X1, locus = gene_name, est_counts = X3)
