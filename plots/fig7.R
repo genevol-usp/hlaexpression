@@ -19,7 +19,7 @@ ggplot(ase_df, aes(reorder(locus, ase, median), ase)) +
     stat_summary(fun.y = median, geom = "point", shape = "\U2014", size = 10, color = "#DC0000B2") +
     coord_cartesian(ylim = c(0, 0.5)) +
     theme_bw() +
-    theme(text = element_text(size = 9, family = "Times")) +
+    theme(text = element_text(size = 11, family = "Times")) +
     labs(x = NULL, y = "ASE")
 dev.off()
 

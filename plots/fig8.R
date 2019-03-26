@@ -36,12 +36,15 @@ global_cors <- hlapers_gene %>%
     mutate(locus = sub("HLA-", "", locus)) %>%
     spread(locus, tpm) %>% 
     select(!!! syms(sub("HLA-", "", gencode_hla$gene_name))) %>% 
-    ggcorr(label = TRUE, label_round = 2, label_size = 1.8, hjust = 0.8, size = 2.5, family = "Times") +
+    ggcorr(label = TRUE, label_round = 2, label_size = 2.5, hjust = 0.8, 
+           size = 3, family = "Times") +
     labs(title = "Gene-level") +
     theme(legend.position = "none",
-          text = element_text(size = 5, family = "Times"),
-          plot.title = element_text(size = 10, family = "Times", hjust = 0.5))
+          text = element_text(size = 11, family = "Times"),
+          plot.title = element_text(size = 11, family = "Times", hjust = 0.5))
 
+p_global <- ggplot_build(global_cors)
+p_global$data[[2]]$label <- sub("^0", "", p_global$data[[2]]$label)
 
 phased <- "../geuvadis_reanalysis/phase_hla/concordant_set.tsv" %>%
     read_tsv() %>%
@@ -53,11 +56,15 @@ phased <- "../geuvadis_reanalysis/phase_hla/concordant_set.tsv" %>%
 
 cis_cors <- phased %>% 
     select(-subject, -hap) %>%
-    ggcorr(label = TRUE, label_round = 2, label_size = 1.8, hjust = 0.8, size = 2.5, family = "Times") +
+    ggcorr(label = TRUE, label_round = 2, label_size = 2.5, hjust = 0.8, 
+           size = 3, family = "Times") +
     labs(title = "Within haplotypes") +
     theme(legend.position = "none",
-          text = element_text(size = 9, family = "Times"),
-          plot.title = element_text(size = 9, family = "Times", hjust = 0.5))
+          text = element_text(size = 11, family = "Times"),
+          plot.title = element_text(size = 11, family = "Times", hjust = 0.5))
+
+p_cis <- ggplot_build(cis_cors)
+p_cis$data[[2]]$label <- sub("^0", "", p_cis$data[[2]]$label)
 
 m <- 
     matrix(NA, nrow = length(hla_genes), ncol = length(hla_genes), 
@@ -72,20 +79,22 @@ phase_data <- tibble(locus1 = hla_genes, locus2 = hla_genes) %>%
 
 trans_cors <- 
     ggcorr(data = NULL, cor_matrix = m, label = TRUE, label_round = 2,  
-           label_size = 1.8, hjust = 0.8, size = 2.5, family = "Times") +
+           label_size = 2.5, hjust = 0.8, size = 3, family = "Times") +
     scale_fill_gradient2(name = "r", limits = c(0, 1), breaks = c(0, 0.5, 1), 
                          low = "#3B9AB2", mid = "#EEEEEE", high = "#F21A00") +
     labs(title = "Between haplotypes") +
-    theme(text = element_text(size = 9, family = "Times"),
-          plot.title = element_text(size = 9, family = "Times", hjust = 0.5))
+    theme(text = element_text(size = 11, family = "Times"),
+          plot.title = element_text(size = 11, family = "Times", hjust = 0.5))
 
 legend <- get_legend(trans_cors)
-
 trans_cors <- trans_cors + theme(legend.position = "none")
 
+p_trans <- ggplot_build(trans_cors)
+p_trans$data[[2]]$label <- sub("^0", "", p_trans$data[[2]]$label)
+
 plot_correlations <- 
-    plot_grid(global_cors, cis_cors, trans_cors, legend, NULL, nrow = 1, 
-              rel_widths = c(1, 1, 1, .25, 0.05))
+    plot_grid(ggplot_gtable(p_global), ggplot_gtable(p_cis), ggplot_gtable(p_trans), 
+              legend, NULL, nrow = 1, rel_widths = c(1, 1, 1, .25, 0.05))
 
 classII_genes <-  c("HLA-DRA", "HLA-DRB1", "HLA-DQA1", "HLA-DQB1", "HLA-DPA1", "HLA-DPB1")
 
@@ -120,8 +129,8 @@ plot_ciita <- ggplot(class_2_trans_df, aes(tpm, CIITA)) +
               hjust = "inward", vjust = "inward", size = 3, family = "Times",
               label.padding = unit(0.05, "lines"), label.size = NA, alpha = 0.4) +
     theme_bw() +
-    theme(text = element_text(size = 9, family = "Times"),
-          axis.text.x = element_text(angle = 15, hjust = 0.8)) +
+    theme(text = element_text(size = 10, family = "Times"),
+          axis.text.x = element_text(angle = 20, hjust = 0.8)) +
     facet_wrap(~locus, nrow = 1, scales = "free") +
     labs(x = NULL)
 

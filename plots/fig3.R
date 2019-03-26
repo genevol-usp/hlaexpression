@@ -19,6 +19,6 @@ ggplot(hlapers, aes(locus, tpm)) +
     geom_boxplot(fill = "grey") +
     scale_y_continuous(labels = comma) +
     theme_bw() + 
-    theme(text = element_text(family = "Times", size = 9)) +
+    theme(text = element_text(family = "Times", size = 11)) +
     labs(x = NULL, y = "TPM")
 dev.off()
