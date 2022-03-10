@@ -3,10 +3,12 @@ devtools::load_all("/home/vitor/Libraries/hlaseqlib")
 
 calc_ase <- function(tpm) min(tpm)/sum(tpm)
 
+hla_loci <- paste0("HLA-", c("A", "B", "C", "DRB1", "DQB1", "DPB1", "DQA1", "DPA1", "DRA"))
+
 ase_df <- 
     "../geuvadis_reanalysis/expression/3-map_to_transcriptome/hla_personalized/quantifications/processed_imgt_quants.tsv" %>%
     read_tsv() %>%
-    filter(locus %in% gencode_hla$gene_name) %>%
+    filter(locus %in% hla_loci) %>%
     mutate(locus = sub("HLA-", "", locus)) %>%
     group_by(subject, locus) %>%
     filter(n_distinct(allele) == 2) %>%
